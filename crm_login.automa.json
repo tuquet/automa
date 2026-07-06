@@ -1,0 +1,121 @@
+{
+  "name": "CRM Login",
+  "description": "Đăng nhập vào hệ thống CRM CMC Global",
+  "version": "1.28.2",
+  "drawflow": {
+    "nodes": [
+      {
+        "id": "trigger_1",
+        "label": "trigger",
+        "type": "BlockBasic",
+        "position": { "x": 100, "y": 200 },
+        "description": "Bắt đầu workflow đăng nhập với tham số username/password",
+        "data": {
+          "type": "manual",
+          "parameters": [
+            {
+              "name": "username",
+              "type": "string",
+              "defaultValue": "tuquet"
+            },
+            {
+              "name": "password",
+              "type": "string",
+              "defaultValue": "1235"
+            }
+          ]
+        }
+      },
+      {
+        "id": "new_tab_1",
+        "label": "new-tab",
+        "type": "BlockBasic",
+        "position": { "x": 400, "y": 200 },
+        "description": "Mở tab login http://crm.cmcglobal.com.vn/",
+        "data": {
+          "url": "http://crm.cmcglobal.com.vn/",
+          "active": true,
+          "waitTabLoaded": true
+        }
+      },
+      {
+        "id": "forms_username",
+        "label": "forms",
+        "type": "BlockBasic",
+        "position": { "x": 700, "y": 200 },
+        "description": "Điền username",
+        "data": {
+          "type": "text-field",
+          "findBy": "xpath",
+          "selector": "//input[@type='text' or contains(@name, 'username') or contains(@id, 'username')]",
+          "value": "{{variables.username}}",
+          "delay": 100,
+          "clearValue": true,
+          "waitForSelector": true
+        }
+      },
+      {
+        "id": "forms_password",
+        "label": "forms",
+        "type": "BlockBasic",
+        "position": { "x": 1000, "y": 200 },
+        "description": "Điền password",
+        "data": {
+          "type": "text-field",
+          "findBy": "xpath",
+          "selector": "//input[@type='password']",
+          "value": "{{variables.password}}",
+          "delay": 100,
+          "clearValue": true,
+          "waitForSelector": true
+        }
+      },
+      {
+        "id": "click_login",
+        "label": "event-click",
+        "type": "BlockBasic",
+        "position": { "x": 1300, "y": 200 },
+        "description": "Click nút đăng nhập",
+        "data": {
+          "findBy": "cssSelector",
+          "selector": "button[data-test-id='auth-login-submit-btn']",
+          "waitForSelector": true
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge_1",
+        "source": "trigger_1",
+        "target": "new_tab_1",
+        "sourceHandle": "trigger_1-output-1",
+        "targetHandle": "new_tab_1-input-1",
+        "label": "Bắt đầu"
+      },
+      {
+        "id": "edge_2",
+        "source": "new_tab_1",
+        "target": "forms_username",
+        "sourceHandle": "new_tab_1-output-1",
+        "targetHandle": "forms_username-input-1",
+        "label": "Trang đã tải"
+      },
+      {
+        "id": "edge_3",
+        "source": "forms_username",
+        "target": "forms_password",
+        "sourceHandle": "forms_username-output-1",
+        "targetHandle": "forms_password-input-1",
+        "label": "Đã điền username"
+      },
+      {
+        "id": "edge_4",
+        "source": "forms_password",
+        "target": "click_login",
+        "sourceHandle": "forms_password-output-1",
+        "targetHandle": "click_login-input-1",
+        "label": "Đã điền password"
+      }
+    ]
+  }
+}

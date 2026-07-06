@@ -1,0 +1,21 @@
+{
+  "name": "Automa Ecosystem",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "editor.formatOnSave": true
+      },
+      "extensions": [
+        "Vue.volar",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  },
+  "forwardPorts": [54321, 54322, 54323],
+  "postCreateCommand": "cd automa && pnpm install --ignore-scripts",
+  "postStartCommand": "cd automa-be && npx supabase start"
+}

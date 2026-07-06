@@ -1,9 +1,9 @@
-﻿node_modules/
+node_modules/
 .chrome-profile/
 .chrome-profile-diagnose/
 .manual-profile/
 temp_workflow.json
-.agents/
-automa-cli/
 
+automa/
+automa-be/
 automa-cli/
