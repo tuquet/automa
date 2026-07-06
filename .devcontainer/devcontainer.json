@@ -16,6 +16,6 @@
     }
   },
   "forwardPorts": [54321, 54322, 54323],
-  "postCreateCommand": "cd automa && pnpm install --ignore-scripts",
+  "postCreateCommand": "bash clone_all.sh",
   "postStartCommand": "cd automa-be && npx supabase start"
 }
