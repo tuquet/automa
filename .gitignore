@@ -7,3 +7,4 @@ temp_workflow.json
 automa/
 automa-be/
 automa-cli/
+.pnpm-store/

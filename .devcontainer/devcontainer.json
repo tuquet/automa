@@ -3,6 +3,9 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
   "customizations": {
     "vscode": {
       "settings": {
@@ -16,6 +19,9 @@
     }
   },
   "forwardPorts": [54321, 54322, 54323],
+  "mounts": [
+    "source=automa-pnpm-store,target=/home/node/.local/share/pnpm/store,type=volume"
+  ],
   "postCreateCommand": "bash clone_all.sh",
   "postStartCommand": "cd automa-be && npx supabase start"
 }

@@ -1,6 +1,9 @@
 #!/bin/bash
 # Script to clone or update all Automa Ecosystem repositories on Linux/Mac
 
+# Khắc phục lỗi "unsafe repository" khi mount folder từ Windows vào Dev Container
+git config --global --add safe.directory '*'
+
 REPOS=("automa" "automa-be" "automa-cli")
 ORG="tuquet"
 
