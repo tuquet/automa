@@ -58,7 +58,7 @@ async function runWorkflow(workflowPath, options = {}) {
   console.log(`Launching Puppeteer browser with Automa extension from: ${extensionPath}`);
   
   const browser = await puppeteer.launch({
-    headless: false, // Must be false to support extensions
+    headless: 'shell', // Default to headless shell to support extensions in CI/displayless envs
     defaultViewport: null,
     executablePath,
     ignoreDefaultArgs: ['--disable-extensions', '--disable-component-extensions-with-background-pages'],
@@ -109,12 +109,17 @@ async function runWorkflow(workflowPath, options = {}) {
     }
     console.log(`Detected Extension ID: ${extensionId}`);
 
-    // Wait a brief moment to allow any automatically opened welcome page to register
-    await new Promise(r => setTimeout(r, 2000));
-
-    // Find the automatically opened extension page (welcome page)
-    let pages = await browser.pages();
-    extensionPage = pages.find(p => p.url().includes(`chrome-extension://${extensionId}/`));
+    // Replace static 2-second sleep with dynamic page polling loop
+    console.log("Polling for automatically opened extension welcome page...");
+    const maxPagePolls = 15;
+    for (let i = 0; i < maxPagePolls; i++) {
+      const pages = await browser.pages();
+      extensionPage = pages.find(p => p.url().includes(`chrome-extension://${extensionId}/`));
+      if (extensionPage) {
+        break;
+      }
+      await new Promise(r => setTimeout(r, 200));
+    }
 
     if (extensionPage) {
       console.log(`Reusing automatically opened extension page: ${extensionPage.url()}`);
@@ -128,7 +133,7 @@ async function runWorkflow(workflowPath, options = {}) {
     console.log("Closing default blank tabs...");
     pages = await browser.pages();
     for (const page of pages) {
-      if (page !== extensionPage) {
+      if (page.url() === 'about:blank' || page.url().includes('new-tab-page')) {
         await page.close().catch(() => {});
       }
     }
@@ -257,41 +262,77 @@ async function runWorkflow(workflowPath, options = {}) {
         // If it was running and now it's gone, or if we want to check logs
         console.log("Checking IndexedDB for execution logs...");
         const logData = await extensionPage.evaluate((wId, execId, startTs) => {
-          return new Promise((resolve, reject) => {
-            const request = indexedDB.open('logs');
-            request.onsuccess = (event) => {
-              const db = event.target.result;
-              const transaction = db.transaction(['items', 'logsData'], 'readonly');
-              const itemsStore = transaction.objectStore('items');
-              const logsDataStore = transaction.objectStore('logsData');
+          return new Promise((resolve) => {
+            try {
+              const request = indexedDB.open('logs');
               
-              const itemsRequest = itemsStore.getAll();
-              const logsDataRequest = logsDataStore.getAll();
+              request.onblocked = () => {
+                resolve(null);
+              };
               
-              transaction.oncomplete = () => {
-                const items = itemsRequest.result || [];
-                const logsData = logsDataRequest.result || [];
+              request.onerror = () => {
+                resolve(null);
+              };
+              
+              request.onsuccess = (event) => {
+                const db = event.target.result;
                 
-                // Find log by executionId or workflowId with matching start time
-                const logItem = items.find(item => {
-                  if (execId) return item.id === execId;
-                  return item.workflowId === wId && item.startedAt >= startTs;
-                });
-                
-                if (!logItem) {
+                // Verify that the object stores exist to prevent version lock/blocked upgrade
+                if (!db.objectStoreNames.contains('items') || !db.objectStoreNames.contains('logsData')) {
+                  db.close();
                   resolve(null);
                   return;
                 }
                 
-                const dataItem = logsData.find(d => d.logId === logItem.id);
-                resolve({
-                  log: logItem,
-                  data: dataItem ? dataItem.data : null
-                });
+                try {
+                  const transaction = db.transaction(['items', 'logsData'], 'readonly');
+                  const itemsStore = transaction.objectStore('items');
+                  const logsDataStore = transaction.objectStore('logsData');
+                  
+                  const itemsRequest = itemsStore.getAll();
+                  const logsDataRequest = logsDataStore.getAll();
+                  
+                  transaction.oncomplete = () => {
+                    const items = itemsRequest.result || [];
+                    const logsData = logsDataRequest.result || [];
+                    
+                    // Find log by executionId or workflowId with matching start time
+                    const logItem = items.find(item => {
+                      if (execId) return item.id === execId;
+                      return item.workflowId === wId && item.startedAt >= startTs;
+                    });
+                    
+                    if (!logItem) {
+                      db.close();
+                      resolve(null);
+                      return;
+                    }
+                    
+                    const dataItem = logsData.find(d => d.logId === logItem.id);
+                    db.close();
+                    resolve({
+                      log: logItem,
+                      data: dataItem ? dataItem.data : null
+                    });
+                  };
+                  
+                  transaction.onerror = () => {
+                    db.close();
+                    resolve(null);
+                  };
+                  
+                  transaction.onabort = () => {
+                    db.close();
+                    resolve(null);
+                  };
+                } catch (e) {
+                  db.close();
+                  resolve(null);
+                }
               };
-              transaction.onerror = (e) => reject(e);
-            };
-            request.onerror = (e) => reject(e);
+            } catch (e) {
+              resolve(null);
+            }
           });
         }, workflowId, executionId, startTime);
 

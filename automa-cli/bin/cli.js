@@ -33,19 +33,34 @@ async function main() {
 
   for (let i = 1; i < args.length; i++) {
     if (args[i] === '--extension' || args[i] === '-e') {
-      extensionPath = path.resolve(args[i + 1]);
-      i++;
-    } else if (args[i] === '--variables' || args[i] === '-v') {
-      try {
-        variables = JSON.parse(args[i + 1]);
-      } catch (err) {
-        console.error("Error parsing variables JSON:", err.message);
+      if (i + 1 < args.length && args[i + 1] !== undefined) {
+        extensionPath = path.resolve(args[i + 1]);
+        i++;
+      } else {
+        console.error("Error: --extension / -e requires a value");
         process.exit(1);
       }
-      i++;
+    } else if (args[i] === '--variables' || args[i] === '-v') {
+      if (i + 1 < args.length && args[i + 1] !== undefined) {
+        try {
+          variables = JSON.parse(args[i + 1]);
+        } catch (err) {
+          console.error("Error parsing variables JSON:", err.message);
+          process.exit(1);
+        }
+        i++;
+      } else {
+        console.error("Error: --variables / -v requires a value");
+        process.exit(1);
+      }
     } else if (args[i] === '--timeout' || args[i] === '-t') {
-      timeout = parseInt(args[i + 1], 10);
-      i++;
+      if (i + 1 < args.length && args[i + 1] !== undefined) {
+        timeout = parseInt(args[i + 1], 10);
+        i++;
+      } else {
+        console.error("Error: --timeout / -t requires a value");
+        process.exit(1);
+      }
     }
   }
 

@@ -30,6 +30,9 @@ async function testVerification() {
         injected_var: "injected_val"
       },
       timeout: 30000,
+      puppeteerOptions: {
+        headless: 'shell'
+      },
       onBrowserCreated: (browser) => {
         // Hook targetcreated listener to assert popup.html or params.html are NEVER rendered
         browser.on('targetcreated', (target) => {

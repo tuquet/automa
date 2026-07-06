@@ -4,7 +4,7 @@ This document details the architectural design, Puppeteer startup sequence, mess
 
 ## Puppeteer Startup and Message Sequence
 
-Below is the Mermaid diagram detailing the Puppeteer lifecycle, extension ID detection, handshake, and message passing flow.
+Below is the Mermaid Flowchart detailing the Puppeteer lifecycle, extension ID detection, handshake, and message passing flow.
 
 ```mermaid
 graph TD
