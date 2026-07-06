@@ -1,15 +1,31 @@
 #!/bin/bash
-# Script to clone all Automa Ecosystem repositories on Linux/Mac
+# Script to clone or update all Automa Ecosystem repositories on Linux/Mac
 
-echo "Cloning Automa Ecosystem repositories..."
+REPOS=("automa" "automa-be" "automa-cli")
+ORG="tuquet"
 
-gh repo clone tuquet/automa automa
-cd automa && pnpm install --ignore-scripts && cd ..
+echo "Cloning or updating Automa Ecosystem repositories..."
 
-gh repo clone tuquet/automa-be automa-be
-cd automa-be && pnpm install --ignore-scripts && cd ..
+for REPO in "${REPOS[@]}"; do
+  echo "----------------------------------------"
+  if [ -d "$REPO" ]; then
+    echo "Directory '$REPO' already exists. Pulling latest changes..."
+    cd "$REPO" || exit
+    git pull
+  else
+    echo "Cloning '$REPO'..."
+    gh repo clone "$ORG/$REPO" "$REPO"
+    cd "$REPO" || exit
+  fi
+  
+  if [ -f "package.json" ]; then
+    echo "Installing dependencies for '$REPO'..."
+    pnpm install --ignore-scripts
+  else
+    echo "No package.json found in '$REPO', skipping pnpm install."
+  fi
+  cd ..
+done
 
-gh repo clone tuquet/automa-cli automa-cli
-cd automa-cli && pnpm install --ignore-scripts && cd ..
-
-echo "All repositories cloned successfully!"
+echo "----------------------------------------"
+echo "All repositories processed successfully!"

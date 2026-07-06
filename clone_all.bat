@@ -1,16 +1,33 @@
 @echo off
-REM Script to clone all Automa Ecosystem repositories on Windows
+setlocal enabledelayedexpansion
+REM Script to clone or update all Automa Ecosystem repositories on Windows
 
-echo Cloning Automa Ecosystem repositories...
+set "REPOS=automa automa-be automa-cli"
+set "ORG=tuquet"
 
-gh repo clone tuquet/automa automa
-cd automa && pnpm install --ignore-scripts && cd ..
+echo Cloning or updating Automa Ecosystem repositories...
 
-gh repo clone tuquet/automa-be automa-be
-cd automa-be && pnpm install --ignore-scripts && cd ..
+for %%R in (%REPOS%) do (
+  echo ----------------------------------------
+  if exist "%%R\" (
+    echo Directory '%%R' already exists. Pulling latest changes...
+    cd "%%R"
+    git pull
+  ) else (
+    echo Cloning '%%R'...
+    gh repo clone "%ORG%/%%R" "%%R"
+    cd "%%R"
+  )
+  
+  if exist "package.json" (
+    echo Installing dependencies for '%%R'...
+    call pnpm install --ignore-scripts
+  ) else (
+    echo No package.json found in '%%R', skipping pnpm install.
+  )
+  cd ..
+)
 
-gh repo clone tuquet/automa-cli automa-cli
-cd automa-cli && pnpm install --ignore-scripts && cd ..
-
-echo All repositories cloned successfully!
+echo ----------------------------------------
+echo All repositories processed successfully!
 pause
