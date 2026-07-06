@@ -263,18 +263,25 @@ async function runWorkflow(workflowPath, options = {}) {
         console.log("Checking IndexedDB for execution logs...");
         const logData = await extensionPage.evaluate((wId, execId, startTs) => {
           return new Promise((resolve) => {
+            const timeout = setTimeout(() => {
+              resolve(null);
+            }, 1000);
+
             try {
               const request = indexedDB.open('logs');
               
               request.onblocked = () => {
+                clearTimeout(timeout);
                 resolve(null);
               };
               
               request.onerror = () => {
+                clearTimeout(timeout);
                 resolve(null);
               };
               
               request.onsuccess = (event) => {
+                clearTimeout(timeout);
                 const db = event.target.result;
                 
                 // Verify that the object stores exist to prevent version lock/blocked upgrade
@@ -331,6 +338,7 @@ async function runWorkflow(workflowPath, options = {}) {
                 }
               };
             } catch (e) {
+              clearTimeout(timeout);
               resolve(null);
             }
           });
