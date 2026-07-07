@@ -8,3 +8,4 @@ automa/
 automa-be/
 automa-cli/
 .pnpm-store/
+.agents
