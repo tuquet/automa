@@ -1,12 +1,4 @@
 {
   "name": "automa-ecosystem",
-  "private": true,
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "core-js",
-      "puppeteer",
-      "simple-git-hooks",
-      "vue-demi"
-    ]
-  }
+  "private": true
 }

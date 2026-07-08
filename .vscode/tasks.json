@@ -73,6 +73,42 @@
       },
       "problemMatcher": [],
       "group": "build"
+    },
+    {
+      "label": "Install Dependencies (Workspace Root)",
+      "type": "shell",
+      "command": "pnpm install",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "install"
+      }
+    },
+    {
+      "label": "Automa: Install Dependencies",
+      "type": "shell",
+      "command": "pnpm install",
+      "options": {
+        "cwd": "${workspaceFolder}/automa"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "install"
+      }
+    },
+    {
+      "label": "Automa CLI: Install Dependencies",
+      "type": "shell",
+      "command": "pnpm install",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-cli"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "install"
+      }
     }
   ]
 }

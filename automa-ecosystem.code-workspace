@@ -1,0 +1,21 @@
+{
+  "folders": [
+    {
+      "name": "Ecosystem Root",
+      "path": "."
+    },
+    {
+      "name": "Automa (Extension)",
+      "path": "automa"
+    },
+    {
+      "name": "Automa Backend",
+      "path": "automa-be"
+    },
+    {
+      "name": "Automa CLI",
+      "path": "automa-cli"
+    }
+  ],
+  "settings": {}
+}
