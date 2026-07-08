@@ -109,6 +109,18 @@
       "presentation": {
         "group": "install"
       }
+    },
+    {
+      "label": "Automa Studio (Detached Browser)",
+      "type": "shell",
+      "command": "node bin/cli.js studio",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-cli"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "automa-cli"
+      }
     }
   ]
 }
