@@ -1,0 +1,127 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "1. Supabase: Start",
+      "type": "shell",
+      "command": "npx supabase start",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-be"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "supabase"
+      }
+    },
+    {
+      "label": "1. Supabase: Stop",
+      "type": "shell",
+      "command": "npx supabase stop",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-be"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "supabase"
+      }
+    },
+    {
+      "label": "1. Supabase: Status",
+      "type": "shell",
+      "command": "npx supabase status",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-be"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "supabase"
+      }
+    },
+    {
+      "label": "1. Supabase: DB Reset",
+      "type": "shell",
+      "command": "npx supabase db reset",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-be"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "supabase"
+      }
+    },
+    {
+      "label": "2. Automa: Dev",
+      "type": "shell",
+      "command": "pnpm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}/automa"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "2. Automa: Build",
+      "type": "shell",
+      "command": "pnpm run build",
+      "options": {
+        "cwd": "${workspaceFolder}/automa"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "0. Workspace: Install Dependencies",
+      "type": "shell",
+      "command": "pnpm install",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "install"
+      }
+    },
+    {
+      "label": "3. Automa Studio (Normal Browser)",
+      "type": "shell",
+      "command": "node bin/cli.js studio",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-cli"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "automa-cli"
+      }
+    },
+    {
+      "label": "3. Automa Studio (App Mode)",
+      "type": "shell",
+      "command": "node bin/cli.js studio --app",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-cli"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "automa-cli"
+      }
+    },
+    {
+      "label": "3. Automa CLI: Test CRM Login",
+      "type": "shell",
+      "command": "node bin/cli.js workflow run tests/crm_login.automa.json -e ../automa/build",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-cli"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "automa-cli",
+        "panel": "new"
+      }
+    }
+  ]
+}
