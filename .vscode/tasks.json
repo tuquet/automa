@@ -111,9 +111,21 @@
       }
     },
     {
-      "label": "Automa Studio (Detached Browser)",
+      "label": "Automa Studio (Normal Browser)",
       "type": "shell",
       "command": "node bin/cli.js studio",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-cli"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "automa-cli"
+      }
+    },
+    {
+      "label": "Automa Studio (App Mode)",
+      "type": "shell",
+      "command": "node bin/cli.js studio --app",
       "options": {
         "cwd": "${workspaceFolder}/automa-cli"
       },
