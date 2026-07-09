@@ -51,6 +51,18 @@
       }
     },
     {
+      "label": "1. Supabase: Seed from JSON",
+      "type": "shell",
+      "command": "node scripts/seed-from-folders.js",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-be"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "supabase"
+      }
+    },
+    {
       "label": "2. Automa: Dev",
       "type": "shell",
       "command": "pnpm run dev",
