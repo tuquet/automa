@@ -63,6 +63,18 @@
       }
     },
     {
+      "label": "1. Supabase: Dump to JSON",
+      "type": "shell",
+      "command": "node scripts/dump-seed.js",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-be"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "supabase"
+      }
+    },
+    {
       "label": "2. Automa: Dev",
       "type": "shell",
       "command": "pnpm run dev",
