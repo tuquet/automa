@@ -23,8 +23,8 @@ async function main() {
     console.log("📌 Log ID:", result.log.id);
     
     // Check nếu có snapshot hoặc data
-    if (result.log.snapshot_base64) {
-      console.log("📸 Đã bắt được ảnh Snapshot! Độ dài base64:", result.log.snapshot_base64.length);
+    if (result.log.captured_images_base64 && result.log.captured_images_base64.length > 0) {
+      console.log("📸 Đã bắt được ảnh Snapshot! Số lượng ảnh:", result.log.captured_images_base64.length);
     } else {
       console.log("⚠️ Không có trường snapshot trong log trả về.");
     }
