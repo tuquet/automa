@@ -30,12 +30,15 @@ async function main() {
 
   // 3. Upload to Supabase Storage
   console.log("\n[3/3] Uploading zip file to Supabase Storage ('release' bucket)...");
-  const uploadName = `${packageName}-chrome-v${appVersion}-${Date.now()}.zip`;
+  const uploadName = zipFileName;
   const backendDir = path.resolve(__dirname, '../../../../automa-be');
 
   try {
     // We use the native supabase CLI (since the user is already logged in)
-    execSync(`supabase storage cp "${zipPath}" "ss:///release/${uploadName}" --experimental`, { cwd: backendDir, stdio: 'inherit' });
+    // IMPORTANT: In Windows, supabase CLI `storage cp` fails with absolute paths (C:\...).
+    // We must pass a relative path from the CWD (backendDir) to the zip file.
+    const relativeZipPath = path.relative(backendDir, zipPath);
+    execSync(`supabase storage cp "${relativeZipPath}" "ss:///release/${uploadName}" --linked --experimental`, { cwd: backendDir, stdio: 'inherit' });
   } catch (error) {
     console.error("Failed to upload extension zip to Supabase:", error.message);
     process.exit(1);
