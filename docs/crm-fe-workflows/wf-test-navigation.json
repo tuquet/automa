@@ -1,0 +1,500 @@
+{
+  "id": "wf-test-navigation",
+  "name": "Test Full Navigation",
+  "description": "Kiểm tra toàn bộ luồng Navigation của CRM, bao gồm Sales Team, Team Detail, Employee Detail và Codebook. Tự động Login trước khi chạy.",
+  "version": "1.28.27",
+  "extVersion": "1.28.27",
+  "icon": "riCompass3Line",
+  "table": [],
+  "settings": {
+    "publicId": "",
+    "debugMode": false,
+    "browserType": "chrome",
+    "executionEnv": "background",
+    "blockDelay": 0,
+    "saveLog": true,
+    "onError": "stop-workflow",
+    "restartTimes": 0,
+    "notification": true,
+    "reuseLastState": false,
+    "insertContentTo": "iframe",
+    "reuseTab": false
+  },
+  "global_data": "{\"startUrl\":\"crm.tuquet.com\"}",
+  "drawflow": {
+    "nodes": [
+      {
+        "id": "trigger-1",
+        "label": "trigger",
+        "type": "BlockBasic",
+        "position": {
+          "x": 100,
+          "y": 200
+        },
+        "data": {
+          "description": "Bắt đầu Test",
+          "type": "manual",
+          "parameters": []
+        }
+      },
+      {
+        "id": "init-vars",
+        "label": "insert-data",
+        "type": "BlockBasic",
+        "position": {
+          "x": 300,
+          "y": 200
+        },
+        "data": {
+          "description": "Khởi tạo Variables",
+          "dataList": [
+            {
+              "type": "variables",
+              "name": "team_id",
+              "value": "team-001"
+            },
+            {
+              "type": "variables",
+              "name": "employee_id",
+              "value": "emp-999"
+            }
+          ]
+        }
+      },
+      {
+        "id": "exec-login",
+        "label": "execute-workflow",
+        "type": "BlockBasic",
+        "position": {
+          "x": 500,
+          "y": 200
+        },
+        "data": {
+          "description": "Gọi Workflow Login",
+          "workflowId": "GChnWDv1yTBVL5jmEj_r-",
+          "executeId": "",
+          "globalData": "{\"startUrl\":\"crm.tuquet.com\"}",
+          "disableBlock": false,
+          "insertAllVars": true
+        }
+      },
+      {
+        "id": "pkg-1",
+        "label": "block-package",
+        "type": "BlockPackage",
+        "position": {
+          "x": 700,
+          "y": 200
+        },
+        "data": {
+          "id": "pkg-nav-sales-team",
+          "name": "[nav] Go to Sales Team",
+          "description": "Chuyển hướng an toàn tới trang Sales Team Configuration",
+          "icon": "riGroupLine",
+          "inputs": [
+            {
+              "id": "in_1",
+              "name": "start",
+              "blockId": "url_1783618565275",
+              "handleId": "url_1783618565275-input-1"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "out_1",
+              "name": "end",
+              "blockId": "wait_1783618565275",
+              "handleId": "wait_1783618565275-output-1"
+            }
+          ],
+          "settings": {
+            "asBlock": true
+          },
+          "data": {
+            "nodes": [
+              {
+                "id": "url_1783618565275",
+                "type": "BlockBasic",
+                "label": "tab-url",
+                "data": {
+                  "url": "https://{{globalData.startUrl}}/sales-team",
+                  "description": "Điều hướng tới /sales-team"
+                },
+                "position": {
+                  "x": 100,
+                  "y": 100
+                }
+              },
+              {
+                "id": "wait_1783618565275",
+                "type": "BlockBasic",
+                "label": "element-exists",
+                "data": {
+                  "selector": "//h1[contains(text(), 'Sales Team')]",
+                  "timeout": 10000,
+                  "description": "Chờ trang load xong",
+                  "onError": "fallback"
+                },
+                "position": {
+                  "x": 400,
+                  "y": 100
+                }
+              }
+            ],
+            "edges": [
+              {
+                "id": "edge_1783618565275",
+                "source": "url_1783618565275",
+                "target": "wait_1783618565275",
+                "sourceHandle": "url_1783618565275-output-1",
+                "targetHandle": "wait_1783618565275-input-1",
+                "updatable": true,
+                "selectable": true
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "delay-1",
+        "label": "delay",
+        "type": "BlockBasic",
+        "position": {
+          "x": 900,
+          "y": 200
+        },
+        "data": {
+          "time": 2000,
+          "description": "Chờ 2 giây"
+        }
+      },
+      {
+        "id": "pkg-2",
+        "label": "block-package",
+        "type": "BlockPackage",
+        "position": {
+          "x": 1100,
+          "y": 200
+        },
+        "data": {
+          "id": "pkg-nav-team-detail",
+          "name": "[nav] Go to Team Detail",
+          "description": "Chuyển hướng tới chi tiết Team. Yêu cầu truyền biến {{variables@team_id}}",
+          "icon": "riInformationLine",
+          "inputs": [
+            {
+              "id": "in_1",
+              "name": "start",
+              "blockId": "url_1783618565275",
+              "handleId": "url_1783618565275-input-1"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "out_1",
+              "name": "end",
+              "blockId": "wait_1783618565275",
+              "handleId": "wait_1783618565275-output-1"
+            }
+          ],
+          "settings": {
+            "asBlock": true
+          },
+          "data": {
+            "nodes": [
+              {
+                "id": "url_1783618565275",
+                "type": "BlockBasic",
+                "label": "tab-url",
+                "data": {
+                  "url": "https://{{globalData.startUrl}}/sales-team/{{variables@team_id}}",
+                  "description": "Điều hướng tới /sales-team/{{variables@team_id}}"
+                },
+                "position": {
+                  "x": 100,
+                  "y": 100
+                }
+              },
+              {
+                "id": "wait_1783618565275",
+                "type": "BlockBasic",
+                "label": "element-exists",
+                "data": {
+                  "selector": "//div[contains(@class, 'page-content')]",
+                  "timeout": 10000,
+                  "description": "Chờ trang load xong",
+                  "onError": "fallback"
+                },
+                "position": {
+                  "x": 400,
+                  "y": 100
+                }
+              }
+            ],
+            "edges": [
+              {
+                "id": "edge_1783618565275",
+                "source": "url_1783618565275",
+                "target": "wait_1783618565275",
+                "sourceHandle": "url_1783618565275-output-1",
+                "targetHandle": "wait_1783618565275-input-1",
+                "updatable": true,
+                "selectable": true
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "delay-2",
+        "label": "delay",
+        "type": "BlockBasic",
+        "position": {
+          "x": 1300,
+          "y": 200
+        },
+        "data": {
+          "time": 2000,
+          "description": "Chờ 2 giây"
+        }
+      },
+      {
+        "id": "pkg-3",
+        "label": "block-package",
+        "type": "BlockPackage",
+        "position": {
+          "x": 1500,
+          "y": 200
+        },
+        "data": {
+          "id": "pkg-nav-employee-detail",
+          "name": "[nav] Go to Employee Detail",
+          "description": "Chuyển hướng tới chi tiết Employee. Yêu cầu truyền biến {{variables@employee_id}}",
+          "icon": "riUser3Line",
+          "inputs": [
+            {
+              "id": "in_1",
+              "name": "start",
+              "blockId": "url_1783618565275",
+              "handleId": "url_1783618565275-input-1"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "out_1",
+              "name": "end",
+              "blockId": "wait_1783618565275",
+              "handleId": "wait_1783618565275-output-1"
+            }
+          ],
+          "settings": {
+            "asBlock": true
+          },
+          "data": {
+            "nodes": [
+              {
+                "id": "url_1783618565275",
+                "type": "BlockBasic",
+                "label": "tab-url",
+                "data": {
+                  "url": "https://{{globalData.startUrl}}/sales-team/employees/{{variables@employee_id}}",
+                  "description": "Điều hướng tới /sales-team/employees/{{variables@employee_id}}"
+                },
+                "position": {
+                  "x": 100,
+                  "y": 100
+                }
+              },
+              {
+                "id": "wait_1783618565275",
+                "type": "BlockBasic",
+                "label": "element-exists",
+                "data": {
+                  "selector": "//div[contains(@class, 'page-content')]",
+                  "timeout": 10000,
+                  "description": "Chờ trang load xong",
+                  "onError": "fallback"
+                },
+                "position": {
+                  "x": 400,
+                  "y": 100
+                }
+              }
+            ],
+            "edges": [
+              {
+                "id": "edge_1783618565275",
+                "source": "url_1783618565275",
+                "target": "wait_1783618565275",
+                "sourceHandle": "url_1783618565275-output-1",
+                "targetHandle": "wait_1783618565275-input-1",
+                "updatable": true,
+                "selectable": true
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "delay-3",
+        "label": "delay",
+        "type": "BlockBasic",
+        "position": {
+          "x": 1700,
+          "y": 200
+        },
+        "data": {
+          "time": 2000,
+          "description": "Chờ 2 giây"
+        }
+      },
+      {
+        "id": "pkg-4",
+        "label": "block-package",
+        "type": "BlockPackage",
+        "position": {
+          "x": 1900,
+          "y": 200
+        },
+        "data": {
+          "id": "pkg-nav-codebook",
+          "name": "[nav] Go to Codebook",
+          "description": "Chuyển hướng an toàn tới trang Cấu hình Danh mục",
+          "icon": "riSettings3Line",
+          "inputs": [
+            {
+              "id": "in_1",
+              "name": "start",
+              "blockId": "url_1783618565275",
+              "handleId": "url_1783618565275-input-1"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "out_1",
+              "name": "end",
+              "blockId": "wait_1783618565275",
+              "handleId": "wait_1783618565275-output-1"
+            }
+          ],
+          "settings": {
+            "asBlock": true
+          },
+          "data": {
+            "nodes": [
+              {
+                "id": "url_1783618565275",
+                "type": "BlockBasic",
+                "label": "tab-url",
+                "data": {
+                  "url": "https://{{globalData.startUrl}}/settings/codebook",
+                  "description": "Điều hướng tới /settings/codebook"
+                },
+                "position": {
+                  "x": 100,
+                  "y": 100
+                }
+              },
+              {
+                "id": "wait_1783618565275",
+                "type": "BlockBasic",
+                "label": "element-exists",
+                "data": {
+                  "selector": "//div[contains(@class, 'page-content')]",
+                  "timeout": 10000,
+                  "description": "Chờ trang load xong",
+                  "onError": "fallback"
+                },
+                "position": {
+                  "x": 400,
+                  "y": 100
+                }
+              }
+            ],
+            "edges": [
+              {
+                "id": "edge_1783618565275",
+                "source": "url_1783618565275",
+                "target": "wait_1783618565275",
+                "sourceHandle": "url_1783618565275-output-1",
+                "targetHandle": "wait_1783618565275-input-1",
+                "updatable": true,
+                "selectable": true
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge-1",
+        "source": "trigger-1",
+        "target": "init-vars",
+        "sourceHandle": "trigger-1-output-1",
+        "targetHandle": "init-vars-input-1"
+      },
+      {
+        "id": "edge-2",
+        "source": "init-vars",
+        "target": "exec-login",
+        "sourceHandle": "init-vars-output-1",
+        "targetHandle": "exec-login-input-1"
+      },
+      {
+        "id": "edge-2a",
+        "source": "exec-login",
+        "target": "pkg-1",
+        "sourceHandle": "exec-login-output-1",
+        "targetHandle": "pkg-1-input-in_1"
+      },
+      {
+        "id": "edge-3",
+        "source": "pkg-1",
+        "target": "delay-1",
+        "sourceHandle": "pkg-1-output-out_1",
+        "targetHandle": "delay-1-input-1"
+      },
+      {
+        "id": "edge-4",
+        "source": "delay-1",
+        "target": "pkg-2",
+        "sourceHandle": "delay-1-output-1",
+        "targetHandle": "pkg-2-input-in_1"
+      },
+      {
+        "id": "edge-5",
+        "source": "pkg-2",
+        "target": "delay-2",
+        "sourceHandle": "pkg-2-output-out_1",
+        "targetHandle": "delay-2-input-1"
+      },
+      {
+        "id": "edge-6",
+        "source": "delay-2",
+        "target": "pkg-3",
+        "sourceHandle": "delay-2-output-1",
+        "targetHandle": "pkg-3-input-in_1"
+      },
+      {
+        "id": "edge-7",
+        "source": "pkg-3",
+        "target": "delay-3",
+        "sourceHandle": "pkg-3-output-out_1",
+        "targetHandle": "delay-3-input-1"
+      },
+      {
+        "id": "edge-8",
+        "source": "delay-3",
+        "target": "pkg-4",
+        "sourceHandle": "delay-3-output-1",
+        "targetHandle": "pkg-4-input-in_1"
+      }
+    ],
+    "position": {
+      "x": 0,
+      "y": 0
+    },
+    "zoom": 1
+  }
+}
