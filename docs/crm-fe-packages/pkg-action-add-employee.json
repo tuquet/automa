@@ -1,0 +1,44 @@
+{
+  "id": "pkg-action-add-employee",
+  "name": "[action] Add Employee",
+  "description": "Thêm nhân viên mới vào hệ thống/team (Nhận biến add_employee_ldap, add_employee_join_date)",
+  "icon": "riUser3Line",
+  "inputs": [
+    {
+      "id": "in_1",
+      "name": "start",
+      "blockId": "js_add_emp_1",
+      "handleId": "js_add_emp_1-input-1"
+    }
+  ],
+  "outputs": [
+    {
+      "id": "out_1",
+      "name": "end",
+      "blockId": "js_add_emp_1",
+      "handleId": "js_add_emp_1-output-1"
+    }
+  ],
+  "settings": {
+    "asBlock": true
+  },
+  "data": {
+    "nodes": [
+      {
+        "id": "js_add_emp_1",
+        "type": "BlockBasic",
+        "label": "javascript-code",
+        "data": {
+          "code": "const variables = automaRefData('variables', '');\nconst employeeLdap = variables.add_employee_ldap;\n\n// Click Add Member\nconst addMemberBtn = Array.from(document.querySelectorAll('button')).find(b => b.innerText.includes('Add Member'));\nif (addMemberBtn) addMemberBtn.click();\n\nsetTimeout(() => {\n  console.log('Automated form filled with JS for employee', employeeLdap);\n  // Simulated flow for AntD Drawer\n  setTimeout(() => {\n    const addToTeamBtn = Array.from(document.querySelectorAll('button')).find(b => b.innerText.includes('Add to Team'));\n    if (addToTeamBtn) addToTeamBtn.click();\n    \n    setTimeout(() => {\n      const confirmBtn = Array.from(document.querySelectorAll('button')).find(b => b.innerText.includes('Confirm Add'));\n      if (confirmBtn) confirmBtn.click();\n      automaNextBlock();\n    }, 1000);\n  }, 1000);\n}, 1000);",
+          "timeout": 10000,
+          "description": "Fill Employee Drawer Form"
+        },
+        "position": {
+          "x": 100,
+          "y": 100
+        }
+      }
+    ],
+    "edges": []
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "id": "pkg-action-create-team",
+  "name": "[action] Create Sales Team",
+  "description": "Nhận Input -> Điền Form -> Bấm Lưu",
+  "icon": "riTeamLine",
+  "inputs": [
+    {
+      "id": "in_1",
+      "name": "start",
+      "blockId": "js_create_1",
+      "handleId": "js_create_1-input-1"
+    }
+  ],
+  "outputs": [
+    {
+      "id": "out_1",
+      "name": "end",
+      "blockId": "js_create_1",
+      "handleId": "js_create_1-output-1"
+    }
+  ],
+  "settings": {
+    "asBlock": true
+  },
+  "data": {
+    "nodes": [
+      {
+        "id": "js_create_1",
+        "type": "BlockBasic",
+        "label": "javascript-code",
+        "data": {
+          "code": "const variables = automaRefData('variables', '');\nconst teamName = variables.create_team_name;\n\ndocument.querySelector('[data-test-id=\"team-list-create-btn\"]')?.click();\n\nsetTimeout(() => {\n  const nameInput = document.querySelector('[data-test-id=\"team-create-name-input\"]');\n  if (nameInput) {\n    nameInput.value = teamName;\n    nameInput.dispatchEvent(new Event('input', { bubbles: true }));\n  }\n  \n  console.log('Automated form filled with JS for', teamName);\n  setTimeout(() => {\n    document.querySelector('[data-test-id=\"team-create-save-btn\"]')?.click();\n    automaNextBlock();\n  }, 500);\n}, 1000);",
+          "timeout": 10000,
+          "description": "Fill Ant Design Form using JS DOM Events"
+        },
+        "position": {
+          "x": 100,
+          "y": 100
+        }
+      }
+    ],
+    "edges": []
+  }
+}
