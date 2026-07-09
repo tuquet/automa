@@ -20,7 +20,7 @@
     "insertContentTo": "iframe",
     "reuseTab": false
   },
-  "global_data": "{\"startUrl\":\"crm.tuquet.com\"}",
+  "globalData": "{\n  \"startUrl\": \"crm.mingxn.site\",\n  \"username\": \"nvtuan\",\n  \"password\": \"123456\"\n}",
   "drawflow": {
     "nodes": [
       {
@@ -73,9 +73,10 @@
           "description": "Gọi Workflow Login",
           "workflowId": "GChnWDv1yTBVL5jmEj_r-",
           "executeId": "",
-          "globalData": "{\"startUrl\":\"crm.tuquet.com\"}",
+          "globalData": "{}",
           "disableBlock": false,
-          "insertAllVars": true
+          "insertAllVars": false,
+          "insertAllGlobalData": true
         }
       },
       {
