@@ -29,7 +29,7 @@
         "type": "BlockBasic",
         "label": "tab-url",
         "data": {
-          "url": "https://{{globalData.startUrl}}/settings/codebook",
+          "url": "https://{{variables.$loginUrl}}/settings/codebook",
           "description": "Điều hướng tới /settings/codebook"
         },
         "position": {
