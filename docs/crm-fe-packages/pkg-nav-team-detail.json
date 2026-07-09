@@ -1,7 +1,7 @@
 {
   "id": "pkg-nav-team-detail",
   "name": "[nav] Go to Team Detail",
-  "description": "Chuyển hướng tới chi tiết Team. Yêu cầu truyền biến {{variables@team_id}}",
+  "description": "Chuyển hướng tới chi tiết Team. Yêu cầu truyền biến {{variables@teamId}}",
   "icon": "riInformationLine",
   "inputs": [
     {
@@ -29,8 +29,8 @@
         "type": "BlockBasic",
         "label": "tab-url",
         "data": {
-          "url": "https://{{variables.$loginUrl}}/sales-team/{{variables@team_id}}",
-          "description": "Điều hướng tới /sales-team/{{variables@team_id}}"
+          "url": "https://{{variables.$$loginUrl}}/sales-team/{{variables@teamId}}",
+          "description": "Điều hướng tới /sales-team/{{variables@teamId}}"
         },
         "position": {
           "x": 100,
@@ -64,5 +64,6 @@
         "selectable": true
       }
     ]
-  }
+  },
+  "updatedAt": 1783629082175
 }

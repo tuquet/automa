@@ -113,7 +113,7 @@
         "data": {
           "type": "text-field",
           "delay": 100,
-          "value": "{{secrets@nvtuan.username}}",
+          "value": "{{variables.loginUsername}}",
           "events": [],
           "findBy": "xpath",
           "markEl": false,
@@ -146,7 +146,7 @@
         "data": {
           "type": "text-field",
           "delay": 100,
-          "value": "{{secrets@nvtuan.password}}",
+          "value": "{{secrets@commonPassword}}",
           "events": [],
           "findBy": "xpath",
           "markEl": false,
@@ -199,7 +199,7 @@
         "data": {
           "type": "text-field",
           "delay": 100,
-          "value": "{{secrets@nvtuan.username}}",
+          "value": "{{variables.loginUsername}}",
           "events": [],
           "findBy": "xpath",
           "markEl": false,
@@ -232,7 +232,7 @@
         "data": {
           "type": "text-field",
           "delay": 100,
-          "value": "{{secrets@nvtuan.password}}",
+          "value": "{{secrets@commonPassword}}",
           "events": [],
           "findBy": "xpath",
           "markEl": false,
@@ -285,7 +285,7 @@
         "data": {
           "type": "text-field",
           "delay": 100,
-          "value": "{{secrets@nvtuan.username}}",
+          "value": "{{variables.loginUsername}}",
           "events": [],
           "findBy": "xpath",
           "markEl": false,
@@ -318,7 +318,7 @@
         "data": {
           "type": "text-field",
           "delay": 100,
-          "value": "{{secrets@nvtuan.password}}",
+          "value": "{{secrets@commonPassword}}",
           "events": [],
           "findBy": "xpath",
           "markEl": false,
@@ -446,6 +446,6 @@
   "variable": [],
   "createdAt": 1783567891377,
   "isExtenal": false,
-  "updatedAt": 1783616950617,
+  "updatedAt": 1783627657202,
   "description": "Sử dụng global data input form"
 }

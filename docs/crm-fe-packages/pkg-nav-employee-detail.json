@@ -1,7 +1,7 @@
 {
   "id": "pkg-nav-employee-detail",
   "name": "[nav] Go to Employee Detail",
-  "description": "Chuyển hướng tới chi tiết Employee. Yêu cầu truyền biến {{variables@employee_id}}",
+  "description": "Chuyển hướng tới chi tiết Employee. Yêu cầu truyền biến {{variables@employeeId}}",
   "icon": "riUser3Line",
   "inputs": [
     {
@@ -29,8 +29,8 @@
         "type": "BlockBasic",
         "label": "tab-url",
         "data": {
-          "url": "https://{{variables.$loginUrl}}/sales-team/employees/{{variables@employee_id}}",
-          "description": "Điều hướng tới /sales-team/employees/{{variables@employee_id}}"
+          "url": "https://{{variables.$$loginUrl}}/sales-team/employees/{{variables@employeeId}}",
+          "description": "Điều hướng tới /sales-team/employees/{{variables@employeeId}}"
         },
         "position": {
           "x": 100,
@@ -64,5 +64,6 @@
         "selectable": true
       }
     ]
-  }
+  },
+  "updatedAt": 1783629082173
 }

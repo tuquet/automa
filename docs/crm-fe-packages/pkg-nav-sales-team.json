@@ -29,7 +29,7 @@
         "type": "BlockBasic",
         "label": "tab-url",
         "data": {
-          "url": "https://{{variables.$loginUrl}}/sales-team",
+          "url": "https://{{variables.$$loginUrl}}/sales-team",
           "description": "Điều hướng tới /sales-team"
         },
         "position": {
@@ -64,5 +64,6 @@
         "selectable": true
       }
     ]
-  }
+  },
+  "updatedAt": 1783629082174
 }

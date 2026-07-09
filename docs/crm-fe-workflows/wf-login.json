@@ -51,7 +51,7 @@
         "type": "custom",
         "label": "Bắt đầu",
         "source": "trigger_1",
-        "target": "new_tab_1",
+        "target": "js_map_emp_n5kmlv",
         "sourceX": 207.45277433985328,
         "sourceY": 202.0000209492359,
         "targetX": 281.1002161456086,
@@ -60,7 +60,7 @@
         "updatable": true,
         "selectable": true,
         "sourceHandle": "trigger_1-output-1",
-        "targetHandle": "new_tab_1-input-1"
+        "targetHandle": "js_map_emp_n5kmlv-input-1"
       },
       {
         "id": "vueflow__edge-new_tab_1new_tab_1-output-1-s7jdwkms7jdwkm-input-qx80eug",
@@ -117,21 +117,34 @@
         "targetHandle": "prnirn2-input-ah9s560"
       },
       {
-        "id": "vueflow__edge-prnirn2prnirn2-output-9igqm09-e9bbpgve9bbpgv-input-1sdmaeh",
+        "id": "vueflow__edge-prnirn2prnirn2-output-9igqm09-s7jdwkms7jdwkm-input-qx80eug",
         "data": {},
         "type": "custom",
         "label": "",
         "source": "prnirn2",
-        "target": "e9bbpgv",
+        "target": "s7jdwkm",
         "sourceX": 1268.2582255835146,
         "sourceY": 436.14888413403696,
-        "targetX": 967.1171907811635,
-        "targetY": 143.0214971565037,
+        "targetX": 571.4366282119302,
+        "targetY": 205.41853232680765,
         "markerEnd": "arrowclosed",
         "updatable": true,
         "selectable": true,
         "sourceHandle": "prnirn2-output-9igqm09",
-        "targetHandle": "e9bbpgv-input-1sdmaeh"
+        "targetHandle": "s7jdwkm-input-qx80eug"
+      },
+      {
+        "id": "edge_js_map_emp_n5kmlv_new_tab_1",
+        "data": {},
+        "type": "custom",
+        "label": "",
+        "source": "js_map_emp_n5kmlv",
+        "target": "new_tab_1",
+        "sourceHandle": "js_map_emp_n5kmlv-output-1",
+        "targetHandle": "new_tab_1-input-1",
+        "markerEnd": "arrowclosed",
+        "updatable": true,
+        "selectable": true
       }
     ],
     "nodes": [
@@ -186,7 +199,7 @@
       {
         "id": "new_tab_1",
         "data": {
-          "url": "https://{{variables.$loginUrl}}",
+          "url": "https://{{variables.$$loginUrl}}",
           "active": true,
           "inGroup": false,
           "tabZoom": 1,
@@ -323,7 +336,7 @@
                 "data": {
                   "type": "text-field",
                   "delay": 100,
-                  "value": "{{secrets@nvtuan.username}}",
+                  "value": "{{variables.loginUsername}}",
                   "events": [],
                   "findBy": "xpath",
                   "markEl": false,
@@ -356,7 +369,7 @@
                 "data": {
                   "type": "text-field",
                   "delay": 100,
-                  "value": "{{secrets@nvtuan.password}}",
+                  "value": "{{secrets@commonPassword}}",
                   "events": [],
                   "findBy": "xpath",
                   "markEl": false,
@@ -409,7 +422,7 @@
                 "data": {
                   "type": "text-field",
                   "delay": 100,
-                  "value": "{{secrets@nvtuan.username}}",
+                  "value": "{{variables.loginUsername}}",
                   "events": [],
                   "findBy": "xpath",
                   "markEl": false,
@@ -442,7 +455,7 @@
                 "data": {
                   "type": "text-field",
                   "delay": 100,
-                  "value": "{{secrets@nvtuan.password}}",
+                  "value": "{{secrets@commonPassword}}",
                   "events": [],
                   "findBy": "xpath",
                   "markEl": false,
@@ -495,7 +508,7 @@
                 "data": {
                   "type": "text-field",
                   "delay": 100,
-                  "value": "{{secrets@nvtuan.username}}",
+                  "value": "{{variables.loginUsername}}",
                   "events": [],
                   "findBy": "xpath",
                   "markEl": false,
@@ -528,7 +541,7 @@
                 "data": {
                   "type": "text-field",
                   "delay": 100,
-                  "value": "{{secrets@nvtuan.password}}",
+                  "value": "{{secrets@commonPassword}}",
                   "events": [],
                   "findBy": "xpath",
                   "markEl": false,
@@ -944,6 +957,21 @@
           "y": 351.305129971637
         },
         "initialized": false
+      },
+      {
+        "id": "js_map_emp_n5kmlv",
+        "type": "BlockBasic",
+        "label": "javascript-code",
+        "data": {
+          "code": "const map = {\n  'E0001': 'nvtuan',\n  'E0006': 'nvdat',\n  'E0007': 'nvnam',\n  'E0008': 'nvhoa',\n  'E0002': 'nvlinh',\n  'E0013': 'nvduy',\n  'E0014': 'nvngan',\n  'E0015': 'nvphuc',\n  'E0003': 'nvhung',\n  'E0020': 'nvvy',\n  'E0021': 'nttuan',\n  'E0022': 'ntlinh'\n};\nconst empCodeRaw = automaRefData('variables', '$$employeeCode');\nconst empCode = (typeof empCodeRaw === 'string' ? empCodeRaw : 'E0001').trim();\nconst username = map[empCode] || 'nvtuan';\nautomaSetVariable('loginUsername', username);\nautomaNextBlock();",
+          "timeout": 10000,
+          "description": "Map Employee ID to Username",
+          "context": "background"
+        },
+        "position": {
+          "x": 141.4527427378447,
+          "y": 166
+        }
       }
     ],
     "position": [
@@ -974,7 +1002,7 @@
     "insertDefaultColumn": false
   },
   "createdAt": 1783581803806,
-  "updatedAt": 1783618142140,
+  "updatedAt": 1783629785452,
   "extVersion": "1.32.0",
   "globalData": "{}",
   "isDisabled": false,
