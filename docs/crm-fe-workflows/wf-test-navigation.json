@@ -1,7 +1,7 @@
 {
   "id": "wf-test-navigation",
   "name": "Test Full Navigation",
-  "description": "Kiểm tra toàn bộ luồng Navigation của CRM, bao gồm Sales Team, Team Detail, Employee Detail và Codebook. Tự động Login trước khi chạy.",
+  "description": "Kiểm tra toàn bộ luồng Navigation của CRM, bao gồm Sales Team, Team Detail, Employee Detail và Codebook. Tự động Login bằng credentials trước khi chạy.",
   "version": "1.28.27",
   "extVersion": "1.28.27",
   "icon": "riCompass3Line",
@@ -20,7 +20,7 @@
     "insertContentTo": "iframe",
     "reuseTab": false
   },
-  "globalData": "{\n  \"startUrl\": \"crm.mingxn.site\",\n  \"username\": \"nvtuan\",\n  \"password\": \"123456\"\n}",
+  "globalData": "{}",
   "drawflow": {
     "nodes": [
       {
@@ -76,7 +76,7 @@
           "globalData": "{}",
           "disableBlock": false,
           "insertAllVars": false,
-          "insertAllGlobalData": true
+          "insertAllGlobalData": false
         }
       },
       {

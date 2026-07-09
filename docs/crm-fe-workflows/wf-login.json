@@ -186,7 +186,7 @@
       {
         "id": "new_tab_1",
         "data": {
-          "url": "https://{{globalData.startUrl}}",
+          "url": "https://{{variables.$loginUrl}}",
           "active": true,
           "inGroup": false,
           "tabZoom": 1,
@@ -323,7 +323,7 @@
                 "data": {
                   "type": "text-field",
                   "delay": 100,
-                  "value": "{{globalData.username}}",
+                  "value": "{{secrets@nvtuan.username}}",
                   "events": [],
                   "findBy": "xpath",
                   "markEl": false,
@@ -356,7 +356,7 @@
                 "data": {
                   "type": "text-field",
                   "delay": 100,
-                  "value": "{{globalData.password}}",
+                  "value": "{{secrets@nvtuan.password}}",
                   "events": [],
                   "findBy": "xpath",
                   "markEl": false,
@@ -409,7 +409,7 @@
                 "data": {
                   "type": "text-field",
                   "delay": 100,
-                  "value": "{{globalData.username}}",
+                  "value": "{{secrets@nvtuan.username}}",
                   "events": [],
                   "findBy": "xpath",
                   "markEl": false,
@@ -442,7 +442,7 @@
                 "data": {
                   "type": "text-field",
                   "delay": 100,
-                  "value": "{{globalData.password}}",
+                  "value": "{{secrets@nvtuan.password}}",
                   "events": [],
                   "findBy": "xpath",
                   "markEl": false,
@@ -495,7 +495,7 @@
                 "data": {
                   "type": "text-field",
                   "delay": 100,
-                  "value": "{{globalData.username}}",
+                  "value": "{{secrets@nvtuan.username}}",
                   "events": [],
                   "findBy": "xpath",
                   "markEl": false,
@@ -528,7 +528,7 @@
                 "data": {
                   "type": "text-field",
                   "delay": 100,
-                  "value": "{{globalData.password}}",
+                  "value": "{{secrets@nvtuan.password}}",
                   "events": [],
                   "findBy": "xpath",
                   "markEl": false,
@@ -976,7 +976,7 @@
   "createdAt": 1783581803806,
   "updatedAt": 1783618142140,
   "extVersion": "1.32.0",
-  "globalData": "{\n\t\"startUrl\": \"crm.mingxn.site\",\n  \"username\": \"nvtuan\",\n  \"password\": \"123456\"\n}",
+  "globalData": "{}",
   "isDisabled": false,
   "dataColumns": [],
   "description": "Đăng nhập vào hệ thống CRM CMC Global",
