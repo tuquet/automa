@@ -49,12 +49,12 @@
           "description": "Khởi tạo Variables",
           "dataList": [
             {
-              "type": "variables",
+              "type": "variable",
               "name": "team_id",
               "value": "team-001"
             },
             {
-              "type": "variables",
+              "type": "variable",
               "name": "employee_id",
               "value": "emp-999"
             }
