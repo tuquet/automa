@@ -187,6 +187,19 @@
       "presentation": {
         "group": "cli"
       }
+    },
+    {
+      "label": "4. Dashboard: Tauri Dev",
+      "type": "shell",
+      "command": "pnpm tauri dev",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-dashboard"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "dashboard"
+      }
     }
   ],
   "inputs": [
