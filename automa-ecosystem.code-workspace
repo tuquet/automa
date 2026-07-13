@@ -15,6 +15,10 @@
     {
       "name": "Automa CLI",
       "path": "automa-cli"
+    },
+    {
+      "name": "Automa Dashboard",
+      "path": "automa-dashboard"
     }
   ],
   "settings": {}
