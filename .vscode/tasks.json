@@ -51,7 +51,8 @@
       }
     },
     {
-      "label": "1. Supabase: Seed from JSON",
+      "label": "1. Supabase: ⬆️ Push Data (JSON -> DB)",
+      "detail": "Đẩy toàn bộ file JSON (workflows, packages,...) từ máy lên cập nhật vào Database (Tốc độ siêu nhanh)",
       "type": "shell",
       "command": "node scripts/seed-from-folders.js",
       "options": {
@@ -63,9 +64,23 @@
       }
     },
     {
-      "label": "1. Supabase: Dump to JSON",
+      "label": "1. Supabase: ⬇️ Pull Data (DB -> seed.sql)",
+      "detail": "Kéo toàn bộ Data từ Database xuất thành 1 file seed.sql duy nhất",
       "type": "shell",
       "command": "node scripts/dump-seed.js",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-be"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "supabase"
+      }
+    },
+    {
+      "label": "1. Supabase: ⬇️ Pull Data (DB -> JSON Folders)",
+      "detail": "Kéo dữ liệu mới nhất trên Database về xả thành các file JSON theo từng thư mục (Dễ quản lý code)",
+      "type": "shell",
+      "command": "node scripts/dump-to-folders.js",
       "options": {
         "cwd": "${workspaceFolder}/automa-be"
       },
