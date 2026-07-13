@@ -1,8 +1,0 @@
-{
-  "name": "automa-ecosystem",
-  "private": true,
-  "dependencies": {
-    "ajv": "^8.20.0",
-    "pg": "^8.22.0"
-  }
-}

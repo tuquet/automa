@@ -126,9 +126,9 @@
       }
     },
     {
-      "label": "3. CLI: Run CRM Login Workflow",
+      "label": "3. CLI: Run Custom Workflow",
       "type": "shell",
-      "command": "tuquet-automa-cli --id uP0SZUSRQFM68Zf_tfyNk --extension ../automa/build",
+      "command": "node bin/cli.js --id ${input:workflowId} --extension ../automa/build",
       "options": {
         "cwd": "${workspaceFolder}/automa-cli",
         "env": {
@@ -140,6 +140,61 @@
       "presentation": {
         "group": "cli"
       }
+    },
+    {
+      "label": "3. CLI: 🔍 Scan Workflow Dependencies",
+      "type": "shell",
+      "command": "node bin/cli.js --id ${input:workflowId} --scan-only",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-cli",
+        "env": {
+          "SUPABASE_URL": "http://127.0.0.1:54321",
+          "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "cli"
+      }
+    },
+    {
+      "label": "2. Automa: Build Chrome Prod",
+      "type": "shell",
+      "command": "npm run build:prod-chrome",
+      "options": {
+        "cwd": "${workspaceFolder}/automa"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "2. Automa: Lint",
+      "type": "shell",
+      "command": "npm run lint",
+      "options": {
+        "cwd": "${workspaceFolder}/automa"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "3. CLI: Test",
+      "type": "shell",
+      "command": "npm run test",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-cli"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "cli"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "workflowId",
+      "type": "promptString",
+      "description": "Nhập Workflow ID muốn chạy:",
+      "default": "OYsxwfjHwwlLjE9U9Gjv3"
     }
   ]
 }
