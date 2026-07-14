@@ -1,0 +1,18 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "4. Dashboard: Tauri Dev",
+      "type": "shell",
+      "command": "npx tauri dev",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "dashboard"
+      }
+    }
+  ]
+}
