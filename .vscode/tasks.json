@@ -191,7 +191,7 @@
     {
       "label": "4. Dashboard: Tauri Dev",
       "type": "shell",
-      "command": "pnpm tauri dev",
+      "command": "npx tauri dev",
       "options": {
         "cwd": "${workspaceFolder}/automa-dashboard"
       },
