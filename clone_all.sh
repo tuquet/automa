@@ -4,7 +4,7 @@
 # Khắc phục lỗi "unsafe repository" khi mount folder từ Windows vào Dev Container
 git config --global --add safe.directory '*'
 
-REPOS=("automa" "automa-be" "automa-cli")
+REPOS=("automa" "automa-be" "automa-cli" "automa-dashboard")
 ORG="tuquet"
 
 echo "Cloning or updating Automa Ecosystem repositories..."
