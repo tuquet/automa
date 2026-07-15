@@ -4,13 +4,5 @@ node_modules/
 .manual-profile/
 temp_workflow.json
 
-automa-ex/
-automa-be/
-automa-cli/
-automa-dashboard/
-automa-vault/
 .pnpm-store/
 .agents
-
-# Ignore nested dashboard repo
-automa-dashboard

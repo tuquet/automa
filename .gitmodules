@@ -1,0 +1,15 @@
+[submodule "automa-ex"]
+	path = automa-ex
+	url = https://github.com/tuquet/automa-ex.git
+[submodule "automa-be"]
+	path = automa-be
+	url = https://github.com/tuquet/automa-be.git
+[submodule "automa-cli"]
+	path = automa-cli
+	url = https://github.com/tuquet/automa-cli.git
+[submodule "automa-dashboard"]
+	path = automa-dashboard
+	url = https://github.com/tuquet/automa-dashboard.git
+[submodule "automa-vault"]
+	path = automa-vault
+	url = https://github.com/tuquet/automa-vault.git
