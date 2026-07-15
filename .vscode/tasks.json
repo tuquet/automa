@@ -99,7 +99,7 @@
       "problemMatcher": []
     },
     {
-      "label": "CLI: Lint Workflows & Packages",
+      "label": "Vault: Lint Workflows & Packages",
       "type": "shell",
       "command": "npm run lint",
       "options": {
@@ -108,7 +108,7 @@
       "problemMatcher": []
     },
     {
-      "label": "CLI: Push to Database",
+      "label": "Vault: Push to Database",
       "type": "shell",
       "command": "npm run push -- --project=crm",
       "options": {
@@ -117,7 +117,7 @@
       "problemMatcher": []
     },
     {
-      "label": "CLI: Pull from Database",
+      "label": "Vault: Pull from Database",
       "type": "shell",
       "command": "npm run pull -- --project=crm",
       "options": {
@@ -126,13 +126,53 @@
       "problemMatcher": []
     },
     {
-      "label": "CLI: Check Sync Status",
+      "label": "Vault: Check Sync Status",
       "type": "shell",
       "command": "npm run status -- --project=crm",
       "options": {
         "cwd": "${workspaceFolder}/automa-vault"
       },
       "problemMatcher": []
+    },
+    {
+      "label": "CLI: Run Custom Workflow",
+      "type": "shell",
+      "command": "node bin/cli.js --id ${input:workflowId} --extension ../automa-ex/build",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-cli",
+        "env": {
+          "SUPABASE_URL": "http://127.0.0.1:54321",
+          "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "cli"
+      }
+    },
+    {
+      "label": "CLI: Scan Workflow Dependencies",
+      "type": "shell",
+      "command": "node bin/cli.js --id ${input:workflowId} --scan-only",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-cli",
+        "env": {
+          "SUPABASE_URL": "http://127.0.0.1:54321",
+          "SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "cli"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "workflowId",
+      "type": "promptString",
+      "description": "Nhập Workflow ID muốn chạy:",
+      "default": "OYsxwfjHwwlLjE9U9Gjv3"
     }
   ]
 }
