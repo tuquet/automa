@@ -54,7 +54,7 @@
       "type": "shell",
       "command": "npm run dev",
       "options": {
-        "cwd": "${workspaceFolder}/automa"
+        "cwd": "${workspaceFolder}/automa-ex"
       },
       "problemMatcher": []
     },
@@ -63,16 +63,25 @@
       "type": "shell",
       "command": "npm run build:prod-chrome",
       "options": {
-        "cwd": "${workspaceFolder}/automa"
+        "cwd": "${workspaceFolder}/automa-ex"
       },
       "problemMatcher": []
     },
     {
-      "label": "7. Frontend: Release & Upload to Supabase Storage",
+      "label": "7. Frontend: Release & Upload Extension Wizard",
       "type": "shell",
-      "command": "node automa-be/skills/automa-release/scripts/release.js",
+      "command": "node utils/release.js",
       "options": {
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder}/automa-ex"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "8. Backend: Deploy to Supabase Cloud",
+      "type": "shell",
+      "command": "npx supabase db push; npx supabase functions deploy",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-be"
       },
       "problemMatcher": []
     }

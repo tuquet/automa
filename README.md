@@ -5,7 +5,7 @@ Chào mừng đến với dự án Automa Ecosystem (phiên bản tùy chỉnh v
 ## 1. Kiến trúc hệ thống
 
 Dự án được chia làm 2 phần chính:
-- **`automa/`**: Mã nguồn gốc của Automa Extension (trình duyệt).
+- **`automa-ex/`**: Mã nguồn gốc của Automa Extension (trình duyệt).
 - **`automa-be/`**: Backend Supabase Local dùng để lưu trữ và đồng bộ hóa Workflows.
 
 ### Kiến trúc Đồng bộ (Sync Architecture)
@@ -21,8 +21,8 @@ Thay vì sử dụng tính năng đồng bộ mặc định của Automa lên se
 Code gốc của Automa **không sử dụng `dotenv` hay `.env`**. Thay vào đó, dự án sử dụng tính năng **Alias của Webpack**.
 Để cung cấp URL và Key của Supabase cho Extension mà không phải hardcode bẩn, các cấu hình này được đặt trong:
 
-- `automa/secrets.development.js`
-- `automa/secrets.production.js`
+- `automa-ex/secrets.development.js`
+- `automa-ex/secrets.production.js`
 
 **Nội dung cấu hình mẫu (đã setup):**
 ```javascript
@@ -49,7 +49,8 @@ Dự án đã tích hợp cấu hình sẵn các **VS Code Tasks** trong `.vscod
    - **`4. Backend: Lint Workflows & Packages`**: Chạy linter kiểm tra tính đúng đắn của schema.
    - **`5. Frontend: Start Extension Dev Server`**: Chạy môi trường phát triển của extension.
    - **`6. Frontend: Build Production Chrome Extension`**: Build đóng gói tối ưu cho Chrome Extension.
-   - **`7. Frontend: Release & Upload to Supabase Storage`**: Tự động build và upload bản zip lên Supabase Storage (`release` bucket) để cập nhật extension.
+   - **`7. Frontend: Release & Upload Extension Wizard`**: Chạy wizard tăng version, đóng gói ZIP và upload trực tiếp lên Supabase Storage (sử dụng API).
+   - **`8. Backend: Deploy to Supabase Cloud`**: Link dự án và đẩy Database migrations + Edge Functions lên Supabase Cloud của Production.
 
 Nếu bạn không dùng VS Code, dưới đây là các bước chạy thủ công tương ứng:
 
@@ -67,9 +68,9 @@ npx supabase migration up
 Bạn có thể xem dữ liệu trực quan tại **Supabase Studio**: `http://127.0.0.1:54323`
 
 ### Bước 2: Cài đặt và Build Frontend (Extension)
-Vào thư mục `automa`:
+Vào thư mục `automa-ex`:
 ```bash
-cd automa
+cd automa-ex
 pnpm install --ignore-scripts
 ```
 *Lưu ý dùng `--ignore-scripts` để bỏ qua lỗi build của các package phụ trên Windows.*
@@ -79,7 +80,7 @@ pnpm install --ignore-scripts
 pnpm run build
 ```
 
-Sau khi chạy xong, toàn bộ code extension sẽ nằm trong thư mục `automa/build`. Mở trình duyệt (Chrome/Edge), vào `chrome://extensions`, bật **Developer mode** và chọn **Load unpacked** trỏ tới thư mục `build` này.
+Sau khi chạy xong, toàn bộ code extension sẽ nằm trong thư mục `automa-ex/build`. Mở trình duyệt (Chrome/Edge), vào `chrome://extensions`, bật **Developer mode** và chọn **Load unpacked** trỏ tới thư mục `build` này.
 
 ## 4. Gỡ rối (Troubleshooting) thường gặp
 

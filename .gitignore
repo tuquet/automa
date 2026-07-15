@@ -4,10 +4,11 @@ node_modules/
 .manual-profile/
 temp_workflow.json
 
-automa/
+automa-ex/
 automa-be/
 automa-cli/
 automa-dashboard/
+automa-vault/
 .pnpm-store/
 .agents
 

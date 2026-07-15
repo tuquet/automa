@@ -2,7 +2,7 @@
 setlocal enabledelayedexpansion
 REM Script to clone or update all Automa Ecosystem repositories on Windows
 
-set "REPOS=automa automa-be automa-cli automa-dashboard"
+set "REPOS=automa-ex automa-be automa-vault automa-cli automa-dashboard"
 set "ORG=tuquet"
 
 echo Cloning or updating Automa Ecosystem repositories...

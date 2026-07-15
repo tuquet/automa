@@ -5,8 +5,8 @@
       "path": "."
     },
     {
-      "name": "Automa (Extension)",
-      "path": "automa"
+      "name": "Automa Extension",
+      "path": "automa-ex"
     },
     {
       "name": "Automa Backend",
@@ -19,6 +19,10 @@
     {
       "name": "Automa Dashboard",
       "path": "automa-dashboard"
+    },
+    {
+      "name": "Automa Vault",
+      "path": "automa-vault"
     }
   ],
   "settings": {}
