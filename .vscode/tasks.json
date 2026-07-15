@@ -12,6 +12,69 @@
       "presentation": {
         "group": "install"
       }
+    },
+    {
+      "label": "1. Backend: Start Supabase (Local)",
+      "type": "shell",
+      "command": "npx supabase start",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-be"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "2. Backend: Stop Supabase (Local)",
+      "type": "shell",
+      "command": "npx supabase stop",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-be"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "3. Backend: Reset & Seed Database",
+      "type": "shell",
+      "command": "npm run db:reset",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-be"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "4. Backend: Lint Workflows & Packages",
+      "type": "shell",
+      "command": "npm run lint",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-be"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "5. Frontend: Start Extension Dev Server",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}/automa"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "6. Frontend: Build Production Chrome Extension",
+      "type": "shell",
+      "command": "npm run build:prod-chrome",
+      "options": {
+        "cwd": "${workspaceFolder}/automa"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "7. Frontend: Release & Upload to Supabase Storage",
+      "type": "shell",
+      "command": "node automa-be/skills/automa-release/scripts/release.js",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
     }
   ]
 }

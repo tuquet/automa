@@ -34,11 +34,24 @@ export default {
 ```
 Trong mã nguồn, bạn chỉ cần gọi `import secrets from 'secrets';` là Webpack sẽ tự động inject đúng file theo môi trường build.
 
-## 3. Khởi chạy dự án (One-click Setup)
+## 3. Khởi chạy dự án và Release (VS Code Tasks)
 
-Để thuận tiện nhất, dự án hỗ trợ cấu hình DevContainer, cho phép tự động cài đặt toàn bộ môi trường (Node.js, pnpm, Supabase CLI, v.v.).
+Dự án đã tích hợp cấu hình sẵn các **VS Code Tasks** trong `.vscode/tasks.json`. Developer chỉ cần sử dụng tính năng của VS Code để thao tác dev hoặc release:
 
-Nếu bạn không dùng DevContainer, đây là các bước thủ công:
+### Hướng dẫn sử dụng:
+1. Nhấn phím `F1` (hoặc `Ctrl + Shift + P` / `Cmd + Shift + P`).
+2. Gõ và chọn `Tasks: Run Task`.
+3. Chọn một trong các task sau để thực thi:
+   - **`0. Workspace: Install Dependencies`**: Cài đặt pnpm dependencies cho toàn bộ workspace.
+   - **`1. Backend: Start Supabase (Local)`**: Khởi động local Supabase.
+   - **`2. Backend: Stop Supabase (Local)`**: Dừng local Supabase.
+   - **`3. Backend: Reset & Seed Database`**: Reset trắng database và chạy seed lại từ folder.
+   - **`4. Backend: Lint Workflows & Packages`**: Chạy linter kiểm tra tính đúng đắn của schema.
+   - **`5. Frontend: Start Extension Dev Server`**: Chạy môi trường phát triển của extension.
+   - **`6. Frontend: Build Production Chrome Extension`**: Build đóng gói tối ưu cho Chrome Extension.
+   - **`7. Frontend: Release & Upload to Supabase Storage`**: Tự động build và upload bản zip lên Supabase Storage (`release` bucket) để cập nhật extension.
+
+Nếu bạn không dùng VS Code, dưới đây là các bước chạy thủ công tương ứng:
 
 ### Bước 1: Khởi động Backend (Supabase)
 ```bash
