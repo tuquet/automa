@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "0. Workspace: Install Dependencies",
+      "label": "Workspace: Install Dependencies",
       "type": "shell",
       "command": "pnpm install",
       "options": {
@@ -14,7 +14,7 @@
       }
     },
     {
-      "label": "1. Backend: Start Supabase (Local)",
+      "label": "Supabase: Start (Local)",
       "type": "shell",
       "command": "npx supabase start",
       "options": {
@@ -23,7 +23,7 @@
       "problemMatcher": []
     },
     {
-      "label": "2. Backend: Stop Supabase (Local)",
+      "label": "Supabase: Stop (Local)",
       "type": "shell",
       "command": "npx supabase stop",
       "options": {
@@ -32,7 +32,7 @@
       "problemMatcher": []
     },
     {
-      "label": "3. Backend: Reset Database (Schema Only)",
+      "label": "Supabase: Reset (Schema Only)",
       "type": "shell",
       "command": "npm run db:reset",
       "options": {
@@ -41,7 +41,7 @@
       "problemMatcher": []
     },
     {
-      "label": "4. Backend: Deploy to Supabase Cloud",
+      "label": "Supabase: Deploy to Cloud",
       "type": "shell",
       "command": "npx supabase db push; npx supabase functions deploy",
       "options": {
@@ -50,7 +50,7 @@
       "problemMatcher": []
     },
     {
-      "label": "5. Frontend: Start Extension Dev Server",
+      "label": "Extensions: Start Dev Server",
       "type": "shell",
       "command": "npm run dev",
       "options": {
@@ -59,7 +59,7 @@
       "problemMatcher": []
     },
     {
-      "label": "6. Frontend: Build Production Chrome Extension",
+      "label": "Extensions: Build Production",
       "type": "shell",
       "command": "npm run build:prod-chrome",
       "options": {
@@ -68,7 +68,7 @@
       "problemMatcher": []
     },
     {
-      "label": "7. Frontend: Release & Upload Extension Wizard",
+      "label": "Extensions: Release & Upload Wizard",
       "type": "shell",
       "command": "node utils/release.js",
       "options": {
@@ -77,7 +77,7 @@
       "problemMatcher": []
     },
     {
-      "label": "8. Vault: Lint Workflows & Packages",
+      "label": "CLI: Lint Workflows & Packages",
       "type": "shell",
       "command": "npm run lint",
       "options": {
@@ -86,7 +86,7 @@
       "problemMatcher": []
     },
     {
-      "label": "9. Vault: Push to Database",
+      "label": "CLI: Push to Database",
       "type": "shell",
       "command": "npm run push -- --project=crm",
       "options": {
@@ -95,7 +95,7 @@
       "problemMatcher": []
     },
     {
-      "label": "10. Vault: Pull from Database",
+      "label": "CLI: Pull from Database",
       "type": "shell",
       "command": "npm run pull -- --project=crm",
       "options": {
@@ -104,7 +104,7 @@
       "problemMatcher": []
     },
     {
-      "label": "11. Vault: Check Sync Status",
+      "label": "CLI: Check Sync Status",
       "type": "shell",
       "command": "npm run status -- --project=crm",
       "options": {
