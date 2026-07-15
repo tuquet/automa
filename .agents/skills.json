@@ -1,0 +1,22 @@
+{
+  "entries": [
+    {
+      "path": "automa-be/skills"
+    },
+    {
+      "path": "automa-ex/skills"
+    },
+    {
+      "path": ".agents/skills/automa-cli-run"
+    },
+    {
+      "path": "C:/Repository/my-skills/packages/registry/skills/automa"
+    },
+    {
+      "path": "C:/Repository/my-skills/packages/registry/skills/supabase"
+    },
+    {
+      "path": "C:/Repository/my-skills/packages/registry/skills/supabase-postgres-best-practices"
+    }
+  ]
+}
