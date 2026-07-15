@@ -1,34 +1,28 @@
 #!/bin/bash
-# Script to clone or update all Automa Ecosystem repositories on Linux/Mac
+# Script to clone, initialize, and install dependencies for all Automa Submodules on Linux/Mac
 
 # Khắc phục lỗi "unsafe repository" khi mount folder từ Windows vào Dev Container
 git config --global --add safe.directory '*'
 
-REPOS=("automa-ex" "automa-be" "automa-vault" "automa-cli" "automa-dashboard")
-ORG="tuquet"
+echo "----------------------------------------"
+echo "1. Initializing and updating Git submodules..."
+git submodule update --init --recursive
 
-echo "Cloning or updating Automa Ecosystem repositories..."
+echo "----------------------------------------"
+echo "2. Installing dependencies for all packages..."
+REPOS=("automa-ex" "automa-be" "automa-vault" "automa-cli" "automa-dashboard")
 
 for REPO in "${REPOS[@]}"; do
   echo "----------------------------------------"
-  if [ -d "$REPO" ]; then
-    echo "Directory '$REPO' already exists. Pulling latest changes..."
-    cd "$REPO" || exit
-    git pull
-  else
-    echo "Cloning '$REPO'..."
-    gh repo clone "$ORG/$REPO" "$REPO"
-    cd "$REPO" || exit
-  fi
-  
-  if [ -f "package.json" ]; then
+  if [ -f "$REPO/package.json" ]; then
     echo "Installing dependencies for '$REPO'..."
+    cd "$REPO" || exit
     pnpm install --ignore-scripts
+    cd ..
   else
-    echo "No package.json found in '$REPO', skipping pnpm install."
+    echo "No package.json found in '$REPO', skipping."
   fi
-  cd ..
 done
 
 echo "----------------------------------------"
-echo "All repositories processed successfully!"
+echo "All submodules processed successfully!"

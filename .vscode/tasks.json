@@ -1,0 +1,83 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Submodule: Init & Update (Fresh Clone)",
+      "detail": "Khởi tạo và tải về toàn bộ mã nguồn của các submodules lần đầu tiên",
+      "type": "shell",
+      "command": "git submodule update --init --recursive",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "submodule"
+      }
+    },
+    {
+      "label": "Submodule: Sync & Pull Latest (main)",
+      "detail": "Chuyển các submodules sang nhánh main và kéo code mới nhất về",
+      "type": "shell",
+      "command": "git submodule foreach \"git checkout main && git pull origin main\"",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "submodule"
+      }
+    },
+    {
+      "label": "Submodule: Check Status",
+      "detail": "Kiểm tra commit hash hiện tại của từng submodule đang liên kết",
+      "type": "shell",
+      "command": "git submodule status",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "submodule"
+      }
+    },
+    {
+      "label": "Submodule: Push All (main)",
+      "detail": "Đẩy tất cả commit mới nhất của nhánh main từ các submodules lên GitHub",
+      "type": "shell",
+      "command": "git submodule foreach \"git push origin main\"",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "submodule"
+      }
+    },
+    {
+      "label": "Ecosystem: Clone & Install (Batch Windows)",
+      "detail": "Chạy script clone_all.bat để tải và cài đặt dependencies cho toàn bộ dự án trên Windows",
+      "type": "shell",
+      "command": ".\\clone_all.bat",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "install"
+      }
+    },
+    {
+      "label": "Ecosystem: Clone & Install (Shell Linux/Mac)",
+      "detail": "Chạy script clone_all.sh để tải và cài đặt dependencies cho toàn bộ dự án trên Linux/Mac",
+      "type": "shell",
+      "command": "bash clone_all.sh",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "group": "install"
+      }
+    }
+  ]
+}
