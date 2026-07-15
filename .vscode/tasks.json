@@ -32,7 +32,7 @@
       "problemMatcher": []
     },
     {
-      "label": "3. Backend: Reset & Seed Database",
+      "label": "3. Backend: Reset Database (Schema Only)",
       "type": "shell",
       "command": "npm run db:reset",
       "options": {
@@ -41,9 +41,9 @@
       "problemMatcher": []
     },
     {
-      "label": "4. Backend: Lint Workflows & Packages",
+      "label": "4. Backend: Deploy to Supabase Cloud",
       "type": "shell",
-      "command": "npm run lint",
+      "command": "npx supabase db push; npx supabase functions deploy",
       "options": {
         "cwd": "${workspaceFolder}/automa-be"
       },
@@ -77,11 +77,38 @@
       "problemMatcher": []
     },
     {
-      "label": "8. Backend: Deploy to Supabase Cloud",
+      "label": "8. Vault: Lint Workflows & Packages",
       "type": "shell",
-      "command": "npx supabase db push; npx supabase functions deploy",
+      "command": "npm run lint",
       "options": {
-        "cwd": "${workspaceFolder}/automa-be"
+        "cwd": "${workspaceFolder}/automa-vault"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "9. Vault: Push to Database",
+      "type": "shell",
+      "command": "npm run push -- --project=crm",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-vault"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "10. Vault: Pull from Database",
+      "type": "shell",
+      "command": "npm run pull -- --project=crm",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-vault"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "11. Vault: Check Sync Status",
+      "type": "shell",
+      "command": "npm run status -- --project=crm",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-vault"
       },
       "problemMatcher": []
     }
