@@ -77,6 +77,28 @@
       "problemMatcher": []
     },
     {
+      "label": "Tauri: Dev",
+      "type": "shell",
+      "command": "npx tauri dev",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-dashboard"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "dashboard"
+      }
+    },
+    {
+      "label": "Tauri: Build Production",
+      "type": "shell",
+      "command": "npx tauri build",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-dashboard"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "CLI: Lint Workflows & Packages",
       "type": "shell",
       "command": "npm run lint",
