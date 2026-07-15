@@ -54,23 +54,10 @@
       }
     },
     {
-      "label": "Ecosystem: Clone & Install (Batch Windows)",
-      "detail": "Chạy script clone_all.bat để tải và cài đặt dependencies cho toàn bộ dự án trên Windows",
+      "label": "Submodule: Install All Dependencies",
+      "detail": "Tự động phát hiện và cài đặt thư viện (pnpm/yarn/npm) cho toàn bộ 5 submodules",
       "type": "shell",
-      "command": ".\\clone_all.bat",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [],
-      "presentation": {
-        "group": "install"
-      }
-    },
-    {
-      "label": "Ecosystem: Clone & Install (Shell Linux/Mac)",
-      "detail": "Chạy script clone_all.sh để tải và cài đặt dependencies cho toàn bộ dự án trên Linux/Mac",
-      "type": "shell",
-      "command": "bash clone_all.sh",
+      "command": "git submodule foreach 'if [ -f pnpm-lock.yaml ]; then pnpm i; elif [ -f yarn.lock ]; then yarn install; else npm i; fi'",
       "options": {
         "cwd": "${workspaceFolder}"
       },
