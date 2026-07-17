@@ -4,6 +4,33 @@ Chào mừng đến với hệ sinh thái **Automa Ecosystem**. Đây là phiên
 
 ---
 
+## 📥 Hướng Dẫn Cài Đặt (Onboarding) với DevContainers
+
+Hệ thống được tự động hóa 100% môi trường phát triển thông qua **DevContainers** và **Git Submodules**. Bất kể bạn dùng Windows, Mac hay Linux, bạn sẽ **KHÔNG CẦN** phải tự cài đặt Node.js hay cấu hình biến môi trường rườm rà.
+
+### Bước 1: Yêu Cầu Cơ Bản
+1. Đã cài đặt **Docker Desktop** (khuyên dùng WSL 2 nếu dùng Windows).
+2. Đã cài đặt **Visual Studio Code** và cài Extension **Dev Containers**.
+3. Đã cài đặt **Git**.
+
+### Bước 2: Tải Mã Nguồn
+Mở Terminal (PowerShell/Bash) và clone repository này về:
+```bash
+git clone https://github.com/mingxn/automa-ecosystem.git
+```
+
+### Bước 3: Phép màu DevContainer (Zero-Config)
+1. Mở thư mục `automa-ecosystem` bằng **VS Code**.
+2. Góc phải dưới màn hình sẽ hiện popup: *"Folder contains a Dev Container configuration file"*.
+3. Bấm **Reopen in Container**.
+
+> [!TIP]
+> ⚡ **Magic Happens Here:** Bạn cứ đi uống cafe! VS Code sẽ tự tải Image Linux, cài Node.js, và chạy script `init_workspace.sh` ngầm bên trong. Script này sẽ tự động kéo toàn bộ 5 Submodules con về máy tính của bạn và chạy sẵn `pnpm install` cho tất cả các folder!
+
+> [!CAUTION]
+> **Dành cho máy cũ (đã từng clone code kiểu cũ):** Nếu bạn đã từng có các folder `automa-be`, `automa-fe` nằm rải rác bên ngoài, hãy nhớ đổi tên (backup) các folder đó đi. Sau đó gõ `git pull` và chạy thủ công `bash init_workspace.sh` để chuyển sang kiến trúc Submodules xịn xò này.
+
+---
 ## 1. Bản đồ Kiến trúc Hệ thống (Big Picture)
 
 Dưới đây là sơ đồ Mermaid thể hiện cách các thành phần trong hệ sinh thái tương tác và giao tiếp với nhau:

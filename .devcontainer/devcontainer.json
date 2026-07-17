@@ -31,7 +31,7 @@
   "mounts": [
     "source=automa-pnpm-store,target=/home/node/.local/share/pnpm/store,type=volume"
   ],
-  "postCreateCommand": "pnpm config set store-dir /home/node/.local/share/pnpm/store && bash clone_all.sh",
+  "postCreateCommand": "pnpm config set store-dir /home/node/.local/share/pnpm/store && bash init_workspace.sh",
   "runArgs": [
     "--add-host=crm.cmcglobal.com.vn:127.0.0.1"
   ]
