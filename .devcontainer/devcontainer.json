@@ -4,8 +4,10 @@
     "dockerfile": "Dockerfile"
   },
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
   },
+  "remoteUser": "node",
   "customizations": {
     "vscode": {
       "settings": {
@@ -15,7 +17,11 @@
         "Vue.volar",
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        "ms-azuretools.vscode-docker"
+        "ms-azuretools.vscode-docker",
+        "supabase.supabase-vscode",
+        "bradlc.vscode-tailwindcss",
+        "eamodio.gitlens",
+        "usernamehw.errorlens"
       ]
     }
   },
@@ -23,8 +29,7 @@
   "mounts": [
     "source=automa-pnpm-store,target=/home/node/.local/share/pnpm/store,type=volume"
   ],
-  "postCreateCommand": "bash clone_all.sh",
-  "postStartCommand": "cd automa-be && npx supabase start",
+  "postCreateCommand": "pnpm config set store-dir /home/node/.local/share/pnpm/store && bash clone_all.sh",
   "runArgs": [
     "--add-host=crm.cmcglobal.com.vn:127.0.0.1"
   ]
