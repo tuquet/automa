@@ -1,10 +1,10 @@
-FROM mcr.microsoft.com/devcontainers/javascript-node:1-20-bullseye
+FROM mcr.microsoft.com/devcontainers/javascript-node:1-20-bookworm
 
-# Cài đặt công cụ mạng, git và các thư viện C++/GTK cho Tauri & Puppeteer
+# Cài đặt công cụ mạng, git và các thư viện C++/GTK cho Tauri v2 & Puppeteer
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
         git curl xz-utils wget file \
-        libwebkit2gtk-4.0-dev build-essential libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev \
+        libwebkit2gtk-4.1-dev build-essential libssl-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev \
         libnss3 libxss1 libasound2 libatk-bridge2.0-0 libgbm1 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
