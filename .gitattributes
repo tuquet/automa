@@ -1,2 +1,17 @@
+# Cấu hình chuẩn hóa Line Endings cho môi trường Hỗn hợp (Windows Host + Linux DevContainer)
+
+# Mặc định ép toàn bộ các file text về định dạng LF (Linux) khi lưu vào Git,
+# và khi checkout trên Linux DevContainer cũng giữ nguyên LF.
 * text=auto eol=lf
+
+# Các file đặc thù phải dùng LF (để tránh lỗi bash "command not found \r")
+*.sh text eol=lf
+*.bash text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+
+# Chỉ riêng các file thực thi của Windows mới dùng CRLF
 *.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
