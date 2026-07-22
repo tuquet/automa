@@ -10,13 +10,13 @@
       "path": ".agents/skills/automa-cli-run"
     },
     {
-      "path": "C:/Repository/my-skills/packages/registry/skills/automa"
+      "path": "C:/Users/pn.tund2/Documents/Repository/my-skills/packages/registry/skills/automa"
     },
     {
-      "path": "C:/Repository/my-skills/packages/registry/skills/supabase"
+      "path": "C:/Users/pn.tund2/Documents/Repository/my-skills/packages/registry/skills/supabase"
     },
     {
-      "path": "C:/Repository/my-skills/packages/registry/skills/supabase-postgres-best-practices"
+      "path": "C:/Users/pn.tund2/Documents/Repository/my-skills/packages/registry/skills/supabase-postgres-best-practices"
     }
   ]
 }

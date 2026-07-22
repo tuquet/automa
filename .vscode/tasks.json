@@ -2,62 +2,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Submodule: Init & Update (Fresh Clone)",
-      "detail": "Khởi tạo và tải về toàn bộ mã nguồn của các submodules lần đầu tiên",
+      "label": "Extension: Install Dependencies",
       "type": "shell",
-      "command": "git submodule update --init --recursive",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [],
-      "presentation": {
-        "group": "submodule"
-      }
-    },
-    {
-      "label": "Submodule: Sync & Pull Latest (main)",
-      "detail": "Chuyển các submodules sang nhánh main và kéo code mới nhất về",
-      "type": "shell",
-      "command": "git submodule foreach \"git checkout main && git pull origin main\"",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [],
-      "presentation": {
-        "group": "submodule"
-      }
-    },
-    {
-      "label": "Submodule: Check Status",
-      "detail": "Kiểm tra commit hash hiện tại của từng submodule đang liên kết",
-      "type": "shell",
-      "command": "git submodule status",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [],
-      "presentation": {
-        "group": "submodule"
-      }
-    },
-    {
-      "label": "Submodule: Push All (main)",
-      "detail": "Đẩy tất cả commit mới nhất của nhánh main từ các submodules lên GitHub",
-      "type": "shell",
-      "command": "git submodule foreach \"git push origin main\"",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [],
-      "presentation": {
-        "group": "submodule"
-      }
-    },
-    {
-      "label": "Submodule: Install All Dependencies",
-      "detail": "Tự động phát hiện và cài đặt thư viện (pnpm/yarn/npm) cho toàn bộ 5 submodules",
-      "type": "shell",
-      "command": "git submodule foreach 'if [ -f pnpm-lock.yaml ]; then pnpm i; elif [ -f yarn.lock ]; then yarn install; else npm i; fi'",
+      "command": "pnpm install --ignore-scripts",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -65,6 +12,60 @@
       "presentation": {
         "group": "install"
       }
+    },
+    {
+      "label": "Extension: Dev",
+      "type": "shell",
+      "command": "pnpm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Extension: Build",
+      "type": "shell",
+      "command": "pnpm run build",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "Extension: Build Dev",
+      "detail": "Build Chrome Extension ở chế độ development với secrets phát triển",
+      "type": "shell",
+      "command": "pnpm run build:dev",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "Extension: Build Chrome Prod",
+      "type": "shell",
+      "command": "npm run build:prod-chrome",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "Extension: Lint",
+      "type": "shell",
+      "command": "npm run lint",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": []
     }
   ]
 }
