@@ -1,5 +1,5 @@
 ---
-name: automa-be-index
+name: automa-be
 description: "Index directory for Automa Backend skills. Refer to sub-skills for specific tasks like API design or release."
 ---
 

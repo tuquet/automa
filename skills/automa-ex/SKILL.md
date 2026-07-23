@@ -1,5 +1,5 @@
 ---
-name: automa-ex-index
+name: automa-ex
 description: "Index directory for Automa Extension skills. Refer to sub-skills for specific tasks like workflows or release."
 ---
 

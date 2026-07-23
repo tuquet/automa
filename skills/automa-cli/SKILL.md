@@ -1,5 +1,5 @@
 ---
-name: automa-cli-index
+name: automa-cli
 description: "Index directory for Automa CLI skills. Refer to sub-skills for specific CLI tasks."
 ---
 
