@@ -1,0 +1,60 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "get"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "refKey"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "get"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "firstRowAsKey"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "append"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "insertDataOption || 'INSERT_ROWS'"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "dataFrom": {
+            "const": "data-columns"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "keysAsFirstRow"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "loopThrough": {
+            "const": "google-sheets"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "referenceKey"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "loopThrough": {
+            "const": "variable"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "variableName"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "waitForSelector": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "waitSelectorTimeout"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "loopThrough": {
+            "const": "elements"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "elementSelector"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "loopThrough": {
+            "const": "elements"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "waitForSelector"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "loopThrough": {
+            "const": "elements"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "waitSelectorTimeout"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "loopThrough": {
+            "const": "elements"
+          },
+          "waitForSelector": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "waitSelectorTimeout"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "loopThrough": {
+            "const": "numbers"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "fromNumber"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "loopThrough": {
+            "const": "numbers"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "toNumber"
+        ]
+      }
+    }
+  ]
+}

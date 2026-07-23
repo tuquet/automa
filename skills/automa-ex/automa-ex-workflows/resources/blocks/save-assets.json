@@ -1,0 +1,18 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "url"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "url"
+        ]
+      }
+    }
+  ]
+}

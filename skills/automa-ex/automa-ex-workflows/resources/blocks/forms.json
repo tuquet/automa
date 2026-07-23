@@ -1,0 +1,386 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "text-field"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "value"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "text-field"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "clearValue"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "selectOptionBy": {
+            "const": "value"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "value"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "selectOptionBy": {
+            "const": "value"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "clearValue"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "selectOptionBy": {
+            "const": "custom-position"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "optionPosition"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "select"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "selectOptionBy"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "select"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "value"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "select"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "clearValue"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "select"
+          },
+          "selectOptionBy": {
+            "const": "value"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "value"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "select"
+          },
+          "selectOptionBy": {
+            "const": "value"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "clearValue"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "select"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "optionPosition"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "select"
+          },
+          "selectOptionBy": {
+            "const": "custom-position"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "optionPosition"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "text-field"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "delay"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "text-field"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "value"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "text-field"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "clearValue"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "selectOptionBy": {
+            "const": "value"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "value"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "selectOptionBy": {
+            "const": "value"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "clearValue"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "selectOptionBy": {
+            "const": "custom-position"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "optionPosition"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "select"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "selectOptionBy"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "select"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "value"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "select"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "clearValue"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "select"
+          },
+          "selectOptionBy": {
+            "const": "value"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "value"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "select"
+          },
+          "selectOptionBy": {
+            "const": "value"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "clearValue"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "select"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "optionPosition"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "select"
+          },
+          "selectOptionBy": {
+            "const": "custom-position"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "optionPosition"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "text-field"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "delay"
+        ]
+      }
+    }
+  ]
+}

@@ -1,17 +1,15 @@
 {
   "entries": [
     {
-      "path": "automa-be/skills"
+      "path": "skills/automa-be"
     },
     {
-      "path": "automa-ex/skills"
+      "path": "skills/automa-cli"
     },
     {
-      "path": ".agents/skills/automa-cli-run"
+      "path": "skills/automa-ex"
     },
-    {
-      "path": "C:/Users/pn.tund2/Documents/Repository/my-skills/packages/registry/skills/automa"
-    },
+
     {
       "path": "C:/Users/pn.tund2/Documents/Repository/my-skills/packages/registry/skills/supabase"
     },

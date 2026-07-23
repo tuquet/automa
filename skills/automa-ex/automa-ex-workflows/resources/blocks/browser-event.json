@@ -1,0 +1,32 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "eventName": {
+            "const": "tab:loaded"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "tabLoadedUrl"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "eventName": {
+            "const": "tab:loaded"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "activeTabLoaded"
+        ]
+      }
+    }
+  ]
+}

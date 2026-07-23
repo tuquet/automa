@@ -1,0 +1,9 @@
+{
+  "allOf": [],
+  "properties": {
+    "timeout": {
+      "type": "number",
+      "minimum": 0
+    }
+  }
+}

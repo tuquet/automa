@@ -1,0 +1,60 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "windowState": {
+            "const": "normal"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "top"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "windowState": {
+            "const": "normal"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "left"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "windowState": {
+            "const": "normal"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "height"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "windowState": {
+            "const": "normal"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "width"
+        ]
+      }
+    }
+  ]
+}

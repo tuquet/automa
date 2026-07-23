@@ -1,0 +1,18 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "loadMoreAction": {
+            "const": "click-link"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "actionPageMaxWaitTime"
+        ]
+      }
+    }
+  ]
+}

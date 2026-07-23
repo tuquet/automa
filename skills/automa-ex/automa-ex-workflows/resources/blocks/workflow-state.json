@@ -1,0 +1,63 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "throwError": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "errorMessage"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "stop-current"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "throwError"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "stop-current"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "errorMessage"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "stop-current"
+          },
+          "throwError": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "errorMessage"
+        ]
+      }
+    }
+  ]
+}

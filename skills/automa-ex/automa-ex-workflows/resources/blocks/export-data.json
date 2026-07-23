@@ -1,0 +1,172 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "dataToExport": {
+            "const": "google-sheets"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "refKey"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "dataToExport": {
+            "const": "variable"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "variableName"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "csv"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "addBOMHeader"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "csv"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "addBOMHeader"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "csv"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "addBOMHeader"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "csv"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "csvDelimiter"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "dataToExport": {
+            "const": "google-sheets"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "refKey"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "dataToExport": {
+            "const": "variable"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "variableName"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "csv"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "addBOMHeader"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "csv"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "addBOMHeader"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "csv"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "addBOMHeader"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "csv"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "csvDelimiter"
+        ]
+      }
+    }
+  ]
+}

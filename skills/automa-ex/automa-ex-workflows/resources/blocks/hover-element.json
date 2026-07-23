@@ -1,0 +1,18 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "waitForSelector": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "waitSelectorTimeout"
+        ]
+      }
+    }
+  ]
+}

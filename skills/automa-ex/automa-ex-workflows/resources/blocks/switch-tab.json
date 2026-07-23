@@ -1,0 +1,60 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "findTabBy": {
+            "const": "match-patterns"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "matchPattern"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "findTabBy": {
+            "const": "tab-title"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "tabTitle"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "createIfNoMatch": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "url"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "findTabBy": {
+            "const": "tab-index"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "tabIndex"
+        ]
+      }
+    }
+  ]
+}

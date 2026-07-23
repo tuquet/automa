@@ -1,0 +1,18 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "accept": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "promptText"
+        ]
+      }
+    }
+  ]
+}

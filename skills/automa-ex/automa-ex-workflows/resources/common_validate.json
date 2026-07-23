@@ -1,0 +1,112 @@
+{
+  "CommonProperties": {
+    "type": "object",
+    "properties": {
+      "disableBlock": {
+        "type": "boolean"
+      },
+      "description": {
+        "type": "string"
+      },
+      "assignVariable": {
+        "type": "boolean"
+      },
+      "variableName": {
+        "type": "string"
+      },
+      "saveData": {
+        "type": "boolean"
+      },
+      "dataColumn": {
+        "type": "string"
+      },
+      "onError": {
+        "type": "object",
+        "properties": {
+          "enable": {
+            "type": "boolean"
+          },
+          "assignVariable": {
+            "type": "boolean"
+          },
+          "variableName": {
+            "type": "string"
+          },
+          "retry": {
+            "type": "boolean"
+          },
+          "retryCount": {
+            "type": "number"
+          },
+          "retryTimeout": {
+            "type": "number"
+          }
+        }
+      },
+      "addExtraRow": {
+        "type": "boolean"
+      },
+      "extraRowDataColumn": {
+        "type": "string"
+      }
+    },
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "assignVariable": {
+              "const": true
+            }
+          },
+          "required": [
+            "assignVariable"
+          ]
+        },
+        "then": {
+          "required": [
+            "variableName"
+          ],
+          "properties": {
+            "variableName": {
+              "minLength": 1
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "saveData": {
+              "const": true
+            }
+          },
+          "required": [
+            "saveData"
+          ]
+        },
+        "then": {
+          "required": [
+            "dataColumn"
+          ]
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "addExtraRow": {
+              "const": true
+            }
+          },
+          "required": [
+            "addExtraRow"
+          ]
+        },
+        "then": {
+          "required": [
+            "extraRowDataColumn"
+          ]
+        }
+      }
+    ]
+  }
+}

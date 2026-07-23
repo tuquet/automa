@@ -1,0 +1,74 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "element"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "selector"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "saveToComputer": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "fileName"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "saveToComputer": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "ext || 'png'"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "saveToColumn": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "dataColumn"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "assignVariable": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "variableName"
+        ]
+      }
+    }
+  ]
+}

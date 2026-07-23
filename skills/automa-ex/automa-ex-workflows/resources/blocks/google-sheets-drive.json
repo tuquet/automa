@@ -1,0 +1,13 @@
+{
+  "allOf": [],
+  "properties": {
+    "action": {
+      "enum": [
+        "read",
+        "write",
+        "update",
+        "delete"
+      ]
+    }
+  }
+}

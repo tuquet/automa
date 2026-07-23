@@ -1,0 +1,32 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "closeType": {
+            "const": "tab"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "activeTab"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "closeType": {
+            "const": "tab"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "url"
+        ]
+      }
+    }
+  ]
+}

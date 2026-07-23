@@ -1,0 +1,18 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "dataSource": {
+            "const": "variable"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "varSourceName"
+        ]
+      }
+    }
+  ]
+}

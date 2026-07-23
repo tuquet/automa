@@ -1,0 +1,32 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "retryConditions": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "retryCount"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "retryConditions": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "retryTimeout"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "get"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "getAll"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "useJson": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "jsonCode"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "set"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "value"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "set"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "sameSite"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "set"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "expirationDate"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "set"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "httpOnly"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "set"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "value"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "set"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "sameSite"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "set"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "expirationDate"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": {
+            "const": "set"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "httpOnly"
+        ]
+      }
+    }
+  ]
+}

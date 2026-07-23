@@ -1,0 +1,238 @@
+{
+  "topologyRules": {
+    "BlockRepeatTask": {
+      "allowed": [
+        "output-1",
+        "output-2",
+        "output-fallback"
+      ],
+      "required": [
+        "output-1",
+        "output-2"
+      ]
+    },
+    "BlockWhileLoop": {
+      "allowed": [
+        "output-1",
+        "output-2",
+        "output-fallback"
+      ],
+      "required": [
+        "output-1",
+        "output-2"
+      ]
+    },
+    "BlockLoopData": {
+      "allowed": [
+        "output-1",
+        "output-fallback"
+      ],
+      "required": [
+        "output-1"
+      ]
+    },
+    "BlockLoopElements": {
+      "allowed": [
+        "output-1",
+        "output-fallback"
+      ],
+      "required": [
+        "output-1"
+      ]
+    },
+    "BlockElementExists": {
+      "allowed": [
+        "output-1",
+        "output-2",
+        "output-fallback"
+      ],
+      "required": [
+        "output-1",
+        "output-2"
+      ]
+    },
+    "BlockConditions": {
+      "allowed": [
+        "output-fallback",
+        "^output-.+"
+      ],
+      "required": []
+    },
+    "BlockWebhook": {
+      "allowed": [
+        "output-1",
+        "output-2",
+        "output-fallback"
+      ],
+      "required": [
+        "output-1"
+      ]
+    },
+    "BlockBasicWithFallback": {
+      "allowed": [
+        "output-1",
+        "output-2",
+        "output-fallback"
+      ],
+      "required": [
+        "output-1"
+      ]
+    },
+    "BlockPackage": {
+      "allowed": [
+        "^output-.+"
+      ],
+      "required": []
+    },
+    "BlockTrigger": {
+      "allowed": [
+        "output-1",
+        "output-fallback"
+      ],
+      "required": [
+        "output-1"
+      ]
+    },
+    "BlockBrowserEvent": {
+      "allowed": [
+        "output-1",
+        "output-fallback"
+      ],
+      "required": [
+        "output-1"
+      ]
+    },
+    "BlockGroup": {
+      "allowed": [
+        "output-1",
+        "output-fallback"
+      ],
+      "required": [
+        "output-1"
+      ]
+    },
+    "BlockBasic": {
+      "allowed": [
+        "output-1",
+        "output-fallback"
+      ],
+      "required": []
+    },
+    "default": {
+      "allowed": [
+        "output-1",
+        "output-fallback"
+      ],
+      "required": []
+    }
+  },
+  "variableRules": {
+    "scoping": "global_only",
+    "builtInGlobals": [
+      "loopData",
+      "googleSheets",
+      "table",
+      "automa",
+      "activeTabUrl",
+      "prevBlockData",
+      "workflow",
+      "globalData"
+    ],
+    "prefixes": {
+      "$$": "persistent_storage",
+      "$push:": "array_append"
+    },
+    "extractors": [
+      {
+        "type": "prop_boolean",
+        "description": "Standard assignVariable boolean switch",
+        "conditionPath": "data.assignVariable",
+        "valuePath": "data.variableName"
+      },
+      {
+        "type": "prop_boolean",
+        "description": "Error fallback assignVariable boolean switch",
+        "conditionPath": "data.onError.assignVariable",
+        "valuePath": "data.onError.variableName"
+      },
+      {
+        "type": "array_iteration",
+        "description": "Parameter prompts array",
+        "arrayPath": "data.parameters",
+        "valuePath": "name"
+      },
+      {
+        "type": "array_iteration",
+        "description": "Insert data fallback variables",
+        "arrayPath": "data.onError.dataToInsert",
+        "filter": {
+          "path": "type",
+          "value": "variable"
+        },
+        "valuePath": "name"
+      },
+      {
+        "type": "regex",
+        "description": "Javascript code automaSetVariable calls",
+        "block": "javascript-code",
+        "path": "data.code",
+        "pattern": "automaSetVariable\\s*\\(\\s*['\"]([^'\"]+)['\"]",
+        "groupIndex": 1
+      },
+      {
+        "type": "mutation",
+        "description": "In-place mutation blocks (track variable usage)",
+        "blocks": [
+          "slice-variable",
+          "increase-variable",
+          "regex-variable",
+          "loop-data"
+        ],
+        "valuePath": "data.variableName"
+      }
+    ]
+  },
+  "interpolationRules": {
+    "description": "Mustache interpolation {{...}} validation rules",
+    "syntaxRegex": "\\{\\{([a-zA-Z0-9_$.-]+)\\}\\}",
+    "validNamespaces": [
+      "variables",
+      "loopData",
+      "googleSheets",
+      "table",
+      "automa",
+      "activeTabUrl",
+      "prevBlockData",
+      "workflow",
+      "globalData"
+    ],
+    "nestedValidation": {
+      "variables": "check_against_declared_variables",
+      "loopData": "check_against_active_loops"
+    }
+  },
+  "typeLabelMap": {
+    "BlockBasic": [
+      "trigger",
+      "delay",
+      "loop-data",
+      "loop-breakpoint",
+      "close-tab",
+      "notification",
+      "workflow-state",
+      "javascript-code",
+      "new-tab",
+      "tab-url",
+      "active-tab"
+    ],
+    "BlockBasicWithFallback": [
+      "webhook"
+    ],
+    "BlockConditions": [
+      "conditions"
+    ],
+    "BlockRepeatTask": [
+      "repeat-task"
+    ]
+  }
+}
