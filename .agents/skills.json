@@ -1,28 +1,7 @@
 {
   "entries": [
     {
-      "path": "skills/automa-be"
-    },
-    {
-      "path": "skills/automa-be/automa-be-api"
-    },
-    {
-      "path": "skills/automa-be/automa-be-release"
-    },
-    {
-      "path": "skills/automa-cli"
-    },
-    {
-      "path": "skills/automa-cli/automa-cli-run"
-    },
-    {
-      "path": "skills/automa-ex"
-    },
-    {
-      "path": "skills/automa-ex/automa-ex-release"
-    },
-    {
-      "path": "skills/automa-ex/automa-ex-workflows"
+      "path": "skills"
     },
 
     {
