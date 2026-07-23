@@ -8,6 +8,9 @@ description: "Guidelines for creating, editing, and reviewing Automa JSON workfl
 > [!WARNING]
 > **For Agents Maintaining the Skill:** DO NOT edit `.schema.json` files manually! We use a decoupled, 3-Layer Data-Driven Architecture. You MUST read `references/architecture.md` before making any schema updates. All logic is stored in JSON format; do not attempt to write custom JS linters.
 
+> [!IMPORTANT]
+> **Git Repository Rules:** NEVER use `git commit` or `git push` on your own accord when working on workflows or schemas. Pushing code to remote is an important, sensitive action. **ONLY the USER** is allowed to push code. Leave all completed changes in the Staging Area or Working Directory for the user to review.
+
 Automa Workflows require absolute precision regarding Data Structure (Schema) and strict adherence to Business Logic. This SKILL is designed in Modules to help Agents easily look up knowledge.
 
 ## 1. Master Handbook (Knowledge Base)
