@@ -17,8 +17,8 @@
       "path": "automa-cli"
     },
     {
-      "name": "Automa Dashboard",
-      "path": "automa-dashboard"
+      "name": "Automa Portal",
+      "path": "automa-portal"
     },
     {
       "name": "Automa Vault",
