@@ -29,7 +29,7 @@ pnpm install
 pnpm run dev
 ```
 
-Sau khi chạy lệnh `dev`, hãy mở trình duyệt và truy cập vào địa chỉ `http://localhost:3333/ui` để vào trang **Automa Studio**.
+Sau khi chạy lệnh `dev`, môi trường sẽ sẵn sàng. Lưu ý: Giao diện **Automa Studio** (Web) hiện đang bị **deprecated**. Toàn bộ trải nghiệm người dùng, quản lý Vault và xem Log đã được chuyển hẳn sang **VS Code Extension (`automa-vscode`)**. Hãy cài đặt và mở tab Automa trong VS Code để sử dụng!
 
 ---
 
@@ -39,9 +39,12 @@ Toàn bộ hệ sinh thái lấy `automa-cli` làm trái tim (Orchestrator). Tha
 
 ```mermaid
 graph TD
+    subgraph IDE ["VS Code Environment"]
+        vscode_ext["Automa VS Code Extension"]
+    end
+
     subgraph Browser ["Chrome / Browser"]
         ex_ui["Automa Extensions (Vue Flow UI)"]
-        studio_client["Studio UI (Dashboard)"]
     end
 
     subgraph Core ["CLI Orchestrator (Node.js Daemon)"]
@@ -70,8 +73,8 @@ graph TD
     cli_queue -- "Lưu Log & Job Status" --> db_log
     
     %% Interactions
-    cli_server -- "Serve tĩnh" --> studio_client
     cli_server -- "Nạp nhiều Extensions" --> ex_ui
+    vscode_ext -- "Gọi lệnh qua child_process" --> cli_server
     ex_ui -- "Chạy Workflow (Puppeteer)" --> cli_queue
 ```
 
@@ -79,8 +82,8 @@ graph TD
 
 ## 🚀 5 Trụ Cột Chức Năng Của CLI
 
-### 1. Mở & Phục vụ Studio UI
-CLI không chỉ là công cụ dòng lệnh mà còn chứa một Daemon Server (chạy ở cổng `3333`). Khi gọi lệnh `automa studio`, CLI sẽ kích hoạt server này, sử dụng `UiController` để serve tĩnh giao diện web điều khiển (được build từ `apps/studio` bằng Vue 3 + Shadcn) lên trình duyệt của người dùng. 
+### 1. Phục vụ VS Code Extension (Orchestrator)
+CLI không chỉ là công cụ dòng lệnh mà còn chứa một Daemon Server (chạy ở cổng `3333`). Mặc dù giao diện web Studio đã bị **deprecated**, CLI giờ đây đóng vai trò là backend vững chắc, giao tiếp trực tiếp với **VS Code Extension (`automa-vscode`)** để cung cấp các tính năng quản lý kịch bản ngay trong IDE lập trình. 
 
 ### 2. Quản lý Thư mục Quét (Vault)
 Thông qua `WorkflowRepository`, CLI cho phép người dùng chỉ định một thư mục "Vault" (được khai báo trong `config.json`). Nó sẽ thực hiện quét đệ quy toàn bộ thư mục này (bỏ qua các thư mục như `.git` hay `node_modules`) để tìm và index các file cấu hình workflow (`.json`). Nhờ vậy, source code workflows hoàn toàn nằm trên máy cục bộ, quản lý qua Git dễ dàng.
@@ -92,7 +95,7 @@ Thông qua `ProfileController`, CLI tạo ra và quản lý các thư mục vậ
 Thay vì bắt người dùng phải mở Chrome thủ công, CLI có thể tự động bật Puppeteer, bơm (inject) **nhiều extensions cùng lúc** (từ thư mục `extensions/`) vào, và kích hoạt các workflow một cách độc lập thông qua API.
 
 ### 5. Lưu vết (Logging) bằng SQLite
-Tất cả các lệnh thực thi không bị bay mất vào hư không. CLI tích hợp một hệ thống Hàng đợi (Job Queue) mạnh mẽ (chạy bằng `worker-thread`). Bất cứ khi nào một tiến trình workflow đang chạy hoặc hoàn tất, nó sẽ ghi trực tiếp trạng thái và logs vào file cơ sở dữ liệu `log.sqlite`. Giao diện Studio có thể dùng thông tin này để stream log realtime (SSE) cho người dùng xem.
+Tất cả các lệnh thực thi không bị bay mất vào hư không. Bất cứ khi nào một tiến trình workflow hoàn tất, toàn bộ logs và dữ liệu context (`ctxData`) của từng Node sẽ được ghi phân mảnh, chi tiết vào file cơ sở dữ liệu `log.sqlite`. **VS Code Extension** sử dụng dữ liệu này để hiển thị bảng lịch sử (Execution History) ngay trong giao diện lập trình, giúp developer dễ dàng debug.
 
 ---
 
