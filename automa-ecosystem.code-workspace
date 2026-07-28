@@ -24,6 +24,10 @@
       "name": "Automa Vault",
       "path": "automa-vault"
     },
+    {
+      "name": "Automa Vscode",
+      "path": "automa-vscode"
+    },
   ],
   "settings": {}
 }

@@ -1,167 +1,148 @@
-# Automa Ecosystem - Big Picture & Architecture Guide
+# Automa Ecosystem
 
-Chào mừng đến với hệ sinh thái **Automa Ecosystem**. Đây là phiên bản mở rộng toàn diện, hỗ trợ môi trường tự vận hành (Self-contained) ngoại tuyến (Offline-First), đồng bộ đám mây và thực thi tự động hóa nâng cao thông qua kiến trúc đa ứng dụng (Multi-app Ecosystem).
+Chào mừng đến với **Automa Ecosystem**. Phiên bản hiện tại là một hệ sinh thái mạnh mẽ (Multi-app Monorepo) xoay quanh trung tâm là công cụ dòng lệnh `automa-cli`.
+
+Kiến trúc mới này tập trung vào sự tự động hóa 100%, có thể hoạt động hoàn toàn Offline (Offline-First) và quản lý dữ liệu linh hoạt, tách biệt khỏi sự phụ thuộc vào các dịch vụ Cloud cũ.
 
 ---
 
-## 📥 Hướng Dẫn Cài Đặt (Onboarding) với DevContainers
+## 🚀 Hướng Dẫn Cài Đặt & Khởi Chạy (Getting Started)
 
-Hệ thống được tự động hóa 100% môi trường phát triển thông qua **DevContainers** và **Git Submodules**. Bất kể bạn dùng Windows, Mac hay Linux, bạn sẽ **KHÔNG CẦN** phải tự cài đặt Node.js hay cấu hình biến môi trường rườm rà.
+Dự án được xây dựng dưới dạng **Turborepo** sử dụng **pnpm**.
 
-### Bước 1: Yêu Cầu Cơ Bản
-1. Đã cài đặt **Docker Desktop** (khuyên dùng WSL 2 nếu dùng Windows).
-2. Đã cài đặt **Visual Studio Code** và cài Extension **Dev Containers**.
-3. Đã cài đặt **Git**.
+### 1. Yêu Cầu Hệ Thống
+- Node.js >= 18.x
+- pnpm >= 8.x (`npm install -g pnpm`)
 
-### Bước 2: Tải Mã Nguồn
-Mở Terminal (PowerShell/Bash) và clone repository này về:
+### 2. Cài Đặt & Khởi Chạy
+Mở Terminal và chạy tuần tự các lệnh sau:
+
 ```bash
-git clone https://github.com/mingxn/automa-ecosystem.git
+# 1. Clone mã nguồn
+git clone https://github.com/tuquet/automa-ecosystem.git
+cd automa-ecosystem/automa-cli
+
+# 2. Cài đặt toàn bộ dependencies cho Monorepo
+pnpm install
+
+# 3. Khởi động môi trường Dev (Bật API Server & Giao diện Studio)
+pnpm run dev
 ```
 
-### Bước 3: Phép màu DevContainer (Zero-Config)
-1. Mở thư mục `automa-ecosystem` bằng **VS Code**.
-2. Góc phải dưới màn hình sẽ hiện popup: *"Folder contains a Dev Container configuration file"*.
-3. Bấm **Reopen in Container**.
-
-> [!TIP]
-> ⚡ **Magic Happens Here:** Bạn cứ đi uống cafe! VS Code sẽ tự tải Image Linux, cài Node.js, và chạy script `init_workspace.sh` ngầm bên trong. Script này sẽ tự động kéo toàn bộ 5 Submodules con về máy tính của bạn và chạy sẵn `pnpm install` cho tất cả các folder!
-
-> [!CAUTION]
-> **Dành cho máy cũ (đã từng clone code kiểu cũ):** Nếu bạn đã từng có các folder `automa-be`, `automa-fe` nằm rải rác bên ngoài, hãy nhớ đổi tên (backup) các folder đó đi. Sau đó gõ `git pull` và chạy thủ công `bash init_workspace.sh` để chuyển sang kiến trúc Submodules xịn xò này.
+Sau khi chạy lệnh `dev`, hãy mở trình duyệt và truy cập vào địa chỉ `http://localhost:3333/ui` để vào trang **Automa Studio**.
 
 ---
-## 1. Bản đồ Kiến trúc Hệ thống (Big Picture)
 
-Dưới đây là sơ đồ Mermaid thể hiện cách các thành phần trong hệ sinh thái tương tác và giao tiếp với nhau:
+## 🏗️ Kiến Trúc Hệ Thống: `automa-cli` Là Gốc Rễ
+
+Toàn bộ hệ sinh thái lấy `automa-cli` làm trái tim (Orchestrator). Thay vì giao tiếp phân mảnh qua nhiều app độc lập, mọi luồng dữ liệu đều được quản lý bởi CLI.
 
 ```mermaid
 graph TD
-    subgraph Browser ["Môi trường Trình duyệt (Chrome Extension)"]
-        ex_ui["Vue Flow UI (Giao diện Thiết kế)"]
-        ex_store["Pinia Store (Lưu trữ RAM / Offline)"]
-        ex_idb["IndexedDB (Dexie - Single Source of Truth)"]
-        ex_sw["Background Service Worker (Sync Engine)"]
+    subgraph Browser ["Chrome / Browser"]
+        ex_ui["Automa Extensions (Vue Flow UI)"]
+        studio_client["Studio UI (Dashboard)"]
     end
 
-    subgraph Desktop ["Môi trường Desktop (Tauri App)"]
-        tauri_app["automa-dashboard (Tauri UI Dashboard)"]
+    subgraph Core ["CLI Orchestrator (Node.js Daemon)"]
+        cli_server["API Server & Router"]
+        cli_repo["Workflow Repository (Vault Scanner)"]
+        cli_profile["Profile Controller"]
+        cli_queue["SQLite Job Queue & Worker"]
     end
 
-    subgraph CLI ["Môi trường Dòng lệnh (CLI Tools)"]
-        vault_cli["automa-vault (Vault Sync CLI)"]
-        run_cli["automa-cli (Puppeteer Runner)"]
+    subgraph Storage ["Local OS Storage (~/.automa-cli/)"]
+        config_json{"config.json"}
+        extensions_dir["extensions/ (Nhiều extensions)"]
+        profiles_dir["profiles/"]
+        db_profile[("profile.sqlite")]
+        db_log[("log.sqlite")]
     end
-
-    subgraph Backend ["Môi trường Backend (Supabase Database)"]
-        sb_rest["PostgREST API (REST Endpoints)"]
-        sb_db[("PostgreSQL Database")]
-        sb_realtime["Supabase Realtime (WebSockets)"]
-    end
-
-    %% Extension internal communication
-    ex_ui --> ex_store
-    ex_store --> ex_idb
-    ex_idb -- "Monkeypatch Event" --> ex_sw
-    ex_sw -- "Update RAM" --> ex_store
-
-    %% Extension to Backend
-    ex_sw -- "HTTP REST (Push/Pull)" --> sb_rest
-    sb_realtime -- "WebSocket (Realtime Delta)" --> ex_sw
-
-    %% Vault & CLI Runner to Backend
-    vault_cli -- "PostgREST API (Diff Push/Pull)" --> sb_rest
-    run_cli -- "REST (Load Workflows)" --> sb_rest
     
-    %% CLI Runner to Extension Build
-    run_cli -- "Load Unpacked Extension" --> ex_idb
+    vault_dir["Thư mục Vault (Đường dẫn trỏ từ config.json)"]
 
-    %% Tauri to Vault / CLI / Supabase CLI
-    tauri_app -- "Shell Exec (Push/Pull/Reset)" --> vault_cli
-    tauri_app -- "Shell Exec (Run Workflows)" --> run_cli
+    %% CLI Functions
+    cli_repo -- "Đọc cấu hình & Quét đệ quy" --> vault_dir
+    cli_repo -. "Lấy Vault Path" .-> config_json
+    cli_server -- "Đọc Extensions" --> extensions_dir
+    cli_profile -- "Quản lý Session" --> profiles_dir
+    cli_profile -- "Lưu Personalization" --> db_profile
+    cli_queue -- "Lưu Log & Job Status" --> db_log
     
-    %% API Mapping
-    sb_rest --> sb_db
-    sb_realtime --> sb_db
+    %% Interactions
+    cli_server -- "Serve tĩnh" --> studio_client
+    cli_server -- "Nạp nhiều Extensions" --> ex_ui
+    ex_ui -- "Chạy Workflow (Puppeteer)" --> cli_queue
 ```
 
 ---
 
-## 2. Trách nhiệm của từng Thành phần (Microservices & Apps)
+## 🚀 5 Trụ Cột Chức Năng Của CLI
 
-### 📌 `automa-be` (Supabase Backend)
-* **Trách nhiệm:** Cung cấp hạ tầng cơ sở dữ liệu PostgreSQL local (qua Docker) và cloud. Chịu trách nhiệm thực thi các migrations, thiết lập chính sách RLS (Row Level Security) và phân quyền SQL.
-* **Giao tiếp:** Tiếp nhận các HTTP REST Request thông qua PostgREST API (cổng `54321` local) từ Extension, Vault CLI và Runner CLI. Phát tín hiệu Realtime qua WebSocket khi có cập nhật bảng.
+### 1. Mở & Phục vụ Studio UI
+CLI không chỉ là công cụ dòng lệnh mà còn chứa một Daemon Server (chạy ở cổng `3333`). Khi gọi lệnh `automa studio`, CLI sẽ kích hoạt server này, sử dụng `UiController` để serve tĩnh giao diện web điều khiển (được build từ `apps/studio` bằng Vue 3 + Shadcn) lên trình duyệt của người dùng. 
 
-### 📌 `automa-ex` (Chrome Extension)
-* **Trách nhiệm:** Trình thiết kế (Designer) trực quan dạng sơ đồ khối, cho phép người dùng tạo, sửa, cấu hình các tiến trình tự động hoá (workflows) trực tiếp trên Chrome/Edge.
-* **Giao tiếp:** Hoạt động theo cơ chế **Offline-First**:
-  - Giao diện Vue tương tác với **Pinia Store** $\rightarrow$ Lưu tức thời vào **IndexedDB (Dexie)**.
-  - Dexie kích hoạt sự kiện gửi message ngầm báo hiệu cho **Service Worker** (`background/index.js`).
-  - Service Worker thực hiện kéo/đẩy (Pull/Push Delta) bất đồng bộ với `automa-be` và lắng nghe kênh Realtime WebSocket để đồng bộ tức thời khi có thay đổi từ máy khác.
+### 2. Quản lý Thư mục Quét (Vault)
+Thông qua `WorkflowRepository`, CLI cho phép người dùng chỉ định một thư mục "Vault" (được khai báo trong `config.json`). Nó sẽ thực hiện quét đệ quy toàn bộ thư mục này (bỏ qua các thư mục như `.git` hay `node_modules`) để tìm và index các file cấu hình workflow (`.json`). Nhờ vậy, source code workflows hoàn toàn nằm trên máy cục bộ, quản lý qua Git dễ dàng.
 
-### 📌 `automa-vault` (Seeding & Sync CLI)
-* **Trách nhiệm:** Kho lưu trữ dữ liệu hạt giống (Seed Data) của các dự án (workflows, packages, variables, credentials). Cung cấp bộ công cụ CLI (`vault.js`) để đẩy dữ liệu lên DB hoặc kéo về máy local một cách độc lập và an toàn.
-* **Giao tiếp:** Giao tiếp trực tiếp với PostgREST API của Supabase bằng `fetch` HTTP thuần. Sử dụng thuật toán so khớp khác biệt (Diff LWW) bỏ qua timestamp để đẩy/kéo và bảo toàn cấu trúc đặt tên file nguyên bản của lập trình viên.
+### 3. Quản lý Chrome Profiles
+Thông qua `ProfileController`, CLI tạo ra và quản lý các thư mục vật lý (Profile) của trình duyệt tại `~/.automa-cli/profiles/`. Khi chạy Puppeteer để auto web, CLI sẽ map các folder này bằng cờ `--user-data-dir`. Việc này giúp mọi phiên đăng nhập (Session, Cookies) của người dùng đều được lưu lại. Ngoài ra, các cấu hình cá nhân hóa (Personalization) của từng trình duyệt được lưu trữ an toàn trong `profile.sqlite`.
 
-### 📌 `automa-cli` (Puppeteer Workflow Executor)
-* **Trách nhiệm:** Trình thực thi tự động hóa dạng không đầu (headless) hoặc có đầu qua Puppeteer. Cho phép chạy các workflows của Automa trực tiếp bằng NodeJS thông qua command line mà không cần mở giao diện thiết kế.
-* **Giao tiếp:** Gọi REST API tới Supabase để lấy nội dung workflow cần chạy, nạp thư mục build đã đóng gói của `automa-ex/build` vào trình duyệt Puppeteer và kích hoạt chạy tự động.
+### 4. Thực thi Workflow (Runner)
+Thay vì bắt người dùng phải mở Chrome thủ công, CLI có thể tự động bật Puppeteer, bơm (inject) **nhiều extensions cùng lúc** (từ thư mục `extensions/`) vào, và kích hoạt các workflow một cách độc lập thông qua API.
 
-### 📌 `automa-dashboard` (Tauri Desktop App)
-* **Trách nhiệm:** Giao diện điều khiển trung tâm chạy trên Desktop. Giúp người dùng quản lý trạng thái các database, các dự án trong Vault, kích hoạt chạy workflows và xem báo cáo kết quả.
-* **Giao tiếp:** Đóng vai trò là lớp bọc UI điều phối (orchestration). Nó gọi trực tiếp các tiến trình hệ thống (Shell Execution) để kích hoạt lệnh của `automa-vault` (push/pull), `automa-cli` (run) và `supabase CLI` (start/stop/reset).
+### 5. Lưu vết (Logging) bằng SQLite
+Tất cả các lệnh thực thi không bị bay mất vào hư không. CLI tích hợp một hệ thống Hàng đợi (Job Queue) mạnh mẽ (chạy bằng `worker-thread`). Bất cứ khi nào một tiến trình workflow đang chạy hoặc hoàn tất, nó sẽ ghi trực tiếp trạng thái và logs vào file cơ sở dữ liệu `log.sqlite`. Giao diện Studio có thể dùng thông tin này để stream log realtime (SSE) cho người dùng xem.
 
 ---
 
-## 3. Các Luồng Giao Tiếp Phức Hợp (Core Integration Flows)
+## ⚙️ Cấu Hình & Dữ Liệu Cục Bộ (Local Storage)
 
-### A. Luồng đồng bộ 2 chiều của Extension (Bi-directional Sync)
-```text
-Vue UI -> Pinia Store -> Dexie IndexedDB (Local Save)
-                             │ (Monkeypatch method trigger)
-                             ▼
-                    browser.runtime.sendMessage
-                             │
-                             ▼
-                    Background Sync Worker
-                             │
-            ┌────────────────┴────────────────┐
-            ▼                                 ▼
-   Push Sync Queue                   Subscribe Realtime WS
-   (Batched Upsert/Delete)           (Receive Delta updates)
-            │                                 │
-            ▼                                 ▼
-      Supabase Cloud                   Dexie IndexedDB (Write-back)
-```
+Để đảm bảo tính độc lập và dễ quản lý, toàn bộ dữ liệu cấu hình và trạng thái của hệ sinh thái được tập trung duy nhất tại một thư mục gốc trên hệ điều hành (Root OS Folder):
+**`~/.automa-cli/`**
 
-### B. Mối quan hệ giữa Vault CLI và Tauri Dashboard
-```text
-[Tauri UI Dashboard] --(Nhấn "Đẩy Dữ Liệu")--> [Tauri Rust Core]
-                                                       │
-                                                       ▼ (Shell Spawn)
-                                            [pnpm run push --project=crm]
-                                                       │
-                                                       ▼
-                                            [automa-vault/vault.js]
-                                                       │
-                                    ┌──────────────────┴──────────────────┐
-                                    ▼ (Pre-seed Hooks)                    ▼ (REST API)
-                             [lint-workflows.js]                     [Supabase DB]
-                             [align-workflows.js]
-```
+Thư mục này bao gồm các thành phần cốt lõi:
+
+1. **`config.json`**
+   - File cấu hình trung tâm định nghĩa các đường dẫn (paths) và thiết lập (settings) của CLI.
+2. **`extensions/`**
+   - Chứa danh sách các đường dẫn mã nguồn của các tiện ích (Extensions). CLI hỗ trợ nạp **nhiều extensions cùng lúc** vào trình duyệt (Puppeteer) thông qua thư mục này.
+3. **`profiles/`**
+   - Nơi chứa dữ liệu phiên duyệt web (Session, Cookies, Cache) của từng Profile tách biệt (`~/.automa-cli/profiles/<profileId>`). Đảm bảo chạy tự động hóa nhiều tài khoản mà không bị trùng lặp.
+4. **`profile.sqlite`**
+   - Cơ sở dữ liệu chuyên biệt để lưu trữ các thông tin cá nhân hóa (Personalization), cấu hình riêng lẻ cho từng trình duyệt hoặc profile.
+5. **`log.sqlite`** (hoặc `db.sqlite`)
+   - Cơ sở dữ liệu cục bộ dùng để lưu vết (Logging) toàn bộ tiến trình Hàng đợi (Job Queue), giúp người dùng xem lại lịch sử chạy workflow bất cứ lúc nào.
+
+> **Lưu ý:** Thư mục Vault có thể nằm ở bất kỳ đâu trên máy tính để tiện cho việc dùng Git, nhưng đường dẫn trỏ tới Vault sẽ được khai báo trong `config.json`.
 
 ---
 
-## 🛠️ Quản lý Môi trường Phát triển (VS Code Tasks)
+## 🛠️ Cấu trúc Monorepo
 
-Ecosystem đã tích hợp sẵn hệ thống các VS Code Tasks tối giản và đồng bộ tại `.vscode/tasks.json`. Bạn chỉ cần nhấn `Ctrl+Shift+P` -> `Tasks: Run Task` và chọn:
+Dự án hiện tại là một Monorepo Turborepo, bao gồm các thành phần chính:
 
-* **`Workspace: Install Dependencies`**: Cài đặt thư viện cho toàn bộ workspace.
-* **`Supabase: Start (Local)` / `Supabase: Stop (Local)`**: Quản lý Docker containers DB.
-* **`Supabase: Reset (Schema Only)`**: Đưa DB về trạng thái cấu trúc ban đầu sạch sẽ.
-* **`Supabase: Deploy to Cloud`**: Đẩy Migrations & Edge Functions lên Production cloud.
-* **`Extensions: Start Dev Server` / `Extensions: Build Production`**: Phát triển & đóng gói Extension.
-* **`Tauri: Dev` / `Tauri: Build Production`**: Chạy giao diện Desktop Dashboard.
-* **`Vault: Push to Database` / `Vault: Pull from Database` / `Vault: Check Sync Status`**: Đồng bộ dữ liệu hạt giống.
-* **`CLI: Run Custom Workflow` / `CLI: Scan Workflow Dependencies`**: Chạy thử nghiệm tự động hoá Puppeteer.
+* **`automa-cli`**: Bao gồm lõi `apps/cli` (API Server, SQLite Queue, Profile & Vault Manager) và `apps/studio` (Giao diện Web UI điều khiển).
+* **`automa-ex`**: Mã nguồn gốc của Automa Extensions (Nơi phát triển các tiện ích nạp vào trình duyệt).
+* **`automa-vault`**: Nơi định nghĩa cấu trúc chuẩn của một Vault cơ bản. Nó bao gồm file cấu hình tĩnh (`settings.json`). Trong tương lai, cấu trúc này đóng vai trò là "Khuôn mẫu" (Template) giúp đồng bộ hóa (sync) toàn bộ dữ liệu của Vault lên các hệ thống Backend hoặc Git Remote.
+* **`apps/e2e`**: Bộ kiểm thử Playwright.
+
+---
+
+## 🔌 Tích hợp IDE (VS Code Extension)
+
+Hệ sinh thái tích hợp sẵn một Submodule chuyên biệt dành cho VS Code:
+* **`automa-vscode`**: Là một VS Code Extension chính thức giúp Lập trình viên tương tác trực tiếp với `automa-cli` ngay trong môi trường viết code.
+  - **Nhiệm vụ:** Mang đến trải nghiệm "Click & Run". Cung cấp giao diện để người dùng có thể kích hoạt Studio, chạy Workflow, quản lý Vault và xem logs mà không cần phải gõ lệnh Terminal thủ công. Đây là cầu nối giúp `automa-cli` hòa nhập sâu vào thói quen của Developer.
+
+---
+
+## ⌨️ Các Lệnh Thường Dùng (Scripts)
+
+Tại thư mục `automa-cli`, bạn có thể sử dụng các lệnh Turborepo sau:
+
+- `pnpm run dev`: Khởi chạy toàn bộ hệ thống (API Daemon + Studio UI).
+- `pnpm run build`: Đóng gói (Build) CLI và tĩnh hóa Studio UI.
+- `pnpm run test`: Chạy Unit Test cho toàn bộ các package.
+- `pnpm run test:e2e`: Khởi chạy Playwright để test giao diện End-to-End.
+- `npx automa studio`: (Nếu cài CLI global) Khởi chạy giao diện Studio độc lập.
