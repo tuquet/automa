@@ -11,8 +11,6 @@ This file acts purely as a **Referrer/Index**. Depending on your specific task, 
 
 ## Available Skills
 
-- 🎨 **[Automa CLI Studio (automa-cli-studio)](./automa-cli-studio/SKILL.md)**
-  - **Purpose:** Strict UI/UX guidelines for Vue 3, Tailwind, and Shadcn-Vue development inside the `studio` frontend.
 
 - 💻 **[Automa CLI Run (automa-cli-run)](./automa-cli-run/SKILL.md)**
   - **Purpose:** Protocol for verifying local dependencies and running the Automa CLI tool to execute workflows.

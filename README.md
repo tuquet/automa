@@ -1,14 +1,14 @@
 # Automa Ecosystem
 
-Chào mừng đến với **Automa Ecosystem**. Phiên bản hiện tại là một hệ sinh thái mạnh mẽ (Multi-app Monorepo) xoay quanh trung tâm là công cụ dòng lệnh `automa-cli`.
+Chào mừng đến với **Automa Ecosystem**. Phiên bản hiện tại là một hệ sinh thái gọn nhẹ và mạnh mẽ xoay quanh trung tâm là công cụ dòng lệnh `automa-cli`.
 
-Kiến trúc mới này tập trung vào sự tự động hóa 100%, có thể hoạt động hoàn toàn Offline (Offline-First) và quản lý dữ liệu linh hoạt, tách biệt khỏi sự phụ thuộc vào các dịch vụ Cloud cũ.
+Kiến trúc mới này tập trung vào sự tự động hóa 100%, hoạt động hoàn toàn Offline (Offline-First) và quản lý dữ liệu linh hoạt, tách biệt khỏi sự phụ thuộc vào các dịch vụ Cloud cũ.
 
 ---
 
 ## 🚀 Hướng Dẫn Cài Đặt & Khởi Chạy (Getting Started)
 
-Dự án được xây dựng dưới dạng **Turborepo** sử dụng **pnpm**.
+Dự án được quản lý linh hoạt, các thành phần giao tiếp với nhau trực tiếp qua CLI.
 
 ### 1. Yêu Cầu Hệ Thống
 - Node.js >= 18.x
@@ -20,22 +20,22 @@ Mở Terminal và chạy tuần tự các lệnh sau:
 ```bash
 # 1. Clone mã nguồn
 git clone https://github.com/tuquet/automa-ecosystem.git
-cd automa-ecosystem/automa-cli
+cd automa-ecosystem
 
-# 2. Cài đặt toàn bộ dependencies cho Monorepo
+# 2. Cài đặt extension Automa gốc (Vanilla)
+cd automa-cli
 pnpm install
-
-# 3. Khởi động môi trường Dev (Bật API Server & Giao diện Studio)
-pnpm run dev
+pnpm run build
+node dist/cli.js install-extension --type github
 ```
 
-Sau khi chạy lệnh `dev`, môi trường sẽ sẵn sàng. Lưu ý: Giao diện **Automa Studio** (Web) hiện đang bị **deprecated**. Toàn bộ trải nghiệm người dùng, quản lý Vault và xem Log đã được chuyển hẳn sang **VS Code Extension (`automa-vscode`)**. Hãy cài đặt và mở tab Automa trong VS Code để sử dụng!
+> **Lưu ý:** Giao diện Automa Studio (Web) hay các bản fork cũ như `automa-ex` hiện đang bị **deprecated**. Toàn bộ trải nghiệm người dùng, quản lý Vault và xem Log đã được chuyển hẳn sang **VS Code Extension (`automa-vscode`)** và công cụ CLI gốc. Bản mở rộng Automa (Vanilla) nguyên gốc sẽ được CLI tự động tải về qua lệnh `install-extension`.
 
 ---
 
 ## 🏗️ Kiến Trúc Hệ Thống: `automa-cli` Là Gốc Rễ
 
-Toàn bộ hệ sinh thái lấy `automa-cli` làm trái tim (Orchestrator). Thay vì giao tiếp phân mảnh qua nhiều app độc lập, mọi luồng dữ liệu đều được quản lý bởi CLI.
+Toàn bộ hệ sinh thái lấy `automa-cli` làm trái tim (Orchestrator). Thay vì giao tiếp phân mảnh qua nhiều app độc lập, mọi luồng dữ liệu đều được thực thi và điều phối bởi CLI.
 
 ```mermaid
 graph TD
@@ -44,22 +44,20 @@ graph TD
     end
 
     subgraph Browser ["Chrome / Browser"]
-        ex_ui["Automa Extensions (Vue Flow UI)"]
+        ex_ui["Automa Extension (Vanilla)"]
     end
 
-    subgraph Core ["CLI Orchestrator (Node.js Daemon)"]
-        cli_server["API Server & Router"]
+    subgraph Core ["CLI Orchestrator"]
+        cli_runner["Workflow Runner"]
         cli_repo["Workflow Repository (Vault Scanner)"]
         cli_profile["Profile Controller"]
-        cli_queue["SQLite Job Queue & Worker"]
     end
 
     subgraph Storage ["Local OS Storage (~/.automa-cli/)"]
         config_json{"config.json"}
-        extensions_dir["extensions/ (Nhiều extensions)"]
+        extensions_dir["extensions/ (Chứa bản Vanilla)"]
         profiles_dir["profiles/"]
-        db_profile[("profile.sqlite")]
-        db_log[("log.sqlite")]
+        db_log[("logs (IndexedDB / SQLite)")]
     end
     
     vault_dir["Thư mục Vault (Đường dẫn trỏ từ config.json)"]
@@ -67,85 +65,58 @@ graph TD
     %% CLI Functions
     cli_repo -- "Đọc cấu hình & Quét đệ quy" --> vault_dir
     cli_repo -. "Lấy Vault Path" .-> config_json
-    cli_server -- "Đọc Extensions" --> extensions_dir
+    cli_runner -- "Inject Extension" --> extensions_dir
     cli_profile -- "Quản lý Session" --> profiles_dir
-    cli_profile -- "Lưu Personalization" --> db_profile
-    cli_queue -- "Lưu Log & Job Status" --> db_log
+    cli_runner -- "Lưu vết Execution" --> db_log
     
     %% Interactions
-    cli_server -- "Nạp nhiều Extensions" --> ex_ui
-    vscode_ext -- "Gọi lệnh qua child_process" --> cli_server
-    ex_ui -- "Chạy Workflow (Puppeteer)" --> cli_queue
+    vscode_ext -- "Gọi lệnh qua child_process" --> cli_runner
+    cli_runner -- "Điều khiển qua Puppeteer & IndexedDB" --> ex_ui
 ```
 
 ---
 
-## 🚀 5 Trụ Cột Chức Năng Của CLI
+## 🚀 4 Trụ Cột Chức Năng Của CLI
 
 ### 1. Phục vụ VS Code Extension (Orchestrator)
-CLI không chỉ là công cụ dòng lệnh mà còn chứa một Daemon Server (chạy ở cổng `3333`). Mặc dù giao diện web Studio đã bị **deprecated**, CLI giờ đây đóng vai trò là backend vững chắc, giao tiếp trực tiếp với **VS Code Extension (`automa-vscode`)** để cung cấp các tính năng quản lý kịch bản ngay trong IDE lập trình. 
+CLI cung cấp bộ lệnh hoàn chỉnh (`run`, `history`, `log`) cho **VS Code Extension (`automa-vscode`)** giao tiếp thông qua `child_process`. Điều này mang lại tính năng quản lý kịch bản trực tiếp ngay trong IDE lập trình mà không cần phải bật server nền (daemon).
 
 ### 2. Quản lý Thư mục Quét (Vault)
-Thông qua `WorkflowRepository`, CLI cho phép người dùng chỉ định một thư mục "Vault" (được khai báo trong `config.json`). Nó sẽ thực hiện quét đệ quy toàn bộ thư mục này (bỏ qua các thư mục như `.git` hay `node_modules`) để tìm và index các file cấu hình workflow (`.json`). Nhờ vậy, source code workflows hoàn toàn nằm trên máy cục bộ, quản lý qua Git dễ dàng.
+Thông qua `WorkflowRepository`, CLI cho phép người dùng chỉ định một thư mục "Vault" (được khai báo trong `config.json`). Nó sẽ thực hiện quét đệ quy toàn bộ thư mục này để tìm và index các file cấu hình workflow (`.json`). Source code workflows hoàn toàn nằm trên máy cục bộ, dễ dàng đồng bộ qua Git.
 
 ### 3. Quản lý Chrome Profiles
-Thông qua `ProfileController`, CLI tạo ra và quản lý các thư mục vật lý (Profile) của trình duyệt tại `~/.automa-cli/profiles/`. Khi chạy Puppeteer để auto web, CLI sẽ map các folder này bằng cờ `--user-data-dir`. Việc này giúp mọi phiên đăng nhập (Session, Cookies) của người dùng đều được lưu lại. Ngoài ra, các cấu hình cá nhân hóa (Personalization) của từng trình duyệt được lưu trữ an toàn trong `profile.sqlite`.
+Thông qua `ProfileController`, CLI tạo ra và quản lý các thư mục vật lý (Profile) của trình duyệt tại `~/.automa-cli/profiles/`. Khi chạy Puppeteer, CLI map folder bằng cờ `--user-data-dir` để giữ nguyên các phiên đăng nhập (Session, Cookies) của người dùng một cách riêng biệt cho từng ngữ cảnh chạy.
 
-### 4. Thực thi Workflow (Runner)
-Thay vì bắt người dùng phải mở Chrome thủ công, CLI có thể tự động bật Puppeteer, bơm (inject) **nhiều extensions cùng lúc** (từ thư mục `extensions/`) vào, và kích hoạt các workflow một cách độc lập thông qua API.
-
-### 5. Lưu vết (Logging) bằng SQLite
-Tất cả các lệnh thực thi không bị bay mất vào hư không. Bất cứ khi nào một tiến trình workflow hoàn tất, toàn bộ logs và dữ liệu context (`ctxData`) của từng Node sẽ được ghi phân mảnh, chi tiết vào file cơ sở dữ liệu `log.sqlite`. **VS Code Extension** sử dụng dữ liệu này để hiển thị bảng lịch sử (Execution History) ngay trong giao diện lập trình, giúp developer dễ dàng debug.
+### 4. Tự động hóa & Thực thi Workflow (Runner)
+CLI có khả năng tự động bật trình duyệt thông qua Puppeteer, nạp (inject) trực tiếp **Automa Extension nguyên bản (Vanilla)** từ thư mục `extensions/`, và bắt đầu thực thi workflow. Toàn bộ tiến trình sẽ được giám sát chặt chẽ bằng cách poll trực tiếp từ IndexedDB của trình duyệt để xuất báo cáo log theo thời gian thực về màn hình console hoặc VS Code.
 
 ---
 
 ## ⚙️ Cấu Hình & Dữ Liệu Cục Bộ (Local Storage)
 
-Để đảm bảo tính độc lập và dễ quản lý, toàn bộ dữ liệu cấu hình và trạng thái của hệ sinh thái được tập trung duy nhất tại một thư mục gốc trên hệ điều hành (Root OS Folder):
+Toàn bộ dữ liệu cấu hình và trạng thái của hệ sinh thái được tập trung duy nhất tại:
 **`~/.automa-cli/`**
 
-Thư mục này bao gồm các thành phần cốt lõi:
-
-1. **`config.json`**
-   - File cấu hình trung tâm định nghĩa các đường dẫn (paths) và thiết lập (settings) của CLI.
-2. **`extensions/`**
-   - Chứa danh sách các đường dẫn mã nguồn của các tiện ích (Extensions). CLI hỗ trợ nạp **nhiều extensions cùng lúc** vào trình duyệt (Puppeteer) thông qua thư mục này.
-3. **`profiles/`**
-   - Nơi chứa dữ liệu phiên duyệt web (Session, Cookies, Cache) của từng Profile tách biệt (`~/.automa-cli/profiles/<profileId>`). Đảm bảo chạy tự động hóa nhiều tài khoản mà không bị trùng lặp.
-4. **`profile.sqlite`**
-   - Cơ sở dữ liệu chuyên biệt để lưu trữ các thông tin cá nhân hóa (Personalization), cấu hình riêng lẻ cho từng trình duyệt hoặc profile.
-5. **`log.sqlite`** (hoặc `db.sqlite`)
-   - Cơ sở dữ liệu cục bộ dùng để lưu vết (Logging) toàn bộ tiến trình Hàng đợi (Job Queue), giúp người dùng xem lại lịch sử chạy workflow bất cứ lúc nào.
-
-> **Lưu ý:** Thư mục Vault có thể nằm ở bất kỳ đâu trên máy tính để tiện cho việc dùng Git, nhưng đường dẫn trỏ tới Vault sẽ được khai báo trong `config.json`.
+1. **`config.json`**: File cấu hình trung tâm định nghĩa các đường dẫn (paths) và thiết lập (settings) của CLI.
+2. **`extensions/`**: Chứa extension Automa tải từ Github.
+3. **`profiles/`**: Nơi chứa dữ liệu phiên duyệt web của từng Profile tách biệt. Đảm bảo chạy tự động hóa nhiều tài khoản mà không bị trùng lặp.
+4. **`log.sqlite` / `logs`**: Nơi lưu vết toàn bộ tiến trình lịch sử chạy workflow, giúp người dùng xem lại logs bất cứ lúc nào qua VS Code Extension.
 
 ---
 
-## 🛠️ Cấu trúc Monorepo
+## 🛠️ Cấu trúc Hệ Sinh Thái (Submodules)
 
-Dự án hiện tại là một Monorepo Turborepo, bao gồm các thành phần chính:
-
-* **`automa-cli`**: Bao gồm lõi `apps/cli` (API Server, SQLite Queue, Profile & Vault Manager) và `apps/studio` (Giao diện Web UI điều khiển).
-* **`automa-ex`**: Mã nguồn gốc của Automa Extensions (Nơi phát triển các tiện ích nạp vào trình duyệt).
-* **`automa-vault`**: Nơi định nghĩa cấu trúc chuẩn của một Vault cơ bản. Nó bao gồm file cấu hình tĩnh (`settings.json`). Trong tương lai, cấu trúc này đóng vai trò là "Khuôn mẫu" (Template) giúp đồng bộ hóa (sync) toàn bộ dữ liệu của Vault lên các hệ thống Backend hoặc Git Remote.
-* **`apps/e2e`**: Bộ kiểm thử Playwright.
-
----
-
-## 🔌 Tích hợp IDE (VS Code Extension)
-
-Hệ sinh thái tích hợp sẵn một Submodule chuyên biệt dành cho VS Code:
-* **`automa-vscode`**: Là một VS Code Extension chính thức giúp Lập trình viên tương tác trực tiếp với `automa-cli` ngay trong môi trường viết code.
-  - **Nhiệm vụ:** Mang đến trải nghiệm "Click & Run". Cung cấp giao diện để người dùng có thể kích hoạt Studio, chạy Workflow, quản lý Vault và xem logs mà không cần phải gõ lệnh Terminal thủ công. Đây là cầu nối giúp `automa-cli` hòa nhập sâu vào thói quen của Developer.
+* **`automa-cli`**: Công cụ dòng lệnh trung tâm. Đảm nhiệm việc tải extension, quét Vault và chạy Workflow thông qua Puppeteer.
+* **`automa-vscode`**: VS Code Extension chính thức. Cung cấp giao diện "Click & Run", quản lý lịch sử và xem logs trực quan ngay trong trình soạn thảo mã nguồn.
+* **`automa-vault`**: Nơi định nghĩa cấu trúc chuẩn của một Vault cơ bản. Nó bao gồm file cấu hình tĩnh (`settings.json`). Trong tương lai, đóng vai trò là "Khuôn mẫu" (Template) giúp đồng bộ hóa dữ liệu.
 
 ---
 
 ## ⌨️ Các Lệnh Thường Dùng (Scripts)
 
-Tại thư mục `automa-cli`, bạn có thể sử dụng các lệnh Turborepo sau:
+Tại thư mục `automa-cli`, bạn có thể sử dụng:
 
-- `pnpm run dev`: Khởi chạy toàn bộ hệ thống (API Daemon + Studio UI).
-- `pnpm run build`: Đóng gói (Build) CLI và tĩnh hóa Studio UI.
-- `pnpm run test`: Chạy Unit Test cho toàn bộ các package.
-- `pnpm run test:e2e`: Khởi chạy Playwright để test giao diện End-to-End.
-- `npx automa studio`: (Nếu cài CLI global) Khởi chạy giao diện Studio độc lập.
+- `pnpm run build`: Đóng gói (Build) CLI.
+- `node dist/cli.js install-extension`: Tải tự động extension gốc (Vanilla) từ Github.
+- `node dist/cli.js run <file.json>`: Chạy một workflow cục bộ từ file chỉ định.
+- `node dist/cli.js history`: Xem lịch sử các workflow đã chạy.

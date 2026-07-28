@@ -5,28 +5,16 @@
       "path": "."
     },
     {
-      "name": "Automa Extension",
-      "path": "automa-ex"
-    },
-    {
-      "name": "Automa Backend",
-      "path": "automa-be"
-    },
-    {
       "name": "Automa CLI",
       "path": "automa-cli"
     },
     {
-      "name": "Automa Portal",
-      "path": "automa-portal"
+      "name": "Automa Vscode",
+      "path": "automa-vscode"
     },
     {
       "name": "Automa Vault",
       "path": "automa-vault"
-    },
-    {
-      "name": "Automa Vscode",
-      "path": "automa-vscode"
     },
   ],
   "settings": {}
