@@ -1,0 +1,97 @@
+[
+  {
+    "run_at": 1785339927829,
+    "completed": 0,
+    "failed": 3,
+    "tasks": [
+      {
+        "workflow": "workflows/test.json",
+        "variables": {
+          "profile": "acc1"
+        },
+        "job_id": "cli-job-1785339803609",
+        "status": "failed",
+        "started_at": 1785339803171,
+        "ended_at": 1785339865594,
+        "duration_ms": 62423,
+        "workflow_id": "unknown"
+      },
+      {
+        "workflow": "workflows/test.json",
+        "variables": {
+          "profile": "acc2"
+        },
+        "job_id": "cli-job-1785339803615",
+        "status": "failed",
+        "started_at": 1785339803179,
+        "ended_at": 1785339865575,
+        "duration_ms": 62396,
+        "workflow_id": "unknown"
+      },
+      {
+        "workflow": "workflows/test.json",
+        "variables": {
+          "profile": "acc3"
+        },
+        "job_id": "cli-job-1785339866034",
+        "status": "failed",
+        "started_at": 1785339865585,
+        "ended_at": 1785339927828,
+        "duration_ms": 62243,
+        "workflow_id": "unknown"
+      }
+    ]
+  },
+  {
+    "run_at": 1785343507849,
+    "completed": 0,
+    "failed": 3,
+    "tasks": [
+      {
+        "workflow": "workflows/test.json",
+        "variables": {
+          "profile": "acc1"
+        },
+        "job_id": "cli-job-1785343383620",
+        "status": "failed",
+        "started_at": 1785343383148,
+        "ended_at": 1785343445623,
+        "duration_ms": 62475,
+        "workflow_id": "unknown",
+        "attempt_count": 1,
+        "pid": 25792,
+        "error_message": "Execution timed out (60s)."
+      },
+      {
+        "workflow": "workflows/test.json",
+        "variables": {
+          "profile": "acc2"
+        },
+        "job_id": "cli-job-1785343383620",
+        "status": "failed",
+        "started_at": 1785343383155,
+        "ended_at": 1785343445631,
+        "duration_ms": 62476,
+        "workflow_id": "unknown",
+        "attempt_count": 1,
+        "pid": 25380,
+        "error_message": "Execution timed out (60s)."
+      },
+      {
+        "workflow": "workflows/test.json",
+        "variables": {
+          "profile": "acc3"
+        },
+        "job_id": "cli-job-1785343446048",
+        "status": "failed",
+        "started_at": 1785343445631,
+        "ended_at": 1785343507848,
+        "duration_ms": 62217,
+        "workflow_id": "unknown",
+        "attempt_count": 1,
+        "pid": 14496,
+        "error_message": "Execution timed out (60s)."
+      }
+    ]
+  }
+]
