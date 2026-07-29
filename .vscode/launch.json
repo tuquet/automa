@@ -9,6 +9,7 @@
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}/automa-vscode"
       ],
+      "preLaunchTask": "VSCode: Build Deploy",
       "outFiles": [
         "${workspaceFolder}/automa-vscode/dist/**/*.js"
       ]

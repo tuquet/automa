@@ -66,6 +66,35 @@
         "cwd": "${workspaceFolder}"
       },
       "problemMatcher": []
+    },
+    {
+      "label": "CLI: Build Deploy",
+      "type": "shell",
+      "command": "pnpm run build",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-cli"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "VSCode: Build Deploy",
+      "type": "shell",
+      "command": "pnpm run package",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-vscode"
+      },
+      "problemMatcher": [],
+      "group": "build"
+    },
+    {
+      "label": "Build Ecosystem Deploy",
+      "dependsOn": [
+        "CLI: Build Deploy",
+        "VSCode: Build Deploy"
+      ],
+      "group": "build",
+      "problemMatcher": []
     }
   ]
 }

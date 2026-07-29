@@ -3,6 +3,6 @@ node_modules/
 .chrome-profile-diagnose/
 .manual-profile/
 temp_workflow.json
-
+automa-repo-clone
 .pnpm-store/
 .agents

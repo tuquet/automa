@@ -1,0 +1,4 @@
+packages:
+  - 'automa-cli'
+  - 'automa-vault'
+  - 'automa-vscode'

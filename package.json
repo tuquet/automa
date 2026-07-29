@@ -10,5 +10,8 @@
     "automa-cli/**/*.{js,ts,vue}": [
       "npx @biomejs/biome check --write"
     ]
+  },
+  "dependencies": {
+    "tuquet-automa-cli": "workspace:*"
   }
 }
