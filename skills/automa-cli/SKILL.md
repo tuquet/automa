@@ -15,5 +15,8 @@ This file acts purely as a **Referrer/Index**. Depending on your specific task, 
 - 💻 **[Automa CLI Run (automa-cli-run)](./automa-cli-run/SKILL.md)**
   - **Purpose:** Protocol for verifying local dependencies and running the Automa CLI tool to execute workflows.
 
+- 🛠️ **[Automa CLI Studio (automa-cli-studio)](./automa-cli-studio/SKILL.md)**
+  - **Purpose:** Protocol for programmatically injecting and opening a local workflow inside the Automa Extension Studio using Puppeteer.
+
 > [!IMPORTANT]
 > **Agents:** Do not perform tasks directly from this index. You MUST read the detailed `SKILL.md` of the respective sub-folder before proceeding with your task.

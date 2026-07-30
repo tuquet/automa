@@ -1,0 +1,12 @@
+{
+  "automa.vault.run.globalVariables": {
+    "$$getEmployeeDetailBaseUrl": "crm.mingxn.site/sales-team/employees/",
+    "$$loginUrl": "crm.mingxn.site",
+    "$$getEmployeesUrl": "crm.mingxn.site/sales-team",
+    "$$getCodebookUrl": "crm.mingxn.site/settings/codebook",
+    "$$getForbiddenUrl": "crm.mingxn.site/forbidden",
+    "$$getTeamDetailBaseUrl": "crm.mingxn.site/sales-team/",
+    "$$getSalesTeamUrl": "crm.mingxn.site/sales-team"
+  },
+  "automa.vault.run.debug": true
+}
