@@ -6,3 +6,4 @@ temp_workflow.json
 automa-repo-clone
 .pnpm-store/
 .agents
+scratch/
