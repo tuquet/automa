@@ -28,3 +28,5 @@ Mỗi dự án cần đi kèm một file mẫu `demo.fleets.json` để minh h�
   ]
 }
 ```
+
+- Tham khảo [SRS_Fleet_Mapping.md](./SRS_Fleet_Mapping.md) về yêu cầu tính năng Mapping Workflow và Profile trong UI Fleet.

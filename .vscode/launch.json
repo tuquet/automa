@@ -2,14 +2,12 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run Extension",
+      "name": "Debug Automa VS Code Extension",
       "type": "extensionHost",
       "request": "launch",
-      "runtimeExecutable": "${execPath}",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}/automa-vscode"
       ],
-      "preLaunchTask": "VSCode: Build Deploy",
       "outFiles": [
         "${workspaceFolder}/automa-vscode/dist/**/*.js"
       ]

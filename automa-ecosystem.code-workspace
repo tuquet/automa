@@ -1,21 +1,16 @@
 {
   "folders": [
     {
-      "name": "Ecosystem Root",
       "path": "."
     },
     {
-      "name": "Automa CLI",
-      "path": "automa-cli"
-    },
-    {
-      "name": "Automa Vscode",
       "path": "automa-vscode"
     },
     {
-      "name": "Automa Vault",
-      "path": "automa-vault"
+      "path": "automa-cli"
     },
-  ],
-  "settings": {}
+    {
+      "path": "automa-vault"
+    }
+  ]
 }
