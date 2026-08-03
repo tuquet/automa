@@ -7,3 +7,6 @@
 [submodule "automa-vscode"]
 	path = automa-vscode
 	url = https://github.com/tuquet/automa-vscode.git
+[submodule "automa-source"]
+	path = automa-source
+	url = https://github.com/AutomaApp/automa.git
