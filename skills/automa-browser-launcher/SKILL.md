@@ -145,3 +145,7 @@ export class BrowserLauncher {
 2. **Resource Management**: Dễ dàng dọn dẹp bộ nhớ/process với method `close()` bằng package `tree-kill`.
 3. **Decoupling**: Tách rời việc khởi chạy (`launch()`) và việc gắn kết Puppeteer (`connect()`), có thể phục vụ nhiều kịch bản (chỉ mở trình duyệt, hoặc vừa mở vừa tự động điều khiển).
 4. **Anti-Detect Friendly**: Cách tiếp cận này hoàn toàn minh bạch với hệ điều hành và trông giống hệt như người dùng bấm đúp chuột vào trình duyệt bình thường, qua mặt các hệ thống detect Puppeteer thông dụng.
+
+## 5. Phân biệt Chrome for Testing và Pure Chromium
+Từ phiên bản v114, Puppeteer mặc định tải về `Chrome for Testing` (Browser.CHROME). Phiên bản này **bị gắn chặt (hardcoded)** cảnh báo "Chrome for testing is only for automated testing" trên Title bar, không thể tắt bằng cờ `--disable-infobars`.
+* **Quy tắc**: Khi cấu hình yêu cầu cài đặt hoặc tải `chromium` (tức là mong muốn có một trình duyệt sạch sẽ, không cảnh báo), **PHẢI** chỉ định `Browser.CHROMIUM` và tag `latest` khi sử dụng `@puppeteer/browsers`, thay vì dùng `Browser.CHROME`.
