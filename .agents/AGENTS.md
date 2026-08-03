@@ -15,3 +15,6 @@
 - **Trigger**: Whenever the user sends a JSON snippet with `"name": "automa-blocks"` (which contains nodes, dimensions, and block data exported from the Automa Editor).
 - **Behavior**: You MUST recognize this as an Automa Node/Block configuration. 
 - **Action**: Immediately leverage your Automa ecosystem skills (e.g., `automa-cli`, `automa-ex-architecture`) to analyze the node's `type`, `label`, and `data` parameters. Provide tailored technical advice, debugging, or optimization tips specific to the Automa ecosystem.
+
+# File Organization Rules
+- **Scratch Files**: Any temporary, test, one-off, or scratch scripts created during the session MUST be saved inside a \scratch/\ folder relative to the active submodule/sub-project (e.g., \utoma-cli/scratch/\ or \utoma-vault/scratch/\). Do NOT pollute the project root directory with these files.
