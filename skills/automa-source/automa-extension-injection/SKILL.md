@@ -1,6 +1,6 @@
 ---
 name: automa-extension-injection
-description: Kiến trúc Vòng đời Chromium Extension & Các nguyên tắc tương tác an toàn qua Puppeteer.
+description: Kiến trúc Vòng đời Chromium Extension & Các nguyên tắc tương tác an toàn qua Puppeteer (automa-source / automa-ex).
 ---
 
 # Automa Extension Injection & Communication

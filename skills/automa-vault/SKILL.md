@@ -1,20 +1,22 @@
 ---
 name: automa-vault
-description: Hướng dẫn cấu trúc thư mục và file cấu hình mẫu cho tính năng Fleets trong automa-vault.
+description: Hướng dẫn cấu trúc thư mục, file cấu hình Fleets và đặc tả Workflow & Browser Profile Mapping cho automa-vault.
 ---
 
-# Automa Vault Fleets Convention
+# Automa Vault Fleets & Profile Mapping Convention
 
-Khi làm việc với tính năng Fleets trong dự án `automa-vault`, luôn tuân thủ các quy tắc cấu trúc sau:
+Tài liệu này quy định quy chuẩn cấu trúc thư mục Fleets trong `automa-vault` và đặc tả kiến trúc **Workflow & Browser Profile Mapping** trong Fleet Editor.
 
-## 1. Cấu trúc thư mục
+---
+
+## 1. Cấu trúc thư mục Fleets
+
 Tất cả các tệp liên quan đến cấu hình của fleets phải được đặt trong thư mục `fleets/` nằm bên trong từng project cụ thể.
 Ví dụ: `automa-vault/{project}/fleets/`
 
-## 2. File mẫu (demo.fleets.json)
-Mỗi dự án cần đi kèm một file mẫu `demo.fleets.json` để minh họa cấu trúc của một fleet. 
+### File cấu hình mẫu (`demo.fleets.json`)
+Mỗi dự án cần đi kèm một file mẫu `demo.fleets.json` để minh họa cấu trúc của một fleet.
 
-**Nội dung mẫu của `demo.fleets.json`:**
 ```json
 {
   "name": "Demo Fleet",
@@ -29,4 +31,37 @@ Mỗi dự án cần đi kèm một file mẫu `demo.fleets.json` để minh h�
 }
 ```
 
-- Tham khảo [SRS_Fleet_Mapping.md](./SRS_Fleet_Mapping.md) về yêu cầu tính năng Mapping Workflow và Profile trong UI Fleet.
+---
+
+## 2. Fleet Workflow & Browser Profile Mapping Specification
+
+Fleet Visual Editor hỗ trợ ánh xạ (mapping) và gán trực tiếp các Workflow local và Browser Profile cho Fleet Members và Tasks.
+
+### 2.1 Backend (VS Code Extension Provider - `FleetPreviewEditorProvider.ts`)
+- **Profile & Workflow Scanning**: Tự động quét workspace tìm các file `**/*.bprofile.json`, `**/*.profile.json` và `**/*.automa.json`.
+- **Dictionary Generation**: Trích xuất `id` và `name` độc bản (fallback về tên file nếu thiếu `name`).
+- **Data Injection**: Truyền hai dictionary `workflows` và `profiles` vào Webview qua thông điệp `postMessage({ type: 'update', text, workflows, profiles })`.
+
+### 2.2 Frontend (Webview UI - Vue 3)
+- **Profile Dropdown**: Tại Member header, hiển thị `<select>` dropdown chứa danh sách `profiles`. Khi thay đổi, tự động cập nhật `member.browser_id` và đánh dấu document đã sửa.
+- **Workflow Dropdown**: Tại Task card, hiển thị `<select>` dropdown chứa danh sách `workflows`. Khi thay đổi, cập nhật `task.workflow_id`.
+- **Fallback Handling**: Nếu Fleet JSON chứa ID không còn tồn tại trong workspace local (ví dụ: file đã bị xóa), dropdown tự động hiển thị tiền tố `[Missing]` hoặc `[Unknown]` để cảnh báo người dùng mà không làm mất dữ liệu gốc.
+
+### 2.3 Demo Profile Targets (`automa-vault/profiles/`)
+Tệp profile mẫu được lưu trữ tại `automa-vault/profiles/`:
+- `marketing-profile-01.bprofile.json`
+- `accounting-profile-02.bprofile.json`
+
+Format chuẩn của a `.bprofile.json`:
+```json
+{
+  "id": "accounting-profile-02",
+  "name": "Accounting Profile",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)...",
+  "timezone": "Asia/Ho_Chi_Minh"
+}
+```
+
+### 2.4 UI/UX Styling
+- Cửa sổ điều khiển và dropdown sử dụng biến màu chuẩn VS Code (như `var(--vscode-dropdown-background)`).
+- Mọi thao tác thay đổi lập tức kích hoạt nút "Save Fleet".

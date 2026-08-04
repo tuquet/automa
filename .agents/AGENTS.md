@@ -21,8 +21,11 @@
 
 # Automa Extension Architecture & Constraints
 
-- **StorageArea Polyfill Bug (Chrome 129+)**: The extension uses an older `webextension-polyfill` that crashes with `TypeError: Illegal invocation: Function must be called on an object of type StorageArea` on modern Chrome versions. 
-  - **Rule**: NEVER modify `automa-source` to fix this. Instead, ensure any Puppeteer/CLI launcher (`automa-cli`) forces the use of a stable, older Chromium executable (e.g., Puppeteer's bundled Chrome 126) rather than dynamically fetching the latest system Chrome.
+- **Repository**: `automa-source` is now an independent fork at `tuquet/automa-ext` (forked from `AutomaApp/automa`). Direct modifications are allowed.
+  - **Upstream tracking**: `upstream` remote points to `AutomaApp/automa.git` for cherry-picking upstream fixes when needed.
+- **No `webextension-polyfill`**: The extension uses native `chrome.*` API (MV3) and `browser.*` API (Firefox) via a minimal wrapper at `src/lib/browser-compat.js`. Do NOT re-introduce `webextension-polyfill`.
+- **Chromium Version**: CLI (`automa-cli`) uses `latest` Chromium build. No version pinning required.
 - **MessageListener Routing Prefix**: The `MessageListener` utility in `automa-source` automatically intercepts messages based on the execution context prefix (e.g., `background--`, `offscreen--`). 
   - **Rule**: When invoking extension events from external scripts (like `dummyTab` in the CLI) using direct `chrome.runtime.sendMessage`, you MUST manually prepend the correct prefix (e.g., `background--workflow:execute`). Otherwise, the `MessageListener` will not match the event name.
+
 

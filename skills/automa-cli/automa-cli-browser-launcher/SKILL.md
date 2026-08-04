@@ -1,6 +1,6 @@
 ---
-name: automa-browser-launcher
-description: Mẫu chuẩn OOP để khởi chạy trình duyệt bằng exec/spawn và kết nối qua CDP (không dùng Puppeteer launch).
+name: automa-cli-browser-launcher
+description: Mẫu chuẩn OOP để khởi chạy trình duyệt bằng exec/spawn và kết nối qua CDP (automa-cli).
 ---
 
 # Browser Launcher CDP (No-Playwright Mode)
