@@ -9,4 +9,4 @@
 	url = https://github.com/tuquet/automa-vscode.git
 [submodule "automa-source"]
 	path = automa-source
-	url = https://github.com/AutomaApp/automa.git
+	url = https://github.com/tuquet/automa-ext.git
