@@ -1,0 +1,227 @@
+{
+  "main": {
+    "id": "c3b7868c605cd1b4",
+    "type": "split",
+    "children": [
+      {
+        "id": "c7fbe4735b61fdc9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "11b9380c190ef02f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "automa-vscode/Commands_Reference.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Commands_Reference"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "f594307700961ba0",
+    "type": "split",
+    "children": [
+      {
+        "id": "3e0d9214cc2da31e",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "27c3de20a00134ee",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Trình duyệt tệp"
+            }
+          },
+          {
+            "id": "2572ed0371d6714d",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Tìm kiếm"
+            }
+          },
+          {
+            "id": "03f96aae7552e4ae",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Đánh dấu"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 245.5
+  },
+  "right": {
+    "id": "a4548eadffaed8e9",
+    "type": "split",
+    "children": [
+      {
+        "id": "b04fe35706982803",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "ea12943101559498",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "automa-vscode/Commands_Reference.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Liên kết đến"
+            }
+          },
+          {
+            "id": "da130ec1490108ae",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "automa-vscode/Commands_Reference.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Liên kết đi ra"
+            }
+          },
+          {
+            "id": "a601d4fb4d9ad5c4",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Thẻ"
+            }
+          },
+          {
+            "id": "36dc4eba8caf7d05",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Tất cả thuộc tính"
+            }
+          },
+          {
+            "id": "7b0a9de8dcd43bc9",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "automa-vscode/Commands_Reference.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Đề cương"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Mở bộ chuyển đổi nhanh": false,
+      "graph:Mở xem biểu đồ": false,
+      "canvas:Tạo bảng mới": false,
+      "daily-notes:Mở ghi chú hôm nay": false,
+      "templates:Chèn mẫu": false,
+      "command-palette:Mở khay lệnh": false,
+      "bases:Tạo cơ sở mới": false
+    }
+  },
+  "active": "11b9380c190ef02f",
+  "lastOpenFiles": [
+    "automa-vault/_Index.md",
+    "automa-cli/HTTP_Server_API.md",
+    "Home.md",
+    "automa-cli/_Index.md",
+    "automa-source/_Index.md",
+    "automa-vscode/_Index.md",
+    "_meta/automa-cli/Local_Database.md",
+    "automa-cli/Local_Database.md",
+    "automa-cli/Fleet_Management.md",
+    "automa-cli/Execution_Engine.md",
+    "automa-cli/Data_Sanitization.md",
+    "automa-cli/Browser_Management.md",
+    "automa-cli/automa-cli.md",
+    "automa-cli",
+    "_meta/automa-cli/HTTP_Server_API.md",
+    "_meta/automa-cli/Fleet_Management.md",
+    "_meta/automa-cli/Execution_Engine.md",
+    "_meta/automa-cli/Data_Sanitization.md",
+    "_meta/automa-cli/automa-cli.md",
+    "automa-vscode/automa-vscode.md",
+    "automa-vault/automa-vault.md",
+    "_meta/automa-cli/Browser_Management.md",
+    "automa-vscode/Sidebar_Views.md",
+    "automa-vscode/Settings_Configuration.md",
+    "automa-vscode/Fleet_Preview.md",
+    "automa-vscode/Commands_Reference.md",
+    "automa-vscode/Log_Viewer.md",
+    "_meta/All_Documents.base",
+    "automa-vault",
+    "automa-source",
+    "automa-vscode",
+    "_meta/automa-cli",
+    "_meta"
+  ]
+}

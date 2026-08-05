@@ -28,4 +28,12 @@
 - **MessageListener Routing Prefix**: The `MessageListener` utility in `automa-source` automatically intercepts messages based on the execution context prefix (e.g., `background--`, `offscreen--`). 
   - **Rule**: When invoking extension events from external scripts (like `dummyTab` in the CLI) using direct `chrome.runtime.sendMessage`, you MUST manually prepend the correct prefix (e.g., `background--workflow:execute`). Otherwise, the `MessageListener` will not match the event name.
 
+# Knowledge Base & Documentation
 
+- **Primary Source of Truth**: All project documentation is centralized in an Obsidian Vault located at the `documents/` folder.
+- **Agent Initialization**: When tasked with understanding the ecosystem architecture, features, or CLI/VSCode commands, you MUST ALWAYS read `documents/Home.md` and `documents/_meta/All_Documents.base` first. 
+- **Documentation Updates**: Whenever you implement a major feature or architectural change, you must update the corresponding Markdown files in the `documents/` Vault.
+- **Mandatory Skills**: When working with the Vault, you MUST load and apply the following local skills:
+  1. `obsidian-markdown`: For formatting notes, using wikilinks, callouts, and frontmatter.
+  2. `obsidian-bases`: For creating or updating `.base` files to query and summarize vault data dynamically.
+  3. `obsidian-cli`: For interacting with, searching, or automating the vault if the Obsidian desktop app is running.
