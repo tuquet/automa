@@ -14,8 +14,7 @@ Vault là thư mục trung tâm để quản lý mọi dữ liệu liên quan đ
 
 - `*.automa.json`: Workflow
 - `*.fleets.json`: Cấu hình thực thi song song
-- `*.bprofile.json`: Browser Profile (Proxy, UserAgent, Fingerprint)
-- `*.automa-log.json`: Nhật ký thực thi
+- `*.profile.json`: Browser Profile (Proxy, UserAgent, Fingerprint)
 
 ## Cấu trúc đề xuất
 
@@ -24,7 +23,6 @@ my-vault/
   ├── workflows/
   ├── fleets/
   ├── profiles/
-  ├── logs/
   └── .vscode/
       └── settings.json
 ```

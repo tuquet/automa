@@ -17,6 +17,7 @@ Extension đăng ký một Activity Bar với các Panel View nằm ở Sidebar 
 File nguồn chính:
 - [[AutomaFilesProvider.ts]] (`src/providers/AutomaFilesProvider.ts`)
 - [[RunnersTreeDataProvider.ts]] (`src/providers/RunnersTreeDataProvider.ts`)
+- [[HistoryTreeDataProvider.ts]] (`src/providers/HistoryTreeDataProvider.ts`)
 
 Cả hai lớp này đều implements interface `vscode.TreeDataProvider`.
 
@@ -45,6 +46,14 @@ Class `RunnersTreeDataProvider` theo dõi và điều khiển các tác vụ th�
 - **TreeItem Action:**
   - Icon dạng `sync~spin` để biểu thị tiến trình đang chạy.
   - Kèm inline action command (`automa.killRunner`) và click action (`automa.showRunnerLog`).
+
+### 3. Execution History View (HistoryTreeDataProvider)
+Class `HistoryTreeDataProvider` cung cấp danh sách các luồng thực thi trước đây.
+
+- **Dữ liệu Tập trung:** Gọi lệnh ngầm `automa history --json` từ CLI để lấy dữ liệu từ cơ sở dữ liệu SQLite cục bộ (thay vì quét file JSON vật lý trong Vault).
+- **Virtual URI Log Rendering:**
+  - Khi click vào một Job, VS Code bắn command `automa.showLogPreview` truyền kèm URI ảo dạng `automa-log://<jobId>`.
+  - [[LogCustomEditorProvider.ts]] sẽ chặn URI này và render ra màn hình Webview, sử dụng thông tin chi tiết qua lệnh `automa log <jobId> --json`.
 
 > [!INFO]
 > File Explorer Sidebar cung cấp cái nhìn tổng quan về thư mục, trong khi Automa Sidebar Views mang đến tính phân loại logic (Semantic View) tách biệt rõ ràng theo từng loại Entity, giúp quản lý chuyên nghiệp hơn.

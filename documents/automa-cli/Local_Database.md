@@ -27,7 +27,7 @@ Mã nguồn khởi tạo: [[core/db/index.ts]](file:///c:/Users/pn.tund2/Documen
 Lưu trữ thông tin tổng quan của mỗi lần chạy workflow.
 - `id` (TEXT PRIMARY KEY): Thường có dạng `cli-job-<timestamp>` hoặc được gắn bởi hệ thống.
 - `name` (TEXT): Tên của workflow/job.
-- `data` (TEXT): Payload của workflow dưới dạng JSON.
+- `data` (TEXT): Payload của workflow dưới dạng JSON. Bổ sung trường `results` sau khi chạy xong để trả về variables và table outputs.
 - `options` (TEXT): Cấu hình chạy (ví dụ timeouts, settings) dạng JSON.
 - `status` (TEXT): Trạng thái của job (`running`, `success`, `error`, v.v.).
 - *(Các trường `created_at` và `updated_at` tự sinh).*
@@ -46,6 +46,7 @@ Logic tương tác với database được module hoá tại [[core/db/JobReposi
 ### Các hàm chính:
 - `createJob(jobId, name, data, options, status)`: Tạo record trong bảng `jobs` (trả về boolean nếu thành công).
 - `updateJobStatus(jobId, status)`: Cập nhật cột `status`.
+- `finishJob(jobId, status, results, duration)`: Cập nhật trạng thái kèm theo kết quả đầu ra (`results`), được `ExecutionManager` gọi khi một luồng chạy kết thúc.
 - `insertLog(jobId, type, message)`: Thêm một bản ghi vào bảng `logs`. Bỏ qua một cách im lặng (silent fail) nếu có lỗi.
 - `getJobStatus(jobId)`: Truy vấn trạng thái của job.
 - `getJobLogs(jobId)`: Lấy mảng toàn bộ logs theo `job_id`, sắp xếp tăng dần theo ID (thứ tự thời gian).
