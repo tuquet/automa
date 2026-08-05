@@ -63,6 +63,10 @@ Tài liệu này tổng hợp toàn bộ các lệnh (commands) được cung c�
 - **Vị trí**: Workflow Preview Toolbar.
 - **Mô tả**: Mở workflow hiện tại trên giao diện kéo thả Automa Extension Studio ngay trong trình duyệt.
 
+### 2.4 Automa: Encrypt Secret (`automa.vault.encryptSecret`)
+- **Vị trí**: Command Palette (`Ctrl+Shift+P`).
+- **Mô tả**: Mã hoá thông tin nhạy cảm trước khi lưu vào Automa Vault.
+
 ---
 
 ## 3. Commands giao diện Editor (UI & Previews)
@@ -75,7 +79,7 @@ Các lệnh này chủ yếu dùng để chuyển đổi (toggle) giữa chế �
 | `automa.showWorkflowSource` | Show Workflow Source | `</>` | Quay lại mã nguồn khi đang ở Workflow Preview |
 | `automa.showFleetPreview` | Preview Fleet | 👁 | Xem trực quan file `*.fleets.json` |
 | `automa.showFleetSource` | Show Fleet Source | `</>` | Quay lại mã nguồn khi đang ở Fleet Preview |
-| `automa.showLogPreview` | Open Preview | 👁 | Mở Log Viewer cho file `*.automa-log.json` |
+| `automa.showLogPreview` | Open Preview | 👁 | Mở Log Viewer qua Virtual URI (`automa-log://`) hoặc file `*.automa-log.json` |
 | `automa.showLogSource` | Show Source | `</>` | Xem nội dung thô khi đang ở Log Viewer |
 
 ---
@@ -85,10 +89,14 @@ Các lệnh này chủ yếu dùng để chuyển đổi (toggle) giữa chế �
 Các lệnh này nằm ở thanh tiêu đề (View Title) của các tab bên trong Activity Bar.
 
 - **`automa.refreshRunners`**: (🔄) Cập nhật lại danh sách các runners đang hoạt động.
+- **`automa.refreshHistory`**: (🔄) Cập nhật lại danh sách lịch sử thực thi.
 - **`automa.searchProfiles`** / **`automa.clearSearchProfiles`**: (🔍 / 🧹) Tìm kiếm và xóa bộ lọc trong view **Profiles**.
 - **`automa.searchWorkflows`** / **`automa.clearSearchWorkflows`**: (🔍 / 🧹) Tìm kiếm và xóa bộ lọc trong view **Workflows**.
 - **`automa.searchPackages`** / **`automa.clearSearchPackages`**: (🔍 / 🧹) Tìm kiếm và xóa bộ lọc trong view **Packages**.
 - **`automa.searchFleets`** / **`automa.clearSearchFleets`**: (🔍 / 🧹) Tìm kiếm và xóa bộ lọc trong view **Fleets**.
+- **`automa.filterHistoryByTaskId`** / **`automa.clearHistoryFilter`**: (🔍 / 🧹) Lọc và xóa bộ lọc theo Task ID trong view **History**.
+- **`automa.deleteHistoryItem`**: (🗑️) Xóa một mục lịch sử thực thi cụ thể.
+- **`automa.clearHistory`**: (🗑️) Xóa toàn bộ lịch sử thực thi.
 
 > [!TIP]
 > Bạn không cần phải Refresh các view hiển thị file, do extension sử dụng `FileSystemWatcher` để tự động làm mới danh sách khi file có sự thay đổi.

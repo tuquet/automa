@@ -28,7 +28,7 @@ automa fleet start ./fleets/marketing.fleets.json --run-now
 
 ## 2. Luồng hoạt động (Workflow Flow)
 
-Dựa trên mã nguồn tại [[FleetCommand.ts]](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/commands/FleetCommand.ts), quy trình khởi động một Fleet bao gồm các bước sau:
+Dựa trên mã nguồn tại [FleetCommand.ts](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/commands/FleetCommand.ts), quy trình khởi động một Fleet bao gồm các bước sau:
 
 1. **Phân tích và kiểm tra JSON**: Đọc file `.fleets.json`.
 2. **Kiểm tra tính hợp lệ (Linter Service Gateway)**: Sử dụng `LinterService.validate(fleetData, "fleet")` để đảm bảo file JSON chuẩn Schema. Nếu có lỗi, quá trình sẽ dừng ngay (Fail fast).

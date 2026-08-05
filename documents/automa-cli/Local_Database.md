@@ -16,7 +16,7 @@ tags:
 ## 1. Cấu trúc Database
 
 Cơ sở dữ liệu được lưu tại đường dẫn cấu hình mặc định: `~/.automa-cli/config/log.sqlite` (hoặc trong thư mục cấu hình hệ thống). 
-Mã nguồn khởi tạo: [[core/db/index.ts]](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/core/db/index.ts).
+Mã nguồn khởi tạo: [core/db/index.ts](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/core/db/index.ts).
 
 ### Đặc điểm khởi tạo:
 - Chế độ **WAL** (`journal_mode = WAL`): Giúp tăng hiệu năng đọc/ghi đồng thời, tránh lock khi có nhiều browser đang chạy song song trong Fleet và báo cáo log về cùng lúc.
@@ -41,7 +41,7 @@ Lưu trữ log chi tiết từng bước (step) cho các job.
 
 ## 2. API Quản lý Job (JobRepository)
 
-Logic tương tác với database được module hoá tại [[core/db/JobRepository.ts]](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/core/db/JobRepository.ts).
+Logic tương tác với database được module hoá tại [core/db/JobRepository.ts](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/core/db/JobRepository.ts).
 
 ### Các hàm chính:
 - `createJob(jobId, name, data, options, status)`: Tạo record trong bảng `jobs` (trả về boolean nếu thành công).

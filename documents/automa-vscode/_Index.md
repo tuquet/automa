@@ -10,7 +10,7 @@ tags:
 
 Chào mừng bạn đến với tài liệu của Extension **Automa CLI Toolkit** cho VS Code. Thay vì một trang tài liệu khổng lồ, các tính năng đã được phân chia rõ ràng để dễ dàng tra cứu và bảo trì.
 
-> [!info] Điều hướng (Navigation)
+> [!INFO] Điều hướng (Navigation)
 > Sử dụng các liên kết dưới đây để xem chi tiết từng nhóm tính năng.
 
 ## 🎨 Giao diện Trực quan (Visual Editors)
@@ -25,3 +25,6 @@ Các trình biên tập thay thế JSON thô bằng giao diện kéo thả, cấ
 ## ⚙️ Lệnh & Cấu hình (Commands & Settings)
 - [[Commands_Reference]]: Tra cứu các lệnh chuột phải (Run, Lint, Auto-Fix NanoID, Open in Studio).
 - [[Settings_Configuration]]: Các thiết lập `automa.*` trong VS Code Preferences (Global Variables, Browser Path).
+
+## 🛠️ Công cụ hỗ trợ (Utilities)
+- [[Linter_Diagnostics]]: Bắt lỗi và hiển thị cảnh báo file JSON trực tiếp trên Editor với Linter Engine.

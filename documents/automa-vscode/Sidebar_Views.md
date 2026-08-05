@@ -51,6 +51,9 @@ Class `RunnersTreeDataProvider` theo dõi và điều khiển các tác vụ th�
 Class `HistoryTreeDataProvider` cung cấp danh sách các luồng thực thi trước đây.
 
 - **Dữ liệu Tập trung:** Gọi lệnh ngầm `automa history --json` từ CLI để lấy dữ liệu từ cơ sở dữ liệu SQLite cục bộ (thay vì quét file JSON vật lý trong Vault).
+- **Lọc theo Task ID (Task Filter):**
+  - Hỗ trợ công cụ lọc thông minh qua nút "Filter by Task ID" trên thanh tiêu đề của View.
+  - Người dùng có thể nhập mã tĩnh của một Task (được định nghĩa trong Fleet) để CLI tự động truy xuất vào chuỗi JSON bằng hàm `json_extract(options, '$.fleetContext.task_id')` trong SQLite.
 - **Virtual URI Log Rendering:**
   - Khi click vào một Job, VS Code bắn command `automa.showLogPreview` truyền kèm URI ảo dạng `automa-log://<jobId>`.
   - [[LogCustomEditorProvider.ts]] sẽ chặn URI này và render ra màn hình Webview, sử dụng thông tin chi tiết qua lệnh `automa log <jobId> --json`.

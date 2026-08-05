@@ -17,6 +17,11 @@ Chào mừng bạn đến với tài liệu cốt lõi của **Automa CLI**. Đ�
 - [[Execution_Engine]]: Phân tích vòng đời chạy của một Workflow.
 - [[Browser_Management]]: CDP Polling, khởi tạo Chromium, và giao tiếp Extension MV3.
 - [[Data_Sanitization]]: Tiền xử lý JSON, sửa lỗi NanoID để chống crash Studio.
+- [[Linter_Engine]]: Hệ thống kiểm lỗi tĩnh và cross-reference (Diagnostics).
+
+## 🛡️ Bảo mật & Dữ liệu toàn cục (Security & Globals)
+- [[Security_Cryptography]]: Cơ chế mã hóa và quản lý bí mật.
+- **Globals Vault**: Hệ thống cung cấp biến môi trường và thông tin đăng nhập (credentials) an toàn cho toàn bộ quá trình chạy (xem thêm tại Execution Engine và Security).
 
 ## 🚀 Tính năng Nâng cao (Server & Fleet)
 - [[Fleet_Management]]: Chạy workflow song song, cron scheduling và điều phối đa tiến trình.

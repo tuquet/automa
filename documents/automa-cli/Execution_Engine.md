@@ -23,7 +23,7 @@ Quá trình thực thi của CLI bám sát sơ đồ phân luồng như sau:
    - Quét sự phụ thuộc (Dependency tree): tìm và thu thập các sub-workflows hoặc packages được tham chiếu trong workflow chính.
 
 2. **Quản lý Cấu hình & Biến (Variables Resolution)**
-   - CLI kết hợp biến môi trường theo độ ưu tiên: `CLI flag > .vscode/settings.json > global DB > default config`.
+   - CLI kết hợp biến môi trường theo độ ưu tiên: `CLI flag > .vscode/settings.json > Globals Vault > default config`.
    - Các biến Global (`$$VAR`) được tiêm thẳng vào ngữ cảnh.
    - Nếu chạy ở chế độ tương tác (interactive), CLI có thể prompt người dùng nhập các tham số trigger.
 

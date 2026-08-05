@@ -21,11 +21,11 @@ Bạn có thể chạy server với lệnh `serve`. Port mặc định là `8765
 automa serve --port 8765
 ```
 
-Mã nguồn xử lý CLI nằm tại [[ServeCommand.ts]](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/commands/ServeCommand.ts).
+Mã nguồn xử lý CLI nằm tại [ServeCommand.ts](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/commands/ServeCommand.ts).
 
 ## 2. Đặc điểm kỹ thuật
 
-Được triển khai tại [[core/server/index.ts]](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/core/server/index.ts):
+Được triển khai tại [core/server/index.ts](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/core/server/index.ts):
 
 - **Graceful Shutdown**: Lắng nghe `SIGINT` và `SIGTERM`, tự động dọn dẹp các tiến trình trình duyệt (`BrowserManager.destroyAll()`) trước khi thoát.
 - **Auto-shutdown (Heartbeat)**: Tích hợp cơ chế timeout `30 phút` (`HEARTBEAT_INTERVAL`). Nếu không có bất kỳ request nào đến trong 30 phút, server sẽ tự động tắt để giải phóng tài nguyên. Mỗi khi có request mới, thời gian heartbeat sẽ được làm mới.
