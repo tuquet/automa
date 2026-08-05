@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "c7fbe4735b61fdc9",
+        "id": "29ee6a1d1774a7f1",
         "type": "tabs",
         "children": [
           {
-            "id": "11b9380c190ef02f",
+            "id": "54df8272e7112373",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "automa-vscode/Commands_Reference.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "Commands_Reference"
+              "title": "Tab mới"
             }
           }
         ]
@@ -188,7 +184,7 @@
       "bases:Tạo cơ sở mới": false
     }
   },
-  "active": "11b9380c190ef02f",
+  "active": "27c3de20a00134ee",
   "lastOpenFiles": [
     "automa-vault/_Index.md",
     "automa-cli/HTTP_Server_API.md",
