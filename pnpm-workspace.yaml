@@ -3,6 +3,7 @@ packages:
   - 'automa-vscode'
   - 'automa-vscode/webview-ui'
   - 'automa-source'
+  - 'packages/*'
 allowBuilds:
   better-sqlite3: true
   esbuild: true
