@@ -74,3 +74,12 @@ Quản lý chu kỳ phát triển của `automa-vscode`:
   ```
 * **VS Code Task Integration**:
   Trong `.vscode/tasks.json` của workspace, cấu hình task `Build VSCode Extension` để tự động compile trước khi nhấn `F5` chạyExtension Development Host.
+
+---
+
+## 5. UI State Sync Architecture
+
+Để đảm bảo VS Code Sidebar (TreeViews) luôn phản ánh đúng trạng thái thực tế của file system mà không cần người dùng nhấn nút Refresh thủ công:
+- **`createFileSystemWatcher`**: Lắng nghe sự kiện (create/change/delete) trên các file `.json`, `.yaml` trong `.vault/` hoặc `globals/` để trigger `refresh()` lên `ProviderManager`.
+- **`onDidChangeVisibility`**: Tự động fetch data mới nhất mỗi khi người dùng chuyển tab và focus vào một panel cụ thể.
+- **`EventEmitter`**: Gọi `this._onDidChangeTreeData.fire()` để ép VS Code vẽ lại cây thư mục.

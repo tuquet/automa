@@ -62,6 +62,41 @@ Format chuẩn của a `.bprofile.json`:
 }
 ```
 
-### 2.4 UI/UX Styling
 - Cửa sổ điều khiển và dropdown sử dụng biến màu chuẩn VS Code (như `var(--vscode-dropdown-background)`).
 - Mọi thao tác thay đổi lập tức kích hoạt nút "Save Fleet".
+
+---
+
+## 3. Global Vault (Variables, Credentials, Tables)
+
+Global Vault sử dụng kiến trúc phi tập trung (Decentralized Vault) trên toàn bộ Workspace, cho phép người dùng tổ chức dữ liệu một cách linh hoạt (ví dụ: đặt file `leads.table.json` nằm ngay cùng thư mục với `marketing.automa.json`).
+
+VS Code Extension (`VaultTreeDataProvider`) và Automa CLI sẽ quét toàn bộ dự án (`vscode.workspace.findFiles`) để nhận diện các thành phần Global Vault dựa trên đuôi mở rộng:
+- **Biến (Variables):** Tất cả các file `**/*.variable.json`
+- **Thông tin xác thực (Credentials):** Tất cả các file `**/*.credential.json`
+- **Bảng dữ liệu (Tables):** Tất cả các file `**/*.table.json`
+
+### 3.1 Cấu trúc file `*.table.json`
+Đặc tả schema JSON bắt buộc cho một Table để đảm bảo tính tương thích giữa `automa-vscode` (khởi tạo) và `automa-cli` (thực thi) cũng như Automa Extension.
+
+```json
+[
+  {
+    "id": "table_1234abcd",
+    "name": "My Table",
+    "columns": [],
+    "items": [],
+    "columnsIndex": {},
+    "createdAt": 1691234567890,
+    "modifiedAt": 1691234567890
+  }
+]
+```
+
+**Chi tiết trường dữ liệu:**
+- `id`: Định danh duy nhất (có thể là chuỗi string UUID/random hoặc số nguyên).
+- `name`: Tên bảng hiển thị.
+- `columns`: (Mảng) Định nghĩa các cột.
+- `items`: (Mảng) Chứa các hàng dữ liệu (rows).
+- `columnsIndex`: (Object) Tra cứu ID cột.
+- `createdAt` / `modifiedAt`: (Timestamp) Thời gian khởi tạo/cập nhật.
