@@ -83,3 +83,11 @@ Quản lý chu kỳ phát triển của `automa-vscode`:
 - **`createFileSystemWatcher`**: Lắng nghe sự kiện (create/change/delete) trên các file `.json`, `.yaml` trong `.vault/` hoặc `globals/` để trigger `refresh()` lên `ProviderManager`.
 - **`onDidChangeVisibility`**: Tự động fetch data mới nhất mỗi khi người dùng chuyển tab và focus vào một panel cụ thể.
 - **`EventEmitter`**: Gọi `this._onDidChangeTreeData.fire()` để ép VS Code vẽ lại cây thư mục.
+
+## 6. Custom Editor Providers & Webview Panels
+
+Trong submodule này, kiến trúc đã được cập nhật lớn để hiển thị giao diện tuỳ chỉnh (Custom Editors):
+- **`StudioWebviewPanel`**: Quản lý Webview hiển thị Automa Studio nhúng trực tiếp trong VS Code.
+- **`LogCustomEditorProvider` / `LiveLogEditorProvider`**: Các Provider đảm nhiệm việc render file log (`.log`) bằng giao diện tuỳ chỉnh thay vì mở bằng Text Editor mặc định, cung cấp khả năng Live-Reload, theo dõi tiến trình chạy của Fleet/Workflow.
+- **`DaemonManager`**: Chịu trách nhiệm quản lý vòng đời của các tiến trình background (Automa CLI runner), giúp VS Code biết được tiến trình nào đang chạy, logs lưu ở đâu, và cho phép dừng (kill) một cách an toàn.
+- **`CommandManager`**: Cấu trúc mới dùng để đăng ký tập trung các lệnh (commands) lên VS Code, giúp tách biệt (Decoupling) logic giữa UI Context và Execute Function.

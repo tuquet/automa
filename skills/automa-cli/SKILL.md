@@ -47,3 +47,5 @@ await extWorker.evaluate(async (url) => {
 
 - **`VaultContextResolver`**: Một service độc lập dùng để nội suy (infer) đường dẫn `vaultPath` và `projectName` từ một đường dẫn absolute (khi người dùng chạy lệnh từ bất kỳ thư mục con nào). Tránh viết lại vòng lặp quét ngược `.vault` trong từng Command.
 - **`ExecutionManager`**: Lớp bao bọc (wrapper) chung để xử lý logic lặp (Retries), truyền tham số `runnerFunction` (Dependency Injection) thay vì hardcode hàm thực thi. Điều này giúp tách biệt ranh giới trách nhiệm (SRP) giữa lớp quản lý thực thi và lớp điều khiển Puppeteer/Browser.
+- **`WorkflowDriver` & Fallback Console**: Đảm nhiệm việc kết nối Browser, có cơ chế xử lý khi Browser bị ngắt kết nối đột ngột (fallback worker console) và dừng workflow ngay lập tức nếu Service Worker bắn ra ngoại lệ (exception).
+- **`WorkflowRepository`**: Hỗ trợ phân giải (parse) định dạng Object thay vì chỉ String cho credentials và variables toàn cục (globals), giúp linh hoạt hơn trong cấu hình.
