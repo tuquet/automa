@@ -2,9 +2,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Extension: Install Dependencies",
+      "label": "Workspace: Install Dependencies",
       "type": "shell",
-      "command": "pnpm install --ignore-scripts",
+      "command": "pnpm install",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -14,9 +14,9 @@
       }
     },
     {
-      "label": "Extension: Dev",
+      "label": "Workspace: Dev All",
       "type": "shell",
-      "command": "pnpm run dev",
+      "command": "pnpm dev",
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -28,7 +28,7 @@
       }
     },
     {
-      "label": "Extension: Build",
+      "label": "Workspace: Build All",
       "type": "shell",
       "command": "pnpm run build",
       "options": {
@@ -38,62 +38,33 @@
       "group": "build"
     },
     {
-      "label": "Extension: Build Dev",
-      "detail": "Build Chrome Extension ở chế độ development với secrets phát triển",
+      "label": "Workspace: Dev VSCode",
       "type": "shell",
-      "command": "pnpm run build:dev",
+      "command": "pnpm dev:vscode",
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "problemMatcher": [],
-      "group": "build"
-    },
-    {
-      "label": "Extension: Build Chrome Prod",
-      "type": "shell",
-      "command": "npm run build:prod-chrome",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [],
-      "group": "build"
-    },
-    {
-      "label": "Extension: Lint",
-      "type": "shell",
-      "command": "npm run lint",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
+      "isBackground": true,
       "problemMatcher": []
     },
     {
-      "label": "CLI: Build Deploy",
+      "label": "Workspace: Dev CLI",
       "type": "shell",
-      "command": "pnpm run build",
+      "command": "pnpm dev:cli",
       "options": {
-        "cwd": "${workspaceFolder}/automa-cli"
+        "cwd": "${workspaceFolder}"
       },
-      "problemMatcher": [],
-      "group": "build"
+      "isBackground": true,
+      "problemMatcher": []
     },
     {
-      "label": "VSCode: Build Deploy",
+      "label": "Workspace: Dev Source",
       "type": "shell",
-      "command": "pnpm run package",
+      "command": "pnpm dev:source",
       "options": {
-        "cwd": "${workspaceFolder}/automa-vscode"
+        "cwd": "${workspaceFolder}"
       },
-      "problemMatcher": [],
-      "group": "build"
-    },
-    {
-      "label": "Build Ecosystem Deploy",
-      "dependsOn": [
-        "CLI: Build Deploy",
-        "VSCode: Build Deploy"
-      ],
-      "group": "build",
+      "isBackground": true,
       "problemMatcher": []
     }
   ]
