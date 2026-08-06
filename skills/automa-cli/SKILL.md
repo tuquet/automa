@@ -47,3 +47,9 @@ await extWorker.evaluate(async (url) => {
 
 - **`VaultContextResolver`**: Một service độc lập dùng để nội suy (infer) đường dẫn `vaultPath` và `projectName` từ một đường dẫn absolute (khi người dùng chạy lệnh từ bất kỳ thư mục con nào). Tránh viết lại vòng lặp quét ngược `.vault` trong từng Command.
 - **`ExecutionManager`**: Lớp bao bọc (wrapper) chung để xử lý logic lặp (Retries), truyền tham số `runnerFunction` (Dependency Injection) thay vì hardcode hàm thực thi. Điều này giúp tách biệt ranh giới trách nhiệm (SRP) giữa lớp quản lý thực thi và lớp điều khiển Puppeteer/Browser.
+
+## 🚀 Recent Core Features (Skill Learning Loop)
+
+- **`JobRepository` & Log Buffering**: Tối ưu hóa hiệu suất bằng cách lưu trữ log vào buffer bộ nhớ tạm và insert vào SQLite theo batch (đạt 100 dòng hoặc sau 1 giây timeout) thay vì insert từng dòng liên tục.
+- **Biến môi trường nâng cao**: `.variables.json` và `.credentials.json` hiện đã hỗ trợ định dạng **Object** (Key-Value pairs). Lõi CLI tự động map key thành `id` và `name` tương thích với Automa schema (trước đây chỉ hỗ trợ Array).
+- **Browser Lifecycle Management**: Tích hợp callback `onBrowserDisconnected` cho `WorkflowRunner` để bắt sự kiện người dùng vô tình đóng cửa sổ Chrome và tự động dừng tiến trình CLI kịp thời, ngăn chặn việc rò rỉ (leak) worker và timeout treo vĩnh viễn.

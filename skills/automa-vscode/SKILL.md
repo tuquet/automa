@@ -83,3 +83,18 @@ Quản lý chu kỳ phát triển của `automa-vscode`:
 - **`createFileSystemWatcher`**: Lắng nghe sự kiện (create/change/delete) trên các file `.json`, `.yaml` trong `.vault/` hoặc `globals/` để trigger `refresh()` lên `ProviderManager`.
 - **`onDidChangeVisibility`**: Tự động fetch data mới nhất mỗi khi người dùng chuyển tab và focus vào một panel cụ thể.
 - **`EventEmitter`**: Gọi `this._onDidChangeTreeData.fire()` để ép VS Code vẽ lại cây thư mục.
+
+---
+
+## 6. Webview Data Injection & Two-Way RPC (Phase 4)
+
+Từ phiên bản kiến trúc mới, `StudioWebviewPanel.ts` hỗ trợ Webview Two-Way RPC để giao tiếp với Vue App bên trong Webview.
+Do Vue App là một Web Extension (Automa) chạy trong môi trường Webview, nó sẽ gọi các API như `browser.runtime.sendMessage()`. Thay vì background worker của Chrome, VS Code Extension sẽ đứng ra hứng các tin nhắn này thông qua `handleRuntimeMessage`:
+
+- Hứng các events chuẩn của Automa:
+  - `background--fetch`, `background--fetch:text`: Dùng để fetch data (từ API bên ngoài) do Webview bị hạn chế CORS.
+  - `background--workflow:execute`: Gọi `DaemonManager` để kích hoạt workflow run thông qua localhost API hoặc CLI fallback.
+  - `background--open:dashboard`: Chặn hành vi mở tab dashboard mặc định của Automa vì người dùng đã ở trong VS Code.
+- Gửi kết quả về thông qua `runtime-message-response` với message ID tương ứng.
+
+Kiến trúc này cho phép Automa Vue App chạy trơn tru bên trong VS Code Webview mà không cần sửa đổi mã nguồn gốc (zero modification to upstream `automa`).
