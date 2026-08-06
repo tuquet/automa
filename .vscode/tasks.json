@@ -45,7 +45,17 @@
         "cwd": "${workspaceFolder}"
       },
       "isBackground": true,
-      "problemMatcher": []
+      "problemMatcher": {
+        "owner": "tsup",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Build start",
+          "endsPattern": "Build success"
+        }
+      }
     },
     {
       "label": "Workspace: Dev CLI",
