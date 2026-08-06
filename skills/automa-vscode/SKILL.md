@@ -83,3 +83,13 @@ Quản lý chu kỳ phát triển của `automa-vscode`:
 - **`createFileSystemWatcher`**: Lắng nghe sự kiện (create/change/delete) trên các file `.json`, `.yaml` trong `.vault/` hoặc `globals/` để trigger `refresh()` lên `ProviderManager`.
 - **`onDidChangeVisibility`**: Tự động fetch data mới nhất mỗi khi người dùng chuyển tab và focus vào một panel cụ thể.
 - **`EventEmitter`**: Gọi `this._onDidChangeTreeData.fire()` để ép VS Code vẽ lại cây thư mục.
+
+---
+
+## 6. Webview Data Injection & Two-Way RPC (Phase 4)
+
+Giao diện xem trước Workflow (`WorkflowPreviewEditorProvider`) và Fleet sử dụng Webview với cơ chế 2 chiều:
+- VS Code gửi data vào Webview qua `updateWebview` (postMessage).
+- Webview thực hiện UI state changes và gửi Message (`saveWorkflow`) ngược lại VS Code.
+- **Triggers & Parameters**: Quản lý ghi đè (override) giá trị `defaultValue` trực tiếp từ giao diện webview cho các node Trigger (`BlockTrigger`).
+- Hỗ trợ phân tích linh hoạt cả Object và Array cho `variables.json` / `credentials.json` để hiển thị trong Sidebar VaultView (hiển thị cấu trúc dạng cây bằng `VaultItem`).

@@ -47,3 +47,17 @@ await extWorker.evaluate(async (url) => {
 
 - **`VaultContextResolver`**: Một service độc lập dùng để nội suy (infer) đường dẫn `vaultPath` và `projectName` từ một đường dẫn absolute (khi người dùng chạy lệnh từ bất kỳ thư mục con nào). Tránh viết lại vòng lặp quét ngược `.vault` trong từng Command.
 - **`ExecutionManager`**: Lớp bao bọc (wrapper) chung để xử lý logic lặp (Retries), truyền tham số `runnerFunction` (Dependency Injection) thay vì hardcode hàm thực thi. Điều này giúp tách biệt ranh giới trách nhiệm (SRP) giữa lớp quản lý thực thi và lớp điều khiển Puppeteer/Browser.
+
+---
+
+## 🔑 Globals & Credentials Parsing
+
+Automa CLI hiện đã hỗ trợ đọc các tệp `.variables.json` và `.credentials.json` không chỉ dưới dạng `Array` mà còn dưới dạng `Object` key-value. Điều này mang lại sự linh hoạt trong quá trình nạp thông số đầu vào toàn cục (`WorkflowRepository`).
+
+## ⚙️ Browser Settings Merging
+
+Việc gộp (merging) `puppeteerOptions` từ `browserSettings` trong `WorkflowRunner` đã được chuẩn hóa. Đặc biệt là tham số mảng `args` (dùng để pass các thiết lập như grid sizes, v.v) sẽ được khử trùng lặp (Set) và hợp nhất đúng đắn thay vì bị ghi đè hoàn toàn.
+
+## 🛡️ Browser Disconnection Handling
+
+`ExecutionManager` và `WorkflowRunner` giờ đây hỗ trợ sự kiện `onBrowserDisconnected` để xử lý việc đóng trình duyệt an toàn (graceful fallback).
