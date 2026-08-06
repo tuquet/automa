@@ -7,3 +7,4 @@ automa-repo-clone
 .pnpm-store/
 .agents
 scratch/
+.turbo/

@@ -22,10 +22,12 @@ Mở Terminal và chạy tuần tự các lệnh sau:
 git clone https://github.com/tuquet/automa-ecosystem.git
 cd automa-ecosystem
 
-# 2. Cài đặt extension Automa gốc (Vanilla)
-cd automa-cli
+# 2. Cài đặt toàn bộ hệ sinh thái (Monorepo)
 pnpm install
 pnpm run build
+
+# 3. Cài đặt extension Automa gốc (Vanilla)
+cd automa-cli
 node dist/cli.js install-extension --type github
 ```
 
@@ -114,9 +116,18 @@ Toàn bộ dữ liệu cấu hình và trạng thái của hệ sinh thái đư�
 
 ## ⌨️ Các Lệnh Thường Dùng (Scripts)
 
-Tại thư mục `automa-cli`, bạn có thể sử dụng:
+Dự án được cấu trúc theo dạng **pnpm workspace** kết hợp **Turborepo**. Tại thư mục gốc (`automa-ecosystem`), bạn có thể sử dụng các lệnh:
 
-- `pnpm run build`: Đóng gói (Build) CLI.
+- `pnpm install`: Cài đặt dependencies cho toàn bộ hệ sinh thái.
+- `pnpm run build`: Đóng gói (Build) song song bằng Turborepo.
+- `pnpm dev`: Chạy dev mode (watch) cho tất cả sub-projects.
+- `pnpm dev:cli`: Chạy dev mode riêng cho `automa-cli`.
+- `pnpm dev:vscode`: Chạy dev mode riêng cho `automa-vscode`.
+- `pnpm dev:source`: Chạy dev mode riêng cho `automa-source`.
+
+Ngoài ra, để sử dụng các lệnh CLI thủ công, hãy di chuyển vào thư mục `automa-cli`:
+
+- `cd automa-cli`
 - `node dist/cli.js install-extension`: Tải tự động extension gốc (Vanilla) từ Github.
 - `node dist/cli.js run <file.json>`: Chạy một workflow cục bộ từ file chỉ định.
 - `node dist/cli.js history`: Xem lịch sử các workflow đã chạy.
