@@ -40,3 +40,10 @@ await extWorker.evaluate(async (url) => {
   await chrome.windows.create({ url, type: 'popup', width: 1280, height: 800 });
 }, studioUrl);
 ```
+
+---
+
+## 🏗️ Core Architecture: Orchestration & Dependency Injection
+
+- **`VaultContextResolver`**: Một service độc lập dùng để nội suy (infer) đường dẫn `vaultPath` và `projectName` từ một đường dẫn absolute (khi người dùng chạy lệnh từ bất kỳ thư mục con nào). Tránh viết lại vòng lặp quét ngược `.vault` trong từng Command.
+- **`ExecutionManager`**: Lớp bao bọc (wrapper) chung để xử lý logic lặp (Retries), truyền tham số `runnerFunction` (Dependency Injection) thay vì hardcode hàm thực thi. Điều này giúp tách biệt ranh giới trách nhiệm (SRP) giữa lớp quản lý thực thi và lớp điều khiển Puppeteer/Browser.

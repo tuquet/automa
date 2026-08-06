@@ -10,7 +10,8 @@
       ],
       "outFiles": [
         "${workspaceFolder}/automa-vscode/dist/**/*.js"
-      ]
+      ],
+      "preLaunchTask": "Workspace: Dev VSCode"
     }
   ]
 }
