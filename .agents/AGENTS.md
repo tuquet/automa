@@ -23,7 +23,8 @@
 
 - **Repository**: `automa-source` is now an independent fork at `tuquet/automa-ext` (forked from `AutomaApp/automa`). Direct modifications are allowed.
   - **Upstream tracking**: `upstream` remote points to `AutomaApp/automa.git` for cherry-picking upstream fixes when needed.
-- **No `webextension-polyfill`**: The extension uses native `chrome.*` API (MV3) and `browser.*` API (Firefox) via a minimal wrapper at `src/lib/browser-compat.js`. Do NOT re-introduce `webextension-polyfill`.
+- **No `webextension-polyfill`**: The extension uses native `chrome.*` API (MV3) and `browser.*` API (Firefox) via a minimal wrapper at `src/lib/browser-compat.js`.
+  - **Build-time Aliasing Rule**: To maintain zero conflicts with the upstream `automa` repository, DO NOT manually replace `import browser from "webextension-polyfill"` in the source files. Instead, keep the upstream source unchanged and use Webpack `resolve.alias` (in `webpack.config.js`) to redirect `webextension-polyfill` imports to `src/lib/browser-compat.js` during the build process.
 - **Chromium Version**: CLI (`automa-cli`) uses `latest` Chromium build. No version pinning required.
 - **MessageListener Routing Prefix**: The `MessageListener` utility in `automa-source` automatically intercepts messages based on the execution context prefix (e.g., `background--`, `offscreen--`). 
   - **Rule**: When invoking extension events from external scripts (like `dummyTab` in the CLI) using direct `chrome.runtime.sendMessage`, you MUST manually prepend the correct prefix (e.g., `background--workflow:execute`). Otherwise, the `MessageListener` will not match the event name.
