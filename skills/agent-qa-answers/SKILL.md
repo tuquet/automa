@@ -69,3 +69,21 @@ AI **bắt buộc** phải sinh code dạng: `const mail = automaRefData('variab
 **Đáp án 35 (Iframes):** Chromium không thể đâm xuyên qua Document Boundaries của thẻ Iframe. AI **Bắt buộc** phải sinh một block `switch-frame` (loại `switch-to-iframe`) trước khối `forms`, truyền tham số `data.selector` trỏ tới thẻ `<iframe>`. Khi tương tác xong, phải gọi lại `switch-frame` (loại `main-frame`) để thoát ra.
 
 **Đáp án 38 (JavaScript Return):** Khi code Async, lệnh `return` cổ điển bị vô hiệu hóa trong luồng của Engine. Đọc `handleJavascriptBlock.js` sẽ thấy Automa bọc code trong một Promise. AI **bắt buộc** phải sinh hàm nội bộ `automaNextBlock(data)` để Resolve Promise đó và chuyển chuỗi dữ liệu (payload) sang block tiếp theo.
+
+**Đáp án 39 (Data Extraction - Trick Question):** Đây là bẫy! Hệ sinh thái Automa **KHÔNG TỒN TẠI** block `extract-data` hay thuộc tính `dataToExtract`. Để xuất Array/Table thay vì đè biến đơn lẻ, AI phải dùng block `get-text` (hoặc `attribute-value`), sau đó cấu hình cờ `multiple: true` và `saveData: true, dataColumn: "Ten_SP"`.
+
+**Đáp án 40 (Modularization):** Để vượt rào Token Limit, AI thiết kế kiến trúc Micro-Workflows: sinh ra nhiều file `.workflow.json` nhỏ, mỗi file có ID Nanoid. Sau đó sinh một file Main Workflow chỉ chứa các block `execute-workflow` (chỉ định `executeId` bằng ID các file con). `WorkflowLinter` sẽ tự động quét đệ quy Vault để Cross-Reference nối chúng lại.
+
+**Đáp án 41 (Auth/Cookies Bypass):** Thay vì viết chuỗi block vượt Captcha dễ sập, ưu tiên sử dụng `Browser Profiles`. Login tay 1 lần, lưu profile. Khi gọi qua CLI, dùng `--profile <ID>`. Trình duyệt sẽ nạp thư mục `User Data Dir` chứa Cookies cũ, bypass hoàn toàn màn hình Login.
+
+**Đáp án 42 (Headless Detection):** Theo `BrowserLauncher.ts`, Automa sử dụng cờ `--headless=new` (thay vì `--headless` cũ) truyền vào hàm `execFile`. Phiên bản Headless mới này giả lập đầy đủ pipeline render đồ họa, giúp fingerprint giống hệt trình duyệt thật, vượt qua phần lớn rào cản Cloudflare chống bot.
+
+---
+
+## Tổng kết những góc nhìn tâm đắc nhất (Agent Learnings)
+Qua 42 câu truy vấn, một AI Agent cần nắm giữ các "Bí kíp" cốt lõi sau để không phá hỏng hệ thống:
+1. **Auto-Sanitization là chiếc phao cứu sinh:** Hệ thống sẽ không văng lỗi khi file JSON sai ID, mà `WorkflowSanitizer` sẽ dùng Regex bắt các ID hỏng (như `node_1`), sinh ra `nanoid` chuẩn, ánh xạ lại toàn bộ `edges` và lưu đè.
+2. **Khởi tạo và triệt tiêu Process thông minh:** `ProcessManager` bắt mọi tín hiệu OS (SIGINT/SIGTERM) để Kill Tree tránh tràn RAM. Tuyệt đối không dùng `puppeteer.launch()`, Automa dùng `execFile` kèm cờ `--remote-debugging-port`, sau đó fetch `/json/version` bắt WebSocket URL và `puppeteer.connect()`.
+3. **Đàm phán cổng (Port Negotiation):** Daemon không bao giờ crash nếu cổng mặc định (8765) bị trùng. `DaemonManager` sẽ quét tịnh tiến port và spawn lệnh với `--port` mới.
+4. **Webpack 5 Extension Vitals:** Khi build UI/Extension có Webpack 5, để dynamic imports (`await import()`) của Locales không bị lỗi đường dẫn khi nhúng vào ảo hóa, bắt buộc phải override `__webpack_public_path__ = window.ASSETS_BASE_URL` hoặc `chrome.runtime.getURL('/')`.
+5. **Validation Mềm & Cứng (Linter):** Chạy thật ngoài CLI, `BaseLinter` bật cờ `isStrict = true` -> Gây Crash execution. Khi mở trên VS Code Editor, `isStrict = false` -> Biến đổi Diagnostic báo lượn sóng màu vàng thân thiện tại chính xác số dòng (tìm bằng Regex `indexOf`).
