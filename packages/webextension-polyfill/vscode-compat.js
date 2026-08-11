@@ -15,14 +15,51 @@ if (!vscodeApi) {
   }
 }
 
+if (window.__INITIAL_WORKFLOW_ID__) {
+  window.location.hash = '/workflows/' + window.__INITIAL_WORKFLOW_ID__;
+}
+
 const listeners = new Set();
 
 const pendingStorageRequests = new Map();
 let storageRequestId = 0;
 
+const storageListeners = new Set();
+const dummyEvent = { addListener: () => {}, removeListener: () => {} };
+const storageOnChangedEvent = {
+  addListener: (listener) => storageListeners.add(listener),
+  removeListener: (listener) => storageListeners.remove(listener),
+  hasListener: (listener) => storageListeners.has(listener)
+};
+
+const runtimeMessageListeners = new Set();
+const runtimeOnMessageEvent = {
+  addListener: (listener) => runtimeMessageListeners.add(listener),
+  removeListener: (listener) => runtimeMessageListeners.delete(listener),
+  hasListener: (listener) => runtimeMessageListeners.has(listener)
+};
+
 if (vscodeApi) {
   window.addEventListener('message', (event) => {
     const message = event.data;
+    if (message.type === 'workflow-state-update') {
+       storageListeners.forEach(listener => listener({
+         workflowStates: { newValue: message.data }
+       }));
+       return;
+    }
+    if (message.type === 'storage-update') {
+       storageListeners.forEach(listener => listener({
+         workflows: { newValue: message.data.workflows }
+       }));
+       return;
+    }
+    if (message.type === 'background--open:dashboard') {
+       runtimeMessageListeners.forEach(listener => {
+          listener({ name: 'background--open:dashboard', data: message.data }, {}, () => {});
+       });
+       return;
+    }
     if (message.type === 'storage-get-response' || message.type === 'storage-set-response' || message.type === 'runtime-message-response') {
       const resolve = pendingStorageRequests.get(message.id);
       if (resolve) {
@@ -34,8 +71,6 @@ if (vscodeApi) {
     listeners.forEach(listener => listener(message));
   });
 }
-
-const dummyEvent = { addListener: () => {}, removeListener: () => {} };
 
 const api = {
   runtime: {
@@ -57,7 +92,7 @@ const api = {
         }
       });
     },
-    onMessage: dummyEvent,
+    onMessage: runtimeOnMessageEvent,
     getURL: (path) => path,
     getManifest: () => ({ version: '1.30.00', manifest_version: 3 })
   },
@@ -76,13 +111,19 @@ const api = {
           if (!vscodeApi) return resolve();
           const id = ++storageRequestId;
           pendingStorageRequests.set(id, resolve);
-          vscodeApi.postMessage({ type: 'storage-set', id, data: items });
+          try {
+            const serialized = JSON.parse(JSON.stringify(items));
+            vscodeApi.postMessage({ type: 'storage-set', id, data: serialized });
+          } catch (e) {
+            console.error("Failed to serialize storage-set items", e);
+            resolve();
+          }
         });
       },
       remove: (keys) => Promise.resolve(),
-      onChanged: dummyEvent
+      onChanged: storageOnChangedEvent
     },
-    onChanged: dummyEvent
+    onChanged: storageOnChangedEvent
   },
   windows: {
     create: () => Promise.resolve(),

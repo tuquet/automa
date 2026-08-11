@@ -64,16 +64,20 @@ Khi người dùng mở một workflow legacy từ cộng đồng (thường có
 
 Quản lý chu kỳ phát triển của `automa-vscode`:
 
-* **Development Watch**:
-  ```bash
-  npm run watch
-  ```
 * **Packaging VSIX**:
   ```bash
-  npx @vscode/vsce package
+  npx @vscode/vsce package --no-dependencies
   ```
-* **VS Code Task Integration**:
-  Trong `.vscode/tasks.json` của workspace, cấu hình task `Build VSCode Extension` để tự động compile trước khi nhấn `F5` chạyExtension Development Host.
+  (Lưu ý: Luôn dùng `--no-dependencies` trong monorepo để tránh lỗi dependencies validation từ gốc).
+
+* **Composite Debugging Flow (F5)**:
+  Luồng debug của dự án được cấu hình cực kỳ chặt chẽ tại thư mục gốc của monorepo (`.vscode/launch.json` và `.vscode/tasks.json`).
+  Khi nhấn `F5` chạy config **"Debug Automa VS Code Extension"**, VS Code sẽ kích hoạt task tổng `Workspace: Dev VSCode`, task này tự động chạy song song 3 tiến trình nền (watch mode) thông qua Turbo repo:
+  1. `Workspace: Dev Source VSCode UI`: Dịch mã nguồn UI Vue từ `automa-ext` (`pnpm dev:source:vscode`).
+  2. `Workspace: Dev Source Runner`: Dịch mã nguồn Runner/Injected Scripts từ `automa-ext` (`pnpm dev:source:runner`).
+  3. `Workspace: Dev VSCode Host`: Dịch mã backend của Extension (`pnpm dev:vscode`).
+
+  Điều này đảm bảo toàn bộ hệ sinh thái (từ Webview UI, Runner đến Extension Logic) được build đồng bộ và cập nhật theo thời gian thực (Hot Reload) mỗi khi lưu file. Không cần phải chạy thủ công từng script `watch` rải rác ở các thư mục con.
 
 ---
 

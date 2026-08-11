@@ -61,3 +61,12 @@ Mọi UI và môi trường thực thi của Extension được phân mảnh r�
 - **`sandbox/index.html` (Isolated Sandbox):** Một iframe vô hình (`display: none`) nhúng trong `newtab`. Đóng vai trò làm "phòng cách ly" để thực thi mã Javascript, Condition hoặc Expression do người dùng viết. Dùng `window.postMessage` giao tiếp, đảm bảo mã độc không thể chạm vào API của Chrome Extension.
 - **`params/index.html` (Parameters Dialog):** Một cửa sổ Vue siêu nhỏ gọn để yêu cầu người dùng nhập các Biến (Variables) bị thiếu trước khi bắt đầu chạy một Workflow.
 - **`offscreen/index.html` (DOM/Audio Proxy):** Tài liệu ẩn dành riêng cho Manifest V3. Vì Background Service Worker bị cấm truy cập DOM và Clipboard, trang này cung cấp "cửa sau" để Background mượn DOM xử lý các tác vụ đó.
+
+## 6. CDP Debugger Flow (Worker Node Level)
+- **Cơ chế: Chrome DevTools Protocol (CDP) via Background SW**
+- **Luồng hoạt động:**
+  - **Chế độ `debugMode`**: Mỗi block (node worker) trong Workflow (ví dụ: `Forms`, `Click`, `Press Key`) đều hỗ trợ tham số `debugMode`.
+  - **Attach Debugger**: Khi Workflow Engine tương tác với một Tab (`handlerActiveTab`, `handlerNewTab`, `handlerInteractionBlock`), nó gọi hàm `attachDebugger(tabId)` (từ `src/workflowEngine/helper.js`) để gắn `chrome.debugger` vào tab đích (protocol `1.3`).
+  - **Message Delegation**: Nếu `block.debugMode === true`, thay vì dùng JS thuần (`element.click()`), Content Script sẽ gửi thông điệp `sendMessage('debugger:send-command', payload, 'background')` hoặc `debugger:type`.
+  - **Background Execution**: Background Service Worker (`src/background/index.js`) nhận thông điệp và trực tiếp gọi `chrome.debugger.sendCommand({ tabId }, method, params)` để giả lập tương tác phần cứng thật như `Input.dispatchMouseEvent` hoặc `Input.dispatchKeyEvent`.
+- **Tác dụng**: Giúp các node worker vượt qua mọi rào cản của trình duyệt (ví dụ: Trusted Events, CSP khắt khe) để tự động hóa một cách "xịn" nhất ở cấp độ DevTools Protocol.

@@ -7,12 +7,13 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "dev:cli": "turbo run dev --filter=tuquet-automa-cli",
+    "dev:cli": "turbo run dev --filter=@tuquet/automa-cli",
     "dev:vscode": "turbo run dev --filter=automa-vscode",
     "dev:source:vscode": "turbo run dev:vscode --filter=automa",
     "dev:source:runner": "turbo run dev:runner --filter=automa"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.31.1",
     "husky": "^9.1.7",
     "lint-staged": "^17.2.0",
     "turbo": "^2.1.2"

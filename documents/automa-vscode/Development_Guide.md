@@ -28,10 +28,11 @@ Nếu bạn mở thư mục gốc `automa-ecosystem`, trong mục **Run and Debu
 - Chọn cấu hình: `Debug Automa VS Code Extension`
 - Bấm `F5` hoặc click nút Play.
 
-### Mối liên hệ với `automa-cli`
-`automa-vscode` không tự mình thực thi các workflow. Nó hoạt động như một lớp giao diện (GUI) gọi đến **Automa CLI Toolkit**.
-- Trong quá trình debug, nếu CLI có thay đổi, bạn nên mở Terminal và chạy lệnh `pnpm dev:cli` tại thư mục root (hoặc dùng task `Workspace: Dev CLI`).
-- Tính năng như *Run Workflow* sẽ thực thi lệnh shell gọi đến CLI. Extension sẽ dùng file được trỏ tới từ cấu hình `automa.cliPath` (nếu có), hoặc CLI cài qua `npm`/`npx`. Ở môi trường local dev, hãy chắc chắn CLI đang chạy hoặc được trỏ đúng đường dẫn cục bộ.
+### Mối liên hệ với `automa-cli` (Daemon Architecture)
+`automa-vscode` không tự mình thực thi các workflow. Nó hoạt động như một lớp giao diện (GUI) giao tiếp với **Automa CLI Toolkit** thông qua một background Daemon.
+- **Kiến trúc REST/SSE**: Extension giao tiếp với Local Daemon (Node.js/Express) ở port `8765` qua các API như `/api/jobs/run`, `/api/lint`, `/api/system/install-browser`. Việc này giúp loại bỏ tình trạng tốn RAM do khởi tạo nhiều V8 contexts (raw CLI) và các lỗi parse JSON từ `stdout`.
+- **Tuyệt đối không lạm dụng Raw CLI**: `DaemonManager` sẽ quản lý vòng đời của process. Extension chỉ nên gọi fallback Raw CLI (thông qua `executeRawCliCommand`) trong trường hợp bất khả kháng khi Daemon bị crash.
+- Trong quá trình debug, nếu CLI có thay đổi, bạn nên mở Terminal và chạy lệnh `pnpm dev:cli` tại thư mục root để test. Local CLI sẽ tự động được ưu tiên resolve qua file `automa.cliPath` hoặc `npx`.
 
 ---
 
@@ -61,10 +62,13 @@ Lệnh này sẽ tạo ra các file Javascript trong thư mục `dist/` (vd: `di
    ```
 2. Chạy lệnh đóng gói:
    ```bash
-   vsce package
+   vsce package --no-dependencies
    # Hoặc nếu chưa cài toàn cục:
-   # npx vsce package
+   # npx vsce package --no-dependencies
    ```
+> [!WARNING] Vấn đề Dependency trong Monorepo
+> Vì `automa-vscode` nằm trong một hệ thống Monorepo, lệnh `vsce package` tiêu chuẩn có thể báo lỗi thiếu thư viện (`dependencies` không khớp với `package.json` gốc). Do đó, bạn **bắt buộc phải truyền flag `--no-dependencies`** để bỏ qua check cấu trúc và để `tsup` tự lo phần bundle các thư viện ngoài.
+
 *Lưu ý: Quá trình package sẽ tự động gọi hook `vscode:prepublish` trong `package.json`, và chạy `pnpm run package` (chạy `tsup` với flag `--minify`) để tối ưu hóa dung lượng source code.*
 
 Kết quả, bạn sẽ nhận được một file có dạng `automa-vscode-0.0.1.vsix` tại thư mục `automa-vscode/`. File này có thể được kéo thả vào VS Code (hoặc cài đặt bằng lệnh `Extensions: Install from VSIX...`) để sử dụng.

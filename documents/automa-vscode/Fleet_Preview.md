@@ -24,7 +24,7 @@ Class `FleetPreviewEditorProvider` implements `vscode.CustomTextEditorProvider` 
 1. **Thu thập dữ liệu tham chiếu (Dictionaries)**
    - Để hiển thị danh sách Dropdown cho các Task và Profile, Provider gọi hai hàm:
      - `getWorkflowDictionary()`: Tìm kiếm tất cả `**/*.automa.json` trong Workspace để lập ánh xạ `ID -> Name`.
-     - `getProfileDictionary()`: Tìm kiếm tất cả `**/*.{bprofile.json,profile.json}` để lập ánh xạ Profile `ID -> Name`.
+     - `getProfileDictionary()`: Tìm kiếm tất cả `**/*.{profile.json,profile.json}` để lập ánh xạ Profile `ID -> Name`.
    - Dữ liệu này được gửi tới Webview qua message `type: "update"`.
 
 2. **Giao tiếp Webview & Document Sync**

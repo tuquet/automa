@@ -38,7 +38,7 @@ Mỗi dự án cần đi kèm một file mẫu `demo.fleets.json` để minh h�
 Fleet Visual Editor hỗ trợ ánh xạ (mapping) và gán trực tiếp các Workflow local và Browser Profile cho Fleet Members và Tasks.
 
 ### 2.1 Backend (VS Code Extension Provider - `FleetPreviewEditorProvider.ts`)
-- **Profile & Workflow Scanning**: Tự động quét workspace tìm các file `**/*.bprofile.json`, `**/*.profile.json` và `**/*.automa.json`.
+- **Profile & Workflow Scanning**: Tự động quét workspace tìm các file `**/*.profile.json`, `**/*.profile.json` và `**/*.automa.json`.
 - **Dictionary Generation**: Trích xuất `id` và `name` độc bản (fallback về tên file nếu thiếu `name`).
 - **Data Injection**: Truyền hai dictionary `workflows` và `profiles` vào Webview qua thông điệp `postMessage({ type: 'update', text, workflows, profiles })`.
 
@@ -49,10 +49,10 @@ Fleet Visual Editor hỗ trợ ánh xạ (mapping) và gán trực tiếp các W
 
 ### 2.3 Demo Profile Targets (`automa-vault/profiles/`)
 Tệp profile mẫu được lưu trữ tại `automa-vault/profiles/`:
-- `marketing-profile-01.bprofile.json`
-- `accounting-profile-02.bprofile.json`
+- `marketing-profile-01.profile.json`
+- `accounting-profile-02.profile.json`
 
-Format chuẩn của a `.bprofile.json`:
+Format chuẩn của a `.profile.json`:
 ```json
 {
   "id": "accounting-profile-02",
