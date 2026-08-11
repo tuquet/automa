@@ -71,8 +71,11 @@ Format chuẩn của a `.profile.json`:
 
 Global Vault sử dụng kiến trúc phi tập trung (Decentralized Vault) trên toàn bộ Workspace, cho phép người dùng tổ chức dữ liệu một cách linh hoạt (ví dụ: đặt file `leads.table.json` nằm ngay cùng thư mục với `marketing.automa.json`).
 
-VS Code Extension (`VaultTreeDataProvider`) và Automa CLI sẽ quét toàn bộ dự án (`vscode.workspace.findFiles`) để nhận diện các thành phần Global Vault dựa trên đuôi mở rộng:
-- **Biến (Variables):** Tất cả các file `**/*.variable.json`
+VS Code Extension (`VaultTreeDataProvider`) và Automa CLI sử dụng cơ chế quét đệ quy (Decentralized Scanning) thông qua `vscode.workspace.findFiles` hoặc `findWorkflowRecursive()` (chấp nhận mọi file `*.json` hoặc `*.automa.json` với CLI thường). 
+Tuy nhiên, đối với Daemon nạp tổng thể Global Vault (`loadAll()`), bắt buộc phải tuân thủ chuẩn quy tắc đuôi mở rộng (suffix) sau để nhận diện thành phần:
+- **Workflow:** Tất cả các file `**/*.workflow.json` (Hệ thống tự nhận diện không cần nhét cứng vào thư mục root `workflows/`)
+- **Packages:** Tất cả các file `**/*.package.json`
+- **Biến (Variables):** Tất cả các file `**/*.variables.json` hoặc `**/*.variable.json`
 - **Thông tin xác thực (Credentials):** Tất cả các file `**/*.credential.json`
 - **Bảng dữ liệu (Tables):** Tất cả các file `**/*.table.json`
 

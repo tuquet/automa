@@ -47,3 +47,6 @@ await extWorker.evaluate(async (url) => {
 
 - **`VaultContextResolver`**: Một service độc lập dùng để nội suy (infer) đường dẫn `vaultPath` và `projectName` từ một đường dẫn absolute (khi người dùng chạy lệnh từ bất kỳ thư mục con nào). Tránh viết lại vòng lặp quét ngược `.vault` trong từng Command.
 - **`ExecutionManager`**: Lớp bao bọc (wrapper) chung để xử lý logic lặp (Retries), truyền tham số `runnerFunction` (Dependency Injection) thay vì hardcode hàm thực thi. Điều này giúp tách biệt ranh giới trách nhiệm (SRP) giữa lớp quản lý thực thi và lớp điều khiển Puppeteer/Browser.
+- **`WorkflowLoaderService`**: Dịch vụ tải workflow. Khi cung cấp URL GitHub, hàm `transformGitHubUrl()` sẽ dùng regex để thay thế `github.com` thành `raw.githubusercontent.com`, bỏ qua thư mục `blob`, và dùng `ofetch` HTTP GET trực tiếp nội dung JSON vào RAM, bỏ qua bước `git clone`.
+- **`SyncWatcher` (Dashboard Mode)**: Khi mở Studio mà không truyền file, hệ thống sẽ chạy ở Dashboard Mode. Mọi thao tác trên Vue.js lưu vào `chrome.storage.local`. `SyncWatcher.ts` của CLI sẽ phát hiện thay đổi và ghi (write) ra file `.json` qua `fs.writeFileSync`.
+- **`DaemonManager` (Port Negotiation)**: Daemon không crash nếu cổng mặc định (8765) bị trùng. Hệ thống sẽ quét tịnh tiến port và spawn process với cờ `--port` mới tương ứng.

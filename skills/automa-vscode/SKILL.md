@@ -60,7 +60,22 @@ Khi người dùng mở một workflow legacy từ cộng đồng (thường có
 
 ---
 
-## 4. Build, Packaging & Tasks
+## 4. Daemon API Communication (Do's and Don'ts)
+
+- **Sử dụng REST/HTTP (Đúng):** Lớp `TaskRunner.ts` luôn phải sử dụng các API qua HTTP POST/GET (ví dụ: `submitJob`) để giao tiếp với Daemon đang chạy ngầm (`automa-cli serve`).
+- **Nghiêm cấm dùng Raw CLI (Sai):** KHÔNG gọi lệnh bằng `child_process.exec('automa-cli run ...')` hay `vscode.ProcessExecution(cmd, args)` (trừ khi dùng để khởi động chính Daemon). Việc spawn raw CLI commands sẽ tạo ra một môi trường V8 Javascript hoàn toàn mới (Memory Leak nghiêm trọng), và dữ liệu `stdout` dễ bị rác (như `console.log`) làm vỡ JSON parsing.
+
+---
+
+## 5. Native Debugger UI Reuse
+
+Khi phát triển tính năng Debugger cho VS Code, **KHÔNG** làm lại UI Inspector. 
+- Extension Webview sẽ sử dụng nguyên bản file Vue Component `EditorDebugging.vue` của ứng dụng web. 
+- Giao tiếp được thực hiện thông qua `StudioWebviewPanel.ts` đóng vai trò là proxy chặn các message từ Webview UI (như `workflow:resume`) và chuyển thành HTTP request gửi xuống API của Daemon.
+
+---
+
+## 6. Build, Packaging & Tasks
 
 Quản lý chu kỳ phát triển của `automa-vscode`:
 
@@ -81,7 +96,7 @@ Quản lý chu kỳ phát triển của `automa-vscode`:
 
 ---
 
-## 5. UI State Sync Architecture
+## 7. UI State Sync Architecture
 
 Để đảm bảo VS Code Sidebar (TreeViews) luôn phản ánh đúng trạng thái thực tế của file system mà không cần người dùng nhấn nút Refresh thủ công:
 - **`createFileSystemWatcher`**: Lắng nghe sự kiện (create/change/delete) trên các file `.json`, `.yaml` trong `.vault/` hoặc `globals/` để trigger `refresh()` lên `ProviderManager`.
