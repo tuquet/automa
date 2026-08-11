@@ -5,5 +5,8 @@ packages:
   - 'packages/*'
 allowBuilds:
   better-sqlite3: true
+  core-js: set this to true or false
   esbuild: true
   puppeteer: true
+  simple-git-hooks: set this to true or false
+  vue-demi: set this to true or false
