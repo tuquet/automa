@@ -6,7 +6,7 @@ tags:
   - architecture
 ---
 
-# 🧩 Automa Chrome Extension (automa-source)
+# 🧩 Automa Chrome Extension (automa-ext)
 
 > [!INFO] Tổng quan
 > Tài liệu này mô tả kiến trúc của tiện ích mở rộng Automa (Phase B), sử dụng MV3 Native Engine (`chrome.*`) và đã loại bỏ hoàn toàn `webextension-polyfill`.
@@ -19,4 +19,5 @@ tags:
 - **[[VueFlow UI]] (Studio)**: Giao diện kéo thả cho phép thiết kế workflow trực quan.
 
 > [!NOTE] Chi tiết mã nguồn
-> Xem chi tiết trong source code tại thư mục `automa-source/`.
+> Xem chi tiết trong source code tại thư mục `automa-ext/`.
+> Xem thêm: **[[Development_Guide|Hướng dẫn Build & Phát triển (Runner / VS Code)]]**

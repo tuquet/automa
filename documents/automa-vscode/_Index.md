@@ -28,3 +28,4 @@ Các trình biên tập thay thế JSON thô bằng giao diện kéo thả, cấ
 
 ## 🛠️ Công cụ hỗ trợ (Utilities)
 - [[Linter_Diagnostics]]: Bắt lỗi và hiển thị cảnh báo file JSON trực tiếp trên Editor với Linter Engine.
+- [[Development_Guide]]: Hướng dẫn phát triển, debug bằng F5 (Launch) và build file cài đặt .vsix.

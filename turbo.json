@@ -11,6 +11,14 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "dev:vscode": {
+      "cache": false,
+      "persistent": true
+    },
+    "dev:runner": {
+      "cache": false,
+      "persistent": true
     }
   }
 }

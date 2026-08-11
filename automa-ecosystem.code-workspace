@@ -13,7 +13,7 @@
       "path": "automa-vault"
     },
     {
-      "path": "automa-source"
+      "path": "automa-ext"
     }
   ]
 }

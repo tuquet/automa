@@ -1,7 +1,7 @@
 {
   "name": "automa-ecosystem",
   "private": true,
-  "packageManager": "pnpm@11.15.1",
+  "packageManager": "pnpm@11.21.0+sha512.521705bce689924eac72f5a3587122f362689ef6571e55ba80076fd637c11132ecffada26fad4ea79c485bfddbfd3d5a2a5b05805a77e893de71ec8a6cca3bb1",
   "scripts": {
     "prepare": "husky",
     "build": "turbo run build",
@@ -9,7 +9,8 @@
     "lint": "turbo run lint",
     "dev:cli": "turbo run dev --filter=tuquet-automa-cli",
     "dev:vscode": "turbo run dev --filter=automa-vscode",
-    "dev:source": "turbo run dev --filter=automa"
+    "dev:source:vscode": "turbo run dev:vscode --filter=automa",
+    "dev:source:runner": "turbo run dev:runner --filter=automa"
   },
   "devDependencies": {
     "husky": "^9.1.7",

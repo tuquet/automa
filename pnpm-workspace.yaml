@@ -1,8 +1,7 @@
 packages:
   - 'automa-cli'
   - 'automa-vscode'
-  - 'automa-vscode/webview-ui'
-  - 'automa-source'
+  - 'automa-ext'
   - 'packages/*'
 allowBuilds:
   better-sqlite3: true

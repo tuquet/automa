@@ -1,17 +1,17 @@
 ---
-name: automa-source
-description: Kiến trúc và các Feature đã hoàn thiện của Automa Extension (automa-source / automa-ex). Trigger khi làm việc với UI, Auth, Sync, hoặc Teamwork của automa-source.
+name: automa-ext
+description: Kiến trúc và các Feature đã hoàn thiện của Automa Extension (automa-ext / automa-ex). Trigger khi làm việc với UI, Auth, Sync, hoặc Teamwork của automa-ext.
 ---
 
-# Automa Extension (`automa-source`) - System Requirements Specification (SRS) & Feature List
+# Automa Extension (`automa-ext`) - System Requirements Specification (SRS) & Feature List
 
 > **Repository**: [`tuquet/automa-ext`](https://github.com/tuquet/automa-ext) (forked from `AutomaApp/automa`)
 > **Browser API**: Native `chrome.*` / `browser.*` via `src/lib/browser-compat.js` (no `webextension-polyfill`)
 > **Manifest**: MV3 (Chrome), MV2 (Firefox)
 
-Tài liệu này đóng vai trò là danh sách các tính năng (Feature List) và kiến trúc cốt lõi đã được xây dựng hoàn thiện bên trong `automa-source` (còn gọi là `automa-ex`). Khi thao tác với `automa-source`, hãy luôn tham chiếu tài liệu này để tận dụng các hệ thống có sẵn, tránh xây dựng trùng lặp.
+Tài liệu này đóng vai trò là danh sách các tính năng (Feature List) và kiến trúc cốt lõi đã được xây dựng hoàn thiện bên trong `automa-ext` (còn gọi là `automa-ex`). Khi thao tác với `automa-ext`, hãy luôn tham chiếu tài liệu này để tận dụng các hệ thống có sẵn, tránh xây dựng trùng lặp.
 
-## Sub-Skills thuộc `automa-source`:
+## Sub-Skills thuộc `automa-ext`:
 - 💉 **[Automa Extension Injection](./automa-extension-injection/SKILL.md)**: Kiến trúc Vòng đời Chromium Extension & Các nguyên tắc tương tác an toàn qua Puppeteer (tiêm workflow, storage observer, Service Worker wake-up).
 
 

@@ -190,7 +190,7 @@
     "automa-cli/HTTP_Server_API.md",
     "Home.md",
     "automa-cli/_Index.md",
-    "automa-source/_Index.md",
+    "automa-ext/_Index.md",
     "automa-vscode/_Index.md",
     "_meta/automa-cli/Local_Database.md",
     "automa-cli/Local_Database.md",
@@ -215,7 +215,7 @@
     "automa-vscode/Log_Viewer.md",
     "_meta/All_Documents.base",
     "automa-vault",
-    "automa-source",
+    "automa-ext",
     "automa-vscode",
     "_meta/automa-cli",
     "_meta"

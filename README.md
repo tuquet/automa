@@ -123,7 +123,7 @@ Dự án được cấu trúc theo dạng **pnpm workspace** kết hợp **Turbo
 - `pnpm dev`: Chạy dev mode (watch) cho tất cả sub-projects.
 - `pnpm dev:cli`: Chạy dev mode riêng cho `automa-cli`.
 - `pnpm dev:vscode`: Chạy dev mode riêng cho `automa-vscode`.
-- `pnpm dev:source`: Chạy dev mode riêng cho `automa-source`.
+- `pnpm dev:source`: Chạy dev mode riêng cho `automa-ext`.
 
 Ngoài ra, để sử dụng các lệnh CLI thủ công, hãy di chuyển vào thư mục `automa-cli`:
 

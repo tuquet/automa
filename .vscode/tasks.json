@@ -14,20 +14,6 @@
       }
     },
     {
-      "label": "Workspace: Dev All",
-      "type": "shell",
-      "command": "pnpm dev",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "isBackground": true,
-      "problemMatcher": [],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    },
-    {
       "label": "Workspace: Build All",
       "type": "shell",
       "command": "pnpm run build",
@@ -38,13 +24,16 @@
       "group": "build"
     },
     {
-      "label": "Workspace: Dev VSCode",
+      "label": "Workspace: Dev VSCode Host",
       "type": "shell",
       "command": "pnpm dev:vscode",
       "options": {
         "cwd": "${workspaceFolder}"
       },
       "isBackground": true,
+      "presentation": {
+        "hidden": true
+      },
       "problemMatcher": {
         "owner": "tsup",
         "pattern": {
@@ -63,19 +52,64 @@
       }
     },
     {
-      "label": "Workspace: Dev CLI",
+      "label": "Workspace: Dev Source VSCode UI",
       "type": "shell",
-      "command": "pnpm dev:cli",
+      "command": "pnpm dev:source:vscode",
       "options": {
         "cwd": "${workspaceFolder}"
       },
       "isBackground": true,
+      "presentation": {
+        "hidden": true
+      },
+      "problemMatcher": {
+        "owner": "webpack",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "compiled .*"
+        }
+      }
+    },
+    {
+      "label": "Workspace: Dev Source Runner",
+      "type": "shell",
+      "command": "pnpm dev:source:runner",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "presentation": {
+        "hidden": true
+      },
+      "problemMatcher": {
+        "owner": "webpack",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "compiled .*"
+        }
+      }
+    },
+    {
+      "label": "Workspace: Dev VSCode",
+      "dependsOn": [
+        "Workspace: Dev Source VSCode UI",
+        "Workspace: Dev Source Runner",
+        "Workspace: Dev VSCode Host"
+      ],
       "problemMatcher": []
     },
     {
-      "label": "Workspace: Dev Source",
+      "label": "Workspace: Dev CLI",
       "type": "shell",
-      "command": "pnpm dev:source",
+      "command": "pnpm dev:cli",
       "options": {
         "cwd": "${workspaceFolder}"
       },

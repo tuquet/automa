@@ -29,7 +29,7 @@ graph LR
         status["Status Bar Indicator"]
     end
 
-    subgraph Source ["automa-source (Vanilla Extension)"]
+    subgraph Source ["automa-ext (Vanilla Extension)"]
         engine["Workflow Engine"]
         sync["Cloud Sync (LWW)"]
         auth["Silent Auth"]
@@ -64,7 +64,7 @@ graph LR
 | **Thiếu test coverage** | 🟡 Medium | Chỉ có `verify_cli.js` — không có unit test cho Linter, Sanitizer, Fleet scheduler. |
 | **Webview inline JS/CSS** | 🟠 Low-Med | 5 webview HTML đều self-contained (Vue CDN + inline) — khó maintain, không có build pipeline riêng. |
 | **SQLite + IndexedDB dual storage** | 🟠 Low-Med | Log lưu đồng thời 2 nơi (SQLite CLI + IndexedDB browser). Chưa có reconciliation strategy. |
-| **`automa-source` là fork read-only** | 🟠 Low-Med | Mọi thay đổi Extension phải qua upstream `AutomaApp/automa` hoặc maintain fork. Rủi ro divergence. |
+| **`automa-ext` là fork read-only** | 🟠 Low-Med | Mọi thay đổi Extension phải qua upstream `AutomaApp/automa` hoặc maintain fork. Rủi ro divergence. |
 
 ### 4. Gaps giữa 2 sản phẩm
 
@@ -276,15 +276,15 @@ graph TD
 #### 4.1 SaaS Dashboard
 
 - **Web Dashboard**: Quản lý workflow, fleet, execution history qua browser (không cần VS Code).
-- **Tech stack**: Next.js + Supabase (đã có auth + sync infrastructure trong `automa-source`).
-- **Tái sử dụng**: Cloud Sync (LWW) engine từ `automa-source` đã hoàn thiện 100%.
+- **Tech stack**: Next.js + Supabase (đã có auth + sync infrastructure trong `automa-ext`).
+- **Tái sử dụng**: Cloud Sync (LWW) engine từ `automa-ext` đã hoàn thiện 100%.
 
 #### 4.2 Team Collaboration
 
 - **Shared Vault**: Team members cùng truy cập vault qua Supabase Realtime.
 - **Role-based access**: Owner / Editor / Viewer cho workflow và fleet.
 - **Audit log**: Ai chạy workflow gì, lúc nào, kết quả ra sao.
-- **Tái sử dụng**: Teamwork UI + `teamWorkflowStore` từ `automa-source` đã sẵn sàng.
+- **Tái sử dụng**: Teamwork UI + `teamWorkflowStore` từ `automa-ext` đã sẵn sàng.
 
 #### 4.3 Cloud Runner (Managed Execution)
 
@@ -316,7 +316,7 @@ graph TD
 
 | Rủi ro | Xác suất | Tác động | Giảm thiểu |
 | :--- | :--- | :--- | :--- |
-| Chrome API breaking changes (MV3 evolution) | Cao | Cao | Maintain fork `automa-source` + automated upstream sync |
+| Chrome API breaking changes (MV3 evolution) | Cao | Cao | Maintain fork `automa-ext` + automated upstream sync |
 | `webextension-polyfill` abandoned | Cao | Cao | Migration plan sang native `chrome.*` API (Horizon 1) |
 | Puppeteer major version break | Trung bình | Trung bình | Pin + gradual upgrade. Rust CDP client là giải pháp tận gốc |
 | One-person bus factor | Cao | Rất cao | Documentation (đã bắt đầu), modular architecture, community contribution |

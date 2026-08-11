@@ -23,7 +23,7 @@ Chào mừng đến với hệ quản trị tri thức của **Automa Ecosystem*
    - Core command-line interface để thực thi workflows, quản lý fleet, chạy HTTP server.
 2. **[[automa-vscode/_Index|🛠️ VS Code Extension (CLI Toolkit)]]**
    - Tiện ích mở rộng VS Code giúp chỉnh sửa, quản lý và kích hoạt workflow/fleet trực quan.
-3. **[[automa-source/_Index|🧩 Automa Chrome Extension]]**
+3. **[[automa-ext/_Index|🧩 Automa Chrome Extension]]**
    - Extension UI (Studio) và Background MV3 Native Engine, đã gỡ bỏ hoàn toàn polyfill.
 4. **[[automa-vault/_Index|🗃️ Automa Vault]]**
    - Đặc tả cấu trúc lưu trữ Local Vault, Fleets, và Browser Profiles.
