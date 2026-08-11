@@ -1,3 +1,12 @@
+---
+title: Product Strategy
+date: 2026-08-11
+tags:
+  - strategy
+  - planning
+  - core
+---
+
 # Automa Ecosystem — Nhận xét Tổng quan & Chiến lược Phát triển Dài hạn
 
 ---

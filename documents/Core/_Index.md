@@ -1,12 +1,21 @@
 ---
-title: Automa Vault Specification
+title: Automa Core & Vault
 date: 2026-08-05
 tags:
   - vault
+  - core
   - spec
 ---
 
-# 🗃️ Automa Vault Specification
+# 🗃️ Automa Core & Vault Specification
+
+Tài liệu này bao gồm các đặc tả lõi của hệ thống (Core Strategy, Agent QA) và thư mục Vault trung tâm để quản lý mọi dữ liệu liên quan đến tự động hóa trong Automa Ecosystem.
+
+## 🧠 Core Strategy & QA
+- [[product_strategy|Product Strategy]]
+- [[QA_Agent_Interrogation|Agent Interrogation Q&A]]
+
+## 🗃️ Vault Specification
 
 Vault là thư mục trung tâm để quản lý mọi dữ liệu liên quan đến tự động hóa trong Automa Ecosystem.
 
