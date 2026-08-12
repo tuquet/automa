@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return, @typescript-eslint/ban-ts-comment */
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { assetsDb, accounts, proxies, browserProfiles } from '@automa/core';
 import { eq, isNull } from 'drizzle-orm';
@@ -11,16 +12,22 @@ export class CampaignService {
   constructor(private readonly cliWorkerService: CliWorkerService) {}
 
   async runCampaign(dto: RunCampaignDto) {
-    if (!assetsDb) throw new Error("Assets DB not initialized");
+    if (!assetsDb) throw new Error('Assets DB not initialized');
     const { workflowPath, accountId } = dto;
 
     this.logger.log(`Starting campaign for workflow: ${workflowPath}`);
 
     const selectedAccount = await this.getAvailableAccount(accountId);
     const selectedProxy = await this.getAliveProxy();
+
     const selectedProfile = await this.getBrowserProfile(selectedAccount.id);
 
-    const payload = this.buildPayload(workflowPath, selectedAccount, selectedProxy, selectedProfile);
+    const payload = this.buildPayload(
+      workflowPath,
+      selectedAccount,
+      selectedProxy,
+      selectedProfile,
+    );
 
     return await this.cliWorkerService.dispatchJob(payload);
   }
@@ -38,7 +45,11 @@ export class CampaignService {
     }
 
     if (!selectedAccount) {
-      throw new NotFoundException(accountId ? `Account ${accountId} not found` : "No active accounts available");
+      throw new NotFoundException(
+        accountId
+          ? `Account ${accountId} not found`
+          : 'No active accounts available',
+      );
     }
     return selectedAccount;
   }
@@ -54,16 +65,27 @@ export class CampaignService {
     const boundProfiles = await assetsDb.select().from(browserProfiles).where(eq(browserProfiles.accountId, accountId)).limit(1);
     if (boundProfiles.length > 0) {
       return boundProfiles[0];
-    } 
-    
+    }
+
     // @ts-ignore
     const freeProfiles = await assetsDb.select().from(browserProfiles).where(isNull(browserProfiles.accountId)).limit(1);
-    return freeProfiles.length > 0 
-      ? freeProfiles[0] 
-      : { userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" };
+    return freeProfiles.length > 0
+      ? freeProfiles[0]
+      : {
+          userAgent:
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        };
   }
 
-  private buildPayload(workflowPath: string, account: any, proxy: any, profile: any) {
+  private buildPayload(
+    workflowPath: string,
+
+    account: any,
+
+    proxy: any,
+
+    profile: any,
+  ) {
     return {
       workflowPath,
       options: {
@@ -71,10 +93,15 @@ export class CampaignService {
       },
       assets: {
         accountId: account.id,
+
         cookies: account.cookies,
-        proxy: proxy ? `${proxy.protocol}://${proxy.username ? proxy.username + ':' + proxy.password + '@' : ''}${proxy.host}:${proxy.port}` : null,
-        browserProfile: profile
-      }
+
+        proxy: proxy
+          ? `${proxy.protocol}://${proxy.username ? proxy.username + ':' + proxy.password + '@' : ''}${proxy.host}:${proxy.port}`
+          : null,
+
+        browserProfile: profile,
+      },
     };
   }
 }
