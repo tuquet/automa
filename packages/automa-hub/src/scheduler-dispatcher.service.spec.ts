@@ -85,7 +85,7 @@ describe('SchedulerDispatcherService', () => {
       // Should have called runCampaign 3 times
       expect(campaignService.runCampaign).toHaveBeenCalledTimes(3);
       expect(campaignService.runCampaign).toHaveBeenCalledWith(expect.objectContaining({
-        workflowId: '/my/workflow.json',
+        workflowPath: '/my/workflow.json',
         accountId: 'acc1',
       }));
     });

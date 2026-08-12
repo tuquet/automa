@@ -1,6 +1,7 @@
 import * as drizzle_orm_sqlite_core from 'drizzle-orm/sqlite-core';
 import { Client } from '@libsql/client';
 import { LibSQLDatabase } from 'drizzle-orm/libsql';
+export { eq, inArray, sql } from 'drizzle-orm';
 
 declare const jobs: drizzle_orm_sqlite_core.SQLiteTableWithColumns<{
     name: "jobs";
@@ -387,6 +388,18 @@ declare const proxies: drizzle_orm_sqlite_core.SQLiteTableWithColumns<{
             enumValues: [string, ...string[]];
             baseColumn: never;
         }, object>;
+        trustScore: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "trust_score";
+            tableName: "proxies";
+            dataType: "number";
+            columnType: "SQLiteInteger";
+            data: number;
+            driverParam: number;
+            notNull: false;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, object>;
         lastChecked: drizzle_orm_sqlite_core.SQLiteColumn<{
             name: "last_checked";
             tableName: "proxies";
@@ -596,15 +609,219 @@ declare const browserProfiles: drizzle_orm_sqlite_core.SQLiteTableWithColumns<{
     };
     dialect: "sqlite";
 }>;
+declare const fleets: drizzle_orm_sqlite_core.SQLiteTableWithColumns<{
+    name: "fleets";
+    schema: undefined;
+    columns: {
+        id: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "id";
+            tableName: "fleets";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        name: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "name";
+            tableName: "fleets";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        description: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "description";
+            tableName: "fleets";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        status: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "status";
+            tableName: "fleets";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        createdAt: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "created_at";
+            tableName: "fleets";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: true;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+    };
+    dialect: "sqlite";
+}>;
+declare const fleetMembers: drizzle_orm_sqlite_core.SQLiteTableWithColumns<{
+    name: "fleet_members";
+    schema: undefined;
+    columns: {
+        fleetId: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "fleet_id";
+            tableName: "fleet_members";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        accountId: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "account_id";
+            tableName: "fleet_members";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        createdAt: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "created_at";
+            tableName: "fleet_members";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: true;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+    };
+    dialect: "sqlite";
+}>;
+declare const schedules: drizzle_orm_sqlite_core.SQLiteTableWithColumns<{
+    name: "schedules";
+    schema: undefined;
+    columns: {
+        id: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "id";
+            tableName: "schedules";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        fleetId: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "fleet_id";
+            tableName: "schedules";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        workflowPath: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "workflow_path";
+            tableName: "schedules";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        cronExpr: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "cron_expr";
+            tableName: "schedules";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        concurrency: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "concurrency";
+            tableName: "schedules";
+            dataType: "number";
+            columnType: "SQLiteInteger";
+            data: number;
+            driverParam: number;
+            notNull: false;
+            hasDefault: true;
+            enumValues: undefined;
+            baseColumn: never;
+        }, object>;
+        status: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "status";
+            tableName: "schedules";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: true;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        createdAt: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "created_at";
+            tableName: "schedules";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: true;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+    };
+    dialect: "sqlite";
+}>;
 
 declare const schema_accounts: typeof accounts;
 declare const schema_browserProfiles: typeof browserProfiles;
 declare const schema_campaigns: typeof campaigns;
+declare const schema_fleetMembers: typeof fleetMembers;
+declare const schema_fleets: typeof fleets;
 declare const schema_jobs: typeof jobs;
 declare const schema_logs: typeof logs;
 declare const schema_proxies: typeof proxies;
+declare const schema_schedules: typeof schedules;
 declare namespace schema {
-  export { schema_accounts as accounts, schema_browserProfiles as browserProfiles, schema_campaigns as campaigns, schema_jobs as jobs, schema_logs as logs, schema_proxies as proxies };
+  export { schema_accounts as accounts, schema_browserProfiles as browserProfiles, schema_campaigns as campaigns, schema_fleetMembers as fleetMembers, schema_fleets as fleets, schema_jobs as jobs, schema_logs as logs, schema_proxies as proxies, schema_schedules as schedules };
 }
 
 declare let historyDbClient: Client | null;
@@ -614,7 +831,8 @@ declare let assetsDb: LibSQLDatabase<typeof schema> | null;
 interface DbConfig {
     historyDbPath: string;
     assetsDbPath: string;
+    migrationsFolder?: string;
 }
 declare function initCoreDatabases(config: DbConfig): Promise<void>;
 
-export { type DbConfig, accounts, assetsDb, assetsDbClient, browserProfiles, campaigns, historyDb, historyDbClient, initCoreDatabases, jobs, logs, proxies };
+export { type DbConfig, accounts, assetsDb, assetsDbClient, browserProfiles, campaigns, fleetMembers, fleets, historyDb, historyDbClient, initCoreDatabases, jobs, logs, proxies, schedules };

@@ -1,4 +1,7 @@
+import { TelemetryService } from './telemetry.service';
 export declare class MmoController {
+    private readonly telemetryService;
+    constructor(telemetryService: TelemetryService);
     getAccounts(): Promise<{
         id: string;
         platform: string;
@@ -21,6 +24,7 @@ export declare class MmoController {
         username: string | null;
         password: string | null;
         status: string;
+        trustScore: number | null;
         createdAt: string | null;
         host: string;
         port: number;
@@ -29,6 +33,9 @@ export declare class MmoController {
     }[]>;
     createProxy(body: any): Promise<{
         id: string;
+        success: boolean;
+    }>;
+    reportTelemetry(body: any): Promise<{
         success: boolean;
     }>;
 }

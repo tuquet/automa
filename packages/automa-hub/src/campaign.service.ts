@@ -96,9 +96,11 @@ export class CampaignService {
 
         cookies: account.cookies,
 
-        proxy: proxy
+        proxyUrl: proxy
           ? `${proxy.protocol}://${proxy.username ? proxy.username + ':' + proxy.password + '@' : ''}${proxy.host}:${proxy.port}`
           : null,
+        
+        proxyId: proxy ? proxy.id : null,
 
         browserProfile: profile,
       },

@@ -38,8 +38,9 @@ let CliWorkerService = CliWorkerService_1 = class CliWorkerService {
             return result;
         }
         catch (error) {
-            this.logger.error(`Failed to dispatch job to CLI Worker: ${error.message}`);
-            throw new common_1.ServiceUnavailableException(`CLI Worker is unavailable: ${error.message}`);
+            const e = error;
+            this.logger.error(`Failed to dispatch job to CLI Worker: ${e.message}`);
+            throw new common_1.ServiceUnavailableException(`CLI Worker is unavailable: ${e.message}`);
         }
     }
 };
