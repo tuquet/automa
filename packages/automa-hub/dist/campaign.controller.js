@@ -15,16 +15,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CampaignController = void 0;
 const common_1 = require("@nestjs/common");
 const campaign_service_1 = require("./campaign.service");
+const run_campaign_dto_1 = require("./dto/run-campaign.dto");
 let CampaignController = class CampaignController {
     campaignService;
     constructor(campaignService) {
         this.campaignService = campaignService;
     }
-    async runCampaign(body) {
-        if (!body.workflowPath) {
-            throw new Error("workflowPath is required");
-        }
-        const result = await this.campaignService.runCampaign(body.workflowPath, body.accountId);
+    async runCampaign(dto) {
+        const result = await this.campaignService.runCampaign(dto);
         return { success: true, result };
     }
 };
@@ -33,7 +31,7 @@ __decorate([
     (0, common_1.Post)('run'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [run_campaign_dto_1.RunCampaignDto]),
     __metadata("design:returntype", Promise)
 ], CampaignController.prototype, "runCampaign", null);
 exports.CampaignController = CampaignController = __decorate([

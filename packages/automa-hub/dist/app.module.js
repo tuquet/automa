@@ -8,19 +8,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
+const config_1 = require("@nestjs/config");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const mmo_controller_1 = require("./mmo.controller");
 const campaign_controller_1 = require("./campaign.controller");
 const campaign_service_1 = require("./campaign.service");
+const cli_worker_service_1 = require("./cli-worker.service");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [],
+        imports: [config_1.ConfigModule.forRoot({ isGlobal: true })],
         controllers: [app_controller_1.AppController, mmo_controller_1.MmoController, campaign_controller_1.CampaignController],
-        providers: [app_service_1.AppService, campaign_service_1.CampaignService],
+        providers: [app_service_1.AppService, campaign_service_1.CampaignService, cli_worker_service_1.CliWorkerService],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
