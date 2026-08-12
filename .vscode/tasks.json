@@ -51,29 +51,7 @@
         }
       }
     },
-    {
-      "label": "Workspace: Dev Source VSCode UI",
-      "type": "shell",
-      "command": "pnpm dev:source:vscode",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "isBackground": true,
-      "presentation": {
-        "hidden": true
-      },
-      "problemMatcher": {
-        "owner": "webpack",
-        "pattern": {
-          "regexp": "^$"
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": ".",
-          "endsPattern": "compiled .*"
-        }
-      }
-    },
+
     {
       "label": "Workspace: Dev Source Runner",
       "type": "shell",
@@ -100,7 +78,6 @@
     {
       "label": "Workspace: Dev VSCode",
       "dependsOn": [
-        "Workspace: Dev Source VSCode UI",
         "Workspace: Dev Source Runner",
         "Workspace: Dev VSCode Host"
       ],

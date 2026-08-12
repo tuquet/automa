@@ -102,3 +102,22 @@ Quản lý chu kỳ phát triển của `automa-vscode`:
 - **`createFileSystemWatcher`**: Lắng nghe sự kiện (create/change/delete) trên các file `.json`, `.yaml` trong `.vault/` hoặc `globals/` để trigger `refresh()` lên `ProviderManager`.
 - **`onDidChangeVisibility`**: Tự động fetch data mới nhất mỗi khi người dùng chuyển tab và focus vào một panel cụ thể.
 - **`EventEmitter`**: Gọi `this._onDidChangeTreeData.fire()` để ép VS Code vẽ lại cây thư mục.
+
+---
+
+## 8. Webview UI Integration (Theme Sync & File Saving)
+
+Việc nhúng toàn bộ Vue App của Automa vào VS Code Webview (`StudioWebviewPanel.ts`) đòi hỏi các thủ thuật tích hợp cực kỳ quan trọng để đảm bảo UX native nhất:
+
+1. **VS Code Theme Sync (Đồng bộ Giao diện):**
+   - Không được hardcode màu sắc cho Webview. 
+   - Sử dụng các biến CSS gốc của VS Code (`var(--vscode-editor-background)`, `var(--vscode-editor-foreground)`, `var(--vscode-editorWidget-background)`).
+   - Dùng `MutationObserver` gắn trên thẻ `body` để bắt các class theme của VS Code (`vscode-dark`, `vscode-high-contrast`) và đồng bộ chúng bằng cách thêm/xoá class `dark` của TailwindCSS trên thẻ `html`. 
+   Điều này giúp Automa Studio có Dark/Light mode khớp 100% với môi trường VS Code.
+
+2. **Cơ chế Save File cục bộ (Local File System):**
+   - Thay vì thiết kế lại API lưu trữ trong Vue, ta tận dụng logic gốc của Vue app:
+   - Từ Extension Host (bên ngoài), gửi một `postMessage` (`{ type: 'trigger-save' }`) vào Webview.
+   - Tại đoạn script inject khởi tạo Webview, lắng nghe message này và **giả lập phím `Ctrl + S`** qua `KeyboardEvent`. 
+   - Ứng dụng Vue bên trong Webview sẽ nhận phím tắt, tự động kích hoạt tiến trình save nội bộ của nó (chạy validator, parse node).
+   - Sau đó Vue app sẽ emit event lưu trữ, được `StudioMessageRouter` chặn lại và ghi đè nội dung JSON trực tiếp xuống file gốc (`doc.uri.fsPath`) thông qua `vscode.workspace.fs`.

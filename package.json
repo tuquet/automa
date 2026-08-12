@@ -9,7 +9,6 @@
     "lint": "turbo run lint",
     "dev:cli": "turbo run dev --filter=@tuquet/automa-cli",
     "dev:vscode": "turbo run dev --filter=automa-vscode",
-    "dev:source:vscode": "turbo run dev:vscode --filter=automa",
     "dev:source:runner": "turbo run dev:runner --filter=automa"
   },
   "devDependencies": {
