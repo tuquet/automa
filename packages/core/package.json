@@ -1,0 +1,23 @@
+{
+  "name": "@automa/core",
+  "version": "1.0.0",
+  "description": "Shared Core MMO Data Foundation",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "db:generate": "drizzle-kit generate"
+  },
+  "dependencies": {
+    "@libsql/client": "^0.6.0",
+    "drizzle-orm": "^0.30.10"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.21.2",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5"
+  }
+}
