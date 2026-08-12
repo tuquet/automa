@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "cf7bda92-5afc-4e95-a9cd-7e56a9e6631a",
+  "id": "fbf08362-3c3f-4d0c-a890-0ddc92f4b659",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "accounts": {
@@ -162,64 +162,11 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "campaigns": {
-      "name": "campaigns",
+    "campaign_accounts": {
+      "name": "campaign_accounts",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "workflow_id": {
-          "name": "workflow_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "schedule": {
-          "name": "schedule",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "status": {
-          "name": "status",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "'idle'"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "fleet_members": {
-      "name": "fleet_members",
-      "columns": {
-        "fleet_id": {
-          "name": "fleet_id",
+        "campaign_id": {
+          "name": "campaign_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -243,12 +190,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "fleet_members_fleet_id_fleets_id_fk": {
-          "name": "fleet_members_fleet_id_fleets_id_fk",
-          "tableFrom": "fleet_members",
-          "tableTo": "fleets",
+        "campaign_accounts_campaign_id_campaigns_id_fk": {
+          "name": "campaign_accounts_campaign_id_campaigns_id_fk",
+          "tableFrom": "campaign_accounts",
+          "tableTo": "campaigns",
           "columnsFrom": [
-            "fleet_id"
+            "campaign_id"
           ],
           "columnsTo": [
             "id"
@@ -256,9 +203,9 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "fleet_members_account_id_accounts_id_fk": {
-          "name": "fleet_members_account_id_accounts_id_fk",
-          "tableFrom": "fleet_members",
+        "campaign_accounts_account_id_accounts_id_fk": {
+          "name": "campaign_accounts_account_id_accounts_id_fk",
+          "tableFrom": "campaign_accounts",
           "tableTo": "accounts",
           "columnsFrom": [
             "account_id"
@@ -273,8 +220,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "fleets": {
-      "name": "fleets",
+    "campaigns": {
+      "name": "campaigns",
       "columns": {
         "id": {
           "name": "id",
@@ -297,13 +244,27 @@
           "notNull": false,
           "autoincrement": false
         },
+        "workflow_id": {
+          "name": "workflow_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "schedule": {
+          "name": "schedule",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "status": {
           "name": "status",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'active'"
+          "default": "'idle'"
         },
         "created_at": {
           "name": "created_at",
@@ -492,6 +453,14 @@
           "autoincrement": false,
           "default": "'alive'"
         },
+        "trust_score": {
+          "name": "trust_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 100
+        },
         "last_checked": {
           "name": "last_checked",
           "type": "text",
@@ -523,8 +492,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "fleet_id": {
-          "name": "fleet_id",
+        "campaign_id": {
+          "name": "campaign_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -571,12 +540,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "schedules_fleet_id_fleets_id_fk": {
-          "name": "schedules_fleet_id_fleets_id_fk",
+        "schedules_campaign_id_campaigns_id_fk": {
+          "name": "schedules_campaign_id_campaigns_id_fk",
           "tableFrom": "schedules",
-          "tableTo": "fleets",
+          "tableTo": "campaigns",
           "columnsFrom": [
-            "fleet_id"
+            "campaign_id"
           ],
           "columnsTo": [
             "id"

@@ -9,9 +9,8 @@ var schema_exports = {};
 __export(schema_exports, {
   accounts: () => accounts,
   browserProfiles: () => browserProfiles,
+  campaignAccounts: () => campaignAccounts,
   campaigns: () => campaigns,
-  fleetMembers: () => fleetMembers,
-  fleets: () => fleets,
   jobs: () => jobs,
   logs: () => logs,
   proxies: () => proxies,
@@ -68,6 +67,7 @@ var proxies = sqliteTable("proxies", {
 var campaigns = sqliteTable("campaigns", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
+  description: text("description"),
   workflowId: text("workflow_id").notNull(),
   schedule: text("schedule"),
   // cron expression
@@ -85,22 +85,14 @@ var browserProfiles = sqliteTable("browser_profiles", {
   // Bound account
   createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`)
 });
-var fleets = sqliteTable("fleets", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  description: text("description"),
-  status: text("status").notNull().default("active"),
-  // active, paused
-  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`)
-});
-var fleetMembers = sqliteTable("fleet_members", {
-  fleetId: text("fleet_id").notNull().references(() => fleets.id, { onDelete: "cascade" }),
+var campaignAccounts = sqliteTable("campaign_accounts", {
+  campaignId: text("campaign_id").notNull().references(() => campaigns.id, { onDelete: "cascade" }),
   accountId: text("account_id").notNull().references(() => accounts.id, { onDelete: "cascade" }),
   createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`)
 });
 var schedules = sqliteTable("schedules", {
   id: text("id").primaryKey(),
-  fleetId: text("fleet_id").notNull().references(() => fleets.id, { onDelete: "cascade" }),
+  campaignId: text("campaign_id").notNull().references(() => campaigns.id, { onDelete: "cascade" }),
   workflowPath: text("workflow_path").notNull(),
   cronExpr: text("cron_expr").notNull(),
   concurrency: integer("concurrency").default(1),
@@ -139,10 +131,9 @@ export {
   assetsDb,
   assetsDbClient,
   browserProfiles,
+  campaignAccounts,
   campaigns,
   eq,
-  fleetMembers,
-  fleets,
   historyDb,
   historyDbClient,
   inArray,

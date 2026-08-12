@@ -8,3 +8,4 @@ automa-repo-clone
 .agents
 scratch/
 .turbo/
+packages/automa-hub/dist/

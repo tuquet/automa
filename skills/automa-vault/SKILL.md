@@ -1,27 +1,27 @@
 ---
 name: automa-vault
-description: Hướng dẫn cấu trúc thư mục, file cấu hình Fleets và đặc tả Workflow & Browser Profile Mapping cho automa-vault.
+description: Hướng dẫn cấu trúc thư mục, file cấu hình Campaigns và đặc tả Workflow & Browser Profile Mapping cho automa-vault.
 ---
 
-# Automa Vault Fleets & Profile Mapping Convention
+# Automa Vault Campaigns & Profile Mapping Convention
 
-Tài liệu này quy định quy chuẩn cấu trúc thư mục Fleets trong `automa-vault` và đặc tả kiến trúc **Workflow & Browser Profile Mapping** trong Fleet Editor.
+Tài liệu này quy định quy chuẩn cấu trúc thư mục Campaigns trong `automa-vault` và đặc tả kiến trúc **Workflow & Browser Profile Mapping** trong Campaign Editor.
 
 ---
 
-## 1. Cấu trúc thư mục Fleets
+## 1. Cấu trúc thư mục Campaigns
 
-Tất cả các tệp liên quan đến cấu hình của fleets phải được đặt trong thư mục `fleets/` nằm bên trong từng project cụ thể.
-Ví dụ: `automa-vault/{project}/fleets/`
+Tất cả các tệp liên quan đến cấu hình của campaigns phải được đặt trong thư mục `campaigns/` nằm bên trong từng project cụ thể.
+Ví dụ: `automa-vault/{project}/campaigns/`
 
-### File cấu hình mẫu (`demo.fleets.json`)
-Mỗi dự án cần đi kèm một file mẫu `demo.fleets.json` để minh họa cấu trúc của một fleet.
+### File cấu hình mẫu (`demo.campaigns.json`)
+Mỗi dự án cần đi kèm một file mẫu `demo.campaigns.json` để minh họa cấu trúc của một campaign.
 
 ```json
 {
-  "name": "Demo Fleet",
+  "name": "Demo Campaign",
   "version": "1.0.0",
-  "description": "Cấu trúc mẫu cho một Automa Fleet",
+  "description": "Cấu trúc mẫu cho một Automa Campaign",
   "workflows": [
     {
       "id": "wf-1",
@@ -33,11 +33,11 @@ Mỗi dự án cần đi kèm một file mẫu `demo.fleets.json` để minh h�
 
 ---
 
-## 2. Fleet Workflow & Browser Profile Mapping Specification
+## 2. Campaign Workflow & Browser Profile Mapping Specification
 
-Fleet Visual Editor hỗ trợ ánh xạ (mapping) và gán trực tiếp các Workflow local và Browser Profile cho Fleet Members và Tasks.
+Campaign Visual Editor hỗ trợ ánh xạ (mapping) và gán trực tiếp các Workflow local và Browser Profile cho Campaign Members và Tasks.
 
-### 2.1 Backend (VS Code Extension Provider - `FleetPreviewEditorProvider.ts`)
+### 2.1 Backend (VS Code Extension Provider - `CampaignPreviewEditorProvider.ts`)
 - **Profile & Workflow Scanning**: Tự động quét workspace tìm các file `**/*.profile.json`, `**/*.profile.json` và `**/*.automa.json`.
 - **Dictionary Generation**: Trích xuất `id` và `name` độc bản (fallback về tên file nếu thiếu `name`).
 - **Data Injection**: Truyền hai dictionary `workflows` và `profiles` vào Webview qua thông điệp `postMessage({ type: 'update', text, workflows, profiles })`.
@@ -45,7 +45,7 @@ Fleet Visual Editor hỗ trợ ánh xạ (mapping) và gán trực tiếp các W
 ### 2.2 Frontend (Webview UI - Vue 3)
 - **Profile Dropdown**: Tại Member header, hiển thị `<select>` dropdown chứa danh sách `profiles`. Khi thay đổi, tự động cập nhật `member.browser_id` và đánh dấu document đã sửa.
 - **Workflow Dropdown**: Tại Task card, hiển thị `<select>` dropdown chứa danh sách `workflows`. Khi thay đổi, cập nhật `task.workflow_id`.
-- **Fallback Handling**: Nếu Fleet JSON chứa ID không còn tồn tại trong workspace local (ví dụ: file đã bị xóa), dropdown tự động hiển thị tiền tố `[Missing]` hoặc `[Unknown]` để cảnh báo người dùng mà không làm mất dữ liệu gốc.
+- **Fallback Handling**: Nếu Campaign JSON chứa ID không còn tồn tại trong workspace local (ví dụ: file đã bị xóa), dropdown tự động hiển thị tiền tố `[Missing]` hoặc `[Unknown]` để cảnh báo người dùng mà không làm mất dữ liệu gốc.
 
 ### 2.3 Demo Profile Targets (`automa-vault/profiles/`)
 Tệp profile mẫu được lưu trữ tại `automa-vault/profiles/`:
@@ -63,7 +63,7 @@ Format chuẩn của a `.profile.json`:
 ```
 
 - Cửa sổ điều khiển và dropdown sử dụng biến màu chuẩn VS Code (như `var(--vscode-dropdown-background)`).
-- Mọi thao tác thay đổi lập tức kích hoạt nút "Save Fleet".
+- Mọi thao tác thay đổi lập tức kích hoạt nút "Save Campaign".
 
 ---
 
@@ -103,3 +103,4 @@ Tuy nhiên, đối với Daemon nạp tổng thể Global Vault (`loadAll()`), b
 - `items`: (Mảng) Chứa các hàng dữ liệu (rows).
 - `columnsIndex`: (Object) Tra cứu ID cột.
 - `createdAt` / `modifiedAt`: (Timestamp) Thời gian khởi tạo/cập nhật.
+

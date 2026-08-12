@@ -24,10 +24,9 @@ __export(index_exports, {
   assetsDb: () => assetsDb,
   assetsDbClient: () => assetsDbClient,
   browserProfiles: () => browserProfiles,
+  campaignAccounts: () => campaignAccounts,
   campaigns: () => campaigns,
   eq: () => import_drizzle_orm2.eq,
-  fleetMembers: () => fleetMembers,
-  fleets: () => fleets,
   historyDb: () => historyDb,
   historyDbClient: () => historyDbClient,
   inArray: () => import_drizzle_orm2.inArray,
@@ -45,9 +44,8 @@ var schema_exports = {};
 __export(schema_exports, {
   accounts: () => accounts,
   browserProfiles: () => browserProfiles,
+  campaignAccounts: () => campaignAccounts,
   campaigns: () => campaigns,
-  fleetMembers: () => fleetMembers,
-  fleets: () => fleets,
   jobs: () => jobs,
   logs: () => logs,
   proxies: () => proxies,
@@ -104,6 +102,7 @@ var proxies = (0, import_sqlite_core.sqliteTable)("proxies", {
 var campaigns = (0, import_sqlite_core.sqliteTable)("campaigns", {
   id: (0, import_sqlite_core.text)("id").primaryKey(),
   name: (0, import_sqlite_core.text)("name").notNull(),
+  description: (0, import_sqlite_core.text)("description"),
   workflowId: (0, import_sqlite_core.text)("workflow_id").notNull(),
   schedule: (0, import_sqlite_core.text)("schedule"),
   // cron expression
@@ -121,22 +120,14 @@ var browserProfiles = (0, import_sqlite_core.sqliteTable)("browser_profiles", {
   // Bound account
   createdAt: (0, import_sqlite_core.text)("created_at").default(import_drizzle_orm.sql`CURRENT_TIMESTAMP`)
 });
-var fleets = (0, import_sqlite_core.sqliteTable)("fleets", {
-  id: (0, import_sqlite_core.text)("id").primaryKey(),
-  name: (0, import_sqlite_core.text)("name").notNull(),
-  description: (0, import_sqlite_core.text)("description"),
-  status: (0, import_sqlite_core.text)("status").notNull().default("active"),
-  // active, paused
-  createdAt: (0, import_sqlite_core.text)("created_at").default(import_drizzle_orm.sql`CURRENT_TIMESTAMP`)
-});
-var fleetMembers = (0, import_sqlite_core.sqliteTable)("fleet_members", {
-  fleetId: (0, import_sqlite_core.text)("fleet_id").notNull().references(() => fleets.id, { onDelete: "cascade" }),
+var campaignAccounts = (0, import_sqlite_core.sqliteTable)("campaign_accounts", {
+  campaignId: (0, import_sqlite_core.text)("campaign_id").notNull().references(() => campaigns.id, { onDelete: "cascade" }),
   accountId: (0, import_sqlite_core.text)("account_id").notNull().references(() => accounts.id, { onDelete: "cascade" }),
   createdAt: (0, import_sqlite_core.text)("created_at").default(import_drizzle_orm.sql`CURRENT_TIMESTAMP`)
 });
 var schedules = (0, import_sqlite_core.sqliteTable)("schedules", {
   id: (0, import_sqlite_core.text)("id").primaryKey(),
-  fleetId: (0, import_sqlite_core.text)("fleet_id").notNull().references(() => fleets.id, { onDelete: "cascade" }),
+  campaignId: (0, import_sqlite_core.text)("campaign_id").notNull().references(() => campaigns.id, { onDelete: "cascade" }),
   workflowPath: (0, import_sqlite_core.text)("workflow_path").notNull(),
   cronExpr: (0, import_sqlite_core.text)("cron_expr").notNull(),
   concurrency: (0, import_sqlite_core.integer)("concurrency").default(1),
@@ -176,10 +167,9 @@ var import_drizzle_orm2 = require("drizzle-orm");
   assetsDb,
   assetsDbClient,
   browserProfiles,
+  campaignAccounts,
   campaigns,
   eq,
-  fleetMembers,
-  fleets,
   historyDb,
   historyDbClient,
   inArray,
