@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -10,10 +11,13 @@ import { ProfileController } from './profile.controller';
 import { ProfileService } from './profile.service';
 import { FleetController } from './fleet.controller';
 import { FleetService } from './fleet.service';
+import { ScheduleController } from './schedule.controller';
+import { ScheduleService } from './schedule.service';
+import { SchedulerDispatcherService } from './scheduler-dispatcher.service';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true })],
-  controllers: [AppController, MmoController, CampaignController, ProfileController, FleetController],
-  providers: [AppService, CampaignService, CliWorkerService, ProfileService, FleetService],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), ScheduleModule.forRoot()],
+  controllers: [AppController, MmoController, CampaignController, ProfileController, FleetController, ScheduleController],
+  providers: [AppService, CampaignService, CliWorkerService, ProfileService, FleetService, ScheduleService, SchedulerDispatcherService],
 })
 export class AppModule {}
