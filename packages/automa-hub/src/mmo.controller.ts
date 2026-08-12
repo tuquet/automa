@@ -9,6 +9,7 @@ export class MmoController {
   @Get('accounts')
   async getAccounts() {
     if (!assetsDb) return [];
+    // @ts-ignore
     return await assetsDb.select().from(accounts);
   }
 
