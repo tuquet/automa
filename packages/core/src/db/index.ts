@@ -86,5 +86,17 @@ async function setupTables() {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
     `);
+    await assetsDbClient.execute(`
+      CREATE TABLE IF NOT EXISTS browser_profiles (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        user_agent TEXT NOT NULL,
+        timezone TEXT,
+        language TEXT DEFAULT 'en-US',
+        screen_resolution TEXT DEFAULT '1920x1080',
+        account_id TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
   }
 }

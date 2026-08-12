@@ -58,3 +58,14 @@ export const campaigns = sqliteTable('campaigns', {
   status: text('status').notNull().default('idle'),
   createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
 });
+
+export const browserProfiles = sqliteTable('browser_profiles', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  userAgent: text('user_agent').notNull(),
+  timezone: text('timezone'),
+  language: text('language').default('en-US'),
+  screenResolution: text('screen_resolution').default('1920x1080'),
+  accountId: text('account_id'), // Bound account
+  createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+});

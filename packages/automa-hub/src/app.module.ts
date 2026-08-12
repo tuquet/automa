@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MmoController } from './mmo.controller';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { CampaignController } from './campaign.controller';
+import { CampaignService } from './campaign.service';
 
 @Module({
   imports: [],
-  controllers: [AppController, MmoController],
-  providers: [AppService],
+  controllers: [AppController, MmoController, CampaignController],
+  providers: [AppService, CampaignService],
 })
 export class AppModule {}

@@ -23,6 +23,7 @@ __export(index_exports, {
   accounts: () => accounts,
   assetsDb: () => assetsDb,
   assetsDbClient: () => assetsDbClient,
+  browserProfiles: () => browserProfiles,
   campaigns: () => campaigns,
   historyDb: () => historyDb,
   historyDbClient: () => historyDbClient,
@@ -37,6 +38,7 @@ module.exports = __toCommonJS(index_exports);
 var schema_exports = {};
 __export(schema_exports, {
   accounts: () => accounts,
+  browserProfiles: () => browserProfiles,
   campaigns: () => campaigns,
   jobs: () => jobs,
   logs: () => logs,
@@ -96,6 +98,17 @@ var campaigns = (0, import_sqlite_core.sqliteTable)("campaigns", {
   schedule: (0, import_sqlite_core.text)("schedule"),
   // cron expression
   status: (0, import_sqlite_core.text)("status").notNull().default("idle"),
+  createdAt: (0, import_sqlite_core.text)("created_at").default(import_drizzle_orm.sql`CURRENT_TIMESTAMP`)
+});
+var browserProfiles = (0, import_sqlite_core.sqliteTable)("browser_profiles", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  name: (0, import_sqlite_core.text)("name").notNull(),
+  userAgent: (0, import_sqlite_core.text)("user_agent").notNull(),
+  timezone: (0, import_sqlite_core.text)("timezone"),
+  language: (0, import_sqlite_core.text)("language").default("en-US"),
+  screenResolution: (0, import_sqlite_core.text)("screen_resolution").default("1920x1080"),
+  accountId: (0, import_sqlite_core.text)("account_id"),
+  // Bound account
   createdAt: (0, import_sqlite_core.text)("created_at").default(import_drizzle_orm.sql`CURRENT_TIMESTAMP`)
 });
 
@@ -170,6 +183,18 @@ async function setupTables() {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
     `);
+    await assetsDbClient.execute(`
+      CREATE TABLE IF NOT EXISTS browser_profiles (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        user_agent TEXT NOT NULL,
+        timezone TEXT,
+        language TEXT DEFAULT 'en-US',
+        screen_resolution TEXT DEFAULT '1920x1080',
+        account_id TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
   }
 }
 // Annotate the CommonJS export names for ESM import in node:
@@ -177,6 +202,7 @@ async function setupTables() {
   accounts,
   assetsDb,
   assetsDbClient,
+  browserProfiles,
   campaigns,
   historyDb,
   historyDbClient,

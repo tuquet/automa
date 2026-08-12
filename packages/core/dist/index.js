@@ -8,6 +8,7 @@ var __export = (target, all) => {
 var schema_exports = {};
 __export(schema_exports, {
   accounts: () => accounts,
+  browserProfiles: () => browserProfiles,
   campaigns: () => campaigns,
   jobs: () => jobs,
   logs: () => logs,
@@ -67,6 +68,17 @@ var campaigns = sqliteTable("campaigns", {
   schedule: text("schedule"),
   // cron expression
   status: text("status").notNull().default("idle"),
+  createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`)
+});
+var browserProfiles = sqliteTable("browser_profiles", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  userAgent: text("user_agent").notNull(),
+  timezone: text("timezone"),
+  language: text("language").default("en-US"),
+  screenResolution: text("screen_resolution").default("1920x1080"),
+  accountId: text("account_id"),
+  // Bound account
   createdAt: text("created_at").default(sql`CURRENT_TIMESTAMP`)
 });
 
@@ -141,12 +153,25 @@ async function setupTables() {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
       );
     `);
+    await assetsDbClient.execute(`
+      CREATE TABLE IF NOT EXISTS browser_profiles (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        user_agent TEXT NOT NULL,
+        timezone TEXT,
+        language TEXT DEFAULT 'en-US',
+        screen_resolution TEXT DEFAULT '1920x1080',
+        account_id TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
   }
 }
 export {
   accounts,
   assetsDb,
   assetsDbClient,
+  browserProfiles,
   campaigns,
   historyDb,
   historyDbClient,

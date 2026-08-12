@@ -493,14 +493,118 @@ declare const campaigns: drizzle_orm_sqlite_core.SQLiteTableWithColumns<{
     };
     dialect: "sqlite";
 }>;
+declare const browserProfiles: drizzle_orm_sqlite_core.SQLiteTableWithColumns<{
+    name: "browser_profiles";
+    schema: undefined;
+    columns: {
+        id: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "id";
+            tableName: "browser_profiles";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        name: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "name";
+            tableName: "browser_profiles";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        userAgent: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "user_agent";
+            tableName: "browser_profiles";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: true;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        timezone: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "timezone";
+            tableName: "browser_profiles";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        language: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "language";
+            tableName: "browser_profiles";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: true;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        screenResolution: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "screen_resolution";
+            tableName: "browser_profiles";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: true;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        accountId: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "account_id";
+            tableName: "browser_profiles";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: false;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+        createdAt: drizzle_orm_sqlite_core.SQLiteColumn<{
+            name: "created_at";
+            tableName: "browser_profiles";
+            dataType: "string";
+            columnType: "SQLiteText";
+            data: string;
+            driverParam: string;
+            notNull: false;
+            hasDefault: true;
+            enumValues: [string, ...string[]];
+            baseColumn: never;
+        }, object>;
+    };
+    dialect: "sqlite";
+}>;
 
 declare const schema_accounts: typeof accounts;
+declare const schema_browserProfiles: typeof browserProfiles;
 declare const schema_campaigns: typeof campaigns;
 declare const schema_jobs: typeof jobs;
 declare const schema_logs: typeof logs;
 declare const schema_proxies: typeof proxies;
 declare namespace schema {
-  export { schema_accounts as accounts, schema_campaigns as campaigns, schema_jobs as jobs, schema_logs as logs, schema_proxies as proxies };
+  export { schema_accounts as accounts, schema_browserProfiles as browserProfiles, schema_campaigns as campaigns, schema_jobs as jobs, schema_logs as logs, schema_proxies as proxies };
 }
 
 declare let historyDbClient: Client | null;
@@ -513,4 +617,4 @@ interface DbConfig {
 }
 declare function initCoreDatabases(config: DbConfig): Promise<void>;
 
-export { type DbConfig, accounts, assetsDb, assetsDbClient, campaigns, historyDb, historyDbClient, initCoreDatabases, jobs, logs, proxies };
+export { type DbConfig, accounts, assetsDb, assetsDbClient, browserProfiles, campaigns, historyDb, historyDbClient, initCoreDatabases, jobs, logs, proxies };
