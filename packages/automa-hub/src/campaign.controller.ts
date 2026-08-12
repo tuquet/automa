@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Controller, Post, Body } from '@nestjs/common';
 import { CampaignService } from './campaign.service';
 import { RunCampaignDto } from './dto/run-campaign.dto';
@@ -9,6 +10,7 @@ export class CampaignController {
   @Post('run')
   async runCampaign(@Body() dto: RunCampaignDto) {
     const result = await this.campaignService.runCampaign(dto);
+
     return { success: true, result };
   }
 }

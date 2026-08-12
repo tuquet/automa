@@ -15,7 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MmoController = void 0;
 const common_1 = require("@nestjs/common");
 const core_1 = require("@automa/core");
+const telemetry_service_1 = require("./telemetry.service");
 let MmoController = class MmoController {
+    telemetryService;
+    constructor(telemetryService) {
+        this.telemetryService = telemetryService;
+    }
     async getAccounts() {
         if (!core_1.assetsDb)
             return [];
@@ -23,7 +28,7 @@ let MmoController = class MmoController {
     }
     async createAccount(body) {
         if (!core_1.assetsDb)
-            throw new Error("DB not initialized");
+            throw new Error('DB not initialized');
         const newId = `acc_${Date.now()}`;
         await core_1.assetsDb.insert(core_1.accounts).values({
             id: newId,
@@ -40,7 +45,7 @@ let MmoController = class MmoController {
     }
     async createProxy(body) {
         if (!core_1.assetsDb)
-            throw new Error("DB not initialized");
+            throw new Error('DB not initialized');
         const newId = `proxy_${Date.now()}`;
         await core_1.assetsDb.insert(core_1.proxies).values({
             id: newId,
@@ -48,6 +53,10 @@ let MmoController = class MmoController {
             port: body.port,
         });
         return { id: newId, success: true };
+    }
+    async reportTelemetry(body) {
+        await this.telemetryService.processTelemetry(body);
+        return { success: true };
     }
 };
 exports.MmoController = MmoController;
@@ -77,7 +86,15 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], MmoController.prototype, "createProxy", null);
+__decorate([
+    (0, common_1.Post)('telemetry'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], MmoController.prototype, "reportTelemetry", null);
 exports.MmoController = MmoController = __decorate([
-    (0, common_1.Controller)('api/mmo')
+    (0, common_1.Controller)('api/mmo'),
+    __metadata("design:paramtypes", [telemetry_service_1.TelemetryService])
 ], MmoController);
 //# sourceMappingURL=mmo.controller.js.map

@@ -87,7 +87,7 @@ export class SchedulerDispatcherService implements OnModuleInit {
         await Promise.all(
           chunk.map((member: any) =>
             this.campaignService.runCampaign({
-              workflowId: schedule.workflowPath,
+              workflowPath: schedule.workflowPath,
               accountId: member.accountId,
             }).catch(err => {
               this.logger.error(`Failed to dispatch for account ${member.accountId}`, err);

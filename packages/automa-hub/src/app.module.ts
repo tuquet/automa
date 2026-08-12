@@ -14,10 +14,11 @@ import { FleetService } from './fleet.service';
 import { ScheduleController } from './schedule.controller';
 import { ScheduleService } from './schedule.service';
 import { SchedulerDispatcherService } from './scheduler-dispatcher.service';
+import { TelemetryService } from './telemetry.service';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }), ScheduleModule.forRoot()],
   controllers: [AppController, MmoController, CampaignController, ProfileController, FleetController, ScheduleController],
-  providers: [AppService, CampaignService, CliWorkerService, ProfileService, FleetService, ScheduleService, SchedulerDispatcherService],
+  providers: [AppService, CampaignService, CliWorkerService, ProfileService, FleetService, ScheduleService, SchedulerDispatcherService, TelemetryService],
 })
 export class AppModule {}

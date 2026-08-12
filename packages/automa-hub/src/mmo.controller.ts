@@ -2,8 +2,12 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
 import { assetsDb, accounts, proxies } from '@automa/core';
 
+import { TelemetryService } from './telemetry.service';
+
 @Controller('api/mmo')
 export class MmoController {
+  constructor(private readonly telemetryService: TelemetryService) {}
+
   // --- Accounts API ---
   @Get('accounts')
   async getAccounts() {
@@ -45,5 +49,12 @@ export class MmoController {
       port: body.port,
     });
     return { id: newId, success: true };
+  }
+
+  // --- Telemetry API ---
+  @Post('telemetry')
+  async reportTelemetry(@Body() body: any) {
+    await this.telemetryService.processTelemetry(body);
+    return { success: true };
   }
 }

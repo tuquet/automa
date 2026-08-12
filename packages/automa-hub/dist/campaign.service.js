@@ -23,7 +23,7 @@ let CampaignService = CampaignService_1 = class CampaignService {
     }
     async runCampaign(dto) {
         if (!core_1.assetsDb)
-            throw new Error("Assets DB not initialized");
+            throw new Error('Assets DB not initialized');
         const { workflowPath, accountId } = dto;
         this.logger.log(`Starting campaign for workflow: ${workflowPath}`);
         const selectedAccount = await this.getAvailableAccount(accountId);
@@ -43,7 +43,9 @@ let CampaignService = CampaignService_1 = class CampaignService {
             selectedAccount = results[0];
         }
         if (!selectedAccount) {
-            throw new common_1.NotFoundException(accountId ? `Account ${accountId} not found` : "No active accounts available");
+            throw new common_1.NotFoundException(accountId
+                ? `Account ${accountId} not found`
+                : 'No active accounts available');
         }
         return selectedAccount;
     }
@@ -59,7 +61,9 @@ let CampaignService = CampaignService_1 = class CampaignService {
         const freeProfiles = await core_1.assetsDb.select().from(core_1.browserProfiles).where((0, drizzle_orm_1.isNull)(core_1.browserProfiles.accountId)).limit(1);
         return freeProfiles.length > 0
             ? freeProfiles[0]
-            : { userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" };
+            : {
+                userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            };
     }
     buildPayload(workflowPath, account, proxy, profile) {
         return {
@@ -70,9 +74,12 @@ let CampaignService = CampaignService_1 = class CampaignService {
             assets: {
                 accountId: account.id,
                 cookies: account.cookies,
-                proxy: proxy ? `${proxy.protocol}://${proxy.username ? proxy.username + ':' + proxy.password + '@' : ''}${proxy.host}:${proxy.port}` : null,
-                browserProfile: profile
-            }
+                proxyUrl: proxy
+                    ? `${proxy.protocol}://${proxy.username ? proxy.username + ':' + proxy.password + '@' : ''}${proxy.host}:${proxy.port}`
+                    : null,
+                proxyId: proxy ? proxy.id : null,
+                browserProfile: profile,
+            },
         };
     }
 };

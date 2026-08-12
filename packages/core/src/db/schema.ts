@@ -46,6 +46,7 @@ export const proxies = sqliteTable('proxies', {
   password: text('password'),
   protocol: text('protocol').default('http'), // http, socks5
   status: text('status').notNull().default('alive'),
+  trustScore: integer('trust_score').default(100),
   lastChecked: text('last_checked'),
   createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
 });

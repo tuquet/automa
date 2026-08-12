@@ -25,12 +25,18 @@ __export(index_exports, {
   assetsDbClient: () => assetsDbClient,
   browserProfiles: () => browserProfiles,
   campaigns: () => campaigns,
+  eq: () => import_drizzle_orm2.eq,
+  fleetMembers: () => fleetMembers,
+  fleets: () => fleets,
   historyDb: () => historyDb,
   historyDbClient: () => historyDbClient,
+  inArray: () => import_drizzle_orm2.inArray,
   initCoreDatabases: () => initCoreDatabases,
   jobs: () => jobs,
   logs: () => logs,
-  proxies: () => proxies
+  proxies: () => proxies,
+  schedules: () => schedules,
+  sql: () => import_drizzle_orm2.sql
 });
 module.exports = __toCommonJS(index_exports);
 
@@ -40,9 +46,12 @@ __export(schema_exports, {
   accounts: () => accounts,
   browserProfiles: () => browserProfiles,
   campaigns: () => campaigns,
+  fleetMembers: () => fleetMembers,
+  fleets: () => fleets,
   jobs: () => jobs,
   logs: () => logs,
-  proxies: () => proxies
+  proxies: () => proxies,
+  schedules: () => schedules
 });
 var import_sqlite_core = require("drizzle-orm/sqlite-core");
 var import_drizzle_orm = require("drizzle-orm");
@@ -88,6 +97,7 @@ var proxies = (0, import_sqlite_core.sqliteTable)("proxies", {
   protocol: (0, import_sqlite_core.text)("protocol").default("http"),
   // http, socks5
   status: (0, import_sqlite_core.text)("status").notNull().default("alive"),
+  trustScore: (0, import_sqlite_core.integer)("trust_score").default(100),
   lastChecked: (0, import_sqlite_core.text)("last_checked"),
   createdAt: (0, import_sqlite_core.text)("created_at").default(import_drizzle_orm.sql`CURRENT_TIMESTAMP`)
 });
@@ -111,10 +121,34 @@ var browserProfiles = (0, import_sqlite_core.sqliteTable)("browser_profiles", {
   // Bound account
   createdAt: (0, import_sqlite_core.text)("created_at").default(import_drizzle_orm.sql`CURRENT_TIMESTAMP`)
 });
+var fleets = (0, import_sqlite_core.sqliteTable)("fleets", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  name: (0, import_sqlite_core.text)("name").notNull(),
+  description: (0, import_sqlite_core.text)("description"),
+  status: (0, import_sqlite_core.text)("status").notNull().default("active"),
+  // active, paused
+  createdAt: (0, import_sqlite_core.text)("created_at").default(import_drizzle_orm.sql`CURRENT_TIMESTAMP`)
+});
+var fleetMembers = (0, import_sqlite_core.sqliteTable)("fleet_members", {
+  fleetId: (0, import_sqlite_core.text)("fleet_id").notNull().references(() => fleets.id, { onDelete: "cascade" }),
+  accountId: (0, import_sqlite_core.text)("account_id").notNull().references(() => accounts.id, { onDelete: "cascade" }),
+  createdAt: (0, import_sqlite_core.text)("created_at").default(import_drizzle_orm.sql`CURRENT_TIMESTAMP`)
+});
+var schedules = (0, import_sqlite_core.sqliteTable)("schedules", {
+  id: (0, import_sqlite_core.text)("id").primaryKey(),
+  fleetId: (0, import_sqlite_core.text)("fleet_id").notNull().references(() => fleets.id, { onDelete: "cascade" }),
+  workflowPath: (0, import_sqlite_core.text)("workflow_path").notNull(),
+  cronExpr: (0, import_sqlite_core.text)("cron_expr").notNull(),
+  concurrency: (0, import_sqlite_core.integer)("concurrency").default(1),
+  status: (0, import_sqlite_core.text)("status").notNull().default("active"),
+  // active, paused
+  createdAt: (0, import_sqlite_core.text)("created_at").default(import_drizzle_orm.sql`CURRENT_TIMESTAMP`)
+});
 
 // src/db/index.ts
 var import_client = require("@libsql/client");
 var import_libsql = require("drizzle-orm/libsql");
+var import_migrator = require("drizzle-orm/libsql/migrator");
 var historyDbClient = null;
 var historyDb = null;
 var assetsDbClient = null;
@@ -128,75 +162,14 @@ async function initCoreDatabases(config) {
     assetsDbClient = (0, import_client.createClient)({ url: config.assetsDbPath });
     assetsDb = (0, import_libsql.drizzle)(assetsDbClient, { schema: schema_exports });
   }
-  await setupTables();
-}
-async function setupTables() {
-  if (historyDbClient) {
-    await historyDbClient.execute(`
-      CREATE TABLE IF NOT EXISTS jobs (
-        id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        data TEXT NOT NULL,
-        options TEXT,
-        status TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
-    await historyDbClient.execute(`
-      CREATE TABLE IF NOT EXISTS logs (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        job_id TEXT NOT NULL,
-        type TEXT NOT NULL,
-        message TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY(job_id) REFERENCES jobs(id) ON DELETE CASCADE
-      );
-    `);
-  }
-  if (assetsDbClient) {
-    await assetsDbClient.execute(`
-      CREATE TABLE IF NOT EXISTS accounts (
-        id TEXT PRIMARY KEY,
-        platform TEXT NOT NULL,
-        username TEXT NOT NULL,
-        password TEXT,
-        two_factor_secret TEXT,
-        cookies TEXT,
-        proxy_id TEXT,
-        status TEXT NOT NULL DEFAULT 'active',
-        trust_score INTEGER DEFAULT 100,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
-    await assetsDbClient.execute(`
-      CREATE TABLE IF NOT EXISTS proxies (
-        id TEXT PRIMARY KEY,
-        host TEXT NOT NULL,
-        port INTEGER NOT NULL,
-        username TEXT,
-        password TEXT,
-        protocol TEXT DEFAULT 'http',
-        status TEXT NOT NULL DEFAULT 'alive',
-        last_checked TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
-    await assetsDbClient.execute(`
-      CREATE TABLE IF NOT EXISTS browser_profiles (
-        id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
-        user_agent TEXT NOT NULL,
-        timezone TEXT,
-        language TEXT DEFAULT 'en-US',
-        screen_resolution TEXT DEFAULT '1920x1080',
-        account_id TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
+  if (config.migrationsFolder) {
+    await (0, import_migrator.migrate)(historyDb, { migrationsFolder: config.migrationsFolder });
+    await (0, import_migrator.migrate)(assetsDb, { migrationsFolder: config.migrationsFolder });
   }
 }
+
+// src/index.ts
+var import_drizzle_orm2 = require("drizzle-orm");
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   accounts,
@@ -204,10 +177,16 @@ async function setupTables() {
   assetsDbClient,
   browserProfiles,
   campaigns,
+  eq,
+  fleetMembers,
+  fleets,
   historyDb,
   historyDbClient,
+  inArray,
   initCoreDatabases,
   jobs,
   logs,
-  proxies
+  proxies,
+  schedules,
+  sql
 });
