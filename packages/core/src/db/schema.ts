@@ -69,3 +69,28 @@ export const browserProfiles = sqliteTable('browser_profiles', {
   accountId: text('account_id'), // Bound account
   createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
 });
+
+export const fleets = sqliteTable('fleets', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  description: text('description'),
+  status: text('status').notNull().default('active'), // active, paused
+  createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const fleetMembers = sqliteTable('fleet_members', {
+  fleetId: text('fleet_id').notNull().references(() => fleets.id, { onDelete: 'cascade' }),
+  accountId: text('account_id').notNull().references(() => accounts.id, { onDelete: 'cascade' }),
+  createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+});
+
+export const schedules = sqliteTable('schedules', {
+  id: text('id').primaryKey(),
+  fleetId: text('fleet_id').notNull().references(() => fleets.id, { onDelete: 'cascade' }),
+  workflowPath: text('workflow_path').notNull(),
+  cronExpr: text('cron_expr').notNull(),
+  concurrency: integer('concurrency').default(1),
+  status: text('status').notNull().default('active'), // active, paused
+  createdAt: text('created_at').default(sql`CURRENT_TIMESTAMP`),
+});
+
