@@ -21,5 +21,16 @@
     "automa-cli/**/*.{js,ts,vue}": [
       "npx @biomejs/biome check --write"
     ]
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3",
+      "puppeteer",
+      "core-js",
+      "es5-ext",
+      "simple-git-hooks",
+      "unrs-resolver",
+      "vue-demi"
+    ]
   }
 }
