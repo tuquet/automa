@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "vue.volar",
+    "biomejs.biome",
+    "dbaeumer.vscode-eslint",
+    "tuquet.automa-vscode"
+  ]
+}
