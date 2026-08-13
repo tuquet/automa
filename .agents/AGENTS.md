@@ -85,3 +85,10 @@
   3. Commit the changes to `dev`.
   4. Merge `dev` into `main` (or instruct the user to do so via PR).
 - **Hotfix Rule**: Hotfixes branch off `main`, require their own changeset, get bumped, and MUST be merged back into BOTH `main` and `dev`.
+
+# CI/CD & Supply Chain Security Rules
+
+- **Private Submodules Checkout**: When configuring GitHub Actions (`actions/checkout`), if the ecosystem contains private Git submodules, you MUST explicitly provide a Personal Access Token (`token: ${{ secrets.GH_PAT }}`) because the default `GITHUB_TOKEN` cannot cross repository boundaries.
+- **VS Code Extension `engines`**: Any VS Code extension `package.json` MUST explicitly declare the minimum supported VS Code version in the `engines.vscode` field (e.g., `"engines": { "vscode": "^1.85.0" }`). Without this, `vsce publish` will permanently fail.
+- **VSCE CI Publishing**: Do NOT use outdated third-party actions (like `lannonbr/vsce-action`) for publishing. Always use the official CLI command `npx @vscode/vsce publish -p ${{ secrets.VSCE_PAT }} --no-dependencies` natively within the `run` step.
+- **PNPM v9+ Built Dependencies (ERR_PNPM_IGNORED_BUILDS)**: In pnpm v9 and above (e.g., v11), the `pnpm.onlyBuiltDependencies` field in `package.json` is deprecated and ignored. To prevent `ERR_PNPM_IGNORED_BUILDS` during CI/CD, all packages that require postinstall build scripts (e.g., `puppeteer`, `better-sqlite3`, `core-js`, `vue-demi`) MUST be explicitly approved under the `allowBuilds` dictionary in the root `pnpm-workspace.yaml`.
