@@ -75,3 +75,13 @@
 - **Native Debugger UI Reuse**: The Vue app already contains a robust Debugger and Variables Inspector (`EditorDebugging.vue`). When working on Debugger features for VS Code, DO NOT reinvent the UI. The Webview handles all rendering and state inspection intrinsically.
 - **Message Bridging via Webpack Override**: The Webview UI sends debug commands (`workflow:resume`, `workflow:stop`, `workflow:breakpoint`) via `sendMessage()`. Because of `webpack.runner.config.js` and the `browser-compat.js` wrapper, these are translated into IPC/Daemon payloads. The VS Code Extension Backend (`StudioWebviewPanel.ts`) MUST intercept these messages and proxy them to the appropriate Execution Engine or Daemon API.
 
+# Branching & Release Workflow (Dev vs Main)
+
+- **The `dev` Branch (Integration):** All feature development, bug fixes, and `pnpm changeset` commands MUST target the `dev` branch. The `dev` branch accumulates the `.changeset/*.md` files.
+- **The `main` Branch (Production):** The `main` branch is strictly for production releases. NEVER commit or push code directly to `main`. It only accepts merges from `dev` or hotfix branches.
+- **Release Execution Rule**: When instructed to perform a release, you MUST:
+  1. Switch to the `dev` branch.
+  2. `cd` into the target submodule(s) and run `pnpm changeset version` to consume the `.md` files and bump versions.
+  3. Commit the changes to `dev`.
+  4. Merge `dev` into `main` (or instruct the user to do so via PR).
+- **Hotfix Rule**: Hotfixes branch off `main`, require their own changeset, get bumped, and MUST be merged back into BOTH `main` and `dev`.
