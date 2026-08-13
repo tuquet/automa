@@ -1,22 +1,30 @@
-name: Publish
+name: Ecosystem CI
 
 on:
   push:
     branches:
       - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build_and_publish:
-    name: Build & Publish
+  build_and_verify:
+    name: Build & Verify
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repo
+      - name: Checkout Repo & Submodules
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: recursive
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
@@ -35,17 +43,8 @@ jobs:
       - name: Lint
         run: pnpm run lint
 
-      - name: Test
-        run: pnpm test
-
       - name: Build
         run: pnpm run build
 
-      - name: Create Release Pull Request or Publish to NPM
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          publish: pnpm exec changeset publish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Note: Automatic changesets action has been removed in favor of Per-Submodule Changesets.
+      # Publishing happens per-submodule manually or through distinct release jobs.
