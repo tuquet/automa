@@ -3,6 +3,7 @@
     "vue.volar",
     "biomejs.biome",
     "dbaeumer.vscode-eslint",
-    "tuquet.vscode-automa"
+    "tuquet.vscode-automa",
+    "github.vscode-github-actions"
   ]
 }
