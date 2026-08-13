@@ -1,5 +1,5 @@
 <div align="center">
-  <!-- <img src="automa-vscode/assets/logo.jpg" width="128" height="128" alt="Automa Ecosystem Logo" /> -->
+  <img src="automa-vscode/assets/logo.png" width="128" height="128" alt="Automa Ecosystem Logo" />
   <h1>Automa Ecosystem</h1>
   <p><strong>Nền tảng Orchestration Đa Trình Duyệt Chuẩn Doanh Nghiệp (Enterprise-Grade)</strong></p>
 </div>
