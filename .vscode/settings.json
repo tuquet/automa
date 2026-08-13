@@ -1,0 +1,21 @@
+{
+	"explorer.fileNesting.enabled": true,
+	"explorer.fileNesting.expand": false,
+	"explorer.fileNesting.patterns": {
+		"package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, pnpm-workspace.yaml, .npmrc, .pnpmfile.cjs",
+		"tsconfig.json": "tsconfig.*.json",
+		"webpack.config.js": "webpack.*.config.js",
+		"tsup.config.ts": "tsup.config.*.ts",
+		"README.md": "CHANGELOG.md, LICENSE, CONTRIBUTING.md, CODE_OF_CONDUCT.md",
+		".env": "*.env, .env.*, .envrc, env.d.ts",
+		".gitignore": ".gitattributes, .gitmodules, .gitkeep",
+		"*.ts": "${capture}.js, ${capture}.d.ts, ${capture}.map, ${capture}.test.ts, ${capture}.spec.ts",
+		"*.tsx": "${capture}.ts, ${capture}.js, ${capture}.css, ${capture}.scss, ${capture}.module.css, ${capture}.test.tsx, ${capture}.spec.tsx",
+		"*.vue": "${capture}.ts, ${capture}.js, ${capture}.css, ${capture}.scss, ${capture}.test.ts",
+		"jest.config.js": "jest.setup.js, __mocks__",
+		"vitest.config.ts": "vitest.workspace.ts, vitest.setup.ts",
+		".eslintrc*": ".eslintignore, .eslintcache, eslint.config.*",
+		".prettierrc*": ".prettierignore",
+		"biome.json": "biome.jsonc"
+	}
+}

@@ -59,12 +59,19 @@
 
 # VS Code Webview Build & Asset Loading Workflow
 
-- **Webview UI Build Target**: The standard `pnpm run build` command in the root folder DOES NOT build the VS Code Webview UI. It only builds the standard browser extension (`automa-ext/build`). 
-  - **Rule**: Whenever you make UI changes intended for the VS Code Extension, you MUST navigate to the `automa-ext/` folder and run `pnpm run build:vscode`. This ensures `webpack.vscode.config.js` is executed and outputs assets directly to `automa-vscode/webview-ui/dist`.
+- **Silent Runner Mode (CLI Target)**: The standard `pnpm run build` command builds the standard native browser extension. 
+  - **Rule**: Whenever you make changes intended for the CLI Daemon or VS Code Extension, you MUST run `pnpm run build:runner` to use `webpack.runner.config.js`. This creates a headless build (without UI) specifically for the CLI execution engine, outputting to `dist/cli-runner`.
+  - **Rule**: We NO LONGER output UI bundles directly to `automa-vscode`. The VS Code extension acts purely as an IPC client.
+
+# Versioning & Changelogs (Changesets)
+
+- **Per-Submodule Versioning**: The ecosystem uses a Decoupled Architecture for versioning. `@changesets/cli` is installed INDEPENDENTLY inside each submodule (`automa-cli`, `automa-ext`, `automa-vscode`).
+- **Git Submodules Boundary**: Because each package is a Git Submodule with its own `.git` history, we do NOT run changesets at the monorepo root. Doing so causes staging/cleanup failures.
+- **Rule**: Whenever you need to generate a changeset or run a release (`pnpm changeset version`), you MUST `cd` into the specific submodule directory first. Do not run it at the root. Never write Changelog-style history in `README.md` files; always use changesets instead.
 - **Webpack Public Path (Chunk Loading)**: VS Code Webviews serve assets over a restricted `vscode-resource:` protocol. Webpack`s default `publicPath` (`/` or `auto`) will fail to resolve dynamic chunks (like Vue i18n locale `.js` chunks), resulting in `ChunkLoadError` and fetch JSON parsing errors.
   - **Rule**: You MUST ensure that the Webview entry point (`automa-ext/src/newtab/index.js`) explicitly sets `__webpack_public_path__ = window.ASSETS_BASE_URL;` at the absolute top of the file before any dynamic imports are evaluated. `window.ASSETS_BASE_URL` must be injected securely by the Webview Provider.
 
 
 - **Native Debugger UI Reuse**: The Vue app already contains a robust Debugger and Variables Inspector (`EditorDebugging.vue`). When working on Debugger features for VS Code, DO NOT reinvent the UI. The Webview handles all rendering and state inspection intrinsically.
-- **Message Bridging via Webpack Override**: The Webview UI sends debug commands (`workflow:resume`, `workflow:stop`, `workflow:breakpoint`) via `sendMessage()`. Because of `webpack.vscode.config.js` and the `browser-compat.js` wrapper, these are translated into `vscode.postMessage()`. The VS Code Extension Backend (`StudioWebviewPanel.ts`) MUST intercept these messages and proxy them to the appropriate Execution Engine or Daemon API.
+- **Message Bridging via Webpack Override**: The Webview UI sends debug commands (`workflow:resume`, `workflow:stop`, `workflow:breakpoint`) via `sendMessage()`. Because of `webpack.runner.config.js` and the `browser-compat.js` wrapper, these are translated into IPC/Daemon payloads. The VS Code Extension Backend (`StudioWebviewPanel.ts`) MUST intercept these messages and proxy them to the appropriate Execution Engine or Daemon API.
 
