@@ -5,25 +5,23 @@ description: Hướng dẫn phát triển VS Code Extension cho Automa (automa-v
 
 # Automa VS Code Extension (`automa-vscode`)
 
-Tài liệu này cung cấp hướng dẫn kiến trúc và quy trình phát triển cho submodule **Automa VS Code Extension** (`automa-vscode`).
+**BẮT BUỘC** tuân thủ quy định kiến trúc và quy trình phát triển submodule `automa-vscode`.
 
 ---
 
 ## 1. Extension Architecture & Key Responsibilities
 
-Submodule `automa-vscode` đóng vai trò là giao diện tích hợp trực tiếp trong môi trường IDE người dùng:
-1. **Context Menu Commands**: Cho phép nhấp chuột phải vào file `.json` đại diện cho Workflow hoặc Package để gọi các thao tác:
+`automa-vscode` **BẮT BUỘC** đảm nhiệm các vai trò sau:
+1. **Context Menu Commands**: Cung cấp thao tác cho file `.json`:
    - `Automa: Lint Check Workflow/Package`
    - `Automa: Open in Automa Studio`
    - `Automa: Execute Workflow`
-2. **Diagnostics Provider (Linter Integration)**: Đọc kết quả từ Linter (`automa-cli-lint`) và hiển thị lỗi trực tiếp lên panel **Problems** của VS Code.
-3. **Auto-Sanitization on Load**: Tự động chuyển đổi cấu hình node cũ (ví dụ: node ID `n1`, thiếu `type`) thành nanoID hợp lệ trước khi đẩy dữ liệu vào Studio.
+2. **Diagnostics Provider (Linter Integration)**: Hiển thị lỗi từ Daemon API `/api/lint` lên panel **Problems**.
+3. **Auto-Sanitization on Load**: Tự động chuyển đổi cấu hình node cũ thành nanoID hợp lệ trước khi đẩy vào Studio.
 
 ---
 
 ## 2. Integration with Linter & Diagnostics
-
-VS Code Extension tích hợp trực tiếp bộ quy tắc của `automa-cli-lint`:
 
 ```typescript
 import * as vscode from 'vscode';
@@ -44,80 +42,67 @@ export function updateDiagnostics(document: vscode.TextDocument, lintErrors: Arr
 ```
 
 > [!IMPORTANT]
-> **Linter UX Constraint**: Trong môi trường Editor (VS Code Extension), các sai lệch schema cấu trúc không nghiêm trọng NÊN được báo dưới dạng `Warning` thay vì `Error` để tránh gây phiền hà cho người dùng trong quá trình phác thảo workflow.
+> **Linter UX Constraint**: **BẮT BUỘC** báo cáo sai lệch schema không nghiêm trọng dưới dạng `Warning`, **TUYỆT ĐỐI KHÔNG** dùng `Error`.
 
 ---
 
 ## 3. Auto-Sanitization Protocol
 
-Khi người dùng mở một workflow legacy từ cộng đồng (thường có node ID dạng `n1`, `n2` hoặc thiếu trường `type` root):
-1. **Phát hiện**: Lắng nghe sự kiện mở Studio từ Context Menu hoặc Command Palette.
+**KHI MỞ** workflow legacy:
+1. **Phát hiện**: Lắng nghe sự kiện mở Studio.
 2. **Sanitize trước khi Load**:
-   - Thay thế tất cả ID dạng `n1` bằng `nanoid(21)` khớp regex `/^[A-Za-z0-9_-]{21}$/`.
-   - Cập nhật lại kết nối edge handles tương ứng.
-   - Gán mặc định `type: 'BlockBasic'` nếu thuộc tính `type` bị thiếu.
-3. **Inject**: Đẩy JSON đã được làm sạch vào `browser.storage.local` thông qua Service Worker Popup Injector.
+   - **BẮT BUỘC** thay thế ID dạng `n1` bằng `nanoid(21)` khớp `/^[A-Za-z0-9_-]{21}$/`.
+   - **BẮT BUỘC** cập nhật kết nối edge handles.
+   - **BẮT BUỘC** gán `type: 'BlockBasic'` nếu thuộc tính `type` bị thiếu.
+3. **Inject**: Đẩy JSON sạch vào `browser.storage.local`.
 
 ---
 
-## 4. Daemon API Communication (Do's and Don'ts)
+## 4. Daemon API Communication
 
-- **Sử dụng REST/HTTP (Đúng):** Lớp `TaskRunner.ts` luôn phải sử dụng các API qua HTTP POST/GET (ví dụ: `submitJob`) để giao tiếp với Daemon đang chạy ngầm (`automa-cli serve`).
-- **Nghiêm cấm dùng Raw CLI (Sai):** KHÔNG gọi lệnh bằng `child_process.exec('automa-cli run ...')` hay `vscode.ProcessExecution(cmd, args)` (trừ khi dùng để khởi động chính Daemon). Việc spawn raw CLI commands sẽ tạo ra một môi trường V8 Javascript hoàn toàn mới (Memory Leak nghiêm trọng), và dữ liệu `stdout` dễ bị rác (như `console.log`) làm vỡ JSON parsing.
+- **BẮT BUỘC** sử dụng REST/HTTP: Lớp `TaskRunner.ts` luôn gọi API qua HTTP POST/GET (ví dụ: `submitJob`).
+- **TUYỆT ĐỐI KHÔNG** gọi lệnh CLI trực tiếp thông qua `child_process.exec` hay `vscode.ProcessExecution` để thực thi script (ngoại trừ lệnh khởi động Daemon). Mọi yêu cầu xử lý **BẮT BUỘC** gửi qua API tới Daemon.
 
 ---
 
 ## 5. Native Debugger UI Reuse
 
-Khi phát triển tính năng Debugger cho VS Code, **KHÔNG** làm lại UI Inspector. 
-- Extension Webview sẽ sử dụng nguyên bản file Vue Component `EditorDebugging.vue` của ứng dụng web. 
-- Giao tiếp được thực hiện thông qua `StudioWebviewPanel.ts` đóng vai trò là proxy chặn các message từ Webview UI (như `workflow:resume`) và chuyển thành HTTP request gửi xuống API của Daemon.
+- **TUYỆT ĐỐI KHÔNG** xây dựng lại UI Inspector bên trong VS Code.
+- **BẮT BUỘC** dùng Daemon để gọi Automa Studio nguyên bản từ trình duyệt thông qua API.
+- Extension đóng vai trò là **Thin Client**, chỉ hiển thị giao diện cấu hình tĩnh hoặc Welcome Panel và đẩy mọi tác vụ nặng sang Daemon xử lý.
 
 ---
 
 ## 6. Build, Packaging & Tasks
 
-Quản lý chu kỳ phát triển của `automa-vscode`:
-
 * **Packaging VSIX**:
+  **BẮT BUỘC** dùng cờ `--no-dependencies`:
   ```bash
   npx @vscode/vsce package --no-dependencies
   ```
-  (Lưu ý: Luôn dùng `--no-dependencies` trong monorepo để tránh lỗi dependencies validation từ gốc).
 
 * **Composite Debugging Flow (F5)**:
-  Luồng debug của dự án được cấu hình cực kỳ chặt chẽ tại thư mục gốc của monorepo (`.vscode/launch.json` và `.vscode/tasks.json`).
-  Khi nhấn `F5` chạy config **"Debug Automa VS Code Extension"**, VS Code sẽ kích hoạt task tổng `Workspace: Dev VSCode`, task này tự động chạy song song 3 tiến trình nền (watch mode) thông qua Turbo repo:
-  1. `Workspace: Dev Source VSCode UI`: Dịch mã nguồn UI Vue từ `automa-ext` (`pnpm dev:source:vscode`).
-  2. `Workspace: Dev Source Runner`: Dịch mã nguồn Runner/Injected Scripts từ `automa-ext` (`pnpm dev:source:runner`).
-  3. `Workspace: Dev VSCode Host`: Dịch mã backend của Extension (`pnpm dev:vscode`).
-
-  Điều này đảm bảo toàn bộ hệ sinh thái (từ Webview UI, Runner đến Extension Logic) được build đồng bộ và cập nhật theo thời gian thực (Hot Reload) mỗi khi lưu file. Không cần phải chạy thủ công từng script `watch` rải rác ở các thư mục con.
+  **BẮT BUỘC** sử dụng task tổng `Workspace: Dev VSCode` (`F5`) để chạy song song:
+  1. `Workspace: Dev Source Runner`
+  2. `Workspace: Dev VSCode Host`
 
 ---
 
 ## 7. UI State Sync Architecture
 
-Để đảm bảo VS Code Sidebar (TreeViews) luôn phản ánh đúng trạng thái thực tế của file system mà không cần người dùng nhấn nút Refresh thủ công:
-- **`createFileSystemWatcher`**: Lắng nghe sự kiện (create/change/delete) trên các file `.json`, `.yaml` trong `.vault/` hoặc `globals/` để trigger `refresh()` lên `ProviderManager`.
-- **`onDidChangeVisibility`**: Tự động fetch data mới nhất mỗi khi người dùng chuyển tab và focus vào một panel cụ thể.
-- **`EventEmitter`**: Gọi `this._onDidChangeTreeData.fire()` để ép VS Code vẽ lại cây thư mục.
+**BẮT BUỘC** áp dụng các cơ chế sau để đồng bộ VS Code Sidebar:
+- **`createFileSystemWatcher`**: Trigger `refresh()` khi có thay đổi file `.json`, `.yaml`.
+- **`onDidChangeVisibility`**: Tự động fetch data khi chuyển tab.
+- **`EventEmitter`**: Gọi `this._onDidChangeTreeData.fire()` để vẽ lại cây thư mục.
 
 ---
 
-## 8. Webview UI Integration (Theme Sync & File Saving)
+## 8. Welcome Panel & UI Integration
 
-Việc nhúng toàn bộ Vue App của Automa vào VS Code Webview (`StudioWebviewPanel.ts`) đòi hỏi các thủ thuật tích hợp cực kỳ quan trọng để đảm bảo UX native nhất:
+1. **Welcome Panel Siêu Nhẹ (Thin Client):**
+   - **TUYỆT ĐỐI KHÔNG** dùng Webview kết hợp Webpack để load các ứng dụng Vue/React nặng nề vào VS Code Extension.
+   - **BẮT BUỘC** sử dụng chuỗi HTML tĩnh thuần túy với các biến CSS gốc của VS Code (`var(--vscode-editor-background)`, v.v.) để trang hiển thị tức thì mà không tiêu tốn tài nguyên.
 
-1. **VS Code Theme Sync (Đồng bộ Giao diện):**
-   - Không được hardcode màu sắc cho Webview. 
-   - Sử dụng các biến CSS gốc của VS Code (`var(--vscode-editor-background)`, `var(--vscode-editor-foreground)`, `var(--vscode-editorWidget-background)`).
-   - Dùng `MutationObserver` gắn trên thẻ `body` để bắt các class theme của VS Code (`vscode-dark`, `vscode-high-contrast`) và đồng bộ chúng bằng cách thêm/xoá class `dark` của TailwindCSS trên thẻ `html`. 
-   Điều này giúp Automa Studio có Dark/Light mode khớp 100% với môi trường VS Code.
-
-2. **Cơ chế Save File cục bộ (Local File System):**
-   - Thay vì thiết kế lại API lưu trữ trong Vue, ta tận dụng logic gốc của Vue app:
-   - Từ Extension Host (bên ngoài), gửi một `postMessage` (`{ type: 'trigger-save' }`) vào Webview.
-   - Tại đoạn script inject khởi tạo Webview, lắng nghe message này và **giả lập phím `Ctrl + S`** qua `KeyboardEvent`. 
-   - Ứng dụng Vue bên trong Webview sẽ nhận phím tắt, tự động kích hoạt tiến trình save nội bộ của nó (chạy validator, parse node).
-   - Sau đó Vue app sẽ emit event lưu trữ, được `StudioMessageRouter` chặn lại và ghi đè nội dung JSON trực tiếp xuống file gốc (`doc.uri.fsPath`) thông qua `vscode.workspace.fs`.
+2. **Cơ chế gọi Studio:**
+   - **TUYỆT ĐỐI KHÔNG** nhúng Studio vào tab VS Code.
+   - **BẮT BUỘC** tận dụng API của Daemon bằng cách gửi yêu cầu HTTP đến `http://127.0.0.1:${port}/api/system/open-studio`.

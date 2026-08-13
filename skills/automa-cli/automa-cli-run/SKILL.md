@@ -1,55 +1,44 @@
 ---
 name: automa-cli-run
-description: Protocol for verifying local dependencies and running the Automa CLI tool to execute workflows.
+description: Giao thức BẮT BUỘC để xác minh các phụ thuộc cục bộ (local dependencies) và chạy Automa CLI nhằm thực thi workflows.
 ---
 
-# Automa CLI Local Run Protocol
+# Giao Thức Chạy Automa CLI Cục Bộ (Local Run Protocol)
 
-Follow this protocol to verify local dependencies and run the Automa CLI runner (`automa-cli`) successfully on the local developer machine.
+BẮT BUỘC XÁC MINH các phụ thuộc cục bộ và CHẠY runner Automa CLI (`automa-cli`) thành công trên máy phát triển dựa trên giao thức này. TUYỆT ĐỐI KHÔNG bỏ qua bất kỳ bước nào dưới đây.
 
----
 
-## 1. Verify Supabase Local Status
 
-Before running a workflow that relies on Supabase variables or credentials, ensure the local Supabase container is up and running.
+## 2. Xác Minh Trạng Thái Build Extension
 
-### Verification Action:
-Run `npx supabase status` inside `automa-be/`.
+BẮT BUỘC CUNG CẤP bản build extension đã giải nén để thực thi workflow thông qua CLI runner.
 
-* **If running:** It will print the local API URL (`http://127.0.0.1:54321`) and credentials.
-* **If stopped:** Run the Supabase start task or run `npx supabase start` in `automa-be/`.
+### Hành Động Xác Minh:
+BẮT BUỘC KIỂM TRA sự tồn tại của file `automa-ext/build/manifest.json`.
 
----
-
-## 2. Verify Extension Build Status
-
-The CLI runner requires the unpacked extension build to execute workflows. 
-
-### Verification Action:
-Check if the file `automa-ex/build/manifest.json` exists.
-
-* **Developer Mode (Dev):** If the developer is actively modifying the extension, they should run `npm run dev` in `automa-ex/`. This keeps the `build/` folder up-to-date via Webpack watch.
-* **Production Mode (Prod):** Run `npm run build:prod-chrome` in `automa-ex/` to generate a optimized one-off build at `automa-ex/build/`.
+* **Chế độ Phát triển (Dev Mode):** BẮT BUỘC CHẠY `npm run dev` trong `automa-ext/` để đảm bảo thư mục `build/` luôn được cập nhật.
+* **Chế độ Sản xuất (Prod Mode):** BẮT BUỘC CHẠY `npm run build:prod-chrome` trong `automa-ext/` để tạo bản build tại `automa-ext/build/`.
 
 ---
 
-## 3. CLI Run Parameters & Invocation
+## 3. Tham Số Chạy CLI & Khởi Chạy
 
-Navigate to `automa-cli/` before running the commands.
+BẮT BUỘC ĐIỀU HƯỚNG tới `automa-cli/` trước khi chạy các lệnh sau. 
+**LƯU Ý KIẾN TRÚC:** Khi tích hợp với các ứng dụng khác, TUYỆT ĐỐI KHÔNG sử dụng `child_process` để gọi lệnh CLI; thay vào đó, BẮT BUỘC GỌI trực tiếp Automa Daemon API theo kiến trúc Thin Client & Daemon hiện đại.
 
-### Option A: Run via local JSON file (Recommended for Vault Workflows)
+### Tùy Chọn A: Chạy qua file JSON cục bộ (Khuyên dùng cho Workflows trong Vault)
 ```bash
-node bin/cli.js "../automa-vault/crm/workflows/Auth - Login.json" --extension ../automa-ex/build
+node dist/cli.js "../automa-vault/crm/workflows/Auth - Login.json" --extension ../automa-ext/build
 ```
 
-### Option B: Run via Database ID
+### Tùy Chọn B: Chạy qua Database ID
 ```bash
-node bin/cli.js --id <database_workflow_id> --extension ../automa-ex/build
+node dist/cli.js --id <database_workflow_id> --extension ../automa-ext/build
 ```
 
-### Passing Input Parameters & Variables
-* **Direct JSON Variables:** Use the `--variables` / `-v` flag with a stringified JSON object:
+### Truyền Tham Số Đầu Vào & Biến Số (Variables)
+* **Direct JSON Variables:** BẮT BUỘC SỬ DỤNG cờ `--variables` (hoặc `-v`) kèm theo chuỗi JSON đã được stringify:
   ```bash
-  node bin/cli.js <path> --variables '{"$$my_var": "custom_value"}'
+  node dist/cli.js <path> --variables '{"$$my_var": "custom_value"}'
   ```
-* **Database Variables Auto-Populate:** The CLI will automatically query all variables from the local Supabase DB and inject any referenced global variables (starting with `$$`) if they are not explicitly overridden in the `--variables` flag. Ensure you have run `Vault: Push` beforehand so the database has the latest values.
+* **Database Variables Auto-Populate:** BẮT BUỘC CHẠY `Vault: Push` trước khi thực thi để đảm bảo database chứa các giá trị mới nhất. CLI BẮT BUỘC tự động tiêm các biến toàn cục (bắt đầu bằng `$$`) từ Supabase DB cục bộ, trừ khi bị ghi đè bởi cờ `--variables`.

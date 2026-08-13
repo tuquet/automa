@@ -1,32 +1,30 @@
 ---
 name: automa-cli-lint
-description: Thông số kỹ thuật và các quy tắc để kiểm tra (lint) tính hợp lệ của file cấu hình Automa (Workflow và Package).
+description: Thông số kỹ thuật và các quy tắc để kiểm tra (lint) tính hợp lệ của tệp cấu hình Automa (Quy trình làm việc và Gói).
 ---
 
-# Linter Specification cho Automa Ecosystem
+# Thông số Kỹ thuật Kiểm tra lỗi (Linter) cho Hệ sinh thái Automa
 
-Skill này định nghĩa các quy tắc cốt lõi để phát triển tính năng `automa lint` trong `automa-cli`. Tính năng này sẽ đóng vai trò như một Core Linter API để không chỉ sử dụng trực tiếp qua command line mà còn cung cấp logic validate cho Automa VS Code Extension (dạng Context Menu 'Lint Check') và giúp Agent có nền tảng vững chắc để tự động sửa lỗi JSON.
+BẮT BUỘC TRIỂN KHAI các quy tắc cốt lõi của tính năng kiểm tra lỗi như được chỉ định dưới đây. Đây BẮT BUỘC là tiêu chuẩn cho dòng lệnh, VS Code Extension và các trình tự sửa lỗi tự động.
 
-## 1. Kiểm tra cấu trúc bằng JSON Schema (Structural Linting)
-Thay vì code tay từng trường hợp `if/else`, Linter nên tận dụng sức mạnh của **JSON Schema Validation** (sử dụng các thư viện như `ajv` hoặc `zod`). 
-- **Với Workflow:** Load file `automa.schema.json` và đưa dữ liệu vào validate. Schema V7 đã định nghĩa sẵn các loại `BlockTrigger`, `Block...`, và các thuộc tính bắt buộc.
-- **Với Package:** Load file `package.schema.json` để validate. Schema này đã định nghĩa chuẩn cấu trúc mảng `inputs`, `outputs`, và `settings.asBlock`.
-- **Ưu điểm:** Tận dụng schema.json sẽ tự động bắt tất cả các lỗi sai kiểu dữ liệu (`string` vs `boolean`), thiếu trường bắt buộc (`required`), và các thuộc tính rác. Linter chỉ cần lấy danh sách lỗi (`errors`) từ bộ validator và chuẩn hóa đầu ra. Agent khi đọc thông báo lỗi từ schema sẽ biết chính xác block nào sai định dạng để sửa.
+## 1. Kiểm tra cấu trúc (Structural Linting)
+TUYỆT ĐỐI KHÔNG DÙNG các lệnh điều kiện thủ công. BẮT BUỘC DÙNG thư viện xác thực dựa trên **JSON Schema**.
+- **Với Quy trình làm việc (Workflow):** BẮT BUỘC TẢI lược đồ chuẩn và xác thực dữ liệu.
+- **Với Gói (Package):** BẮT BUỘC TẢI lược đồ cấu trúc Gói và xác thực.
+- **Xử lý kết quả:** BẮT BUỘC TRÍCH XUẤT danh sách lỗi từ trình xác thực và chuẩn hóa thông báo đầu ra.
 
-## 2. Chuẩn hóa NanoID (ID Validation)
-Mặc dù JSON Schema khai báo `id` là `"type": "string"`, Linter cần bổ sung một rule kiểm tra ngữ nghĩa sâu hơn:
-- **Độ dài:** Chính xác 21 ký tự.
-- **Bảng chữ cái (Alphabet):** `useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict` (tương đương `A-Za-z0-9_-`).
-- **Linter Rule:** Duyệt qua thuộc tính `id` ở root (nếu có) và tất cả `id` của từng node trong `drawflow.nodes`. ID không khớp regex `/^[A-Za-z0-9_-]{21}$/` sẽ bị đánh dấu [Lỗi/Invalid]. (Lưu ý: Không được nhầm lẫn với các ID legacy tự chế như `workflow_..._timestamp`).
+## 2. Chuẩn hóa Định danh (ID Validation)
+BẮT BUỘC THỰC THI kiểm tra ngữ nghĩa khắt khe cho các trường định danh:
+- **Độ dài:** BẮT BUỘC ĐÚNG 21 ký tự.
+- **Ký tự cho phép:** BẮT BUỘC KHỚP định dạng tiêu chuẩn của NanoID (`A-Za-z0-9_-`).
+- **Quy tắc Kiểm tra:** BẮT BUỘC QUÉT các mã định danh ở cấp cao nhất và bên trong tất cả các khối (nodes). BẮT BUỘC ĐÁNH DẤU lỗi nếu không khớp biểu thức chính quy.
 
 ## 3. Quản lý Biến (Semantic Variables Linting)
-JSON Schema không thể hiểu được mối quan hệ giữa các giá trị động, do đó phần này cần xử lý code custom:
-- **Implicit Variables (Biến dùng ẩn):** Linter sẽ quét qua mã nguồn hoặc duyệt cây JSON, tìm các biến bằng 2 Regex:
-  1. Interpolation: `/\{\{\s*variables\.([a-zA-Z0-9_$]+)\s*\}\}/g`
-  2. Hàm RefData: `/automaRefData\(\s*['"]variables['"]\s*,\s*['"]([a-zA-Z0-9_$]+)['"]\s*\)/g`
-- **Explicit Variables (Biến khai báo):** Cần đối chiếu xem những biến được gọi ẩn có tồn tại trong `json.variable` (đối với Package) hoặc `BlockTrigger.data.parameters` (đối với Workflow) hay không.
-- **Linter Rule:** Phóng [Cảnh báo/Warning] nếu một biến được nội suy nhưng chưa được khai báo trước.
+BẮT BUỘC TRIỂN KHAI logic kiểm tra các giá trị động:
+- **Biến dùng ẩn:** BẮT BUỘC QUÉT cấu trúc bằng biểu thức chính quy để tìm các vị trí nội suy biến.
+- **Biến khai báo:** BẮT BUỘC XÁC MINH các biến đã sử dụng có tồn tại trong cấu hình gốc hay không.
+- **Quy tắc Kiểm tra:** BẮT BUỘC PHÁT RA cảnh báo nếu phát hiện một biến được sử dụng nhưng chưa từng được khai báo.
 
-## 4. Hướng phát triển tích hợp (Integration Guidelines)
-- **Đối với automa-cli:** Lệnh `automa lint <file.json>` sẽ đọc file, chạy qua 2 bộ lọc Structural (Schema) và Semantic (Custom IDs/Variables) và trả ra CLI exit code phù hợp (0 cho Pass, 1 cho Fail), kèm log lỗi chi tiết dạng JSON hoặc Console Table.
-- **Đối với automa-vscode:** Nên tích hợp gọi lệnh CLI này thông qua một Command mới trên Context Menu (VD: `Automa: Lint Check Workflow`). Kết quả trả về từ CLI sẽ được hiển thị trên bảng Diagnostics (bảng Problems của VS Code) để báo đỏ trực tiếp tại dòng JSON lỗi.
+## 4. Hướng dẫn Tích hợp (Integration Guidelines)
+- **Công cụ dòng lệnh (automa-cli):** BẮT BUỘC GỌI API CỦA DAEMON để yêu cầu kiểm tra cấu trúc và ngữ nghĩa. **TUYỆT ĐỐI KHÔNG** tự xử lý nặng ở phía máy khách nếu thuộc thẩm quyền của nền tảng. BẮT BUỘC TRẢ VỀ mã thoát chuẩn (0 nếu đạt, 1 nếu thất bại).
+- **Trình soạn thảo VS Code (automa-vscode):** BẮT BUỘC GỌI API CỦA DAEMON để lấy danh sách lỗi. **TUYỆT ĐỐI KHÔNG** sử dụng `child_process` để gọi lệnh CLI chạy ngầm nhằm tránh xung đột tài nguyên. BẮT BUỘC HIỂN THỊ kết quả trực tiếp vào bảng phân tích lỗi (Diagnostics) của trình soạn thảo.

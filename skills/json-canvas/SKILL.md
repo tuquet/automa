@@ -3,11 +3,11 @@ name: json-canvas
 description: Create and edit JSON Canvas files (.canvas) with nodes, edges, groups, and connections. Use when working with .canvas files, creating visual canvases, mind maps, flowcharts, or when the user mentions Canvas files in Obsidian.
 ---
 
-# JSON Canvas Skill
+# Kỹ năng JSON Canvas
 
-## File Structure
+## Cấu trúc File
 
-A canvas file (`.canvas`) contains two top-level arrays following the [JSON Canvas Spec 1.0](https://jsoncanvas.org/spec/1.0/):
+Một file `.canvas` BẮT BUỘC phải chứa hai mảng cấp cao nhất:
 
 ```json
 {
@@ -16,67 +16,66 @@ A canvas file (`.canvas`) contains two top-level arrays following the [JSON Canv
 }
 ```
 
-- `nodes` (optional): Array of node objects
-- `edges` (optional): Array of edge objects connecting nodes
+- `nodes` (Tùy chọn): Mảng chứa các đối tượng node.
+- `edges` (Tùy chọn): Mảng chứa các đối tượng edge kết nối các nodes.
 
-## Common Workflows
+## Quy trình Làm việc Chung
 
-### 1. Create a New Canvas
+### 1. Tạo một Canvas mới
 
-1. Create a `.canvas` file with the base structure `{"nodes": [], "edges": []}`
-2. Generate unique 16-character hex IDs for each node (e.g., `"6f0ad84f44ce9c17"`)
-3. Add nodes with required fields: `id`, `type`, `x`, `y`, `width`, `height`
-4. Add edges referencing valid node IDs via `fromNode` and `toNode`
-5. **Validate**: Parse the JSON to confirm it is valid. Verify all `fromNode`/`toNode` values exist in the nodes array
+1. BẮT BUỘC TẠO một file `.canvas` với cấu trúc khởi tạo: `{"nodes": [], "edges": []}`.
+2. BẮT BUỘC TẠO `id` định dạng hex 16 ký tự, đảm bảo tính duy nhất tuyệt đối cho mỗi node (ví dụ: `"6f0ad84f44ce9c17"`).
+3. BẮT BUỘC THÊM các nodes với đầy đủ các trường yêu cầu: `id`, `type`, `x`, `y`, `width`, `height`.
+4. BẮT BUỘC THÊM các edges tham chiếu chính xác đến các `id` node đã tồn tại thông qua `fromNode` và `toNode`.
+5. **KIỂM TRA HỢP LỆ**: BẮT BUỘC ĐẢM BẢO JSON hoàn toàn hợp lệ và tất cả các tham chiếu đều chính xác. TUYỆT ĐỐI KHÔNG để xảy ra lỗi cấu trúc.
 
-### 2. Add a Node to an Existing Canvas
+### 2. Thêm một Node vào Canvas hiện có
 
-1. Read and parse the existing `.canvas` file
-2. Generate a unique ID that does not collide with existing node or edge IDs
-3. Choose position (`x`, `y`) that avoids overlapping existing nodes (leave 50-100px spacing)
-4. Append the new node object to the `nodes` array
-5. Optionally add edges connecting the new node to existing nodes
-6. **Validate**: Confirm all IDs are unique and all edge references resolve to existing nodes
+1. BẮT BUỘC ĐỌC và phân tích cú pháp (parse) file `.canvas` hiện tại một cách cẩn thận.
+2. BẮT BUỘC TẠO một `id` hoàn toàn mới và duy nhất.
+3. BẮT BUỘC CHỌN vị trí tọa độ (`x`, `y`) sao cho TUYỆT ĐỐI KHÔNG chồng chéo lên các nodes hiện có.
+4. BẮT BUỘC THÊM node mới vào mảng `nodes`.
+5. BẮT BUỘC THÊM các edges kết nối node mới nếu cần thiết.
+6. **KIỂM TRA HỢP LỆ**: BẮT BUỘC ĐẢM BẢO tính duy nhất của `id` và sự hợp lệ của toàn bộ tham chiếu edge.
 
-### 3. Connect Two Nodes
+### 3. Kết nối hai Nodes
 
-1. Identify the source and target node IDs
-2. Generate a unique edge ID
-3. Set `fromNode` and `toNode` to the source and target IDs
-4. Optionally set `fromSide`/`toSide` (top, right, bottom, left) for anchor points
-5. Optionally set `label` for descriptive text on the edge
-6. Append the edge to the `edges` array
-7. **Validate**: Confirm both `fromNode` and `toNode` reference existing node IDs
+1. BẮT BUỘC XÁC ĐỊNH chính xác `id` của node nguồn và node đích.
+2. BẮT BUỘC TẠO một `id` duy nhất cho edge mới.
+3. BẮT BUỘC THIẾT LẬP giá trị cho `fromNode` và `toNode`.
+4. CÓ THỂ THIẾT LẬP `fromSide`/`toSide` và `label` nếu cần.
+5. BẮT BUỘC THÊM edge vừa tạo vào mảng `edges`.
+6. **KIỂM TRA HỢP LỆ**: BẮT BUỘC ĐẢM BẢO cả hai `id` node đều đang tồn tại trong Canvas.
 
-### 4. Edit an Existing Canvas
+### 4. Chỉnh sửa Canvas hiện có
 
-1. Read and parse the `.canvas` file as JSON
-2. Locate the target node or edge by `id`
-3. Modify the desired attributes (text, position, color, etc.)
-4. Write the updated JSON back to the file
-5. **Validate**: Re-check all ID uniqueness and edge reference integrity after editing
+1. BẮT BUỘC ĐỌC và phân tích cú pháp file `.canvas`.
+2. BẮT BUỘC XÁC ĐỊNH VỊ TRÍ node hoặc edge cần sửa thông qua `id`.
+3. BẮT BUỘC SỬA ĐỔI các thuộc tính theo yêu cầu.
+4. BẮT BUỘC GHI lại chuỗi JSON đã cập nhật vào file.
+5. **KIỂM TRA HỢP LỆ**: BẮT BUỘC KIỂM TRA LẠI tính duy nhất của `id` và tính toàn vẹn của tất cả các edges.
 
 ## Nodes
 
-Nodes are objects placed on the canvas. Array order determines z-index: first node = bottom layer, last node = top layer.
+Thứ tự xuất hiện của các phần tử trong mảng sẽ quyết định `z-index`: node đầu tiên nằm ở lớp dưới cùng, node cuối cùng nằm ở lớp trên cùng. BẮT BUỘC SẮP XẾP hợp lý.
 
-### Generic Node Attributes
+### Thuộc tính Node Chung
 
-| Attribute | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `id` | Yes | string | Unique 16-char hex identifier |
-| `type` | Yes | string | `text`, `file`, `link`, or `group` |
-| `x` | Yes | integer | X position in pixels |
-| `y` | Yes | integer | Y position in pixels |
-| `width` | Yes | integer | Width in pixels |
-| `height` | Yes | integer | Height in pixels |
-| `color` | No | canvasColor | Preset `"1"`-`"6"` or hex (e.g., `"#FF0000"`) |
+| Thuộc tính | Bắt buộc | Kiểu dữ liệu | Mô tả |
+|------------|----------|--------------|-------|
+| `id` | Có | string | Định danh hex 16 ký tự, TUYỆT ĐỐI DUY NHẤT. |
+| `type` | Có | string | BẮT BUỘC LÀ một trong: `text`, `file`, `link`, hoặc `group`. |
+| `x` | Có | integer | Vị trí trục X (tính bằng pixel). |
+| `y` | Có | integer | Vị trí trục Y (tính bằng pixel). |
+| `width` | Có | integer | Chiều rộng (tính bằng pixel). |
+| `height` | Có | integer | Chiều cao (tính bằng pixel). |
+| `color` | Không | canvasColor | Giá trị preset từ `"1"` đến `"6"` hoặc mã hex (ví dụ: `"#FF0000"`). |
 
 ### Text Nodes
 
-| Attribute | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `text` | Yes | string | Plain text with Markdown syntax |
+| Thuộc tính | Bắt buộc | Kiểu dữ liệu | Mô tả |
+|------------|----------|--------------|-------|
+| `text` | Có | string | Văn bản thuần túy, hỗ trợ cú pháp Markdown. |
 
 ```json
 {
@@ -90,14 +89,14 @@ Nodes are objects placed on the canvas. Array order determines z-index: first no
 }
 ```
 
-**Newline pitfall**: Use `\n` for line breaks in JSON strings. Do **not** use the literal `\\n` -- Obsidian renders that as the characters `\` and `n`.
+**QUY TẮC NGẮT DÒNG CỰC KỲ QUAN TRỌNG**: BẮT BUỘC SỬ DỤNG `\n` để ngắt dòng bên trong chuỗi JSON. TUYỆT ĐỐI KHÔNG SỬ DỤNG `\\n`.
 
 ### File Nodes
 
-| Attribute | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `file` | Yes | string | Path to file within the system |
-| `subpath` | No | string | Link to heading or block (starts with `#`) |
+| Thuộc tính | Bắt buộc | Kiểu dữ liệu | Mô tả |
+|------------|----------|--------------|-------|
+| `file` | Có | string | Đường dẫn tương đối đến file trong hệ thống vault. |
+| `subpath` | Không | string | Liên kết trỏ đến heading hoặc block cụ thể (bắt đầu bằng dấu `#`). |
 
 ```json
 {
@@ -113,9 +112,9 @@ Nodes are objects placed on the canvas. Array order determines z-index: first no
 
 ### Link Nodes
 
-| Attribute | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `url` | Yes | string | External URL |
+| Thuộc tính | Bắt buộc | Kiểu dữ liệu | Mô tả |
+|------------|----------|--------------|-------|
+| `url` | Có | string | URL liên kết ra bên ngoài. |
 
 ```json
 {
@@ -131,13 +130,13 @@ Nodes are objects placed on the canvas. Array order determines z-index: first no
 
 ### Group Nodes
 
-Groups are visual containers for organizing other nodes. Position child nodes inside the group's bounds.
+BẮT BUỘC ĐỊNH VỊ tọa độ và kích thước các node con sao cho chúng nằm trọn vẹn bên trong ranh giới của group node.
 
-| Attribute | Required | Type | Description |
-|-----------|----------|------|-------------|
-| `label` | No | string | Text label for the group |
-| `background` | No | string | Path to background image |
-| `backgroundStyle` | No | string | `cover`, `ratio`, or `repeat` |
+| Thuộc tính | Bắt buộc | Kiểu dữ liệu | Mô tả |
+|------------|----------|--------------|-------|
+| `label` | Không | string | Nhãn văn bản hiển thị cho group. |
+| `background` | Không | string | Đường dẫn đến ảnh nền. |
+| `backgroundStyle` | Không | string | BẮT BUỘC LÀ một trong: `cover`, `ratio`, hoặc `repeat`. |
 
 ```json
 {
@@ -154,19 +153,17 @@ Groups are visual containers for organizing other nodes. Position child nodes in
 
 ## Edges
 
-Edges connect nodes via `fromNode` and `toNode` IDs.
-
-| Attribute | Required | Type | Default | Description |
-|-----------|----------|------|---------|-------------|
-| `id` | Yes | string | - | Unique identifier |
-| `fromNode` | Yes | string | - | Source node ID |
-| `fromSide` | No | string | - | `top`, `right`, `bottom`, or `left` |
-| `fromEnd` | No | string | `none` | `none` or `arrow` |
-| `toNode` | Yes | string | - | Target node ID |
-| `toSide` | No | string | - | `top`, `right`, `bottom`, or `left` |
-| `toEnd` | No | string | `arrow` | `none` or `arrow` |
-| `color` | No | canvasColor | - | Line color |
-| `label` | No | string | - | Text label |
+| Thuộc tính | Bắt buộc | Kiểu dữ liệu | Mặc định | Mô tả |
+|------------|----------|--------------|----------|-------|
+| `id` | Có | string | - | Định danh duy nhất. |
+| `fromNode` | Có | string | - | ID của node nguồn (BẮT BUỘC TỒN TẠI). |
+| `fromSide` | Không | string | - | `top`, `right`, `bottom`, hoặc `left`. |
+| `fromEnd` | Không | string | `none` | `none` hoặc `arrow`. |
+| `toNode` | Có | string | - | ID của node đích (BẮT BUỘC TỒN TẠI). |
+| `toSide` | Không | string | - | `top`, `right`, `bottom`, hoặc `left`. |
+| `toEnd` | Không | string | `arrow` | `none` hoặc `arrow`. |
+| `color` | Không | canvasColor| - | Màu sắc đường nối. |
+| `label` | Không | string | - | Nhãn văn bản đính kèm trên edge. |
 
 ```json
 {
@@ -180,65 +177,56 @@ Edges connect nodes via `fromNode` and `toNode` IDs.
 }
 ```
 
-## Colors
+## Bảng Màu (Colors)
 
-The `canvasColor` type accepts either a hex string or a preset number:
+| Preset | Màu sắc |
+|--------|---------|
+| `"1"` | Đỏ |
+| `"2"` | Cam |
+| `"3"` | Vàng |
+| `"4"` | Xanh lá |
+| `"5"` | Xanh lơ |
+| `"6"` | Tím |
 
-| Preset | Color |
-|--------|-------|
-| `"1"` | Red |
-| `"2"` | Orange |
-| `"3"` | Yellow |
-| `"4"` | Green |
-| `"5"` | Cyan |
-| `"6"` | Purple |
+## Tạo ID
 
-Preset color values are intentionally undefined -- applications use their own brand colors.
+BẮT BUỘC TẠO chuỗi hệ thập lục phân viết thường gồm chính xác 16 ký tự. TUYỆT ĐỐI KHÔNG sử dụng định dạng khác:
 
-## ID Generation
-
-Generate 16-character lowercase hexadecimal strings (64-bit random value):
-
-```
+```text
 "6f0ad84f44ce9c17"
 "a3b2c1d0e9f8a7b6"
 ```
 
-## Layout Guidelines
+## Hướng dẫn Bố cục
 
-- Coordinates can be negative (canvas extends infinitely)
-- `x` increases right, `y` increases down; position is the top-left corner
-- Space nodes 50-100px apart; leave 20-50px padding inside groups
-- Align to grid (multiples of 10 or 20) for cleaner layouts
+- Tọa độ CÓ THỂ mang giá trị âm.
+- BẮT BUỘC DUY TRÌ khoảng cách giữa các nodes từ 50px đến 100px. BẮT BUỘC CHỪA padding từ 20px đến 50px bên trong các groups.
+- BẮT BUỘC CĂN CHỈNH tọa độ và kích thước theo lưới (phải là bội số của 10 hoặc 20).
 
-| Node Type | Suggested Width | Suggested Height |
-|-----------|-----------------|------------------|
-| Small text | 200-300 | 80-150 |
-| Medium text | 300-450 | 150-300 |
-| Large text | 400-600 | 300-500 |
-| File preview | 300-500 | 200-400 |
-| Link preview | 250-400 | 100-200 |
+| Kiểu Node | Chiều rộng đề xuất (px) | Chiều cao đề xuất (px) |
+|-----------|-------------------------|------------------------|
+| Small text | 200 - 300 | 80 - 150 |
+| Medium text | 300 - 450 | 150 - 300 |
+| Large text | 400 - 600 | 300 - 500 |
+| File preview| 300 - 500 | 200 - 400 |
+| Link preview| 250 - 400 | 100 - 200 |
 
-## Validation Checklist
+## Danh sách Kiểm tra Bắt buộc
 
-After creating or editing a canvas file, verify:
+BẮT BUỘC XÁC MINH nghiêm ngặt các điều kiện sau trước khi hoàn tất:
+1. Toàn bộ giá trị `id` BẮT BUỘC PHẢI DUY NHẤT trong toàn file.
+2. Mọi trường `fromNode` và `toNode` BẮT BUỘC PHẢI THAM CHIẾU đến một `id` node đang tồn tại.
+3. Các trường bắt buộc BẮT BUỘC PHẢI CÓ MẶT đầy đủ cho từng kiểu node tương ứng.
+4. Trường `type` BẮT BUỘC PHẢI HỢP LỆ.
+5. Trường `fromSide`/`toSide` và `fromEnd`/`toEnd` BẮT BUỘC PHẢI HỢP LỆ.
+6. Các preset màu sắc BẮT BUỘC PHẢI HỢP LỆ.
+7. Toàn bộ nội dung JSON BẮT BUỘC PHẢI HỢP LỆ và có thể parse được thành công.
 
-1. All `id` values are unique across both nodes and edges
-2. Every `fromNode` and `toNode` references an existing node ID
-3. Required fields are present for each node type (`text` for text nodes, `file` for file nodes, `url` for link nodes)
-4. `type` is one of: `text`, `file`, `link`, `group`
-5. `fromSide`/`toSide` values are one of: `top`, `right`, `bottom`, `left`
-6. `fromEnd`/`toEnd` values are one of: `none`, `arrow`
-7. Color presets are `"1"` through `"6"` or valid hex (e.g., `"#FF0000"`)
-8. JSON is valid and parseable
+## Ví dụ Hoàn chỉnh
 
-If validation fails, check for duplicate IDs, dangling edge references, or malformed JSON strings (especially unescaped newlines in text content).
+BẮT BUỘC XEM [references/EXAMPLES.md](references/EXAMPLES.md) để tham khảo các ví dụ Canvas chuẩn mực nhất.
 
-## Complete Examples
-
-See [references/EXAMPLES.md](references/EXAMPLES.md) for full canvas examples including mind maps, project boards, research canvases, and flowcharts.
-
-## References
+## Tài liệu Tham khảo
 
 - [JSON Canvas Spec 1.0](https://jsoncanvas.org/spec/1.0/)
 - [JSON Canvas GitHub](https://github.com/obsidianmd/jsoncanvas)

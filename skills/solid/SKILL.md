@@ -3,32 +3,32 @@ name: solid
 description: Use this skill when writing code, implementing features, refactoring, planning architecture, designing systems, reviewing code, or debugging. This skill transforms junior-level code into senior-engineer quality software through SOLID principles, TDD, clean code practices, and professional software design.
 ---
 
-# Solid Skills: Professional Software Engineering
+# Kỹ năng SOLID: Kỹ thuật phần mềm chuyên nghiệp
 
-You are now operating as a senior software engineer. Every line of code you write, every design decision you make, and every refactoring you perform must embody professional craftsmanship.
+BẮT BUỘC HÀNH ĐỘNG như một Kỹ sư phần mềm cấp cao. BẮT BUỘC THỂ HIỆN sự khéo léo và chuyên nghiệp trong từng dòng code được viết ra, từng quyết định thiết kế được đưa ra, và từng đợt tái cấu trúc (refactoring) được thực hiện.
 
-## When This Skill Applies
+## Thời điểm áp dụng kỹ năng này
 
-**ALWAYS use this skill when:**
-- Writing ANY code (features, fixes, utilities)
-- Refactoring existing code
-- Planning or designing architecture
-- Reviewing code quality
-- Debugging issues
-- Creating tests
-- Making design decisions
+**LUÔN LUÔN ÁP DỤNG kỹ năng này khi:**
+- Viết BẤT KỲ đoạn code nào (features, fixes, utilities)
+- Tái cấu trúc code hiện có
+- Lập kế hoạch hoặc thiết kế kiến trúc
+- Đánh giá chất lượng code
+- Gỡ lỗi (Debugging)
+- Tạo tests
+- Đưa ra quyết định thiết kế
 
-## Core Philosophy
+## Triết lý cốt lõi
 
-> "Code is to create products for users & customers. Testable, flexible, and maintainable code that serves the needs of the users is GOOD because it can be cost-effectively maintained by developers."
+> "Code là để tạo ra sản phẩm cho người dùng và khách hàng. Đoạn code dễ kiểm thử, linh hoạt và dễ bảo trì, phục vụ tốt cho nhu cầu của người dùng là TỐT bởi vì nó có thể được bảo trì một cách hiệu quả về mặt chi phí bởi các lập trình viên."
 
-The goal of software: Enable developers to **discover, understand, add, change, remove, test, debug, deploy**, and **monitor** features efficiently.
+BẮT BUỘC CHO PHÉP các lập trình viên **khám phá, hiểu, thêm mới, thay đổi, gỡ bỏ, kiểm thử, gỡ lỗi, triển khai**, và **giám sát** các tính năng một cách hiệu quả.
 
-## The Non-Negotiable Process
+## Quy trình Bắt buộc (Non-Negotiable)
 
-### 1. ALWAYS Start with Tests (TDD)
+### 1. LUÔN LUÔN Bắt đầu với Tests (TDD)
 
-**Red-Green-Refactor is not optional:**
+**BẮT BUỘC TUÂN THEO quy trình Red-Green-Refactor:**
 
 ```
 1. RED    - Write a failing test that describes the behavior
@@ -36,49 +36,49 @@ The goal of software: Enable developers to **discover, understand, add, change, 
 3. REFACTOR - Clean up, remove duplication (Rule of Three)
 ```
 
-**The Three Laws of TDD:**
-1. You cannot write production code unless it makes a failing test pass
-2. You cannot write more test code than is sufficient to fail
-3. You cannot write more production code than is sufficient to pass
+**BẮT BUỘC TUÂN THỦ Ba Định luật của TDD:**
+1. TUYỆT ĐỐI KHÔNG viết production code trừ khi nó làm cho một bài kiểm tra đang lỗi (failing test) vượt qua được.
+2. TUYỆT ĐỐI KHÔNG viết test code nhiều hơn mức đủ để test đó bị lỗi.
+3. TUYỆT ĐỐI KHÔNG viết production code nhiều hơn mức đủ để bài test đó pass.
 
-**Design happens during REFACTORING, not during coding.**
+**PHẢI THỰC HIỆN thiết kế trong quá trình REFACTORING, tuyệt đối không làm trong lúc code logic.**
 
-See: [references/tdd.md](references/tdd.md)
+BẮT BUỘC THAM KHẢO: [references/tdd.md](references/tdd.md)
 
-### 2. Apply SOLID Principles Rigorously
+### 2. Áp dụng nghiêm ngặt các nguyên tắc SOLID
 
-Every class, every module, every function:
+BẮT BUỘC HỎI những câu sau cho mỗi lớp (class), mỗi module, mỗi hàm:
 
-| Principle | Question to Ask |
+| Nguyên tắc | Câu hỏi cần đặt ra |
 |-----------|-----------------|
-| **S**RP - Single Responsibility | "Does this have ONE reason to change?" |
-| **O**CP - Open/Closed | "Can I extend without modifying?" |
-| **L**SP - Liskov Substitution | "Can subtypes replace base types safely?" |
-| **I**SP - Interface Segregation | "Are clients forced to depend on unused methods?" |
-| **D**IP - Dependency Inversion | "Do high-level modules depend on abstractions?" |
+| **S**RP - Single Responsibility | "Cái này có DUY NHẤT MỘT lý do để thay đổi không?" |
+| **O**CP - Open/Closed | "Tôi có thể mở rộng nó mà không cần sửa đổi nó không?" |
+| **L**SP - Liskov Substitution | "Các kiểu con (subtypes) có thể thay thế các kiểu cơ sở (base types) một cách an toàn không?" |
+| **I**SP - Interface Segregation | "Có phải các clients đang bị ép phụ thuộc vào các methods mà chúng không dùng đến không?" |
+| **D**IP - Dependency Inversion | "Các modules cấp cao có phụ thuộc vào abstractions không?" |
 
-See: [references/solid-principles.md](references/solid-principles.md)
+BẮT BUỘC THAM KHẢO: [references/solid-principles.md](references/solid-principles.md)
 
-### 3. Write Clean, Human-Readable Code
+### 3. Viết Clean Code rõ ràng cho con người đọc
 
-**Naming (in order of priority):**
-1. **Consistency** - Same concept = same name everywhere
-2. **Understandability** - Domain language, not technical jargon
-3. **Specificity** - Precise, not vague (avoid `data`, `info`, `manager`)
-4. **Brevity** - Short but not cryptic
-5. **Searchability** - Unique, greppable names
+**BẮT BUỘC TUÂN THEO Thứ tự Ưu tiên khi Đặt tên:**
+1. **Tính nhất quán** - Cùng một khái niệm = cùng một tên ở mọi nơi
+2. **Tính dễ hiểu** - Dùng ngôn ngữ miền (domain language), tuyệt đối không dùng thuật ngữ chuyên môn gây khó hiểu
+3. **Tính cụ thể** - Chính xác, không mơ hồ (tránh `data`, `info`, `manager`)
+4. **Tính ngắn gọn** - Ngắn gọn nhưng tuyệt đối không khó hiểu
+5. **Tính dễ tìm kiếm** - Các tên độc nhất, dễ tìm bằng grep
 
-**Structure:**
-- One level of indentation per method
-- No `else` keyword when possible (early returns)
-- When validating untrusted strings against an object/map, use `Object.hasOwn(...)` (or `Object.prototype.hasOwnProperty.call(...)`) — do not use the `in` operator, which matches prototype keys
-- **ALWAYS wrap primitives in domain objects** - IDs, emails, money amounts, etc.
-- First-class collections (wrap arrays in classes)
-- One dot per line (Law of Demeter)
-- Keep entities small (< 50 lines for classes, < 10 for methods)
-- No more than two instance variables per class
+**BẮT BUỘC TUÂN THỦ Cấu trúc:**
+- BẮT BUỘC SỬ DỤNG một mức độ thụt lề (indentation) cho mỗi method
+- TUYỆT ĐỐI TRÁNH từ khóa `else` khi có thể (áp dụng early returns)
+- BẮT BUỘC SỬ DỤNG `Object.hasOwn(...)` (hoặc `Object.prototype.hasOwnProperty.call(...)`) khi xác thực các chuỗi không đáng tin cậy đối với object/map. TUYỆT ĐỐI KHÔNG DÙNG toán tử `in`, vì nó sẽ khớp cả các keys trong prototype
+- **LUÔN LUÔN bọc các kiểu nguyên thủy (primitives) trong các domain objects** - IDs, emails, số tiền, v.v.
+- BẮT BUỘC SỬ DỤNG First-class collections (bọc mảng trong các lớp class)
+- BẮT BUỘC SỬ DỤNG một dấu chấm trên mỗi dòng (Luật Demeter)
+- BẮT BUỘC GIỮ các entities nhỏ gọn (< 50 dòng cho các lớp class, < 10 dòng cho các methods)
+- TUYỆT ĐỐI KHÔNG CHO PHÉP vượt quá hai biến instance trên mỗi lớp class
 
-**Value Objects are MANDATORY for:**
+**BẮT BUỘC SỬ DỤNG Value Objects cho:**
 ```typescript
 // ALWAYS create value objects for:
 class UserId { constructor(private readonly value: string) {} }
@@ -91,70 +91,70 @@ class OrderId { constructor(private readonly value: string) {} }
 // GOOD: function createOrder(userId: UserId, email: Email)
 ```
 
-See: [references/clean-code.md](references/clean-code.md)
+BẮT BUỘC THAM KHẢO: [references/clean-code.md](references/clean-code.md)
 
-### 4. Design with Responsibility in Mind
+### 4. Thiết kế đi kèm với Trách nhiệm
 
-**Ask these questions for every class:**
-1. "What pattern is this?" (Entity, Service, Repository, Factory, etc.)
-2. "Is it doing too much?" (Check object calisthenics)
+**BẮT BUỘC PHẢI HỎI cho mọi class:**
+1. "Đây là pattern gì?" (Entity, Service, Repository, Factory, v.v.)
+2. "Nó có đang ôm đồm quá nhiều việc không?" (Kiểm tra Object calisthenics)
 
-**Object Stereotypes:**
-- **Information Holder** - Holds data, minimal behavior
-- **Structurer** - Manages relationships between objects
-- **Service Provider** - Performs work, stateless operations
-- **Coordinator** - Orchestrates multiple services
-- **Controller** - Makes decisions, delegates work
-- **Interfacer** - Transforms data between systems
+**Các khuôn mẫu Đối tượng (Object Stereotypes):**
+- **Information Holder** - Lưu giữ dữ liệu, hành vi tối giản
+- **Structurer** - Quản lý mối quan hệ giữa các objects
+- **Service Provider** - Thực hiện công việc, các thao tác phi trạng thái (stateless)
+- **Coordinator** - Điều phối đa dịch vụ (services)
+- **Controller** - Đưa ra các quyết định, ủy quyền công việc
+- **Interfacer** - Biến đổi dữ liệu giữa các hệ thống
 
-See: [references/object-design.md](references/object-design.md)
+BẮT BUỘC THAM KHẢO: [references/object-design.md](references/object-design.md)
 
-### 5. Manage Complexity Ruthlessly
+### 5. Quản lý Độ phức tạp một cách triệt để
 
-**Essential complexity** = inherent to the problem domain
-**Accidental complexity** = introduced by our solutions
+**Độ phức tạp cốt lõi (Essential complexity)** = vốn có trong domain của bài toán
+**Độ phức tạp ngẫu nhiên (Accidental complexity)** = do các giải pháp của chúng ta sinh ra
 
-**Detect complexity through:**
-- Change amplification (small change = many files)
-- Cognitive load (hard to understand)
-- Unknown unknowns (surprises in behavior)
+**PHÁT HIỆN độ phức tạp thông qua:**
+- Sự khuếch đại thay đổi (một thay đổi nhỏ = sửa rất nhiều file)
+- Tải trọng nhận thức (khó để hiểu)
+- Những điều chưa biết vô hình (hành vi gây bất ngờ)
 
-**Fight complexity with:**
-- YAGNI - Don't build what you don't need NOW
-- KISS - Simplest solution that works
-- DRY - But only after Rule of Three (wait for 3 duplications)
+**CHỐNG LẠI độ phức tạp bằng:**
+- YAGNI - TUYỆT ĐỐI KHÔNG xây dựng những gì bạn chưa cần NGAY BÂY GIỜ
+- KISS - BẮT BUỘC SỬ DỤNG giải pháp đơn giản nhất có thể chạy được
+- DRY - BẮT BUỘC CHỈ THỰC HIỆN sau Quy tắc số Ba (Rule of Three) (đợi đến khi có 3 sự trùng lặp)
 
-See: [references/complexity.md](references/complexity.md)
+BẮT BUỘC THAM KHẢO: [references/complexity.md](references/complexity.md)
 
-### 6. Architect for Change
+### 6. Kiến trúc hướng đến Sự thay đổi
 
-**Vertical Slicing:**
-- Features as end-to-end slices
-- Each feature self-contained
+**Cắt dọc (Vertical Slicing):**
+- BẮT BUỘC XÂY DỰNG các tính năng theo các lát cắt end-to-end
+- BẮT BUỘC GIỮ cho mỗi tính năng độc lập, tự chứa (self-contained)
 
-**Horizontal Decoupling:**
-- Layers don't know about each other's internals
-- Dependencies point inward (toward domain)
+**Tách rời ngang (Horizontal Decoupling):**
+- NGĂN CHẶN việc các tầng (layers) biết về cấu trúc bên trong của nhau
+- BẮT BUỘC HƯỚNG các dependencies vào bên trong (hướng tới domain)
 
-**The Dependency Rule:**
-- Source code dependencies point toward high-level policies
-- Infrastructure depends on domain, never reverse
+**Quy tắc Phụ thuộc (The Dependency Rule):**
+- BẮT BUỘC HƯỚNG các dependencies của source code về phía các high-level policies
+- BẮT BUỘC ĐẢM BẢO infrastructure phụ thuộc vào domain, TUYỆT ĐỐI KHÔNG làm ngược lại
 
-See: [references/architecture.md](references/architecture.md)
+BẮT BUỘC THAM KHẢO: [references/architecture.md](references/architecture.md)
 
-## The Four Elements of Simple Design (XP)
+## Bốn Yếu tố của Thiết kế Đơn giản (XP)
 
-In priority order:
-1. **Runs all the tests** - Must work correctly
-2. **Expresses intent** - Readable, reveals purpose
-3. **No duplication** - DRY (but Rule of Three)
-4. **Minimal** - Fewest classes, methods possible
+BẮT BUỘC THỎA MÃN theo thứ tự ưu tiên:
+1. **Pass toàn bộ bài test** - Bắt buộc phải hoạt động chính xác
+2. **Thể hiện được ý định** - Dễ đọc, bộc lộ rõ mục đích
+3. **Không trùng lặp** - DRY (nhưng phải tuân theo Rule of Three)
+4. **Tối giản** - Ít số lượng class, method nhất có thể
 
-## Code Smell Detection
+## Phát hiện Code Smell (Mùi code)
 
-**Stop and refactor when you see:**
+**BẮT BUỘC DỪNG LẠI và REFACTOR khi bạn thấy:**
 
-| Smell | Solution |
+| Smell (Mùi) | Giải pháp |
 |-------|----------|
 | Long Method | Extract methods, compose method pattern |
 | Large Class | Extract class, single responsibility |
@@ -168,26 +168,26 @@ In priority order:
 | Parallel Inheritance | Merge hierarchies |
 | Speculative Generality | YAGNI - remove unused abstractions |
 
-See: [references/code-smells.md](references/code-smells.md)
+BẮT BUỘC THAM KHẢO: [references/code-smells.md](references/code-smells.md)
 
-## Design Patterns Awareness
+## Nhận thức về Design Patterns
 
-**Creational:** Singleton, Factory, Builder, Prototype
-**Structural:** Adapter, Bridge, Decorator, Composite, Proxy
-**Behavioral:** Strategy, Observer, Template Method, Command
+**Nhóm Khởi tạo (Creational):** Singleton, Factory, Builder, Prototype
+**Nhóm Cấu trúc (Structural):** Adapter, Bridge, Decorator, Composite, Proxy
+**Nhóm Hành vi (Behavioral):** Strategy, Observer, Template Method, Command
 
-**Warning:** Don't force patterns. Let them emerge from refactoring.
+**CẢNH BÁO:** TUYỆT ĐỐI KHÔNG ép buộc sử dụng patterns. BẮT BUỘC ĐỂ chúng tự xuất hiện tự nhiên từ quá trình refactoring.
 
-See: [references/design-patterns.md](references/design-patterns.md)
+BẮT BUỘC THAM KHẢO: [references/design-patterns.md](references/design-patterns.md)
 
-## Testing Strategy
+## Chiến lược Kiểm thử (Testing Strategy)
 
-**Test Types (from inner to outer):**
-1. **Unit Tests** - Single class/function, fast, isolated
-2. **Integration Tests** - Multiple components together
-3. **E2E/Acceptance Tests** - Full system, user perspective
+**Các Loại Tests (từ trong ra ngoài):**
+1. **Unit Tests** - Test cho single class/function, tốc độ nhanh, chạy độc lập
+2. **Integration Tests** - Test kết hợp nhiều components với nhau
+3. **E2E/Acceptance Tests** - Test toàn bộ hệ thống, dưới góc nhìn của người dùng
 
-**Arrange-Act-Assert Pattern:**
+**BẮT BUỘC SỬ DỤNG Pattern Arrange-Act-Assert:**
 ```typescript
 // Arrange - Set up test state
 const calculator = new Calculator();
@@ -199,72 +199,71 @@ const result = calculator.add(2, 3);
 expect(result).toBe(5);
 ```
 
-**Test Naming:** Use concrete examples, not abstract statements
+**Đặt tên Test:** BẮT BUỘC SỬ DỤNG các ví dụ cụ thể, tuyệt đối không dùng các câu khẳng định trừu tượng
 ```typescript
 // BAD: 'can add numbers'
 // GOOD: 'when adding 2 + 3, returns 5'
 ```
 
-See: [references/testing.md](references/testing.md)
+BẮT BUỘC THAM KHẢO: [references/testing.md](references/testing.md)
 
-## Behavioral Principles
+## Các Nguyên tắc Hành vi
 
-- **Tell, Don't Ask** - Command objects, don't query and decide
-- **Design by Contract** - Preconditions, postconditions, invariants
-- **Hollywood Principle** - "Don't call us, we'll call you" (IoC)
-- **Law of Demeter** - Only talk to immediate friends
+- **Tell, Don't Ask** - BẮT BUỘC SỬ DỤNG command objects, TUYỆT ĐỐI KHÔNG truy vấn rồi mới quyết định
+- **Design by Contract** - BẮT BUỘC THỰC THI preconditions, postconditions, invariants
+- **Hollywood Principle** - "Đừng gọi cho chúng tôi, chúng tôi sẽ gọi cho bạn" (IoC)
+- **Law of Demeter** - BẮT BUỘC CHỈ giao tiếp với các bạn bè trực tiếp
 
-## Pre-Code Checklist
+## Danh sách kiểm tra Trước khi Code
 
-Before writing ANY code, answer:
+BẮT BUỘC TRẢ LỜI trước khi viết BẤT KỲ đoạn code nào:
 
-1. [ ] Do I understand the requirement? (Write acceptance criteria first)
-2. [ ] What test will I write first?
-3. [ ] What is the simplest solution?
-4. [ ] What patterns might apply? (Don't force them)
-5. [ ] Am I solving a real problem or a hypothetical one?
+1. [ ] Mình có hiểu yêu cầu không? (Viết tiêu chí chấp nhận (acceptance criteria) trước)
+2. [ ] Bài test đầu tiên mình sẽ viết là gì?
+3. [ ] Giải pháp nào là đơn giản nhất?
+4. [ ] Những pattern nào có thể áp dụng? (Đừng ép buộc chúng)
+5. [ ] Mình đang giải quyết một vấn đề thực tế hay một vấn đề giả định?
 
-## During-Code Checklist
+## Danh sách kiểm tra Trong khi Code
 
-While coding, continuously ask:
+BẮT BUỘC LIÊN TỤC HỎI trong quá trình code:
 
-1. [ ] Is this the simplest thing that could work?
-2. [ ] Does this class have a single responsibility?
-3. [ ] Am I depending on abstractions or concretions?
-4. [ ] Can I name this more clearly?
-5. [ ] Is there duplication I should extract? (Rule of Three)
+1. [ ] Đây có phải là cách đơn giản nhất có thể hoạt động không?
+2. [ ] Class này có đảm nhiệm duy nhất một trách nhiệm (single responsibility) không?
+3. [ ] Mình đang phụ thuộc vào abstractions hay concretions?
+4. [ ] Mình có thể đặt tên này rõ ràng hơn không?
+5. [ ] Có sự trùng lặp nào mình nên tách ra không? (Rule of Three)
 
-## Post-Code Checklist
+## Danh sách kiểm tra Sau khi Code
 
-After the code works:
+BẮT BUỘC KIỂM TRA sau khi code đã chạy được:
 
-1. [ ] Do all tests pass?
-2. [ ] Is there any dead code to remove?
-3. [ ] Can I simplify any complex conditions?
-4. [ ] Are names still accurate after changes?
-5. [ ] Would a junior understand this in 6 months?
+1. [ ] Tất cả các bài test đã pass chưa?
+2. [ ] Có dead code nào cần xóa bỏ không?
+3. [ ] Mình có thể đơn giản hóa bất kỳ câu điều kiện phức tạp nào không?
+4. [ ] Các tên gọi có còn chính xác sau các thay đổi không?
+5. [ ] Một lập trình viên junior có hiểu được đoạn code này sau 6 tháng nữa không?
 
-## Red Flags - Stop and Rethink
+## Cờ đỏ - Dừng lại và Suy nghĩ lại
 
-- Writing code without a test
-- Class with more than 2 instance variables
-- Method longer than 10 lines
-- More than one level of indentation
-- Using `else` when early return works
-- Hardcoding values that should be configurable
-- Creating abstractions before the third duplication
-- Adding features "just in case"
-- Depending on concrete implementations
-- God classes that know everything
+BẮT BUỘC DỪNG LẠI nếu:
+- Đang viết code mà không có test
+- Một class có nhiều hơn 2 biến instance
+- Một method dài hơn 10 dòng
+- Vượt quá một mức độ thụt lề
+- Dùng `else` khi có thể dùng early return
+- Hardcode các giá trị lẽ ra phải có thể cấu hình được
+- Tạo abstractions trước khi có sự trùng lặp lần thứ ba
+- Thêm tính năng "phòng hờ trường hợp..." (just in case)
+- Phụ thuộc vào implementations cụ thể
+- Các God classes (class biết quá nhiều và làm quá nhiều)
 
-## Remember
+## Ghi nhớ
 
-> "A little bit of duplication is 10x better than the wrong abstraction."
+> "Một chút trùng lặp thì tốt hơn 10 lần so với việc dùng sai abstraction."
 
-> "Focus on WHAT needs to happen, not HOW it needs to happen."
+> "Tập trung vào CÁI GÌ cần xảy ra, chứ không phải XẢY RA NHƯ THẾ NÀO."
 
-> "Design principles become second nature through practice. Eventually, you won't think about SOLID - you'll just write SOLID code."
+> "Các nguyên tắc thiết kế sẽ trở thành bản năng tự nhiên thông qua luyện tập. Dần dần, bạn sẽ không cần phải nghĩ về SOLID nữa - bạn sẽ tự động viết ra code chuẩn SOLID."
 
-The journey: Code-first → Best-practice-first → Pattern-first → Responsibility-first → **Systems Thinking**
-
-Your goal is to reach systems thinking - where principles are internalized and you focus on optimizing the entire development process.
+BẮT BUỘC ĐẠT TỚI tư duy hệ thống - BẮT BUỘC THẤU HIỂU các nguyên tắc vào sâu bên trong và TẬP TRUNG vào việc tối ưu hóa toàn bộ quá trình phát triển.

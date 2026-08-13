@@ -1,47 +1,47 @@
 ---
 name: automa-cli-studio
-description: "How to programmatically open a local Automa workflow inside the Automa Extension Studio using Puppeteer."
+description: Giao thức mở và lập trình file workflow Automa cục bộ bên trong Automa Extension Studio.
 ---
 
 # Mở Automa Studio (automa-cli-studio)
 
-Quy trình tự động hóa việc load một file workflow `.json` và mở nó dưới dạng giao diện Studio kéo thả bên trong extension Automa.
+BẮT BUỘC TỰ ĐỘNG HÓA việc tải một file workflow `.json` và MỞ nó trong giao diện kéo-thả Studio của Extension. Theo kiến trúc Thin Client & Daemon hiện đại, TUYỆT ĐỐI KHÔNG sử dụng `child_process` để mở công cụ; BẮT BUỘC GỌI Daemon API để giao tiếp.
 
-## Quy trình thuật toán (Algorithm)
+## Quy Trình Thuật Toán (Algorithm)
 
-Dữ liệu workflow của Automa bắt buộc phải được lưu trữ trong `chrome.storage.local` ở dạng **Object Map (Dictionary)** thông qua key `workflows` (Ví dụ: `{ "wf_123": { id: "wf_123", name: "..." } }`). 
-Lý do: Automa sử dụng O(1) lookup thông qua `state.workflows[id]` trong Vuex store. Nếu lưu dưới dạng Mảng (Array), `state.workflows[id]` sẽ bị undefined, khiến Vue Router redirect ra trang Dashboard `#/workflows`.
+BẮT BUỘC LƯU TRỮ dữ liệu workflow trong `chrome.storage.local` dưới dạng một **Object Map (Dictionary)** thông qua khóa `workflows` (ví dụ: `{ "wf_123": { id: "wf_123", name: "..." } }`).
+TUYỆT ĐỐI KHÔNG LƯU TRỮ dưới dạng mảng (Array) để ngăn chặn lỗi `state.workflows[id]` bị undefined, gây ra tình trạng Vue Router tự động chuyển hướng về trang Dashboard `#/workflows`.
 
-Đường dẫn của giao diện Studio là `newtab.html#/workflows/[id]`.
+Đường dẫn giao diện Studio: `newtab.html#/workflows/[id]`.
 
-Để tự động mở Studio từ CLI, ta thực hiện các bước sau:
+BẮT BUỘC THỰC THI các bước sau để mở Studio:
 
-1. **Chuẩn bị dữ liệu:**
-   - Đọc file workflow `.json`.
-   - Kiểm tra nếu workflow chưa có `id`, hãy tự động cấp một `id` (sử dụng `Date.now()` dạng chuỗi hoặc `crypto.randomUUID()`).
+1. **Chuẩn Bị Dữ Liệu:**
+   - BẮT BUỘC ĐỌC file workflow `.json`.
+   - NẾU workflow thiếu `id`, BẮT BUỘC TẠO một `id` mới (sử dụng chuỗi `Date.now()` hoặc `crypto.randomUUID()`).
 
-2. **Khởi chạy Trình duyệt (Browser):**
-   - Dùng Puppeteer để mở trình duyệt ở chế độ có giao diện (`headless: false`).
-   - Nạp sẵn Automa extension (sử dụng tham số `--load-extension` trỏ tới thư mục build của extension).
+2. **Khởi Chạy Trình Duyệt (Browser):**
+   - PHẢI DÙNG Puppeteer để khởi chạy browser với giao diện UI (`headless: false`).
+   - BẮT BUỘC TẢI Automa extension bằng cách sử dụng tham số `--load-extension` trỏ tới thư mục build extension.
 
 3. **Lấy Extension ID:**
-   - Quét qua danh sách các trang đang mở (`browser.targets()`).
-   - Tìm target thuộc về extension (URL bắt đầu bằng `chrome-extension://`).
-   - Trích xuất `EXTENSION_ID` từ chuỗi URL đó (thường nằm ở phần tử thứ 3 sau khi split `/`).
+   - BẮT BUỘC QUÉT các mục tiêu của trình duyệt (`browser.targets()`).
+   - BẮT BUỘC TÌM mục tiêu extension (URL bắt đầu bằng `chrome-extension://`).
+   - BẮT BUỘC TRÍCH XUẤT `EXTENSION_ID` từ URL (thường là phần tử thứ 3 sau khi tách chuỗi bằng dấu `/`).
 
-4. **Tiêm (Inject) Workflow và Vượt qua Welcome Screen:**
-   - Bắt buộc phải inject dữ liệu thông qua Background Service Worker của extension để tránh tab bị tự động đóng.
-   - Dùng `worker.evaluate()` để đọc toàn bộ dữ liệu từ `chrome.storage.local`.
-   - Tiêm workflow dưới dạng **Object Map**, đồng thời tiêm thêm cờ bypass onboarding vào `settings` (ví dụ: `hasCompletedWelcome: true`) để chặn Vue Router redirect về trang `#/welcome` trên profile mới.
+4. **Tiêm (Inject) Workflow và Vượt Qua Màn Hình Chào Mừng (Welcome Screen):**
+   - BẮT BUỘC TIÊM dữ liệu thông qua Background Service Worker của extension để tránh tình trạng tự động đóng tab.
+   - BẮT BUỘC THỰC THI `worker.evaluate()` để đọc dữ liệu từ `chrome.storage.local`.
+   - BẮT BUỘC TIÊM workflow dưới dạng **Object Map** và BẮT BUỘC ĐẶT cờ bỏ qua onboarding trong `settings` (`hasCompletedWelcome: true`) để ngăn chặn việc chuyển hướng sang trang `#/welcome`.
      ```javascript
      await worker.evaluate(async (workflowData) => {
          return new Promise((resolve) => {
              chrome.storage.local.get(null, (data) => {
-                 // 1. Bypass Welcome Screen
+                 // 1. Vượt qua Welcome Screen
                  let settings = data.settings || {};
                  settings.hasCompletedWelcome = true;
                  
-                 // 2. Inject Workflow as Object Map (Dictionary)
+                 // 2. Tiêm Workflow dưới dạng Object Map (Dictionary)
                  let workflows = data.workflows || {};
                  if (Array.isArray(workflows)) {
                      const obj = {};
@@ -56,13 +56,13 @@ Lý do: Automa sử dụng O(1) lookup thông qua `state.workflows[id]` trong Vu
      }, workflowData);
      ```
 
-5. **Mở giao diện Studio (Popup Window):**
-   - Automa sẽ tự động đóng các tab không phải là dạng popup (`currentWindow.type !== 'popup'`).
-   - Bắt buộc phải tạo window dạng popup từ Service Worker thay vì dùng `page.goto()`:
+5. **Mở Giao Diện Studio (Cửa Sổ Popup):**
+   - BẮT BUỘC MỞ cửa sổ popup từ Service Worker (Automa mặc định tự động đóng các tab không phải là popup).
+   - TUYỆT ĐỐI KHÔNG DÙNG `page.goto()`. BẮT BUỘC TẠO cửa sổ thông qua chrome API:
      ```javascript
      const studioUrl = `chrome-extension://${EXTENSION_ID}/newtab.html#/workflows/${workflowData.id}`;
      await worker.evaluate(async (url) => {
          await chrome.windows.create({ url, type: 'popup', width: 1280, height: 800 });
      }, studioUrl);
      ```
-   - Để nguyên CLI chạy cho đến khi trình duyệt đóng lại (người dùng làm việc xong).
+   - BẮT BUỘC GIỮ tiến trình chạy cho đến khi trình duyệt bị đóng.

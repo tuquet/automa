@@ -3,36 +3,37 @@ name: obsidian-bases
 description: Create and edit Obsidian Bases (.base files) with views, filters, formulas, and summaries. Use when working with .base files, creating database-like views of notes, or when the user mentions Bases, table views, card views, filters, or formulas in Obsidian.
 ---
 
-# Obsidian Bases Skill
+# Kỹ năng Obsidian Bases
 
-## Workflow
+## Quy trình Làm việc
 
-1. **Create the file**: Create a `.base` file in the vault with valid YAML content
-2. **Define scope**: Add `filters` to select which notes appear (by tag, folder, property, or date)
-3. **Add formulas** (optional): Define computed properties in the `formulas` section
-4. **Configure views**: Add one or more views (`table`, `cards`, `list`, or `map`) with `order` specifying which properties to display
-5. **Validate**: Verify the file is valid YAML with no syntax errors. Check that all referenced properties and formulas exist. Common issues: unquoted strings containing special YAML characters, mismatched quotes in formula expressions, referencing `formula.X` without defining `X` in `formulas`
-6. **Test in Obsidian**: Open the `.base` file in Obsidian to confirm the view renders correctly. If it shows a YAML error, check quoting rules below
+BẮT BUỘC THỰC THI nghiêm ngặt các bước sau đây:
+1. **Tạo File**: BẮT BUỘC TẠO file `.base` trong vault, đảm bảo nội dung YAML cấu trúc hoàn toàn hợp lệ.
+2. **Xác định Phạm vi**: BẮT BUỘC THÊM `filters` để khoanh vùng các notes sẽ xuất hiện (theo tag, folder, property, hoặc ngày tháng).
+3. **Thêm Công thức** (Tùy chọn): BẮT BUỘC ĐỊNH NGHĨA các thuộc tính tính toán bên trong block `formulas` nếu cần.
+4. **Cấu hình Hiển thị**: BẮT BUỘC THÊM ít nhất một hoặc nhiều views (`table`, `cards`, `list`, hoặc `map`) và sử dụng `order` để chỉ định chính xác các thuộc tính cần hiển thị.
+5. **Kiểm tra Hợp lệ**: BẮT BUỘC XÁC MINH cấu trúc YAML không có bất kỳ lỗi cú pháp nào. BẮT BUỘC KIỂM TRA tất cả các tham chiếu thuộc tính và công thức đều tồn tại.
+6. **Kiểm thử trong Obsidian**: BẮT BUỘC MỞ file `.base` trong Obsidian để xác nhận kết quả hiển thị. NẾU phát hiện lỗi YAML, BẮT BUỘC ĐỐI CHIẾU VÀ SỬA THEO các quy tắc đóng ngoặc kép được liệt kê bên dưới.
 
 ## Schema
 
-Base files use the `.base` extension and contain valid YAML.
+BẮT BUỘC SỬ DỤNG đuôi mở rộng `.base` và đảm bảo tính hợp lệ tuyệt đối của YAML.
 
 ```yaml
-# Global filters apply to ALL views in the base
+# Các bộ lọc toàn cục (global filters) BẮT BUỘC áp dụng cho TẤT CẢ các views trong Base.
 filters:
-  # Can be a single filter string
-  # OR a recursive filter object with exactly ONE key: and, or, or not
+  # Có thể là một chuỗi bộ lọc đơn,
+  # HOẶC một đối tượng bộ lọc đệ quy với CHÍNH XÁC MỘT khóa duy nhất: and, or, hoặc not.
   and:
     - 'status == "active"'
     - not:
         - 'file.hasTag("archived")'
 
-# Define formula properties that can be used across all views
+# BẮT BUỘC định nghĩa các thuộc tính tính toán tại đây để dùng chung cho mọi views.
 formulas:
   formula_name: 'expression'
 
-# Configure display names and settings for properties
+# Cấu hình tên hiển thị và các thiết lập cho thuộc tính.
 properties:
   property_name:
     displayName: "Display Name"
@@ -41,57 +42,57 @@ properties:
   file.ext:
     displayName: "Extension"
 
-# Define custom summary formulas
+# Định nghĩa các công thức tính tổng tùy chỉnh.
 summaries:
   custom_summary_name: 'values.mean().round(3)'
 
-# Define one or more views
+# BẮT BUỘC định nghĩa MỘT hoặc NHIỀU views.
 views:
   - type: table | cards | list | map
     name: "View Name"
-    limit: 10                    # Optional: limit results
-    groupBy:                     # Optional: group results
+    limit: 10                    # Tùy chọn: Giới hạn số lượng kết quả
+    groupBy:                     # Tùy chọn: Nhóm kết quả
       property: property_name
       direction: ASC | DESC
-    filters:                     # View-specific filters follow the same rules
+    filters:                     # Bộ lọc riêng cho view này BẮT BUỘC tuân theo cùng quy tắc
       and:
         - 'status == "active"'
-    order:                       # Properties to display in order
+    order:                       # BẮT BUỘC khai báo danh sách thuộc tính cần hiển thị theo thứ tự
       - file.name
       - property_name
       - formula.formula_name
-    summaries:                   # Map properties to summary formulas
+    summaries:                   # Ánh xạ thuộc tính với các công thức tổng hợp
       property_name: Average
 ```
 
-## Filter Syntax
+## Cú pháp Bộ lọc
 
-Filters narrow down results. They can be applied globally or per-view.
+BẮT BUỘC SỬ DỤNG các bộ lọc (filters) để tinh chỉnh kết quả truy vấn. BẮT BUỘC ÁP DỤNG chúng ở cấp độ toàn cục (global) hoặc chi tiết cho từng view.
 
-### Filter Structure
+### Cấu trúc Bộ lọc
 
 ```yaml
-# Single filter
+# Bộ lọc đơn lẻ
 filters: 'status == "done"'
 
-# AND - all conditions must be true
+# AND - BẮT BUỘC TẤT CẢ điều kiện đều phải đúng
 filters:
   and:
     - 'status == "done"'
     - 'priority > 3'
 
-# OR - any condition can be true
+# OR - CHỈ CẦN MỘT TRONG CÁC điều kiện đúng
 filters:
   or:
     - 'file.hasTag("book")'
     - 'file.hasTag("article")'
 
-# NOT - exclude matching items
+# NOT - TUYỆT ĐỐI LOẠI BỎ các mục thỏa mãn điều kiện
 filters:
   not:
     - 'file.hasTag("archived")'
 
-# Nested filters
+# Bộ lọc lồng nhau
 filters:
   or:
     - file.hasTag("tag")
@@ -103,123 +104,123 @@ filters:
         - file.inFolder("Required Reading")
 ```
 
-### Filter Operators
+### Toán tử Bộ lọc
 
-| Operator | Description |
-|----------|-------------|
-| `==` | equals |
-| `!=` | not equal |
-| `>` | greater than |
-| `<` | less than |
-| `>=` | greater than or equal |
-| `<=` | less than or equal |
-| `&&` | logical and |
-| `\|\|` | logical or |
-| <code>!</code> | logical not |
+| Toán tử | Mô tả |
+|---------|-------|
+| `==` | Bằng |
+| `!=` | Khác |
+| `>` | Lớn hơn |
+| `<` | Nhỏ hơn |
+| `>=` | Lớn hơn hoặc bằng |
+| `<=` | Nhỏ hơn hoặc bằng |
+| `&&` | Logic AND |
+| `\|\|` | Logic OR |
+| `!` | Logic NOT |
 
-## Properties
+## Thuộc tính (Properties)
 
-### Three Types of Properties
+### Ba Loại Thuộc tính Cơ bản
 
-1. **Note properties** - From frontmatter: `note.author` or just `author`
-2. **File properties** - File metadata: `file.name`, `file.mtime`, etc.
-3. **Formula properties** - Computed values: `formula.my_formula`
+1. **Thuộc tính Note** - Bắt nguồn từ frontmatter: `note.author` hoặc gọi tắt là `author`.
+2. **Thuộc tính File** - Metadata nội tại của file: `file.name`, `file.mtime`, v.v.
+3. **Thuộc tính Công thức** - Các giá trị được tính toán từ block formulas: `formula.my_formula`.
 
-### File Properties Reference
+### Bảng Tham khảo Thuộc tính File
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `file.name` | String | File name |
-| `file.basename` | String | File name without extension |
-| `file.path` | String | Full path to file |
-| `file.folder` | String | Parent folder path |
-| `file.ext` | String | File extension |
-| `file.size` | Number | File size in bytes |
-| `file.ctime` | Date | Created time |
-| `file.mtime` | Date | Modified time |
-| `file.tags` | List | All tags in file |
-| `file.links` | List | Internal links in file |
-| `file.backlinks` | List | Files linking to this file |
-| `file.embeds` | List | Embeds in the note |
-| `file.properties` | Object | All frontmatter properties |
+| Thuộc tính | Kiểu dữ liệu | Mô tả |
+|------------|--------------|-------|
+| `file.name` | String | Tên file đầy đủ. |
+| `file.basename` | String | Tên file không bao gồm phần đuôi mở rộng. |
+| `file.path` | String | Đường dẫn tuyệt đối đến file. |
+| `file.folder` | String | Đường dẫn đến thư mục cha chứa file. |
+| `file.ext` | String | Đuôi mở rộng của file. |
+| `file.size` | Number | Kích thước file (tính bằng bytes). |
+| `file.ctime` | Date | Thời điểm khởi tạo file. |
+| `file.mtime` | Date | Thời điểm sửa đổi file gần nhất. |
+| `file.tags` | List | Danh sách toàn bộ tags xuất hiện trong file. |
+| `file.links` | List | Danh sách toàn bộ các liên kết nội bộ trong file. |
+| `file.backlinks` | List | Danh sách toàn bộ các file khác đang trỏ liên kết đến file này. |
+| `file.embeds` | List | Danh sách các thành phần được nhúng trong note. |
+| `file.properties`| Object | Khối chứa toàn bộ thuộc tính frontmatter. |
 
-### The `this` Keyword
+### Từ khóa `this`
 
-- In main content area: refers to the base file itself
-- When embedded: refers to the embedding file
-- In sidebar: refers to the active file in main content
+- Khi ở khu vực nội dung chính: BẮT BUỘC ĐƯỢC HIỂU LÀ tham chiếu đến chính file Base hiện tại.
+- Khi được nhúng: BẮT BUỘC ĐƯỢC HIỂU LÀ tham chiếu đến file đang chứa lệnh nhúng Base.
+- Khi ở sidebar: BẮT BUỘC ĐƯỢC HIỂU LÀ tham chiếu đến file đang được mở trong khu vực nội dung chính.
 
-## Formula Syntax
+## Cú pháp Công thức
 
-Formulas compute values from properties. Defined in the `formulas` section.
+BẮT BUỘC ĐỊNH NGHĨA tất cả công thức tính toán bên trong khối `formulas`.
 
 ```yaml
 formulas:
-  # Simple arithmetic
+  # Các phép toán số học cơ bản
   total: "price * quantity"
 
-  # Conditional logic
+  # Biểu thức điều kiện logic
   status_icon: 'if(done, "✅", "⏳")'
 
-  # String formatting
+  # Định dạng chuỗi văn bản
   formatted_price: 'if(price, price.toFixed(2) + " dollars")'
 
-  # Date formatting
+  # Định dạng ngày tháng
   created: 'file.ctime.format("YYYY-MM-DD")'
 
-  # Calculate days since created (use .days for Duration)
+  # Tính số ngày trôi qua từ khi tạo file (BẮT BUỘC SỬ DỤNG thuộc tính .days cho kiểu Duration)
   days_old: '(now() - file.ctime).days'
 
-  # Calculate days until due date
+  # Tính số ngày còn lại cho đến hạn chót (due_date)
   days_until_due: 'if(due_date, (date(due_date) - today()).days, "")'
 ```
 
-## Key Functions
+## Các Hàm Cốt lõi
 
-Most commonly used functions. For the complete reference of all types (Date, String, Number, List, File, Link, Object, RegExp), see [FUNCTIONS_REFERENCE.md](references/FUNCTIONS_REFERENCE.md).
+BẮT BUỘC SỬ DỤNG các hàm tiêu chuẩn sau đây. BẮT BUỘC THAM KHẢO [FUNCTIONS_REFERENCE.md](references/FUNCTIONS_REFERENCE.md) để nắm rõ chi tiết toàn bộ các hàm hỗ trợ.
 
-| Function | Signature | Description |
-|----------|-----------|-------------|
-| `date()` | `date(string): date` | Parse string to date (`YYYY-MM-DD HH:mm:ss`) |
-| `now()` | `now(): date` | Current date and time |
-| `today()` | `today(): date` | Current date (time = 00:00:00) |
-| `if()` | `if(condition, trueResult, falseResult?)` | Conditional |
-| `duration()` | `duration(string): duration` | Parse duration string |
-| `file()` | `file(path): file` | Get file object |
-| `link()` | `link(path, display?): Link` | Create a link |
+| Hàm | Cú pháp | Mô tả |
+|-----|---------|-------|
+| `date()` | `date(string): date` | Phân tích chuỗi thành kiểu Date (định dạng `YYYY-MM-DD HH:mm:ss`). |
+| `now()` | `now(): date` | Lấy chính xác thời điểm ngày và giờ hiện tại. |
+| `today()` | `today(): date` | Lấy ngày hiện tại (mặc định gán thời gian là `00:00:00`). |
+| `if()` | `if(condition, trueResult, falseResult?)` | Hàm xử lý điều kiện rẽ nhánh. |
+| `duration()`| `duration(string): duration`| Phân tích chuỗi thành kiểu Thời lượng. |
+| `file()` | `file(path): file` | Lấy đối tượng file tương ứng với đường dẫn. |
+| `link()` | `link(path, display?): Link` | Khởi tạo đối tượng liên kết. |
 
-### Duration Type
+### Kiểu Dữ liệu Duration (Thời lượng)
 
-When subtracting two dates, the result is a **Duration** type (not a number).
+CẢNH BÁO TUYỆT ĐỐI QUAN TRỌNG: Phép trừ giữa hai giá trị ngày tháng SẼ LUÔN TRẢ VỀ kiểu **Duration**, TUYỆT ĐỐI KHÔNG PHẢI LÀ MỘT CON SỐ (Number).
 
-**Duration Fields:** `duration.days`, `duration.hours`, `duration.minutes`, `duration.seconds`, `duration.milliseconds`
+**Các trường dữ liệu của Duration bao gồm:** `duration.days`, `duration.hours`, `duration.minutes`, `duration.seconds`, `duration.milliseconds`.
 
-**IMPORTANT:** Duration does NOT support `.round()`, `.floor()`, `.ceil()` directly. Access a numeric field first (like `.days`), then apply number functions.
-
-```yaml
-# CORRECT: Calculate days between dates
-"(date(due_date) - today()).days"                    # Returns number of days
-"(now() - file.ctime).days"                          # Days since created
-"(date(due_date) - today()).days.round(0)"           # Rounded days
-
-# WRONG - will cause error:
-# "((date(due) - today()) / 86400000).round(0)"      # Duration doesn't support division then round
-```
-
-### Date Arithmetic
+**QUY TẮC CẤM KỴ:** Kiểu Duration TUYỆT ĐỐI KHÔNG hỗ trợ các hàm `.round()`, `.floor()`, `.ceil()` một cách trực tiếp. BẮT BUỘC PHẢI TRUY CẬP vào một trường dạng số trước (ví dụ: `.days`), SAU ĐÓ mới được quyền áp dụng các hàm toán học.
 
 ```yaml
-# Duration units: y/year/years, M/month/months, d/day/days,
-#                 w/week/weeks, h/hour/hours, m/minute/minutes, s/second/seconds
-"now() + \"1 day\""       # Tomorrow
-"today() + \"7d\""        # A week from today
-"now() - file.ctime"      # Returns Duration
-"(now() - file.ctime).days"  # Get days as number
+# CHUẨN XÁC: Tính số ngày chênh lệch giữa hai thời điểm
+"(date(due_date) - today()).days"                    # Trả về số lượng ngày
+"(now() - file.ctime).days"                          # Số ngày kể từ khi tạo
+"(date(due_date) - today()).days.round(0)"           # Số ngày đã làm tròn
+
+# SAI LẦM NGHIÊM TRỌNG - BẮT BUỘC SẼ GÂY LỖI:
+# "((date(due) - today()) / 86400000).round(0)"      # Kiểu Duration tuyệt đối không hỗ trợ phép chia trực tiếp rồi làm tròn
 ```
 
-## View Types
+### Tính toán Ngày tháng
 
-### Table View
+```yaml
+# Các đơn vị hỗ trợ cho Duration: y/year/years, M/month/months, d/day/days,
+# w/week/weeks, h/hour/hours, m/minute/minutes, s/second/seconds
+"now() + \"1 day\""          # Ngày mai
+"today() + \"7d\""           # 7 ngày tính từ hôm nay
+"now() - file.ctime"         # KẾT QUẢ TRẢ VỀ LÀ KIỂU DURATION
+"(now() - file.ctime).days"  # KẾT QUẢ TRẢ VỀ LÀ SỐ LƯỢNG NGÀY
+```
+
+## Các Kiểu View
+
+### Table View (Dạng Bảng)
 
 ```yaml
 views:
@@ -234,7 +235,7 @@ views:
       count: Average
 ```
 
-### Cards View
+### Cards View (Dạng Thẻ)
 
 ```yaml
 views:
@@ -246,7 +247,7 @@ views:
       - description
 ```
 
-### List View
+### List View (Dạng Danh sách)
 
 ```yaml
 views:
@@ -257,38 +258,38 @@ views:
       - status
 ```
 
-### Map View
+### Map View (Dạng Bản đồ)
 
-Requires latitude/longitude properties and the Maps community plugin.
+BẮT BUỘC PHẢI CÓ các thuộc tính lưu trữ vĩ độ/kinh độ và ĐÒI HỎI PHẢI CÀI ĐẶT plugin cộng đồng Maps.
 
 ```yaml
 views:
   - type: map
     name: "Locations"
-    # Map-specific settings for lat/lng properties
+    # Các thiết lập riêng biệt của Map dành cho thuộc tính lat/lng
 ```
 
-## Default Summary Formulas
+## Các Công thức Tóm tắt (Summaries) Mặc định
 
-| Name | Input Type | Description |
-|------|------------|-------------|
-| `Average` | Number | Mathematical mean |
-| `Min` | Number | Smallest number |
-| `Max` | Number | Largest number |
-| `Sum` | Number | Sum of all numbers |
-| `Range` | Number | Max - Min |
-| `Median` | Number | Mathematical median |
-| `Stddev` | Number | Standard deviation |
-| `Earliest` | Date | Earliest date |
-| `Latest` | Date | Latest date |
-| `Range` | Date | Latest - Earliest |
-| `Checked` | Boolean | Count of true values |
-| `Unchecked` | Boolean | Count of false values |
-| `Empty` | Any | Count of empty values |
-| `Filled` | Any | Count of non-empty values |
-| `Unique` | Any | Count of unique values |
+| Tên | Đầu vào | Mô tả |
+|-----|---------|-------|
+| `Average` | Number | Tính trung bình cộng. |
+| `Min` | Number | Tìm giá trị nhỏ nhất. |
+| `Max` | Number | Tìm giá trị lớn nhất. |
+| `Sum` | Number | Tính tổng cộng dồn của tất cả các số. |
+| `Range` | Number | Bằng Max trừ đi Min. |
+| `Median` | Number | Tìm trung vị toán học. |
+| `Stddev` | Number | Tính độ lệch chuẩn. |
+| `Earliest` | Date | Tìm ngày sớm nhất. |
+| `Latest` | Date | Tìm ngày muộn nhất. |
+| `Range` | Date | Bằng Latest trừ đi Earliest. |
+| `Checked` | Boolean | Đếm số lượng các giá trị bằng `true`. |
+| `Unchecked` | Boolean | Đếm số lượng các giá trị bằng `false`. |
+| `Empty` | Any | Đếm số lượng các ô trống (không có giá trị). |
+| `Filled` | Any | Đếm số lượng các ô đã được điền (có giá trị). |
+| `Unique` | Any | Đếm số lượng các giá trị không trùng lặp (duy nhất). |
 
-## Complete Examples
+## Các Ví dụ Hoàn chỉnh
 
 ### Task Tracker Base
 
@@ -413,84 +414,84 @@ views:
       - file.mtime
 ```
 
-## Embedding Bases
+## Nhúng Bases
 
-Embed in Markdown files:
+BẮT BUỘC PHẢI NHÚNG Base vào các file Markdown bằng cú pháp vô cùng chuẩn xác sau đây:
 
 ```markdown
 ![[MyBase.base]]
 
-<!-- Specific view -->
+<!-- Nhúng một view cụ thể -->
 ![[MyBase.base#View Name]]
 ```
 
-## YAML Quoting Rules
+## Các Quy tắc Đóng Ngoặc YAML Cực kỳ Quan trọng
 
-- Use single quotes for formulas containing double quotes: `'if(done, "Yes", "No")'`
-- Use double quotes for simple strings: `"My View Name"`
-- Escape nested quotes properly in complex expressions
+- BẮT BUỘC SỬ DỤNG DẤU NHÁY ĐƠN (Single Quotes) để bao bọc các công thức có chứa dấu nháy kép bên trong: `'if(done, "Yes", "No")'`.
+- BẮT BUỘC SỬ DỤNG DẤU NHÁY KÉP (Double Quotes) cho các chuỗi văn bản thông thường: `"My View Name"`.
+- BẮT BUỘC PHẢI ESCAPE các dấu nháy lồng nhau một cách cực kỳ cẩn thận và chính xác trong các biểu thức phức tạp.
 
-## Troubleshooting
+## Xử lý Sự cố (Troubleshooting)
 
-### YAML Syntax Errors
+### Lỗi Cú pháp YAML
 
-**Unquoted special characters**: Strings containing `:`, `{`, `}`, `[`, `]`, `,`, `&`, `*`, `#`, `?`, `|`, `-`, `<`, `>`, `=`, `!`, `%`, `@`, `` ` `` must be quoted.
+**Ký tự đặc biệt không được đặt trong dấu ngoặc kép**: BẮT BUỘC PHẢI ĐẶT TRONG DẤU NGOẶC KÉP các chuỗi có chứa bất kỳ ký tự nào sau đây: `:`, `{`, `}`, `[`, `]`, `,`, `&`, `*`, `#`, `?`, `|`, `-`, `<`, `>`, `=`, `!`, `%`, `@`, `` ` ``.
 
 ```yaml
-# WRONG - colon in unquoted string
+# SAI LẦM NGHIÊM TRỌNG - Chứa dấu hai chấm nhưng lại không được đóng ngoặc kép
 displayName: Status: Active
 
-# CORRECT
+# CHUẨN XÁC
 displayName: "Status: Active"
 ```
 
-**Mismatched quotes in formulas**: When a formula contains double quotes, wrap the entire formula in single quotes.
+**Lỗi không khớp dấu ngoặc trong công thức**: BẮT BUỘC BAO BỌC toàn bộ công thức bằng dấu nháy đơn khi công thức đó có chứa dấu nháy kép bên trong.
 
 ```yaml
-# WRONG - double quotes inside double quotes
+# SAI LẦM NGHIÊM TRỌNG - Sử dụng dấu nháy kép lồng nhau
 formulas:
   label: "if(done, "Yes", "No")"
 
-# CORRECT - single quotes wrapping double quotes
+# CHUẨN XÁC - Sử dụng dấu nháy đơn để bọc toàn bộ chuỗi chứa dấu nháy kép
 formulas:
   label: 'if(done, "Yes", "No")'
 ```
 
-### Common Formula Errors
+### Các Lỗi Công thức Phổ biến Cần Tuyệt đối Tránh
 
-**Duration math without field access**: Subtracting dates returns a Duration, not a number. Always access `.days`, `.hours`, etc.
+**Thực hiện toán học trên Duration nhưng quên truy cập thuộc tính**: BẮT BUỘC PHẢI TRUY CẬP vào `.days`, `.hours`, v.v., TRƯỚC KHI tiến hành áp dụng các phép toán số học. BẮT BUỘC GHI NHỚ: Phép trừ ngày tháng trả về Duration.
 
 ```yaml
-# WRONG - Duration is not a number
+# SAI LẦM NGHIÊM TRỌNG - Duration không phải là một con số
 "(now() - file.ctime).round(0)"
 
-# CORRECT - access .days first, then round
+# CHUẨN XÁC - Bắt buộc truy cập .days trước, sau đó mới làm tròn
 "(now() - file.ctime).days.round(0)"
 ```
 
-**Missing null checks**: Properties may not exist on all notes. Use `if()` to guard.
+**Thiếu cơ chế kiểm tra Null**: BẮT BUỘC SỬ DỤNG `if()` để bảo vệ an toàn biểu thức. Các thuộc tính hoàn toàn có thể không tồn tại trên tất cả các notes.
 
 ```yaml
-# WRONG - crashes if due_date is empty
+# SAI LẦM NGHIÊM TRỌNG - Sẽ ngay lập tức crash nếu due_date bị trống (empty)
 "(date(due_date) - today()).days"
 
-# CORRECT - guard with if()
+# CHUẨN XÁC - Bắt buộc bảo vệ an toàn bằng if()
 'if(due_date, (date(due_date) - today()).days, "")'
 ```
 
-**Referencing undefined formulas**: Ensure every `formula.X` in `order` or `properties` has a matching entry in `formulas`.
+**Tham chiếu các công thức không xác định**: BẮT BUỘC ĐẢM BẢO CHẮC CHẮN RẰNG mỗi khai báo `formula.X` trong mục `order` hoặc `properties` BẮT BUỘC PHẢI CÓ một định nghĩa tương ứng hoàn toàn trùng khớp bên trong mục `formulas`.
 
 ```yaml
-# This will fail silently if 'total' is not defined in formulas
+# Sẽ thất bại hoàn toàn và không báo lỗi trực tiếp nếu 'total' không được định nghĩa trong formulas
 order:
   - formula.total
 
-# Fix: define it
+# CÁCH KHẮC PHỤC: Bắt buộc định nghĩa nó
 formulas:
   total: "price * quantity"
 ```
 
-## References
+## Tài liệu Tham khảo
 
 - [Bases Syntax](https://help.obsidian.md/bases/syntax)
 - [Functions](https://help.obsidian.md/bases/functions)

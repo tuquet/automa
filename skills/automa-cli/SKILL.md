@@ -1,52 +1,45 @@
 ---
 name: automa-cli
-description: "Index directory for Automa CLI (automa-cli) skills and execution protocols. Refer to sub-skills for specific CLI tasks."
+description: "Thư mục gốc chứa các kỹ năng và giao thức thực thi của Automa CLI. Tham khảo các thư mục con cho từng tác vụ cụ thể."
 ---
 
-# Automa CLI (`automa-cli`) - Skills Index & Core Protocols
+# Automa CLI (`automa-cli`) - Mục lục & Giao thức Cốt lõi
 
-Thư mục này tổng hợp toàn bộ các quy trình, kiến trúc và kỹ thuật liên quan đến công cụ **Automa CLI** (`automa-cli`). 
+**BẮT BUỘC XEM** MỤC LỤC TỔNG HỢP toàn bộ quy trình, kiến trúc và kỹ thuật liên quan đến **Automa CLI** (`automa-cli`).
 
-Depending on your specific task, navigate to the corresponding sub-skill below:
+**BẮT BUỘC ĐIỀU HƯỚNG** tới các kỹ năng con (sub-skills) tương ứng bên dưới theo yêu cầu công việc:
 
-## Available Sub-Skills
+## Danh sách Kỹ năng con
 
 - 💻 **[Automa CLI Run (automa-cli-run)](./automa-cli-run/SKILL.md)**
-  - **Mục đích:** Quy trình xác minh phụ thuộc local (Supabase, Extension build) và chạy lệnh CLI để thực thi workflow.
+  - **Mục đích:** **BẮT BUỘC TUÂN THEO** QUY TRÌNH xác minh phụ thuộc và chạy quy trình làm việc (workflow).
 
 - 🛠️ **[Automa CLI Studio (automa-cli-studio)](./automa-cli-studio/SKILL.md)**
-  - **Mục đích:** Quy trình tiêm (inject) và mở một file workflow local dưới dạng giao diện Studio kéo thả bằng Puppeteer.
+  - **Mục đích:** **BẮT BUỘC TUÂN THEO** QUY TRÌNH tiêm mã và mở tệp cấu hình cục bộ dưới dạng giao diện Studio kéo thả.
 
 - 🔍 **[Automa CLI Lint (automa-cli-lint)](./automa-cli-lint/SKILL.md)**
-  - **Mục đích:** Đặc tả kỹ thuật cho tính năng `automa lint` (kiểm tra cấu trúc JSON Schema, NanoID, và Semantic Variables).
+  - **Mục đích:** **BẮT BUỘC ÁP DỤNG** ĐẶC TẢ kỹ thuật cho tính năng kiểm tra lỗi cấu trúc và ngữ nghĩa.
 
 - 🌐 **[Automa CLI Browser Launcher (automa-cli-browser-launcher)](./automa-cli-browser-launcher/SKILL.md)**
-  - **Mục đích:** Pattern chuẩn OOP để khởi chạy Chromium qua CDP (`execFile`) không phụ thuộc vào `puppeteer.launch()`.
+  - **Mục đích:** **BẮT BUỘC SỬ DỤNG** kiến trúc gọi API tới Daemon để khởi chạy trình duyệt thay vì dùng `child_process`.
 
 ---
 
-## ⚡ Core Protocol: Automa Extension UI Bypass (MV3 Popup Window)
+## ⚡ Giao thức Cốt lõi: Automa Extension UI Bypass
 
 > [!IMPORTANT]
-> **Quy tắc bắt buộc khi mở Extension Pages (Studio/Dashboard) từ CLI qua Puppeteer:**
+> **Quy tắc BẮT BUỘC khi mở giao diện Extension (Studio/Dashboard):**
 
-1. **Không dùng `page.goto(chrome-extension://...)` từ tab thường**: `App.vue` của Automa sẽ chủ động tự đóng tab (`browser.tabs.remove`) nếu `currentWindow.type !== 'popup'`.
-2. **Không dùng URL Query Bypasses (như `?bypass=1`)**: Cách này sẽ làm sập quá trình khởi tạo Vue Store (gây ra lỗi `TypeError: Cannot read properties of undefined` trên `tabs[0]`), bỏ qua luồng load dữ liệu database.
-3. **Giải pháp chuẩn:** Luôn tiêm đoạn script vào Background Service Worker của Extension để tạo một cửa sổ dạng `popup` native bằng `chrome.windows.create`:
-
-```typescript
-const extWorker = (await extTarget.worker()) || (await extTarget.page());
-await extWorker.evaluate(async (url) => {
-  await chrome.windows.create({ url, type: 'popup', width: 1280, height: 800 });
-}, studioUrl);
-```
+1. **TUYỆT ĐỐI KHÔNG DÙNG `page.goto` từ tab thông thường**: Giao diện Automa **CHẮC CHẮN SẼ** tự đóng tab nếu không phải cửa sổ dạng popup.
+2. **TUYỆT ĐỐI KHÔNG DÙNG tham số URL để bỏ qua (như `?bypass=1`)**: Cách này **CHẮC CHẮN SẼ** làm hỏng trạng thái ứng dụng và bỏ qua luồng tải dữ liệu chuẩn.
+3. **GIẢI PHÁP CHUẨN:** **LUÔN LUÔN BẮT BUỘC TIÊM** mã kịch bản vào Background Service Worker để tạo một cửa sổ `popup` chuẩn gốc.
 
 ---
 
-## 🏗️ Core Architecture: Orchestration & Dependency Injection
+## 🏗️ Kiến trúc Cốt lõi: Thin Client & Daemon
 
-- **`VaultContextResolver`**: Một service độc lập dùng để nội suy (infer) đường dẫn `vaultPath` và `projectName` từ một đường dẫn absolute (khi người dùng chạy lệnh từ bất kỳ thư mục con nào). Tránh viết lại vòng lặp quét ngược `.vault` trong từng Command.
-- **`ExecutionManager`**: Lớp bao bọc (wrapper) chung để xử lý logic lặp (Retries), truyền tham số `runnerFunction` (Dependency Injection) thay vì hardcode hàm thực thi. Điều này giúp tách biệt ranh giới trách nhiệm (SRP) giữa lớp quản lý thực thi và lớp điều khiển Puppeteer/Browser.
-- **`WorkflowLoaderService`**: Dịch vụ tải workflow. Khi cung cấp URL GitHub, hàm `transformGitHubUrl()` sẽ dùng regex để thay thế `github.com` thành `raw.githubusercontent.com`, bỏ qua thư mục `blob`, và dùng `ofetch` HTTP GET trực tiếp nội dung JSON vào RAM, bỏ qua bước `git clone`.
-- **`SyncWatcher` (Dashboard Mode)**: Khi mở Studio mà không truyền file, hệ thống sẽ chạy ở Dashboard Mode. Mọi thao tác trên Vue.js lưu vào `chrome.storage.local`. `SyncWatcher.ts` của CLI sẽ phát hiện thay đổi và ghi (write) ra file `.json` qua `fs.writeFileSync`.
-- **`DaemonManager` (Port Negotiation)**: Daemon không crash nếu cổng mặc định (8765) bị trùng. Hệ thống sẽ quét tịnh tiến port và spawn process với cờ `--port` mới tương ứng.
+- **`VaultContextResolver`**: **BẮT BUỘC DÙNG** dịch vụ này để xác định cấu hình kho lưu trữ từ đường dẫn tuyệt đối. **TUYỆT ĐỐI KHÔNG** lặp lại mã quét thư mục trong từng lệnh.
+- **`ExecutionManager`**: **BẮT BUỘC SỬ DỤNG** lớp quản lý chung để xử lý thử lại (retries) và tiêm phụ thuộc. **BẮT BUỘC TÁCH BIỆT** ranh giới trách nhiệm.
+- **`WorkflowLoaderService`**: Khi tải quy trình từ GitHub, **BẮT BUỘC DÙNG** HTTP GET trực tiếp nội dung gốc vào bộ nhớ. **TUYỆT ĐỐI KHÔNG** dùng `git clone`.
+- **`SyncWatcher`**: KHI chạy ở chế độ Bảng điều khiển (Dashboard), mọi thay đổi trên giao diện **BẮT BUỘC LƯU** vào bộ nhớ cục bộ và được ghi ra tệp JSON.
+- **`DaemonManager`**: BẮT BUỘC tuân thủ kiến trúc Thin Client & Daemon hiện đại. CLI đóng vai trò Thin Client, **BẮT BUỘC GỌI API** của Daemon để xử lý tác vụ nặng (khởi chạy trình duyệt, quản lý tiến trình). **TUYỆT ĐỐI KHÔNG** dùng `child_process` trực tiếp trong CLI.
