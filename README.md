@@ -1,133 +1,114 @@
-# Automa Ecosystem
+<div align="center">
+  <!-- <img src="automa-vscode/assets/logo.jpg" width="128" height="128" alt="Automa Ecosystem Logo" /> -->
+  <h1>Automa Ecosystem</h1>
+  <p><strong>Nền tảng Orchestration Đa Trình Duyệt Chuẩn Doanh Nghiệp (Enterprise-Grade)</strong></p>
+</div>
 
-Chào mừng đến với **Automa Ecosystem**. Phiên bản hiện tại là một hệ sinh thái gọn nhẹ và mạnh mẽ xoay quanh trung tâm là công cụ dòng lệnh `automa-cli`.
+<br/>
 
-Kiến trúc mới này tập trung vào sự tự động hóa 100%, hoạt động hoàn toàn Offline (Offline-First) và quản lý dữ liệu linh hoạt, tách biệt khỏi sự phụ thuộc vào các dịch vụ Cloud cũ.
+Chào mừng đến với **Automa Ecosystem**. Phiên bản hiện tại là một hệ sinh thái mạnh mẽ được tái thiết kế với triết lý **Offline-First**, hoạt động hoàn toàn độc lập và không phụ thuộc vào các dịch vụ Cloud bên ngoài, mang lại khả năng quản lý dữ liệu an toàn và tự động hóa đa trình duyệt vượt trội.
+
+Tầm nhìn của chúng tôi là chuyển đổi Automa từ một công cụ tự động hóa cá nhân trở thành một nền tảng điều phối (Orchestrator) toàn diện chạy trên mọi môi trường mà không cần cài đặt runtime phức tạp.
 
 ---
 
-## 🚀 Hướng Dẫn Cài Đặt & Khởi Chạy (Getting Started)
+## 🏗️ Kiến Trúc Lõi (Daemon-Driven Architecture)
 
-Dự án được quản lý linh hoạt, các thành phần giao tiếp với nhau trực tiếp qua CLI.
+Hệ thống loại bỏ hoàn toàn các luồng xử lý phân mảnh, thay vào đó vận hành dựa trên cơ chế Daemon Server trung tâm (Background HTTP/SSE) kết hợp giao diện Webview.
 
-### 1. Yêu Cầu Hệ Thống
+```text
+┌────────────────────────────────────────────────────────┐
+│               VS CODE ENVIRONMENT (GUI)                │
+│                                                        │
+│  [Automa VS Code Extension]  ──(Renders)──> [Webview]  │
+│   (Trình điều khiển, Skill AI)             (Vue App)   │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+                 ( HTTP REST / SSE )
+                           │
+                           ▼
+┌────────────────────────────────────────────────────────┐
+│             LOCAL NODE DAEMON (BACKGROUND)             │
+│                 (automa-cli serve)                     │
+│                                                        │
+│  1. API Server & Event Emitter                         │
+│  2. Campaign Orchestrator & Workflow Runner            │
+│  3. Browser Process Manager (Puppeteer)                │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+                  ( CDP Polling )
+                           │
+                           ▼
+┌────────────────────────────────────────────────────────┐
+│                  TARGET BROWSERS                       │
+│                                                        │
+│  [ Chromium / Chrome ]  ──(Loads)──> [ Automa MV3 ]    │
+│  (Trình duyệt thực thi)              (Extension Gốc)   │
+└────────────────────────────────────────────────────────┘
+
+==========================================================
+                 LOCAL VAULT & STORAGE
+==========================================================
+  (Mặc định) ──> 📁 ~/.automa-cli/      (Production)
+  (Khi Dev)  ──> 📁 ~/.automa-cli-dev/  (Dev Sandbox)
+```
+
+### 1. Automa VS Code Extension (`automa-vscode`)
+Giao diện điều khiển trung tâm (GUI). Tích hợp sâu các trình chỉnh sửa trực quan (Visual Editors) từ `automa-ext` vào Webview, mang đến trải nghiệm liền mạch:
+- **AI Agent Skills & Linter:** Cung cấp bộ kỹ năng (skills) chuyên sâu giúp các trợ lý AI tự động sinh mã (generate) ra các workflow hoàn chỉnh, đảm bảo tuân thủ nghiêm ngặt cấu trúc chuẩn.
+- **Campaign & Runner Management:** Giám sát trực quan các chiến dịch tự động hóa (Campaigns) đang hoạt động ngầm. Hỗ trợ theo dõi log đa luồng theo thời gian thực và quản lý vòng đời tiến trình.
+
+### 2. Local Node Daemon (`automa-cli`)
+Trái tim điều phối của toàn bộ hệ sinh thái. Hoạt động như một HTTP Server nền (cổng mặc định `8765`).
+- **Tái sử dụng Process:** Quản lý bộ nhớ thông minh, chống thất thoát RAM (Memory Leak) và xử lý triệt để các tiến trình "Zombie".
+- **Anti-Detection:** Khởi chạy trình duyệt bằng giao thức CDP (Chrome DevTools Protocol) thay vì các wrapper tiêu chuẩn, giúp giảm thiểu rủi ro bị hệ thống bot-detection ngăn chặn.
+
+### 3. Động Cơ Gốc (`automa-ext`)
+Đây là phân nhánh (fork) độc lập chuyên sâu, đóng vai trò thực thi mã lệnh trên trình duyệt. Đã gỡ bỏ hoàn toàn kiến trúc rườm rà cũ (polyfill) để chuyển dịch sang API `chrome.*` (MV3 Native), đảm bảo tốc độ và tính ổn định tuyệt đối trên các bản Chrome mới nhất.
+
+### 4. Môi Trường Sandbox & Vault
+Hệ sinh thái thông minh trong việc nhận diện môi trường. Nếu phát hiện nhà phát triển đang sửa lỗi (Debug/Dev), hệ thống tự động bẻ lái mọi lưu lượng dữ liệu (SQLite, Config, Profile) sang vùng an toàn `~/.automa-cli-dev`. Khả năng override mạnh mẽ thông qua biến môi trường `AUTOMA_HOME` cho mọi máy chủ.
+
+---
+
+## 🚀 Hướng Dẫn Khởi Tạo (Getting Started)
+
+Dự án được quản lý dưới dạng **pnpm workspaces** (Monorepo).
+
+### Yêu Cầu
 - Node.js >= 18.x
-- pnpm >= 8.x (`npm install -g pnpm`)
+- pnpm >= 8.x
+- VS Code >= 1.80.0
 
-### 2. Cài Đặt & Khởi Chạy
-Mở Terminal và chạy tuần tự các lệnh sau:
-
+### Biên Dịch & Chạy
 ```bash
-# 1. Clone mã nguồn
+# 1. Tải mã nguồn
 git clone https://github.com/tuquet/automa-ecosystem.git
 cd automa-ecosystem
 
-# 2. Cài đặt toàn bộ hệ sinh thái (Monorepo)
+# 2. Cài đặt toàn bộ module
 pnpm install
+
+# 3. Đóng gói hệ sinh thái (bao gồm Webview UI)
 pnpm run build
 
-# 3. Cài đặt extension Automa gốc (Vanilla)
-cd automa-cli
-node dist/cli.js install-extension --type github
-```
-
-> **Lưu ý:** Giao diện Automa Studio (Web) hay các bản fork cũ như `automa-ex` hiện đang bị **deprecated**. Toàn bộ trải nghiệm người dùng, quản lý Vault và xem Log đã được chuyển hẳn sang **VS Code Extension (`automa-vscode`)** và công cụ CLI gốc. Bản mở rộng Automa (Vanilla) nguyên gốc sẽ được CLI tự động tải về qua lệnh `install-extension`.
-
----
-
-## 🏗️ Kiến Trúc Hệ Thống: `automa-cli` Là Gốc Rễ
-
-Toàn bộ hệ sinh thái lấy `automa-cli` làm trái tim (Orchestrator). Thay vì giao tiếp phân mảnh qua nhiều app độc lập, mọi luồng dữ liệu đều được thực thi và điều phối bởi CLI.
-
-```mermaid
-graph TD
-    subgraph IDE ["VS Code Environment"]
-        vscode_ext["Automa VS Code Extension"]
-    end
-
-    subgraph Browser ["Chrome / Browser"]
-        ex_ui["Automa Extension (Vanilla)"]
-    end
-
-    subgraph Core ["CLI Orchestrator"]
-        cli_runner["Workflow Runner"]
-        cli_repo["Workflow Repository (Vault Scanner)"]
-        cli_profile["Profile Controller"]
-    end
-
-    subgraph Storage ["Local OS Storage (~/.automa-cli/)"]
-        config_json{"config.json"}
-        extensions_dir["extensions/ (Chứa bản Vanilla)"]
-        profiles_dir["profiles/"]
-        db_log[("logs (IndexedDB / SQLite)")]
-    end
-    
-    vault_dir["Thư mục Vault (Đường dẫn trỏ từ config.json)"]
-
-    %% CLI Functions
-    cli_repo -- "Đọc cấu hình & Quét đệ quy" --> vault_dir
-    cli_repo -. "Lấy Vault Path" .-> config_json
-    cli_runner -- "Inject Extension" --> extensions_dir
-    cli_profile -- "Quản lý Session" --> profiles_dir
-    cli_runner -- "Lưu vết Execution" --> db_log
-    
-    %% Interactions
-    vscode_ext -- "Gọi lệnh qua child_process" --> cli_runner
-    cli_runner -- "Điều khiển qua Puppeteer & IndexedDB" --> ex_ui
+# 4. Khởi chạy môi trường phát triển (Dev Mode)
+pnpm run dev
 ```
 
 ---
 
-## 🚀 4 Trụ Cột Chức Năng Của CLI
+## 🗺️ Định Hướng Phát Triển (Roadmap)
 
-### 1. Phục vụ VS Code Extension (Orchestrator)
-CLI cung cấp bộ lệnh hoàn chỉnh (`run`, `history`, `log`) cho **VS Code Extension (`automa-vscode`)** giao tiếp thông qua `child_process`. Điều này mang lại tính năng quản lý kịch bản trực tiếp ngay trong IDE lập trình mà không cần phải bật server nền (daemon).
+Chiến lược phát triển dài hạn của Automa Ecosystem được chia làm 4 giai đoạn (Horizons):
 
-### 2. Quản lý Thư mục Quét (Vault)
-Thông qua `WorkflowRepository`, CLI cho phép người dùng chỉ định một thư mục "Vault" (được khai báo trong `config.json`). Nó sẽ thực hiện quét đệ quy toàn bộ thư mục này để tìm và index các file cấu hình workflow (`.json`). Source code workflows hoàn toàn nằm trên máy cục bộ, dễ dàng đồng bộ qua Git.
-
-### 3. Quản lý Chrome Profiles
-Thông qua `ProfileController`, CLI tạo ra và quản lý các thư mục vật lý (Profile) của trình duyệt tại `~/.automa-cli/profiles/`. Khi chạy Puppeteer, CLI map folder bằng cờ `--user-data-dir` để giữ nguyên các phiên đăng nhập (Session, Cookies) của người dùng một cách riêng biệt cho từng ngữ cảnh chạy.
-
-### 4. Tự động hóa & Thực thi Workflow (Runner)
-CLI có khả năng tự động bật trình duyệt thông qua Puppeteer, nạp (inject) trực tiếp **Automa Extension nguyên bản (Vanilla)** từ thư mục `extensions/`, và bắt đầu thực thi workflow. Toàn bộ tiến trình sẽ được giám sát chặt chẽ bằng cách poll trực tiếp từ IndexedDB của trình duyệt để xuất báo cáo log theo thời gian thực về màn hình console hoặc VS Code.
+- **Horizon 1 - Ổn định (Stabilize):** Tối ưu hóa MV3, hoàn thiện tính năng kill/stop Campaign, bổ sung Test Coverage và chuẩn bị hạ tầng CI/CD để phát hành bản chính thức lên VS Code Marketplace.
+- **Horizon 2 - Mở rộng (Grow):** Xây dựng trang tài liệu trực tuyến (VitePress), ra mắt **Workflow Hub** chia sẻ kịch bản cho cộng đồng và mở rộng khả năng biên dịch CI/CD.
+- **Horizon 3 - Chuyển dịch lõi (Rust Core):** *Mục tiêu tối thượng*. Thay thế Node.js runtime hiện tại bằng Native Rust Binary (`automa-core`), đạt được tốc độ khởi động <100ms, giảm RAM 80% và phân phối phần mềm **không cần cài đặt Node.js** (Zero-dependency).
+- **Horizon 4 - Nền tảng Doanh nghiệp (SaaS Platform):** Xây dựng Web Dashboard quản trị tập trung với cơ chế Cloud Sync thời gian thực (LWW), hỗ trợ cộng tác nhóm (Team Collaboration) và cung cấp Managed Cloud Runners.
 
 ---
 
-## ⚙️ Cấu Hình & Dữ Liệu Cục Bộ (Local Storage)
+## 📚 Hệ Thống Trí Thức (Knowledge Base)
 
-Toàn bộ dữ liệu cấu hình và trạng thái của hệ sinh thái được tập trung duy nhất tại:
-**`~/.automa-cli/`**
-
-1. **`config.json`**: File cấu hình trung tâm định nghĩa các đường dẫn (paths) và thiết lập (settings) của CLI.
-2. **`extensions/`**: Chứa extension Automa tải từ Github.
-3. **`profiles/`**: Nơi chứa dữ liệu phiên duyệt web của từng Profile tách biệt. Đảm bảo chạy tự động hóa nhiều tài khoản mà không bị trùng lặp.
-4. **`log.sqlite` / `logs`**: Nơi lưu vết toàn bộ tiến trình lịch sử chạy workflow, giúp người dùng xem lại logs bất cứ lúc nào qua VS Code Extension.
-
----
-
-## 🛠️ Cấu trúc Hệ Sinh Thái (Submodules)
-
-* **`automa-cli`**: Công cụ dòng lệnh trung tâm. Đảm nhiệm việc tải extension, quét Vault và chạy Workflow thông qua Puppeteer.
-* **`automa-vscode`**: VS Code Extension chính thức. Cung cấp giao diện "Click & Run", quản lý lịch sử và xem logs trực quan ngay trong trình soạn thảo mã nguồn.
-* **`automa-vault`**: Nơi định nghĩa cấu trúc chuẩn của một Vault cơ bản. Nó bao gồm file cấu hình tĩnh (`settings.json`). Trong tương lai, đóng vai trò là "Khuôn mẫu" (Template) giúp đồng bộ hóa dữ liệu.
-
----
-
-## ⌨️ Các Lệnh Thường Dùng (Scripts)
-
-Dự án được cấu trúc theo dạng **pnpm workspace** kết hợp **Turborepo**. Tại thư mục gốc (`automa-ecosystem`), bạn có thể sử dụng các lệnh:
-
-- `pnpm install`: Cài đặt dependencies cho toàn bộ hệ sinh thái.
-- `pnpm run build`: Đóng gói (Build) song song bằng Turborepo.
-- `pnpm dev`: Chạy dev mode (watch) cho tất cả sub-projects.
-- `pnpm dev:cli`: Chạy dev mode riêng cho `automa-cli`.
-- `pnpm dev:vscode`: Chạy dev mode riêng cho `automa-vscode`.
-- `pnpm dev:source`: Chạy dev mode riêng cho `automa-ext`.
-
-Ngoài ra, để sử dụng các lệnh CLI thủ công, hãy di chuyển vào thư mục `automa-cli`:
-
-- `cd automa-cli`
-- `node dist/cli.js install-extension`: Tải tự động extension gốc (Vanilla) từ Github.
-- `node dist/cli.js run <file.json>`: Chạy một workflow cục bộ từ file chỉ định.
-- `node dist/cli.js history`: Xem lịch sử các workflow đã chạy.
+Tất cả tài liệu kiến trúc chuyên sâu, quy tắc (Guidelines) và giải phẫu tính năng được lưu trữ dưới dạng **Obsidian Vault** tại thư mục `documents/`. Hãy xem tệp `documents/Home.md` để bắt đầu nghiên cứu cấu trúc thiết kế của hệ sinh thái.

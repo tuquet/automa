@@ -15,7 +15,7 @@ tags:
 
 ## 1. Cấu trúc Database
 
-Cơ sở dữ liệu được lưu tại đường dẫn cấu hình mặc định: `~/.automa-cli/config/log.sqlite` (hoặc trong thư mục cấu hình hệ thống). 
+Cơ sở dữ liệu được lưu tại đường dẫn cấu hình mặc định: `~/.automa-cli/run/log.sqlite` (hoặc `~/.automa-cli-dev/run/log.sqlite` khi ở môi trường dev local, có thể bị ghi đè hoàn toàn thông qua biến môi trường `AUTOMA_HOME`). 
 Mã nguồn khởi tạo: [core/db/index.ts](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/core/db/index.ts).
 
 ### Đặc điểm khởi tạo:

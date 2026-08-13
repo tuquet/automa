@@ -55,7 +55,7 @@ graph LR
 | Khía cạnh | Nhận xét |
 | :--- | :--- |
 | **Kiến trúc phân tầng rõ ràng** | VSCode → CLI → Browser Extension. Mỗi tầng có trách nhiệm đơn nhất (SRP). VSCode là GUI, CLI là Orchestrator, Extension là Runtime Engine. |
-| **Offline-First** | Toàn bộ dữ liệu nằm trên local filesystem (`~/.automa-cli/`, vault, SQLite). Không phụ thuộc cloud để chạy. |
+| **Offline-First** | Toàn bộ dữ liệu nằm trên local filesystem (`~/.automa-cli/` hoặc `.automa-cli-dev` khi chạy dev local, hỗ trợ tuỳ biến qua `AUTOMA_HOME`), vault, SQLite. Không phụ thuộc cloud để chạy. |
 | **Anti-detection architecture** | CLI spawn browser qua `execFile` + CDP polling thay vì `puppeteer.launch()` — giảm bot-detection fingerprint. |
 | **Auto-sanitization** | Workflow từ cộng đồng (ID dạng `n1`, thiếu `version`) được tự động sửa chữa khi mở — giảm friction adoption. |
 | **Live 2-Way Sync (Studio)** | Tính năng killer: chỉnh visual trên Studio → ghi ngược file JSON → Git trackable. |
