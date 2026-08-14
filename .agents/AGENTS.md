@@ -87,3 +87,15 @@
 - **VS Code Extension `engines`**: Bất kỳ tệp `package.json` nào của VS Code extension **BẮT BUỘC** khai báo tường minh phiên bản VS Code hỗ trợ tối thiểu trong trường `engines.vscode` (ví dụ: `"engines": { "vscode": "^1.85.0" }`). Thiếu thông tin này, lệnh `vsce publish` sẽ thất bại vĩnh viễn.
 - **VSCE CI Publishing**: **TUYỆT ĐỐI KHÔNG** sử dụng các actions của bên thứ ba đã lỗi thời (như `lannonbr/vsce-action`) để phát hành. **LUÔN LUÔN PHẢI DÙNG** lệnh CLI chính thức `npx @vscode/vsce publish -p ${{ secrets.VSCE_PAT }} --no-dependencies` trực tiếp (natively) bên trong bước `run`.
 - **PNPM v9+ Built Dependencies (ERR_PNPM_IGNORED_BUILDS)**: Trong pnpm v9 trở lên (ví dụ: v11), trường `pnpm.onlyBuiltDependencies` trong `package.json` bị đánh dấu là lỗi thời và bị bỏ qua. Để ngăn chặn lỗi `ERR_PNPM_IGNORED_BUILDS` trong quá trình CI/CD, toàn bộ các packages yêu cầu scripts build sau khi cài đặt (ví dụ: `puppeteer`, `better-sqlite3`, `core-js`, `vue-demi`) **BẮT BUỘC** được phê duyệt tường minh dưới từ điển `allowBuilds` trong tệp gốc `pnpm-workspace.yaml`.
+
+# Code Review & AI Refactoring Swarm
+
+- **Trigger**: Bất cứ khi nào người dùng yêu cầu "review", "refactor", hoặc "improve code".
+- **Behavior**: **TUYỆT ĐỐI KHÔNG** tự mình review một cách tuần tự và chậm chạp. ĐỒNG THỜI, để tránh xung đột mã nguồn (Race Conditions), các Agent cấp dưới KHÔNG ĐƯỢC PHÉP trực tiếp sửa code.
+- **Action**: **BẮT BUỘC** sử dụng công cụ `invoke_subagent` để spawn (tạo ra) cùng lúc 5 AI Subagents (Mô hình: `pro`) chạy ngầm song song ở chế độ **Read-only**. Mỗi Subagent sẽ phụ trách thanh tra một khía cạnh riêng biệt của Clean Code:
+  1. **SOLID & SoC Agent**: Quét tìm các God Objects, vi phạm Dependency Inversion và Separation of Concerns.
+  2. **KISS & YAGNI Agent**: Tìm kiếm các thuật toán over-engineered, các file abstract thừa thãi cần rút gọn.
+  3. **Demeter & Loose Coupling Agent**: Rà soát các chuỗi gọi hàm dài (train wrecks), Feature Envy.
+  4. **Complexity & Flow Agent**: Tìm kiếm các khối Deep Nesting, Spaghetti Code và Cyclomatic Complexity cao.
+  5. **Safety & Defensive Agent**: Báo cáo các lỗ hổng thiếu Fail Fast, Try/Catch, Sanitize Input, Null checks.
+- **Reporting**: Agent chính **BẮT BUỘC** chờ cả 5 Subagents hoàn thành (thông qua `schedule` timer hoặc chờ tin nhắn), sau đó tổng hợp thành một báo cáo duy nhất (Executive Summary / Code Audit) cho USER. Agent chính sẽ là người DUY NHẤT trực tiếp sửa code sau khi USER chốt phương án.
