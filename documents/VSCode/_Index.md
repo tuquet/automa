@@ -6,9 +6,9 @@ tags:
   - index
 ---
 
-# 🛠️ Automa CLI Toolkit (VS Code)
+# 🛠️ Automa VS Code Extension (Core Client)
 
-Chào mừng bạn đến với tài liệu của Extension **Automa CLI Toolkit** cho VS Code. Thay vì một trang tài liệu khổng lồ, các tính năng đã được phân chia rõ ràng để dễ dàng tra cứu và bảo trì.
+Chào mừng bạn đến với tài liệu của Extension **Automa VS Code**. Extension này hoạt động như một "Thin Client" giao tiếp trực tiếp với Rust Daemon (`automa-core`) thay vì thực thi trực tiếp tiến trình. Thay vì một trang tài liệu khổng lồ, các tính năng đã được phân chia rõ ràng để dễ dàng tra cứu và bảo trì.
 
 > [!INFO] Điều hướng (Navigation)
 > Sử dụng các liên kết dưới đây để xem chi tiết từng nhóm tính năng.

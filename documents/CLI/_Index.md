@@ -6,9 +6,9 @@ tags:
   - index
 ---
 
-# 💻 Automa CLI Toolkit
+# 💻 Automa Core Daemon
 
-Chào mừng bạn đến với tài liệu cốt lõi của **Automa CLI**. Đây là "trái tim" thực thi toàn bộ logic của hệ sinh thái Automa ngoài trình duyệt. Tài liệu đã được module hóa theo phương pháp Feature-Driven.
+Chào mừng bạn đến với tài liệu cốt lõi của **Automa Core**. Đây là "trái tim" thực thi toàn bộ logic của hệ sinh thái Automa ngoài trình duyệt. Tài liệu đã được module hóa theo phương pháp Clean Architecture (Rust).
 
 > [!info] Điều hướng (Navigation)
 > Sử dụng các liên kết dưới đây để khám phá kiến trúc bên trong CLI.

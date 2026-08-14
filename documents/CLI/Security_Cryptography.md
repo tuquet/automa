@@ -28,9 +28,9 @@ Automa Extension gốc sử dụng chuẩn mã hóa **AES-256-GCM** (Hoặc AES 
 - CLI sẽ KHÔNG lưu Passphrase vào ổ cứng. Người dùng phải thiết lập qua biến môi trường `AUTOMA_PASSPHRASE`, truyền qua cờ `--passphrase`, hoặc nhập tay dạng mật khẩu ẩn trong Terminal khi chạy lệnh.
 
 ## Lệnh thao tác bí mật
-Sử dụng lệnh sau để mã hóa:
+Sử dụng lệnh sau để mã hóa một cách an toàn (yêu cầu nhập từ Stdin hoặc prompt ẩn):
 ```bash
-automa encrypt-secret "my-token-123" --name "GithubToken"
+cargo run --bin automa-core encrypt-secret --name "GithubToken" --stdin
 ```
 Kết quả thu được sẽ được tự động ghi vào Globals Vault (thư mục `globals/credentials.json`) bên trong Vault. File này có thể được chia sẻ, đẩy lên Git (nếu muốn), vì bên trong nó chỉ chứa các chuỗi hash không thể dịch ngược.
 

@@ -10,11 +10,11 @@ tags:
 # Execution Engine (Lõi Thực Thi)
 
 > [!info]
-> Execution Engine là trái tim của Automa CLI, chịu trách nhiệm cho vòng đời thực thi các workflow: từ phân tích JSON, chuẩn bị dữ liệu, cho đến tiêm vào trình duyệt và thu thập log kết quả.
+> Execution Engine là trái tim của Automa Core, chịu trách nhiệm cho vòng đời thực thi các workflow: từ phân tích JSON, chuẩn bị dữ liệu, cho đến tiêm vào trình duyệt và thu thập log kết quả thông qua kiến trúc xử lý bất đồng bộ `tokio`.
 
 ## Các giai đoạn thực thi (Execution Workflow)
 
-Quá trình thực thi của CLI bám sát sơ đồ phân luồng như sau:
+Quá trình thực thi của Daemon bám sát sơ đồ phân luồng như sau:
 
 1. **Chuẩn bị Dữ liệu & Pre-flight**
    - Đọc JSON từ file (hoặc Vault).
@@ -23,9 +23,9 @@ Quá trình thực thi của CLI bám sát sơ đồ phân luồng như sau:
    - Quét sự phụ thuộc (Dependency tree): tìm và thu thập các sub-workflows hoặc packages được tham chiếu trong workflow chính.
 
 2. **Quản lý Cấu hình & Biến (Variables Resolution)**
-   - CLI kết hợp biến môi trường theo độ ưu tiên: `CLI flag > .vscode/settings.json > Globals Vault > default config`.
+   - Daemon kết hợp biến môi trường theo độ ưu tiên: `Request payload > Globals Vault > default config`.
    - Các biến Global (`$$VAR`) được tiêm thẳng vào ngữ cảnh.
-   - Nếu chạy ở chế độ tương tác (interactive), CLI có thể prompt người dùng nhập các tham số trigger.
+   - Các tác vụ parse JSON phức tạp hoặc mã hóa bảo mật được chạy qua `tokio::task::spawn_blocking` để không block worker threads.
 
 3. **Tiêm Dữ liệu vào Môi trường Extension (Injection Phase)**
    - Trình duyệt được khởi động cùng Automa Extension (unpackaged).
@@ -34,9 +34,9 @@ Quá trình thực thi của CLI bám sát sơ đồ phân luồng như sau:
    - Gửi tín hiệu thực thi qua việc tạo Offscreen document hoặc thông điệp background: `background--workflow:execute`.
 
 4. **Theo dõi Thực thi & Ghi Log (Monitoring & Logging)**
-   - Lắng nghe log output thông qua IndexedDB (Polling) hoặc CDP (CLI_NOTIFY console logs).
-   - Xử lý các sự kiện runtime, thu thập error nếu workflow thất bại.
-   - Xuất dữ liệu thực thi ra SQLite (history) và tạo file JSON báo cáo (`*.automa-log.json`).
+   - Lắng nghe log output thông qua SSE streaming.
+   - Xử lý các sự kiện runtime với cơ chế bắt lỗi nghiêm ngặt (`thiserror`), loại bỏ `panic!`.
+   - Xuất dữ liệu thực thi ra SQLite (history).
    - Đóng trình duyệt tự động sau khi kết thúc (trừ khi có cờ `--keep-browser-open`).
 
 ## Các module tham gia

@@ -11,26 +11,28 @@ tags:
 # 🌐 HTTP Server API (Daemon)
 
 > [!info] Tổng quan
-> `automa serve` khởi chạy một máy chủ HTTP ngầm (HTTP Daemon) sử dụng Express. Máy chủ này đóng vai trò như cầu nối để các công cụ bên ngoài (ví dụ: VS Code Extension) giao tiếp, ra lệnh thực thi workflow và theo dõi kết quả thông qua REST API.
+> `automa-core serve` khởi chạy một máy chủ HTTP ngầm (HTTP Daemon) sử dụng Rust/Axum. Máy chủ này đóng vai trò như cầu nối để các công cụ bên ngoài (ví dụ: VS Code Extension) giao tiếp, ra lệnh thực thi workflow và theo dõi kết quả thông qua REST API.
 
 ## 1. Khởi chạy HTTP Daemon
 
 Bạn có thể chạy server với lệnh `serve`. Port mặc định là `8765`.
 
 ```bash
-automa serve --port 8765
+cargo run --bin automa-core serve --port 8765
 ```
 
-Mã nguồn xử lý CLI nằm tại [ServeCommand.ts](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/commands/ServeCommand.ts).
+Mã nguồn xử lý CLI nằm tại [src/api/server.rs](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-core/src/api/server.rs).
 
 ## 2. Đặc điểm kỹ thuật
 
-Được triển khai tại [core/server/index.ts](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/core/server/index.ts):
+Được triển khai tại [src/api/server.rs](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-core/src/api/server.rs):
 
-- **Graceful Shutdown**: Lắng nghe `SIGINT` và `SIGTERM`, tự động dọn dẹp các tiến trình trình duyệt (`BrowserManager.destroyAll()`) trước khi thoát.
-- **Auto-shutdown (Heartbeat)**: Tích hợp cơ chế timeout `30 phút` (`HEARTBEAT_INTERVAL`). Nếu không có bất kỳ request nào đến trong 30 phút, server sẽ tự động tắt để giải phóng tài nguyên. Mỗi khi có request mới, thời gian heartbeat sẽ được làm mới.
-- **CORS & Payload**: Hỗ trợ Cross-Origin requests (`cors`) và giới hạn payload JSON lớn (`100mb`) để có thể nhận toàn bộ nội dung của Workflow.
-- **Startup Cleanup**: Khi khởi chạy, Daemon sẽ tự động gọi `JobRepository.cleanupOldJobs()` để dọn dẹp database.
+- **Graceful Shutdown**: Lắng nghe `ctrl_c`, tự động dọn dẹp các tiến trình trình duyệt trước khi thoát.
+- **Shared State Management**: Quản lý State chia sẻ qua Axum bằng `Arc<T>` kết hợp `tokio::sync::RwLock` hoặc `tokio::sync::Mutex` để đảm bảo an toàn bộ nhớ khi truy xuất đồng thời từ nhiều thread.
+- **CORS & Bind IP An toàn**: 
+  - Máy chủ **BẮT BUỘC** phải bind mặc định vào `127.0.0.1` (localhost) để ngăn chặn rò rỉ mạng LAN/Internet.
+  - Cấu hình `tower-http` CORS **BẮT BUỘC** phải giới hạn nghiêm ngặt (chỉ cho phép localhost hoặc VS Code Webview origin), **TUYỆT ĐỐI KHÔNG** dùng `CorsLayer::permissive()`.
+- **Startup Cleanup**: Khi khởi chạy, Daemon sẽ tự động gọi dọn dẹp database SQLite.
 
 ## 3. REST API Endpoints
 

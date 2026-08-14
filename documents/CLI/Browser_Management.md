@@ -30,6 +30,6 @@ Do Automa dùng Manifest V3, CLI không thể dùng background page để thực
 
 ## Campaign & Chạy Song Song (Concurrency)
 
-- **`BrowserManager` & `BrowserQueue`**: Quản lý nhiều phiên trình duyệt cùng lúc.
+- **`BrowserManager` & `BrowserQueue`**: Quản lý nhiều phiên trình duyệt cùng lúc. Concurrency được quản lý bằng các tiến trình `tokio` (thay vì Event Loop của Node.js).
 - Ở lệnh `automa Campaign`, `CampaignOrchestrator` sinh ra nhiều process trình duyệt, mỗi trình duyệt chạy trên 1 User Data Directory / Profile tạm biệt lập hoàn toàn.
-- Tuỳ vào chế độ (`queue`, `parallel`, `skip`), hệ thống sẽ cấp phát tài nguyên RAM và điều phối trình duyệt để tối ưu tài nguyên máy khi chạy chục tiến trình scraper cùng lúc.
+- Tuỳ vào chế độ (`queue`, `parallel`, `skip`), hệ thống sẽ cấp phát tài nguyên thông qua `tokio::sync` để bảo vệ tài nguyên khỏi deadlock khi chạy hàng chục tiến trình scraper cùng lúc.

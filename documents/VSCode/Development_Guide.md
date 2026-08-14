@@ -28,11 +28,11 @@ Nếu bạn mở thư mục gốc `automa-ecosystem`, trong mục **Run and Debu
 - Chọn cấu hình: `Debug Automa VS Code Extension`
 - Bấm `F5` hoặc click nút Play.
 
-### Mối liên hệ với `automa-cli` (Daemon Architecture)
-`automa-vscode` không tự mình thực thi các workflow. Nó hoạt động như một lớp giao diện (GUI) giao tiếp với **Automa CLI Toolkit** thông qua một background Daemon.
-- **Kiến trúc REST/SSE**: Extension giao tiếp với Local Daemon (Node.js/Express) ở port `8765` qua các API như `/api/jobs/run`, `/api/lint`, `/api/system/install-browser`. Việc này giúp loại bỏ tình trạng tốn RAM do khởi tạo nhiều V8 contexts (raw CLI) và các lỗi parse JSON từ `stdout`.
-- **Tuyệt đối không lạm dụng Raw CLI**: `DaemonManager` sẽ quản lý vòng đời của process. Extension chỉ nên gọi fallback Raw CLI (thông qua `executeRawCliCommand`) trong trường hợp bất khả kháng khi Daemon bị crash.
-- Trong quá trình debug, nếu CLI có thay đổi, bạn nên mở Terminal và chạy lệnh `pnpm dev:cli` tại thư mục root để test. Local CLI sẽ tự động được ưu tiên resolve qua file `automa.cliPath` hoặc `npx`.
+### Mối liên hệ với `automa-core` (Daemon Architecture)
+`automa-vscode` không tự mình thực thi các workflow. Nó hoạt động như một lớp giao diện (GUI - Thin Client) giao tiếp với **Automa Core** Daemon (viết bằng Rust).
+- **Kiến trúc REST/SSE**: Extension giao tiếp với Local Daemon (Rust/Axum/tokio) ở port `8765` qua các API từ `@automa/sdk` như `submitJob()`. Việc này giúp loại bỏ hoàn toàn tình trạng tốn RAM do khởi tạo nhiều V8 contexts (raw CLI child_process) và các lỗi parse JSON từ `stdout`.
+- **Tuyệt đối không lạm dụng Raw CLI**: Mọi thao tác bắt buộc gọi qua API. Chặn hoàn toàn việc dùng `vscode.ProcessExecution` để khởi chạy CLI.
+- Trong quá trình debug, nếu Core có thay đổi, bạn nên mở Terminal và chạy lệnh `cargo run --bin automa-core serve` tại thư mục root để khởi động Daemon.
 
 ---
 

@@ -23,7 +23,7 @@ Tài liệu này tổng hợp toàn bộ các lệnh (commands) được cung c�
   - Tự động lấy các thiết lập từ VS Code Settings (như `--headless`, `--debug`, v.v.).
   - Nếu workflow có tham số (và setting `useDefaultParameters` tắt), VS Code sẽ hiện hộp thoại Prompt để nhập từng tham số.
   - Khi chạy, một tiến trình ngầm sẽ hiển thị trên Status Bar (`⟳`) và trong View `Runners`.
-  - Hỗ trợ fallback: Tự động dùng CLI cục bộ (nếu có) hoặc tải qua npx nếu không tìm thấy.
+  - Hỗ trợ fallback: Yêu cầu cài đặt và chạy Rust binary (`automa-core serve`) nếu Daemon chưa hoạt động. Mọi giao tiếp đều qua `@automa/sdk` HTTP/SSE.
 
 ### 1.2 Automa: Run Campaign (`automa.runCampaign`)
 - **Icon**: ▶
@@ -31,15 +31,15 @@ Tài liệu này tổng hợp toàn bộ các lệnh (commands) được cung c�
 - **Mô tả**: Khởi chạy toàn bộ Campaign — thực thi song song hoặc theo hàng đợi.
 - **Hành vi**:
   - Mở một QuickPick với 2 tuỳ chọn:
-    - **▶ Run Now**: Chạy Campaign ngay lập tức (bỏ qua cron schedule).
-    - **🕐 Start Daemon**: Chạy Campaign dưới dạng daemon, chờ các task chạy theo lịch trình.
+    - **▶ Run Now**: Yêu cầu Daemon chạy Campaign ngay lập tức (bỏ qua cron schedule).
+    - **🕐 Start Daemon**: Gửi cấu hình Campaign cho Daemon để chạy nền chờ schedule.
   - Trạng thái thực thi được truyền (stream) thời gian thực về giao diện Campaign Preview qua luồng telemetry.
 
 ### 1.3 Kill / Stop Runner (`automa.killRunner`)
 - **Icon**: 🛑
 - **Vị trí**: Inline trong view **Runners** (Activity Bar).
-- **Mô tả**: Dừng (kill) tiến trình runner đang chạy.
-- **Hành vi**: Gửi tín hiệu để kết thúc an toàn tiến trình đang thực thi workflow hoặc Campaign.
+- **Mô tả**: Gửi API request để dừng (kill) một job ID cụ thể.
+- **Hành vi**: Gửi tín hiệu `/api/jobs/:id/kill` cho Rust Daemon để kết thúc an toàn tiến trình.
 
 ---
 
