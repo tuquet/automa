@@ -14,7 +14,7 @@ tags:
 Log Viewer là giao diện đọc log thực thi chi tiết của Automa. Trước đây, log được đọc từ các file `*.automa-log.json`, nhưng ở kiến trúc hiện tại, Log Viewer có khả năng lấy dữ liệu tập trung thông qua cơ sở dữ liệu **SQLite** của CLI bằng cơ chế **Virtual URI**. Trình xem này cung cấp Timeline thực thi, bảng dữ liệu (Table data), và biến (Variables view), giúp người dùng dễ dàng debug quá trình chạy.
 
 ## Kiến trúc Implementation
-File nguồn chính: [[LogCustomEditorProvider.ts]] (`src/providers/LogCustomEditorProvider.ts`)
+File nguồn chính: [LogCustomEditorProvider.ts](file:///C:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-vscode/src/providers/LogCustomEditorProvider.ts) (`src/providers/LogCustomEditorProvider.ts`)
 View HTML: `src/webview/log-editor.html`
 
 Class `LogCustomEditorProvider` implements `vscode.CustomReadonlyEditorProvider` và quản lý View `automa.logEditor`. Chú ý đây là **Readonly** (chỉ đọc), người dùng không thể can thiệp sửa đổi qua giao diện này.
@@ -23,8 +23,8 @@ Class `LogCustomEditorProvider` implements `vscode.CustomReadonlyEditorProvider`
 
 1. **Đọc Dữ Liệu qua Virtual URI**
    - Thay vì đọc file hệ thống bằng `fs.readFile`, Extension sử dụng `LogCustomEditorProvider.showLogForJobId()` khi nhận được URI dạng `automa-log://<jobId>`.
-   - Hàm này sẽ gọi trực tiếp câu lệnh ngầm của CLI: `automa log <jobId> --json` để lấy đầy đủ chi tiết của job.
-   - CLI trả về một payload chứa `job`, `logs`, và `results` (được đọc từ SQLite).
+   - Hàm này sẽ gọi API của Daemon: `GET /api/jobs/<jobId>/logs` để lấy đầy đủ chi tiết của job.
+   - Daemon trả về một payload chứa `job`, `logs`, và `results` (được đọc từ SQLite).
    - Truyền dữ liệu vào `log-editor.html` thông qua template replacement.
 
 2. **Chế độ xem File Truyền thống (Legacy Custom Editor)**

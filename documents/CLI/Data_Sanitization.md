@@ -12,7 +12,7 @@ tags:
 > [!info]
 > Tính năng tự động chuẩn hoá (Sanitize) dữ liệu Workflow và Package trước khi thực thi để đảm bảo tính hợp lệ, sửa các lỗi về cấu trúc, và ngăn ngừa các lỗi crash do ID không hợp lệ gây ra trên Extension.
 
-Tệp nguồn: `automa-cli/src/utils/sanitizer.ts`
+Tệp nguồn: `automa-core/src/core/sanitizer.rs`
 Lớp chịu trách nhiệm chính: `WorkflowSanitizer`
 
 ## Luồng chuẩn hóa (Sanitization Workflow)

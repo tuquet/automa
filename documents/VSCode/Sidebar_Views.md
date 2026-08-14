@@ -15,9 +15,9 @@ Extension đăng ký một Activity Bar với các Panel View nằm ở Sidebar 
 
 ## Kiến trúc Implementation
 File nguồn chính:
-- [[AutomaFilesProvider.ts]] (`src/providers/AutomaFilesProvider.ts`)
-- [[RunnersTreeDataProvider.ts]] (`src/providers/RunnersTreeDataProvider.ts`)
-- [[HistoryTreeDataProvider.ts]] (`src/providers/HistoryTreeDataProvider.ts`)
+- [AutomaFilesProvider.ts](file:///C:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-vscode/src/providers/AutomaFilesProvider.ts) (`src/providers/AutomaFilesProvider.ts`)
+- [RunnersTreeDataProvider.ts](file:///C:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-vscode/src/providers/RunnersTreeDataProvider.ts) (`src/providers/RunnersTreeDataProvider.ts`)
+- [HistoryTreeDataProvider.ts](file:///C:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-vscode/src/providers/HistoryTreeDataProvider.ts) (`src/providers/HistoryTreeDataProvider.ts`)
 
 Cả hai lớp này đều implements interface `vscode.TreeDataProvider`.
 
@@ -50,13 +50,13 @@ Class `RunnersTreeDataProvider` theo dõi và điều khiển các tác vụ th�
 ### 3. Execution History View (HistoryTreeDataProvider)
 Class `HistoryTreeDataProvider` cung cấp danh sách các luồng thực thi trước đây.
 
-- **Dữ liệu Tập trung:** Gọi lệnh ngầm `automa history --json` từ CLI để lấy dữ liệu từ cơ sở dữ liệu SQLite cục bộ (thay vì quét file JSON vật lý trong Vault).
+- **Dữ liệu Tập trung:** Gọi lệnh ngầm tới HTTP Daemon (`GET /api/jobs`) để lấy dữ liệu từ cơ sở dữ liệu SQLite cục bộ.
 - **Lọc theo Task ID (Task Filter):**
   - Hỗ trợ công cụ lọc thông minh qua nút "Filter by Task ID" trên thanh tiêu đề của View.
   - Người dùng có thể nhập mã tĩnh của một Task (được định nghĩa trong Campaign) để CLI tự động truy xuất vào chuỗi JSON bằng hàm `json_extract(options, '$.CampaignContext.task_id')` trong SQLite.
 - **Virtual URI Log Rendering:**
   - Khi click vào một Job, VS Code bắn command `automa.showLogPreview` truyền kèm URI ảo dạng `automa-log://<jobId>`.
-  - [[LogCustomEditorProvider.ts]] sẽ chặn URI này và render ra màn hình Webview, sử dụng thông tin chi tiết qua lệnh `automa log <jobId> --json`.
+  - [LogCustomEditorProvider.ts](file:///C:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-vscode/src/providers/LogCustomEditorProvider.ts) sẽ chặn URI này và render ra màn hình Webview, sử dụng thông tin chi tiết qua lệnh gọi HTTP API tới Daemon.
 
 > [!INFO]
 > File Explorer Sidebar cung cấp cái nhìn tổng quan về thư mục, trong khi Automa Sidebar Views mang đến tính phân loại logic (Semantic View) tách biệt rõ ràng theo từng loại Entity, giúp quản lý chuyên nghiệp hơn.

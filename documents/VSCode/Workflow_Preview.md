@@ -16,7 +16,7 @@ Workflow Preview là một Custom Visual Editor trong Automa VS Code Extension, 
 Nó cho phép xem cấu trúc, tinh chỉnh thông số (Trigger Parameters), thiết lập các biến toàn cục (Global Data), cấu hình (Settings), và xem/cập nhật thông tin Metadata (Properties).
 
 ## Kiến trúc Implementation
-File nguồn chính: [[WorkflowPreviewEditorProvider.ts]] (`src/providers/WorkflowPreviewEditorProvider.ts`)
+File nguồn chính: [WorkflowPreviewEditorProvider.ts](file:///C:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-vscode/src/providers/WorkflowPreviewEditorProvider.ts) (`src/providers/WorkflowPreviewEditorProvider.ts`)
 View HTML: `src/webview/workflow-preview.html` (và `package-preview.html` cho dạng Reusable Package)
 
 Class `WorkflowPreviewEditorProvider` implements `vscode.CustomTextEditorProvider` để đăng ký loại view `automa.workflowPreview`.

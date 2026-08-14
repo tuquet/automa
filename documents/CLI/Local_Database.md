@@ -10,13 +10,13 @@ tags:
 
 # 🗄️ Cơ sở dữ liệu Cục bộ (SQLite)
 
-> [!info] Vai trò của SQLite trong CLI
-> Automa CLI sử dụng SQLite (`better-sqlite3`) để lưu trữ lịch sử thực thi, trạng thái các job (công việc), và thông tin log (nhật ký) của từng bước thực thi trong quá trình chạy. Điều này giúp tính năng lịch sử (`automa history`) và truy vấn log chi tiết (`automa log <jobId>`) hoạt động nhanh, độc lập và ổn định.
+> [!info] Vai trò của SQLite trong Core
+> Automa Core sử dụng SQLite (thông qua crate `rusqlite` hoặc `sqlx`) để lưu trữ lịch sử thực thi, trạng thái các job (công việc), và thông tin log (nhật ký) của từng bước thực thi trong quá trình chạy. Điều này giúp hệ thống truy xuất lịch sử và log ổn định trên backend Rust.
 
 ## 1. Cấu trúc Database
 
-Cơ sở dữ liệu được lưu tại đường dẫn cấu hình mặc định: `~/.automa-cli/run/log.sqlite` (hoặc `~/.automa-cli-dev/run/log.sqlite` khi ở môi trường dev local, có thể bị ghi đè hoàn toàn thông qua biến môi trường `AUTOMA_HOME`). 
-Mã nguồn khởi tạo: [core/db/index.ts](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/core/db/index.ts).
+Cơ sở dữ liệu được lưu tại đường dẫn cấu hình mặc định: `~/.automa-core/run/log.sqlite`.
+Mã nguồn khởi tạo: [src/infrastructure/db/mod.rs](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-core/src/infrastructure/db/mod.rs).
 
 ### Đặc điểm khởi tạo:
 - Chế độ **WAL** (`journal_mode = WAL`): Giúp tăng hiệu năng đọc/ghi đồng thời, tránh lock khi có nhiều browser đang chạy song song trong Campaign và báo cáo log về cùng lúc.
@@ -41,7 +41,7 @@ Lưu trữ log chi tiết từng bước (step) cho các job.
 
 ## 2. API Quản lý Job (JobRepository)
 
-Logic tương tác với database được module hoá tại [core/db/JobRepository.ts](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/core/db/JobRepository.ts).
+Logic tương tác với database được module hoá tại thư mục [src/infrastructure/db/](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-core/src/infrastructure/db/).
 
 ### Các hàm chính:
 - `createJob(jobId, name, data, options, status)`: Tạo record trong bảng `jobs` (trả về boolean nếu thành công).
@@ -59,7 +59,7 @@ Vì số lượng log của workflow có thể phình to rất nhanh, `JobReposi
 
 ## 3. Các lệnh CLI liên quan
 
-Dữ liệu được lưu trữ trong SQLite này sẽ được truy xuất trực tiếp bởi các lệnh của người dùng:
+Dữ liệu được lưu trữ trong SQLite này sẽ được truy xuất trực tiếp bởi HTTP Daemon API thông qua `@automa/sdk` (gọi từ VS Code hoặc trình duyệt):
 
-- **Lệnh `automa history`**: Hiển thị bảng danh sách các jobs chạy gần đây (tối đa theo flag `--limit`). Hỗ trợ xuất bằng `--json`.
-- **Lệnh `automa log <jobId>`**: Lấy chi tiết các step logs (qua hàm `getJobLogs`) của một `jobId` cụ thể in ra dạng text hoặc JSON.
+- **API GET `/api/jobs`**: Lấy danh sách jobs theo phân trang.
+- **API GET `/api/jobs/:id/logs`**: Lấy chi tiết step logs dưới dạng JSON.

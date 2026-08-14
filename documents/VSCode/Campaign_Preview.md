@@ -14,7 +14,7 @@ tags:
 Campaign Preview là Custom Editor dành cho định dạng `*.Campaigns.json` (hoặc `*.Campaign.json`), giúp thiết lập, trực quan hóa và giám sát trạng thái thực thi song song của các nhóm tiến trình (Campaign) trong Automa.
 
 ## Kiến trúc Implementation
-File nguồn chính: [[CampaignPreviewEditorProvider.ts]] (`src/providers/CampaignPreviewEditorProvider.ts`)
+File nguồn chính: [CampaignPreviewEditorProvider.ts](file:///C:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-vscode/src/providers/CampaignPreviewEditorProvider.ts) (`src/providers/CampaignPreviewEditorProvider.ts`)
 View HTML: `src/webview/Campaign-preview.html`
 
 Class `CampaignPreviewEditorProvider` implements `vscode.CustomTextEditorProvider` để đăng ký loại view `automa.CampaignPreview`.

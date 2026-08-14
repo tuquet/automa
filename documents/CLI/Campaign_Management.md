@@ -28,7 +28,7 @@ automa Campaign start ./Campaigns/marketing.Campaigns.json --run-now
 
 ## 2. Luồng hoạt động (Workflow Flow)
 
-Dựa trên mã nguồn tại [CampaignCommand.ts](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/commands/CampaignCommand.ts), quy trình khởi động một Campaign bao gồm các bước sau:
+Dựa trên mã nguồn tại [src/core/campaign/mod.rs](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-core/src/core/campaign/mod.rs), quy trình khởi động một Campaign bao gồm các bước sau:
 
 1. **Phân tích và kiểm tra JSON**: Đọc file `.Campaigns.json`.
 2. **Kiểm tra tính hợp lệ (Linter Service Gateway)**: Sử dụng `LinterService.validate(CampaignData, "Campaign")` để đảm bảo file JSON chuẩn Schema. Nếu có lỗi, quá trình sẽ dừng ngay (Fail fast).

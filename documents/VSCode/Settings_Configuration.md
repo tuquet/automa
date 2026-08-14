@@ -67,8 +67,8 @@ Các cấu hình dưới đây ảnh hưởng đến cách lệnh `automa.runWor
 - **Loại**: `string`
 - **Mặc định**: `""` (Trống)
 - **Mô tả**: Đường dẫn tuyệt đối tới file thực thi `automa-cli`. Nếu để trống, extension sẽ tự động áp dụng logic tự phát hiện (Auto-Resolution):
-  1. Nếu nằm trong monorepo, ưu tiên tìm ở `../automa-cli/dist/cli.js`.
-  2. Fallback sử dụng `npx -y tuquet-automa-cli@latest`.
+  1. Nếu nằm trong monorepo, ưu tiên tìm ở `../automa-core/target/release/automa-core.exe`.
+  2. Fallback tải trực tiếp binary từ server.
 
 ### `automa.browserPathOverride`
 - **Loại**: `string`
