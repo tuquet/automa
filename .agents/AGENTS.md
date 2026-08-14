@@ -34,7 +34,7 @@
   - **Daemon Polling & Reused Processes**: Khi kết nối tới một tiến trình Daemon đang chạy (sử dụng lại port), `DaemonManager` **BẮT BUỘC** theo dõi trạng thái một cách chính xác thông qua cờ `isExternalDaemon`. Phương thức `isRunning()` **BẮT BUỘC** trả về true cho các external daemons để ngăn vòng lặp polling của `TaskRunner` bị sập đột ngột với các lỗi ngắt kết nối giả.
   - **Chromium Version & Download Source**: CLI (`automa-cli`) **PHẢI DÙNG** bản build Chromium `latest` (`PuppeteerBrowser.CHROMIUM`), KHÔNG PHẢI Chrome for Testing. Chromium executable này được tải về từ Google Cloud Storage thông qua `@puppeteer/browsers`, trong khi Automa Extension (`automa-ex`) được tải về từ GitHub Releases.
 - **MessageListener Routing Prefix**: Tiện ích `MessageListener` trong `automa-ext` tự động chặn các messages dựa trên tiền tố ngữ cảnh thực thi (ví dụ: `background--`, `offscreen--`).
-  - **Rule**: Khi gọi các sự kiện extension từ các script bên ngoài (như `dummyTab` trong CLI) sử dụng `chrome.runtime.sendMessage` trực tiếp, **BẮT BUỘC** nối thủ công (prepend) tiền tố chính xác (ví dụ: `background--workflow:execute`). Nếu không, `MessageListener` sẽ không khớp (match) với tên sự kiện.
+  - **Rule**: Khi gọi các sự kiện extension từ các script bên ngoài sử dụng `chrome.runtime.sendMessage` trực tiếp, **BẮT BUỘC** nối thủ công (prepend) tiền tố chính xác (ví dụ: `background--workflow:execute`). Nếu không, `MessageListener` sẽ không khớp (match) với tên sự kiện.
 
 # Knowledge Base & Documentation
 
@@ -44,7 +44,6 @@
 - **Mandatory Skills**: Khi làm việc với Vault, **BẮT BUỘC** nạp và áp dụng các kỹ năng cục bộ (local skills) sau:
   1. `obsidian-markdown`: Để định dạng ghi chú, sử dụng wikilinks, callouts, và frontmatter.
   2. `obsidian-bases`: Để tạo hoặc cập nhật tệp `.base` nhằm truy vấn và tóm tắt dữ liệu vault một cách động.
-  3. `obsidian-cli`: Để tương tác, tìm kiếm, hoặc tự động hóa vault nếu Obsidian desktop app đang chạy.
 
 # Monorepo Architecture & Reusability Rules
 
