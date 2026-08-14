@@ -1,0 +1,16 @@
+{
+  "name": "@automa/sdk",
+  "version": "0.1.0",
+  "description": "TypeScript SDK to communicate with Automa Core Daemon",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.3"
+  }
+}

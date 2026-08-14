@@ -108,3 +108,10 @@
   2. **Performance & Resource Leak QC Agent**: Soi xét các nút thắt hiệu năng (performance bottlenecks), các thao tác đồng bộ nặng nề gây block UI/Node, memory leaks, và zombie processes (tiến trình treo).
   3. **Security & Vulnerability QC Agent**: Rà soát các lỗ hổng bảo mật (XSS, Injection, CSP bypass), cách lưu trữ dữ liệu nhạy cảm (auth tokens/secrets) và kiểm soát truy cập phân quyền.
 - **Reporting**: Agent chính **BẮT BUỘC** chờ cả 3 Subagents hoàn thành (thông qua `schedule` timer hoặc chờ tin nhắn), sau đó tổng hợp thành một báo cáo QC duy nhất (QC Audit Report) cho USER. Agent chính sẽ là người DUY NHẤT trực tiếp tiến hành vá lỗi (bug fix) sau khi USER chốt phương án.
+
+# Automa Rust Core (automa-core) Architecture Rules
+
+- **Clean Architecture & SOLID**: Hệ thống **BẮT BUỘC** phân tách `core` (Domain/Engine/Models) hoàn toàn khỏi `infrastructure` (DB/Vault/External APIs) và `api` (Axum REST/SSE). Mô-đun `core` **TUYỆT ĐỐI KHÔNG** được import hoặc phụ thuộc trực tiếp vào các implementation cụ thể (như `rusqlite`, `tokio::fs`). **PHẢI DÙNG** các trait interfaces (Dependency Inversion).
+- **Concurrency & Async Runtime**: **PHẢI DÙNG** `tokio` làm nền tảng xử lý bất đồng bộ. Đối với các tác vụ nặng về CPU (như mã hóa AES, parse JSON dung lượng khổng lồ), **BẮT BUỘC** chạy trên `tokio::task::spawn_blocking` để không block async runtime thread pool.
+- **Robust Error Handling**: **TUYỆT ĐỐI KHÔNG** dùng `.unwrap()` hay `.expect()` trong code production để tránh crash daemon. **PHẢI DÙNG** thư viện `thiserror` để định nghĩa các kiểu lỗi (Error Types) cấp độ Domain và xử lý chúng gọn gàng bằng toán tử `?`.
+- **State Management & Locks**: Khi lưu trữ State dùng chung (Shared State) trong Axum, **BẮT BUỘC** phải chia sẻ thông qua `Arc<T>`. Đối với dữ liệu cần thay đổi, **PHẢI DÙNG** `tokio::sync::RwLock` hoặc `tokio::sync::Mutex` (không dùng bản std::sync) để tránh lỗi Deadlocks trong môi trường bất đồng bộ.
