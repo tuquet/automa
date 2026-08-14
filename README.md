@@ -20,8 +20,8 @@ Hệ thống loại bỏ hoàn toàn các luồng xử lý phân mảnh, thay v�
 ┌────────────────────────────────────────────────────────┐
 │               VS CODE ENVIRONMENT (GUI)                │
 │                                                        │
-│  [Automa VS Code Extension]  ──(Renders)──> [Webview]  │
-│   (Trình điều khiển, Skill AI)             (Vue App)   │
+│  [Automa VS Code Extension]                            │
+│   (Thin Client / API Client)                           │
 └──────────────────────────┬─────────────────────────────┘
                            │
                  ( HTTP REST / SSE )
@@ -54,7 +54,7 @@ Hệ thống loại bỏ hoàn toàn các luồng xử lý phân mảnh, thay v�
 ```
 
 ### 1. Automa VS Code Extension (`automa-vscode`)
-Giao diện điều khiển trung tâm (GUI). Tích hợp sâu các trình chỉnh sửa trực quan (Visual Editors) từ `automa-ext` vào Webview, mang đến trải nghiệm liền mạch:
+Giao diện điều khiển trung tâm (GUI). Hoạt động hoàn toàn dưới dạng **Thin Client**, không nhúng các ứng dụng Webview (Vue) nặng nề. Giao tiếp với Daemon qua HTTP REST/CDP để mở Web Studio gốc trên trình duyệt độc lập:
 - **AI Agent Skills & Linter:** Cung cấp bộ kỹ năng (skills) chuyên sâu giúp các trợ lý AI tự động sinh mã (generate) ra các workflow hoàn chỉnh, đảm bảo tuân thủ nghiêm ngặt cấu trúc chuẩn.
 - **Campaign & Runner Management:** Giám sát trực quan các chiến dịch tự động hóa (Campaigns) đang hoạt động ngầm. Hỗ trợ theo dõi log đa luồng theo thời gian thực và quản lý vòng đời tiến trình.
 
@@ -89,7 +89,7 @@ cd automa-ecosystem
 # 2. Cài đặt toàn bộ module
 pnpm install
 
-# 3. Đóng gói hệ sinh thái (bao gồm Webview UI)
+# 3. Đóng gói hệ sinh thái
 pnpm run build
 
 # 4. Khởi chạy môi trường phát triển (Dev Mode)
