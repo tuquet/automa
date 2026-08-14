@@ -62,7 +62,7 @@ export function updateDiagnostics(document: vscode.TextDocument, lintErrors: Arr
 
 - **BẮT BUỘC** sử dụng REST/HTTP: Lớp `TaskRunner.ts` luôn gọi API qua HTTP POST/GET (ví dụ: `submitJob`).
 - **TUYỆT ĐỐI KHÔNG** gọi lệnh CLI trực tiếp thông qua `child_process.exec` hay `vscode.ProcessExecution` để thực thi script (ngoại trừ lệnh khởi động Daemon). Mọi yêu cầu xử lý **BẮT BUỘC** gửi qua API tới Daemon.
-
+- **BẮT BUỘC** sử dụng gói SDK `@automa/sdk` (ví dụ: `AutomaClient.submitJob()`) để giao tiếp với Daemon thay vì tự viết các hàm fetch thô trong Extension.
 ---
 
 ## 5. Native Debugger UI Reuse
@@ -105,4 +105,4 @@ export function updateDiagnostics(document: vscode.TextDocument, lintErrors: Arr
 
 2. **Cơ chế gọi Studio:**
    - **TUYỆT ĐỐI KHÔNG** nhúng Studio vào tab VS Code.
-   - **BẮT BUỘC** tận dụng API của Daemon bằng cách gửi yêu cầu HTTP đến `http://127.0.0.1:${port}/api/system/open-studio`.
+   - **BẮT BUỘC** tận dụng Web Server của Daemon bằng cách sử dụng `vscode.env.openExternal` để mở URL `http://127.0.0.1:${port}/studio`. **TUYỆT ĐỐI KHÔNG** sử dụng `ProcessExecution` để chạy lệnh `automa-cli studio`.

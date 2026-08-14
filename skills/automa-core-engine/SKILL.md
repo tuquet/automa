@@ -38,3 +38,9 @@ export interface IBrowserAdapter {
 ## 5. Pattern Hướng Dẫn Phát Triển (TDD & Mocks)
 - **Mocks:** PHẢI DÙNG `MockBrowserAdapter` để xác minh logic trong Node.js mà không cần sự hiện diện của trình duyệt.
 - **PuppeteerBrowserAdapter:** CHỈ ĐƯỢC PHÉP SỬ DỤNG cho việc E2E Integration Testing (ví dụ: `tests/test_google_search.ts`). TUYỆT ĐỐI KHÔNG DÙNG `PuppeteerBrowserAdapter` trong Production (CLI hoặc Daemon).
+
+## 6. Kiến Trúc Khối (Block Execution Architecture)
+- **BẮT BUỘC** triển khai các Block Handlers thông qua Trait bất đồng bộ `#[async_trait]` (`pub trait BlockHandler: Send + Sync { async fn execute(...) }`).
+- **BẮT BUỘC** truy cập các tham số JSON động của Block thông qua trường `extra`. **TUYỆT ĐỐI KHÔNG** gọi `.get()` trực tiếp trên `node.data`.
+  - Mã đúng: `node.data.extra.as_ref().and_then(|e| e.get("propertyName"))`.
+  - Mã sai: `node.data.get("propertyName")`.
