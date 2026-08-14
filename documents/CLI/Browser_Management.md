@@ -28,8 +28,8 @@ Do Automa dùng Manifest V3, CLI không thể dùng background page để thực
 2. **Offscreen Document**: Trong một số thao tác phức tạp, trình duyệt sẽ gọi `chrome.offscreen.createDocument()` để giữ kết nối không bị đứt.
 3. **Studio Popup**: Ở lệnh `automa studio`, CLI tạo một popup Chrome kết nối với Studio URL (`newtab.html#/workflows/<id>`), cho phép giao diện Studio mở lên trực tiếp từ local. Tính năng Live Sync được quản lý bởi `StudioManager`.
 
-## Fleet & Chạy Song Song (Concurrency)
+## Campaign & Chạy Song Song (Concurrency)
 
 - **`BrowserManager` & `BrowserQueue`**: Quản lý nhiều phiên trình duyệt cùng lúc.
-- Ở lệnh `automa fleet`, `FleetOrchestrator` sinh ra nhiều process trình duyệt, mỗi trình duyệt chạy trên 1 User Data Directory / Profile tạm biệt lập hoàn toàn.
+- Ở lệnh `automa Campaign`, `CampaignOrchestrator` sinh ra nhiều process trình duyệt, mỗi trình duyệt chạy trên 1 User Data Directory / Profile tạm biệt lập hoàn toàn.
 - Tuỳ vào chế độ (`queue`, `parallel`, `skip`), hệ thống sẽ cấp phát tài nguyên RAM và điều phối trình duyệt để tối ưu tài nguyên máy khi chạy chục tiến trình scraper cùng lúc.

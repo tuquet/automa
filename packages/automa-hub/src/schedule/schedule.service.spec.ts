@@ -4,7 +4,7 @@ import { NotFoundException } from '@nestjs/common';
 import * as core from '@automa/core';
 
 jest.mock('@automa/core', () => ({
-  schedules: { id: 'id', fleetId: 'fleetId', workflowPath: 'workflowPath', cronExpr: 'cronExpr', concurrency: 'concurrency', status: 'status' },
+  schedules: { id: 'id', campaignId: 'campaignId', workflowPath: 'workflowPath', cronExpr: 'cronExpr', concurrency: 'concurrency', status: 'status' },
   assetsDb: {
     select: jest.fn(),
     insert: jest.fn(),
@@ -30,7 +30,7 @@ describe('ScheduleService', () => {
 
   describe('getAllSchedules', () => {
     it('should return all schedules', async () => {
-      const mockList = [{ id: '1', fleetId: 'f1', cronExpr: '* * * * *' }];
+      const mockList = [{ id: '1', campaignId: 'f1', cronExpr: '* * * * *' }];
       const fromMock = jest.fn().mockResolvedValue(mockList);
       mockAssetsDb.select.mockReturnValue({ from: fromMock });
 
@@ -45,10 +45,10 @@ describe('ScheduleService', () => {
       const valuesMock = jest.fn().mockResolvedValue({});
       mockAssetsDb.insert.mockReturnValue({ values: valuesMock });
       
-      const newSched = { id: 'sch_1', fleetId: 'f1', workflowPath: '/path', cronExpr: '0 * * * *', concurrency: 1, status: 'active', createdAt: '' };
+      const newSched = { id: 'sch_1', campaignId: 'f1', workflowPath: '/path', cronExpr: '0 * * * *', concurrency: 1, status: 'active', createdAt: '' };
       jest.spyOn(service, 'getScheduleById').mockResolvedValue(newSched);
 
-      const payload = { fleetId: 'f1', workflowPath: '/path', cronExpr: '0 * * * *', concurrency: 1 };
+      const payload = { campaignId: 'f1', workflowPath: '/path', cronExpr: '0 * * * *', concurrency: 1 };
       const result = await service.createSchedule(payload);
       
       expect(mockAssetsDb.insert).toHaveBeenCalledWith(core.schedules);

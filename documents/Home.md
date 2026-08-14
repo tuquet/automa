@@ -20,13 +20,13 @@ Chào mừng đến với hệ quản trị tri thức của **Automa Ecosystem*
 ## 📦 Các phân hệ chính (Modules)
 
 1. **[[CLI/_Index|💻 Automa CLI Toolkit]]**
-   - Core command-line interface để thực thi workflows, quản lý fleet, chạy HTTP server.
+   - Core command-line interface để thực thi workflows, quản lý Campaign, chạy HTTP server.
 2. **[[VSCode/_Index|🛠️ VS Code Extension (CLI Toolkit)]]**
-   - Tiện ích mở rộng VS Code giúp chỉnh sửa, quản lý và kích hoạt workflow/fleet trực quan.
+   - Tiện ích mở rộng VS Code giúp chỉnh sửa, quản lý và kích hoạt workflow/Campaign trực quan.
 3. **[[Ext/_Index|🧩 Automa Chrome Extension]]**
    - Extension UI (Studio) và Background MV3 Native Engine, đã gỡ bỏ hoàn toàn polyfill.
 4. **[[Core/_Index|🗃️ Automa Core & Vault]]**
-   - Đặc tả cấu trúc lưu trữ Local Vault, Fleets, và Browser Profiles, cùng với Core Strategy.
+   - Đặc tả cấu trúc lưu trữ Local Vault, Campaigns, và Browser Profiles, cùng với Core Strategy.
 
 ---
 
@@ -38,7 +38,7 @@ Dưới đây là toàn bộ các thẻ (tags) hệ thống và danh sách tài 
 - `#cli`: Lệnh, cấu hình CLI.
 - `#vscode`: Tính năng của VS Code extension.
 - `#extension`: Kiến trúc extension, MV3, Polyfill.
-- `#vault`: Đặc tả JSON, fleets, profiles.
+- `#vault`: Đặc tả JSON, Campaigns, profiles.
 
 ### Tất cả tài liệu
 ![[_meta/All_Documents.base]]

@@ -20,7 +20,7 @@ graph LR
     subgraph CLI ["automa-cli (10 lệnh)"]
         run["run"]
         studio["studio (Live Sync)"]
-        fleet["fleet (start/stop/status)"]
+        Campaign["Campaign (start/stop/status)"]
         lint["lint"]
         serve["serve (HTTP Daemon)"]
         install_b["install-browser"]
@@ -59,7 +59,7 @@ graph LR
 | **Anti-detection architecture** | CLI spawn browser qua `execFile` + CDP polling thay vì `puppeteer.launch()` — giảm bot-detection fingerprint. |
 | **Auto-sanitization** | Workflow từ cộng đồng (ID dạng `n1`, thiếu `version`) được tự động sửa chữa khi mở — giảm friction adoption. |
 | **Live 2-Way Sync (Studio)** | Tính năng killer: chỉnh visual trên Studio → ghi ngược file JSON → Git trackable. |
-| **Fleet orchestration** | Đa trình duyệt, đa profile, 4 loại schedule, 3 concurrency modes — enterprise-grade. |
+| **Campaign orchestration** | Đa trình duyệt, đa profile, 4 loại schedule, 3 concurrency modes — enterprise-grade. |
 | **6-level config resolution** | CLI flags → VS Code settings → vault settings → env → defaults. Linh hoạt cho mọi deployment scenario. |
 
 ### 3. Điểm yếu & Technical Debt
@@ -68,9 +68,9 @@ graph LR
 | :--- | :--- | :--- |
 | **Chromium version lock** | 🔴 Critical | Pinned build `1313161` (v126) vì `webextension-polyfill` crash trên Chrome 129+. Càng để lâu, security gap càng lớn. |
 | **Node.js dependency** | 🟡 Medium | End-user phải cài Node.js 18+ — rào cản lớn cho non-developer. |
-| **Fleet `stop`/`status` chưa implement** | 🟡 Medium | Code hiện chỉ output notice, chưa có logic thực tế. |
-| **Daemon auto-shutdown 30 phút** | 🟡 Medium | Aggressive cho use case long-running fleet. Không có cơ chế heartbeat từ fleet task giữ daemon sống. |
-| **Thiếu test coverage** | 🟡 Medium | Chỉ có `verify_cli.js` — không có unit test cho Linter, Sanitizer, Fleet scheduler. |
+| **Campaign `stop`/`status` chưa implement** | 🟡 Medium | Code hiện chỉ output notice, chưa có logic thực tế. |
+| **Daemon auto-shutdown 30 phút** | 🟡 Medium | Aggressive cho use case long-running Campaign. Không có cơ chế heartbeat từ Campaign task giữ daemon sống. |
+| **Thiếu test coverage** | 🟡 Medium | Chỉ có `verify_cli.js` — không có unit test cho Linter, Sanitizer, Campaign scheduler. |
 | **Webview inline JS/CSS** | 🟠 Low-Med | 5 webview HTML đều self-contained (Vue CDN + inline) — khó maintain, không có build pipeline riêng. |
 | **SQLite + IndexedDB dual storage** | 🟠 Low-Med | Log lưu đồng thời 2 nơi (SQLite CLI + IndexedDB browser). Chưa có reconciliation strategy. |
 | **`automa-ext` là fork read-only** | 🟠 Low-Med | Mọi thay đổi Extension phải qua upstream `AutomaApp/automa` hoặc maintain fork. Rủi ro divergence. |
@@ -80,8 +80,8 @@ graph LR
 | VSCode Extension | CLI | Gap |
 | :--- | :--- | :--- |
 | Có UI quản lý Runners (kill, log) | Có `history` + `log` command | ✅ Đồng bộ tốt |
-| Fleet Preview (live telemetry) | Fleet command (`start` only) | ⚠️ CLI thiếu `stop`/`status` → VSCode phải workaround bằng task terminate |
-| Profile Editor (CodeMirror form) | Profile management via `--user-data-dir` | ⚠️ CLI không có `profile` command độc lập — chỉ implicitly qua fleet |
+| Campaign Preview (live telemetry) | Campaign command (`start` only) | ⚠️ CLI thiếu `stop`/`status` → VSCode phải workaround bằng task terminate |
+| Profile Editor (CodeMirror form) | Profile management via `--user-data-dir` | ⚠️ CLI không có `profile` command độc lập — chỉ implicitly qua Campaign |
 | Lint Check (Problems panel) | `automa lint` (console + `--strict`) | ✅ Đồng bộ tốt, UX khác biệt hợp lý (Warning vs Error) |
 | Package Preview (auto-detect) | Lint hỗ trợ package schema | ⚠️ CLI không có `run` cho package độc lập |
 | — | `install-extension` command | ⚠️ VSCode không có UI tương đương — user phải dùng terminal |
@@ -105,7 +105,7 @@ gantt
 
     section Horizon 1 - Stabilize
     Polyfill fix and Chromium unpin  :h1a, 2026-07-01, 90d
-    Fleet stop/status implement      :h1b, 2026-07-01, 90d
+    Campaign stop/status implement      :h1b, 2026-07-01, 90d
     Test coverage 70 percent         :h1c, 2026-07-01, 180d
     Webview build pipeline           :h1d, 2026-07-01, 90d
     CLI profile command              :h1e, 2026-10-01, 90d
@@ -121,7 +121,7 @@ gantt
     Phase 1 IPC decoupling           :h3a, 2027-01-01, 90d
     Phase 2 Rust MVP runner          :h3b, 2027-04-01, 180d
     Phase 3 Rust daemon gRPC         :h3c, 2027-07-01, 90d
-    Phase 4 Fleet orchestrator       :h3d, 2027-10-01, 90d
+    Phase 4 Campaign orchestrator       :h3d, 2027-10-01, 90d
     Phase 5 Zero-dep VSIX bundle     :h3e, 2028-01-01, 90d
 
     section Horizon 4 - Platform
@@ -145,12 +145,12 @@ gantt
 | **Giải pháp dài hạn** | Migrate sang Chrome's native `chrome.*` API (MV3 đã hỗ trợ đầy đủ) → loại bỏ polyfill hoàn toàn |
 | **Kết quả** | Unpin Chromium version → luôn dùng Chromium stable mới nhất |
 
-#### 1.2 Fleet Command Completion
+#### 1.2 Campaign Command Completion
 
 ```
-automa fleet stop [--all | --task-id <id>]   → Kill tiến trình + cleanup
-automa fleet status [path]                    → JSON output trạng thái fleet
-automa fleet logs [path]                      → Aggregated logs từ tất cả task
+automa Campaign stop [--all | --task-id <id>]   → Kill tiến trình + cleanup
+automa Campaign status [path]                    → JSON output trạng thái Campaign
+automa Campaign logs [path]                      → Aggregated logs từ tất cả task
 ```
 
 #### 1.3 Test Infrastructure
@@ -203,7 +203,7 @@ docs/
 ├── cli/                  # CLI Reference (migrate từ user-guide.md)
 ├── vscode/               # VS Code Extension Guide (migrate từ user-guide.md)
 ├── workflows/            # Workflow authoring best practices
-├── fleet/                # Fleet management deep dive
+├── Campaign/                # Campaign management deep dive
 └── api/                  # Daemon REST API reference
 ```
 
@@ -240,7 +240,7 @@ graph TD
 
     subgraph Core ["automa-core (Rust Binary)"]
         Runner["Workflow Runner (Tokio async)"]
-        Fleet["Fleet Orchestrator"]
+        Campaign["Campaign Orchestrator"]
         Daemon["HTTP/gRPC Daemon (Axum)"]
         Linter["Linter (AJV → serde_json)"]
         CDP["CDP Client (chromiumoxide)"]
@@ -261,9 +261,9 @@ graph TD
 | Phase | Rust handles | Node.js handles | Milestone |
 | :--- | :--- | :--- | :--- |
 | Phase 1 | — | Everything | IPC protocol defined (JSON-RPC spec) |
-| Phase 2 | `lint`, `clean`, `history`, `log` | `run`, `studio`, `fleet`, `serve` | Rust binary ships alongside Node.js |
-| Phase 3 | + `serve` (Axum daemon) | `run`, `studio`, `fleet` | Daemon is Rust-native |
-| Phase 4 | + `run`, `fleet` | `studio` only | Fleet orchestration is Rust-native |
+| Phase 2 | `lint`, `clean`, `history`, `log` | `run`, `studio`, `Campaign`, `serve` | Rust binary ships alongside Node.js |
+| Phase 3 | + `serve` (Axum daemon) | `run`, `studio`, `Campaign` | Daemon is Rust-native |
+| Phase 4 | + `run`, `Campaign` | `studio` only | Campaign orchestration is Rust-native |
 | Phase 5 | Everything | **Deprecated** | Zero-dep VSIX bundle |
 
 #### 3.3 Lợi ích kỳ vọng
@@ -284,21 +284,21 @@ graph TD
 
 #### 4.1 SaaS Dashboard
 
-- **Web Dashboard**: Quản lý workflow, fleet, execution history qua browser (không cần VS Code).
+- **Web Dashboard**: Quản lý workflow, Campaign, execution history qua browser (không cần VS Code).
 - **Tech stack**: Next.js + Supabase (đã có auth + sync infrastructure trong `automa-ext`).
 - **Tái sử dụng**: Cloud Sync (LWW) engine từ `automa-ext` đã hoàn thiện 100%.
 
 #### 4.2 Team Collaboration
 
 - **Shared Vault**: Team members cùng truy cập vault qua Supabase Realtime.
-- **Role-based access**: Owner / Editor / Viewer cho workflow và fleet.
+- **Role-based access**: Owner / Editor / Viewer cho workflow và Campaign.
 - **Audit log**: Ai chạy workflow gì, lúc nào, kết quả ra sao.
 - **Tái sử dụng**: Teamwork UI + `teamWorkflowStore` từ `automa-ext` đã sẵn sàng.
 
 #### 4.3 Cloud Runner (Managed Execution)
 
 - Khách hàng không cần máy tính chạy 24/7.
-- Automa Cloud Runner chạy fleet trên infrastructure của mình.
+- Automa Cloud Runner chạy Campaign trên infrastructure của mình.
 - Pricing model: Per-execution hoặc monthly subscription.
 - Rust binary chạy trên container → density cao, chi phí thấp.
 
@@ -309,7 +309,7 @@ graph TD
 | Hạng mục | Impact | Effort | Priority |
 | :--- | :--- | :--- | :--- |
 | Chromium unpin (polyfill fix) | 🔴 Critical | Medium | **P0** |
-| Fleet stop/status | 🟡 High | Low | **P1** |
+| Campaign stop/status | 🟡 High | Low | **P1** |
 | Test coverage | 🟡 High | Medium | **P1** |
 | Webview build pipeline | 🟠 Medium | Medium | **P2** |
 | VS Code Marketplace publish | 🔴 Critical | Low | **P0** |

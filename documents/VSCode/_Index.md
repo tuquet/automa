@@ -16,7 +16,7 @@ Chào mừng bạn đến với tài liệu của Extension **Automa CLI Toolkit
 ## 🎨 Giao diện Trực quan (Visual Editors)
 Các trình biên tập thay thế JSON thô bằng giao diện kéo thả, cấu hình thân thiện:
 - [[Workflow_Preview]]: Giao diện xem trước và cấu hình thẻ tham số Workflow.
-- [[Fleet_Preview]]: Trình quản lý chạy song song nhiều workflow.
+- [[Campaign_Preview]]: Trình quản lý chạy song song nhiều workflow.
 - [[Log_Viewer]]: Giao diện timeline xem nhật ký thực thi.
 
 ## 🗂️ Quản lý Thanh bên (Sidebar Views)

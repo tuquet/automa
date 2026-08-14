@@ -25,12 +25,12 @@ tags:
 Đây là tính năng độc quyền của Automa CLI khi làm việc với Automa Vault.
 Khi chạy lệnh:
 ```bash
-automa lint "fleets/search.fleets.json" -v .
+automa lint "Campaigns/search.Campaigns.json" -v .
 ```
 CLI sẽ kích hoạt `WorkflowRepository.findWorkflowRecursive` và tiến hành:
 
-#### Đối với Fleet (`.fleets.json`)
-- **Quét Profiles**: Mỗi `browser_id` được khai báo trong thành viên hạm đội (fleet members) sẽ được đối chiếu với thư mục `profiles/` trong Vault. Nếu không tìm thấy file `<browser_id>.profile.json`, Linter sẽ cảnh báo `[Missing Profile]`.
+#### Đối với Campaign (`.Campaigns.json`)
+- **Quét Profiles**: Mỗi `browser_id` được khai báo trong thành viên hạm đội (Campaign members) sẽ được đối chiếu với thư mục `profiles/` trong Vault. Nếu không tìm thấy file `<browser_id>.profile.json`, Linter sẽ cảnh báo `[Missing Profile]`.
 - **Quét Workflows**: Tương tự, nếu `workflow_id` không tồn tại ở bất kỳ đâu trong thư mục `workflows/`, Linter sẽ cảnh báo `[Missing Workflow]`.
 
 #### Đối với Workflow (`.automa.json` hoặc `.workflow.json`)

@@ -42,4 +42,4 @@ Quá trình thực thi của CLI bám sát sơ đồ phân luồng như sau:
 ## Các module tham gia
 - **`WorkflowRunner` / `ExecutionManager`**: Trực tiếp điều phối luồng thực thi tổng thể.
 - **`WorkflowInjector`**: Chuyên tiêm workflow JSON vào Extension storage của trình duyệt đang chạy.
-- **`FleetLogger`**: Thu thập kết quả trả về, ghi ra database.
+- **`CampaignLogger`**: Thu thập kết quả trả về, ghi ra database.

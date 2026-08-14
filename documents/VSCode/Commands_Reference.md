@@ -9,7 +9,7 @@ tags:
 
 # Automa CLI Toolkit — Commands Reference
 
-Tài liệu này tổng hợp toàn bộ các lệnh (commands) được cung cấp bởi **Automa CLI Toolkit** (`automa-vscode`). Các lệnh này giúp bạn tương tác với các workflow, fleet, log và quản lý tiến trình thực thi trực tiếp từ VS Code.
+Tài liệu này tổng hợp toàn bộ các lệnh (commands) được cung cấp bởi **Automa CLI Toolkit** (`automa-vscode`). Các lệnh này giúp bạn tương tác với các workflow, Campaign, log và quản lý tiến trình thực thi trực tiếp từ VS Code.
 
 ---
 
@@ -25,21 +25,21 @@ Tài liệu này tổng hợp toàn bộ các lệnh (commands) được cung c�
   - Khi chạy, một tiến trình ngầm sẽ hiển thị trên Status Bar (`⟳`) và trong View `Runners`.
   - Hỗ trợ fallback: Tự động dùng CLI cục bộ (nếu có) hoặc tải qua npx nếu không tìm thấy.
 
-### 1.2 Automa: Run Fleet (`automa.runFleet`)
+### 1.2 Automa: Run Campaign (`automa.runCampaign`)
 - **Icon**: ▶
-- **Vị trí**: Explorer Context Menu (click chuột phải vào file `.fleets.json`), Editor Title Run.
-- **Mô tả**: Khởi chạy toàn bộ Fleet — thực thi song song hoặc theo hàng đợi.
+- **Vị trí**: Explorer Context Menu (click chuột phải vào file `.Campaigns.json`), Editor Title Run.
+- **Mô tả**: Khởi chạy toàn bộ Campaign — thực thi song song hoặc theo hàng đợi.
 - **Hành vi**:
   - Mở một QuickPick với 2 tuỳ chọn:
-    - **▶ Run Now**: Chạy fleet ngay lập tức (bỏ qua cron schedule).
-    - **🕐 Start Daemon**: Chạy fleet dưới dạng daemon, chờ các task chạy theo lịch trình.
-  - Trạng thái thực thi được truyền (stream) thời gian thực về giao diện Fleet Preview qua luồng telemetry.
+    - **▶ Run Now**: Chạy Campaign ngay lập tức (bỏ qua cron schedule).
+    - **🕐 Start Daemon**: Chạy Campaign dưới dạng daemon, chờ các task chạy theo lịch trình.
+  - Trạng thái thực thi được truyền (stream) thời gian thực về giao diện Campaign Preview qua luồng telemetry.
 
 ### 1.3 Kill / Stop Runner (`automa.killRunner`)
 - **Icon**: 🛑
 - **Vị trí**: Inline trong view **Runners** (Activity Bar).
 - **Mô tả**: Dừng (kill) tiến trình runner đang chạy.
-- **Hành vi**: Gửi tín hiệu để kết thúc an toàn tiến trình đang thực thi workflow hoặc fleet.
+- **Hành vi**: Gửi tín hiệu để kết thúc an toàn tiến trình đang thực thi workflow hoặc Campaign.
 
 ---
 
@@ -77,8 +77,8 @@ Các lệnh này chủ yếu dùng để chuyển đổi (toggle) giữa chế �
 | :--- | :--- | :--- | :--- |
 | `automa.showWorkflowPreview` | Preview Workflow | 👁 | Xem trực quan file `*.automa.json` |
 | `automa.showWorkflowSource` | Show Workflow Source | `</>` | Quay lại mã nguồn khi đang ở Workflow Preview |
-| `automa.showFleetPreview` | Preview Fleet | 👁 | Xem trực quan file `*.fleets.json` |
-| `automa.showFleetSource` | Show Fleet Source | `</>` | Quay lại mã nguồn khi đang ở Fleet Preview |
+| `automa.showCampaignPreview` | Preview Campaign | 👁 | Xem trực quan file `*.Campaigns.json` |
+| `automa.showCampaignSource` | Show Campaign Source | `</>` | Quay lại mã nguồn khi đang ở Campaign Preview |
 | `automa.showLogPreview` | Open Preview | 👁 | Mở Log Viewer qua Virtual URI (`automa-log://`) hoặc file `*.automa-log.json` |
 | `automa.showLogSource` | Show Source | `</>` | Xem nội dung thô khi đang ở Log Viewer |
 
@@ -93,7 +93,7 @@ Các lệnh này nằm ở thanh tiêu đề (View Title) của các tab bên tr
 - **`automa.searchProfiles`** / **`automa.clearSearchProfiles`**: (🔍 / 🧹) Tìm kiếm và xóa bộ lọc trong view **Profiles**.
 - **`automa.searchWorkflows`** / **`automa.clearSearchWorkflows`**: (🔍 / 🧹) Tìm kiếm và xóa bộ lọc trong view **Workflows**.
 - **`automa.searchPackages`** / **`automa.clearSearchPackages`**: (🔍 / 🧹) Tìm kiếm và xóa bộ lọc trong view **Packages**.
-- **`automa.searchFleets`** / **`automa.clearSearchFleets`**: (🔍 / 🧹) Tìm kiếm và xóa bộ lọc trong view **Fleets**.
+- **`automa.searchCampaigns`** / **`automa.clearSearchCampaigns`**: (🔍 / 🧹) Tìm kiếm và xóa bộ lọc trong view **Campaigns**.
 - **`automa.filterHistoryByTaskId`** / **`automa.clearHistoryFilter`**: (🔍 / 🧹) Lọc và xóa bộ lọc theo Task ID trong view **History**.
 - **`automa.deleteHistoryItem`**: (🗑️) Xóa một mục lịch sử thực thi cụ thể.
 - **`automa.clearHistory`**: (🗑️) Xóa toàn bộ lịch sử thực thi.

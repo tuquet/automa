@@ -19,7 +19,7 @@ Cơ sở dữ liệu được lưu tại đường dẫn cấu hình mặc đị
 Mã nguồn khởi tạo: [core/db/index.ts](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-cli/src/core/db/index.ts).
 
 ### Đặc điểm khởi tạo:
-- Chế độ **WAL** (`journal_mode = WAL`): Giúp tăng hiệu năng đọc/ghi đồng thời, tránh lock khi có nhiều browser đang chạy song song trong Fleet và báo cáo log về cùng lúc.
+- Chế độ **WAL** (`journal_mode = WAL`): Giúp tăng hiệu năng đọc/ghi đồng thời, tránh lock khi có nhiều browser đang chạy song song trong Campaign và báo cáo log về cùng lúc.
 
 ### Schema
 

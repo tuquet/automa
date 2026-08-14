@@ -6,7 +6,7 @@ tags:
   - vault
   - storage
   - globals
-  - fleets
+  - Campaigns
   - profiles
   - workflows
 ---
@@ -23,7 +23,7 @@ Một Automa Vault tiêu chuẩn sẽ bao gồm các thư mục chính sau:
 automa-vault/
 ├── workflows/         # Chứa kịch bản tự động hóa (.automa.json, .workflow.json)
 ├── profiles/          # Chứa cấu hình trình duyệt (.profile.json)
-├── fleets/            # Chứa kịch bản điều phối song song (.fleets.json)
+├── Campaigns/            # Chứa kịch bản điều phối song song (.Campaigns.json)
 ├── globals/           # [NEW] Chứa dữ liệu dùng chung toàn cục
 │   ├── variables.json
 │   ├── credentials.json
@@ -42,13 +42,13 @@ automa-vault/
 - Quản lý metadata và cấu hình riêng biệt cho từng hồ sơ trình duyệt.
 - Dữ liệu duyệt web (Cookies, LocalStorage) sẽ được lưu tương ứng trong `~/.automa-cli/profiles/<profile_id>`.
 
-## 3. Fleet Configurations (`fleets/`)
-- Mở rộng tệp: `.fleets.json`
-- Cho phép định nghĩa một "Hạm đội" (Fleet) các trình duyệt chạy song song.
-- Trong Fleet, mỗi `task_id` đóng vai trò là một định danh tĩnh (Static ID) để quản lý luồng thực thi và sự phụ thuộc (`depends_on`).
+## 3. Campaign Configurations (`Campaigns/`)
+- Mở rộng tệp: `.Campaigns.json`
+- Cho phép định nghĩa một "Hạm đội" (Campaign) các trình duyệt chạy song song.
+- Trong Campaign, mỗi `task_id` đóng vai trò là một định danh tĩnh (Static ID) để quản lý luồng thực thi và sự phụ thuộc (`depends_on`).
 
 ## 4. Globals (`globals/`)
-Đây là khu vực chia sẻ dữ liệu toàn cục cho toàn bộ Fleet và Workflows. `ExecutionManager` sẽ tự động tiêm (inject) dữ liệu từ đây vào Runtime trước khi chạy.
+Đây là khu vực chia sẻ dữ liệu toàn cục cho toàn bộ Campaign và Workflows. `ExecutionManager` sẽ tự động tiêm (inject) dữ liệu từ đây vào Runtime trước khi chạy.
 
 - **`variables.json`**: Các biến cấu hình dùng chung (ví dụ: `API_URL`, `TIMEOUT`).
 - **`credentials.json`**: Chứa các bí mật (Secrets, Tokens) **đã được mã hóa** bằng lệnh `automa encrypt-secret`. Nội dung mã hóa (AES-256-GCM + HMAC-SHA256) sẽ được nạp thẳng vào IndexedDB (`dbStorage.credentials`) của Extension, giúp các node như HTTP Request hay Form Authentication hoạt động trong suốt mà không lộ mật khẩu.

@@ -1,6 +1,6 @@
 # Git Repository Rules
 
-- **TUYỆT ĐỐI KHÔNG** tự ý sử dụng lệnh `git commit` hoặc `git push`.
+- **TUYỆT ĐỐI KHÔNG** tự ý sử dụng lệnh `git push` nếu không được yêu cầu.
 - Đẩy mã nguồn lên remote là một hành động quan trọng và nhạy cảm. **CHỈ USER** mới được phép đẩy mã nguồn và sử dụng `git push`.
 - Trừ khi được USER yêu cầu cụ thể, **PHẢI ĐỂ LẠI** toàn bộ các thay đổi đã hoàn thành trong Staging Area hoặc Working Directory để USER tự đánh giá và commit thủ công.
 
@@ -98,3 +98,13 @@
   4. **Complexity & Flow Agent**: Tìm kiếm các khối Deep Nesting, Spaghetti Code và Cyclomatic Complexity cao.
   5. **Safety & Defensive Agent**: Báo cáo các lỗ hổng thiếu Fail Fast, Try/Catch, Sanitize Input, Null checks.
 - **Reporting**: Agent chính **BẮT BUỘC** chờ cả 5 Subagents hoàn thành (thông qua `schedule` timer hoặc chờ tin nhắn), sau đó tổng hợp thành một báo cáo duy nhất (Executive Summary / Code Audit) cho USER. Agent chính sẽ là người DUY NHẤT trực tiếp sửa code sau khi USER chốt phương án.
+
+# Quality Control (QC) & QA Swarm
+
+- **Trigger**: Bất cứ khi nào người dùng yêu cầu "QC", "kiểm thử", "đảm bảo chất lượng", hoặc nhắc từ khóa "QC".
+- **Behavior**: **TUYỆT ĐỐI KHÔNG** tự mình QC một cách phiến diện. ĐỒNG THỜI, các Agent cấp dưới KHÔNG ĐƯỢC PHÉP trực tiếp sửa code trong quá trình QC để tránh xung đột (Read-only mode).
+- **Action**: **BẮT BUỘC** sử dụng công cụ `invoke_subagent` để spawn (tạo ra) cùng lúc 3 AI Subagents (Mô hình: `pro`) chạy ngầm song song. Mỗi Subagent sẽ phụ trách thanh tra một khía cạnh riêng biệt của Quality Control:
+  1. **Functional QA & Edge Cases Agent**: Quét tìm các lỗi logic, điều kiện biên (boundary conditions), các trường hợp ngoại lệ chưa được xử lý (unhandled edge cases), và tính đúng đắn của tính năng.
+  2. **Performance & Resource Leak QC Agent**: Soi xét các nút thắt hiệu năng (performance bottlenecks), các thao tác đồng bộ nặng nề gây block UI/Node, memory leaks, và zombie processes (tiến trình treo).
+  3. **Security & Vulnerability QC Agent**: Rà soát các lỗ hổng bảo mật (XSS, Injection, CSP bypass), cách lưu trữ dữ liệu nhạy cảm (auth tokens/secrets) và kiểm soát truy cập phân quyền.
+- **Reporting**: Agent chính **BẮT BUỘC** chờ cả 3 Subagents hoàn thành (thông qua `schedule` timer hoặc chờ tin nhắn), sau đó tổng hợp thành một báo cáo QC duy nhất (QC Audit Report) cho USER. Agent chính sẽ là người DUY NHẤT trực tiếp tiến hành vá lỗi (bug fix) sau khi USER chốt phương án.

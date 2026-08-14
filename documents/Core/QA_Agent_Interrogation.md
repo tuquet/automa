@@ -15,7 +15,7 @@ tags:
 ---
 
 ## Phần 1: Kiến trúc Lõi & Luồng Dữ Liệu
-**Câu 1:** Cấu trúc thư mục của Automa Vault hoạt động theo nguyên tắc nào? Có cần phải khai báo cứng thư mục `workflows/` và `fleets/` ở root của vault không? Tại sao?
+**Câu 1:** Cấu trúc thư mục của Automa Vault hoạt động theo nguyên tắc nào? Có cần phải khai báo cứng thư mục `workflows/` và `Campaigns/` ở root của vault không? Tại sao?
 
 **Câu 2:** Khi người dùng cung cấp một link URL trỏ tới một file JSON trên GitHub (dạng `https://github.com/tuquet/automa-vault/blob/main/wf.json`), công cụ `automa-cli` của chúng ta có chạy trực tiếp được đường link này không hay phải dùng `git clone` tải file về trước? Giải thích cơ chế đằng sau.
 
@@ -61,7 +61,7 @@ tags:
 
 **Câu 17:** Làm sao để đóng gói (package) một thư viện Workflow thành một Sub-workflow và gọi nó từ một Workflow khác? Khi dùng Linter kiểm tra, Linter làm sao biết được cái Sub-workflow đó có thực sự tồn tại trong ổ cứng hay không (Cross-Reference Validation)?
 
-**Câu 18:** Trong cấu hình Automa Vault, một Fleet Profile (file `.profile.json`) quy định các tham số gì? Nếu tôi gõ `automa lint` một file Workflow có tham chiếu đến Profile ID đó nhưng tôi quên tải file Profile về máy, Linter sẽ hiển thị thông báo gì?
+**Câu 18:** Trong cấu hình Automa Vault, một Campaign Profile (file `.profile.json`) quy định các tham số gì? Nếu tôi gõ `automa lint` một file Workflow có tham chiếu đến Profile ID đó nhưng tôi quên tải file Profile về máy, Linter sẽ hiển thị thông báo gì?
 
 **Câu 19:** Khi bạn (hoặc các AI Agent khác) làm việc và cần viết các đoạn script nháp (scratch scripts) hoặc file dữ liệu test dùng 1 lần. Theo quy tắc trong tổ chức file, bạn được phép vứt các file đó ở đâu để không làm bẩn thư mục mã nguồn gốc?
 

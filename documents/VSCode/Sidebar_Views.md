@@ -11,7 +11,7 @@ tags:
 # Sidebar Views
 
 ## Tổng quan
-Extension đăng ký một Activity Bar với các Panel View nằm ở Sidebar bên trái, cung cấp trung tâm điều khiển (Control Center) cho toàn bộ hệ sinh thái Automa. Các View bao gồm: Runners, Profiles, Workflows, Packages, và Fleets.
+Extension đăng ký một Activity Bar với các Panel View nằm ở Sidebar bên trái, cung cấp trung tâm điều khiển (Control Center) cho toàn bộ hệ sinh thái Automa. Các View bao gồm: Runners, Profiles, Workflows, Packages, và Campaigns.
 
 ## Kiến trúc Implementation
 File nguồn chính:
@@ -22,7 +22,7 @@ File nguồn chính:
 Cả hai lớp này đều implements interface `vscode.TreeDataProvider`.
 
 ### 1. File Browsing Views (AutomaFilesProvider)
-Class `AutomaFilesProvider` được khởi tạo nhiều lần cho các View khác nhau (Workflows, Packages, Profiles, Fleets), mỗi instance sử dụng một `globPattern` riêng biệt.
+Class `AutomaFilesProvider` được khởi tạo nhiều lần cho các View khác nhau (Workflows, Packages, Profiles, Campaigns), mỗi instance sử dụng một `globPattern` riêng biệt.
 
 - **Workspace Scanning:** Sử dụng `vscode.workspace.findFiles` theo pattern (vd: `**/*.automa.json`) để liệt kê tài nguyên.
 - **Lọc (Filtering):**
@@ -53,7 +53,7 @@ Class `HistoryTreeDataProvider` cung cấp danh sách các luồng thực thi tr
 - **Dữ liệu Tập trung:** Gọi lệnh ngầm `automa history --json` từ CLI để lấy dữ liệu từ cơ sở dữ liệu SQLite cục bộ (thay vì quét file JSON vật lý trong Vault).
 - **Lọc theo Task ID (Task Filter):**
   - Hỗ trợ công cụ lọc thông minh qua nút "Filter by Task ID" trên thanh tiêu đề của View.
-  - Người dùng có thể nhập mã tĩnh của một Task (được định nghĩa trong Fleet) để CLI tự động truy xuất vào chuỗi JSON bằng hàm `json_extract(options, '$.fleetContext.task_id')` trong SQLite.
+  - Người dùng có thể nhập mã tĩnh của một Task (được định nghĩa trong Campaign) để CLI tự động truy xuất vào chuỗi JSON bằng hàm `json_extract(options, '$.CampaignContext.task_id')` trong SQLite.
 - **Virtual URI Log Rendering:**
   - Khi click vào một Job, VS Code bắn command `automa.showLogPreview` truyền kèm URI ảo dạng `automa-log://<jobId>`.
   - [[LogCustomEditorProvider.ts]] sẽ chặn URI này và render ra màn hình Webview, sử dụng thông tin chi tiết qua lệnh `automa log <jobId> --json`.

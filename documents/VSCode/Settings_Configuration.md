@@ -24,7 +24,7 @@ Tài liệu này trình bày các tuỳ chọn cấu hình có thể thiết l�
 
 ## 2. Cấu hình Workflow Execution
 
-Các cấu hình dưới đây ảnh hưởng đến cách lệnh `automa.runWorkflow` và `automa.runFleet` thực thi lệnh CLI.
+Các cấu hình dưới đây ảnh hưởng đến cách lệnh `automa.runWorkflow` và `automa.runCampaign` thực thi lệnh CLI.
 
 ### `automa.run.useDefaultParameters`
 - **Loại**: `boolean`
@@ -58,10 +58,10 @@ Các cấu hình dưới đây ảnh hưởng đến cách lệnh `automa.runWor
 - **Mặc định**: `false`
 - **Mô tả**: Kích hoạt chế độ debug (log chi tiết) khi gọi lệnh CLI. Rất hữu ích khi cần điều tra lỗi các bước xử lý của workflow.
 
-### `automa.vault.run.fleetGridSystem`
+### `automa.vault.run.CampaignGridSystem`
 - **Loại**: `boolean`
 - **Mặc định**: `false`
-- **Mô tả**: Bật tính năng chia lưới màn hình (Grid System) tự động phân bổ các cửa sổ trình duyệt trên màn hình khi chạy Automa Fleet (rất hữu ích khi chạy đa luồng).
+- **Mô tả**: Bật tính năng chia lưới màn hình (Grid System) tự động phân bổ các cửa sổ trình duyệt trên màn hình khi chạy Automa Campaign (rất hữu ích khi chạy đa luồng).
 
 ### `automa.cliPath`
 - **Loại**: `string`

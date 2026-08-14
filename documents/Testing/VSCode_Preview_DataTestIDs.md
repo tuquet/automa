@@ -29,19 +29,19 @@ Tất cả các `data-testid` trên màn hình VS Code Preview đều tuân th�
 
 ---
 
-## 3. Màn hình Fleet Preview (`fleet-preview.html`)
-Được hiển thị khi click vào các file `*.fleet.json`.
+## 3. Màn hình Campaign Preview (`Campaign-preview.html`)
+Được hiển thị khi click vào các file `*.Campaign.json`.
 
 | data-testid | Mô tả hành vi | Lệnh gửi về Extension Host (`message.type` / `command`) |
 | --- | --- | --- |
-| `vscode-fleet-preview-save-btn` | Lưu file cấu hình Fleet (Fleet Members & Global Variables). | `save-fleet` |
-| `vscode-fleet-preview-run-btn` | Gửi tín hiệu thực thi đồng loạt (Run) fleet. | `run-fleet` |
-| `vscode-fleet-preview-stop-btn` | Gửi tín hiệu dừng (Stop) quá trình đang chạy của fleet. | `stop-fleet` |
-| `vscode-fleet-preview-format-json-btn` | Định dạng lại chuỗi JSON Global Variables cho chuẩn. | N/A (Xử lý trực tiếp trên giao diện) |
-| `vscode-fleet-preview-add-member-btn` | Thêm một Browser Member mới vào danh sách. | N/A (State Vue nội bộ) |
-| `vscode-fleet-preview-delete-member-btn`| Xóa một Browser Member khỏi danh sách. | N/A (State Vue nội bộ) |
-| `vscode-fleet-preview-add-task-btn` | Thêm một Task execution mới vào trong 1 Member. | N/A (State Vue nội bộ) |
-| `vscode-fleet-preview-delete-task-btn`| Xóa một Task execution ra khỏi 1 Member. | N/A (State Vue nội bộ) |
+| `vscode-Campaign-preview-save-btn` | Lưu file cấu hình Campaign (Campaign Members & Global Variables). | `save-Campaign` |
+| `vscode-Campaign-preview-run-btn` | Gửi tín hiệu thực thi đồng loạt (Run) Campaign. | `run-Campaign` |
+| `vscode-Campaign-preview-stop-btn` | Gửi tín hiệu dừng (Stop) quá trình đang chạy của Campaign. | `stop-Campaign` |
+| `vscode-Campaign-preview-format-json-btn` | Định dạng lại chuỗi JSON Global Variables cho chuẩn. | N/A (Xử lý trực tiếp trên giao diện) |
+| `vscode-Campaign-preview-add-member-btn` | Thêm một Browser Member mới vào danh sách. | N/A (State Vue nội bộ) |
+| `vscode-Campaign-preview-delete-member-btn`| Xóa một Browser Member khỏi danh sách. | N/A (State Vue nội bộ) |
+| `vscode-Campaign-preview-add-task-btn` | Thêm một Task execution mới vào trong 1 Member. | N/A (State Vue nội bộ) |
+| `vscode-Campaign-preview-delete-task-btn`| Xóa một Task execution ra khỏi 1 Member. | N/A (State Vue nội bộ) |
 
 ---
 

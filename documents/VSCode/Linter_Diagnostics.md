@@ -10,7 +10,7 @@ Tính năng Linter Diagnostics mang sức mạnh của [[Linter_Engine]] vào kh
 
 ## Cơ chế hoạt động
 
-- **Phát hiện Event**: Khi người dùng mở một file có đuôi `.automa.json`, `.workflow.json` hoặc `.fleets.json`, Extension sẽ đăng ký lắng nghe sự kiện `onDidChangeTextDocument` (khi gõ phím) và `onDidSaveTextDocument` (khi lưu file).
+- **Phát hiện Event**: Khi người dùng mở một file có đuôi `.automa.json`, `.workflow.json` hoặc `.Campaigns.json`, Extension sẽ đăng ký lắng nghe sự kiện `onDidChangeTextDocument` (khi gõ phím) và `onDidSaveTextDocument` (khi lưu file).
 - **Thực thi tĩnh**: Hệ thống gọi ngầm class `LinterService.validate(content, options)`.
 - **Ánh xạ lỗi**: Kết quả trả về (thường là mảng các `errors` hoặc `warnings`) sẽ được phân tích. Do JSON không có line number trong kết quả lỗi của schema validator (Ajv), Extension sử dụng các hàm parser (hoặc regex heuristic) để ánh xạ thông báo lỗi tới dòng và cột (line & column) thực tế trên trình soạn thảo.
 - **Hiển thị trực quan (Squiggly Lines)**:

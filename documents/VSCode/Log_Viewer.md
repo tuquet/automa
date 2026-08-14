@@ -38,4 +38,4 @@ Class `LogCustomEditorProvider` implements `vscode.CustomReadonlyEditorProvider`
    - Màu sắc Header (Success, Error, Stopped) cũng được sinh ra ngay từ logic của Provider trước khi nhúng vào HTML (biến class `text-vsc-error`, `text-vsc-success`, ...).
 
 > [!TIP]
-> Việc sử dụng `createFileSystemWatcher` giúp Log Viewer cực kỳ hữu dụng để mở theo dõi Live Log khi chạy một Workflow hay Fleet ở chế độ daemon background. Bạn sẽ thấy luồng log cuộn liên tục khi dữ liệu mới được đẩy vào file.
+> Việc sử dụng `createFileSystemWatcher` giúp Log Viewer cực kỳ hữu dụng để mở theo dõi Live Log khi chạy một Workflow hay Campaign ở chế độ daemon background. Bạn sẽ thấy luồng log cuộn liên tục khi dữ liệu mới được đẩy vào file.

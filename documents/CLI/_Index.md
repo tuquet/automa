@@ -23,7 +23,7 @@ Chào mừng bạn đến với tài liệu cốt lõi của **Automa CLI**. Đ�
 - [[Security_Cryptography]]: Cơ chế mã hóa và quản lý bí mật.
 - **Globals Vault**: Hệ thống cung cấp biến môi trường và thông tin đăng nhập (credentials) an toàn cho toàn bộ quá trình chạy (xem thêm tại Execution Engine và Security).
 
-## 🚀 Tính năng Nâng cao (Server & Fleet)
-- [[Fleet_Management]]: Chạy workflow song song, cron scheduling và điều phối đa tiến trình.
+## 🚀 Tính năng Nâng cao (Server & Campaign)
+- [[Campaign_Management]]: Chạy workflow song song, cron scheduling và điều phối đa tiến trình.
 - [[HTTP_Server_API]]: Endpoint API khi chạy CLI dưới dạng Daemon.
 - [[Local_Database]]: Kiến trúc SQLite quản lý trạng thái, logs và dọn dẹp dung lượng.

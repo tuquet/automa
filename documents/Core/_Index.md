@@ -22,7 +22,7 @@ Vault là thư mục trung tâm để quản lý mọi dữ liệu liên quan đ
 ## Các định dạng file
 
 - `*.automa.json` / `*.workflow.json`: Workflow
-- `*.fleets.json`: Cấu hình thực thi song song
+- `*.Campaigns.json`: Cấu hình thực thi song song
 - `*.profile.json`: Browser Profile (Proxy, UserAgent, Fingerprint)
 - `variables.json` / `credentials.json` / `tables.json`: Dữ liệu dùng chung toàn cục (Globals)
 
@@ -34,7 +34,7 @@ Vault là thư mục trung tâm để quản lý mọi dữ liệu liên quan đ
 ```tree
 my-vault/
   ├── workflows/
-  ├── fleets/
+  ├── Campaigns/
   ├── profiles/
   ├── globals/
   └── .vscode/
