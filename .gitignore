@@ -9,3 +9,5 @@ automa-repo-clone
 scratch/
 .turbo/
 packages/automa-hub/dist/
+coverage/
+*.sqlite

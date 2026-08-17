@@ -138,8 +138,11 @@ export class AutomaClient {
           if (line.startsWith("data: ")) {
             const dataStr = line.substring(6);
             if (dataStr) {
+              let data: any = null;
               try {
-                const data = JSON.parse(dataStr);
+                data = JSON.parse(dataStr);
+              } catch (_e) {}
+              if (data) {
                 if (data.type === "progress") {
                   onProgress(`Downloading... ${data.percent}%`);
                 } else if (data.type === "info") {
@@ -147,7 +150,7 @@ export class AutomaClient {
                 } else if (data.type === "error") {
                   throw new Error(data.error);
                 }
-              } catch (_e) {}
+              }
             }
           }
         }

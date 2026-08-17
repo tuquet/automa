@@ -4,7 +4,7 @@ import { ScheduleService } from './schedule.service';
 import { CampaignService } from '../campaign/campaign.service';
 import { SchedulerRegistry } from '@nestjs/schedule';
 
-jest.mock('@automa/core', () => ({}));
+vi.mock('@automa/core', () => ({}));
 
 
 describe('SchedulerDispatcherService', () => {
@@ -20,22 +20,22 @@ describe('SchedulerDispatcherService', () => {
         {
           provide: ScheduleService,
           useValue: {
-            getAllSchedules: jest.fn(),
+            getAllSchedules: vi.fn(),
           },
         },
         {
           provide: CampaignService,
           useValue: {
-            runCampaign: jest.fn(),
-            getCampaignAccounts: jest.fn(),
+            runCampaign: vi.fn(),
+            getCampaignAccounts: vi.fn(),
           },
         },
         {
           provide: SchedulerRegistry,
           useValue: {
-            addCronJob: jest.fn(),
-            deleteCronJob: jest.fn(),
-            getCronJobs: jest.fn().mockReturnValue(new Map()),
+            addCronJob: vi.fn(),
+            deleteCronJob: vi.fn(),
+            getCronJobs: vi.fn().mockReturnValue(new Map()),
           },
         },
       ],
@@ -53,7 +53,7 @@ describe('SchedulerDispatcherService', () => {
         { id: 's1', cronExpr: '0 * * * *', status: 'active', campaignId: 'c1', workflowPath: '/path' },
         { id: 's2', cronExpr: '0 * * * *', status: 'paused', campaignId: 'c2', workflowPath: '/path2' }, // should be ignored
       ];
-      jest.spyOn(scheduleService, 'getAllSchedules').mockResolvedValue(mockSchedules as any);
+      vi.spyOn(scheduleService, 'getAllSchedules').mockResolvedValue(mockSchedules as any);
       
       await service.onModuleInit();
       
@@ -68,8 +68,8 @@ describe('SchedulerDispatcherService', () => {
       const mockSchedule = { id: 's1', campaignId: 'c1', workflowPath: '/my/workflow.json', concurrency: 2 };
       const mockMembers = [{ accountId: 'acc1' }, { accountId: 'acc2' }, { accountId: 'acc3' }];
       
-      jest.spyOn(campaignService, 'getCampaignAccounts').mockResolvedValue(mockMembers as any);
-      jest.spyOn(campaignService, 'runCampaign').mockResolvedValue(true as any);
+      vi.spyOn(campaignService, 'getCampaignAccounts').mockResolvedValue(mockMembers as any);
+      vi.spyOn(campaignService, 'runCampaign').mockResolvedValue(true as any);
 
       await service.dispatchCampaign(mockSchedule as any);
 
