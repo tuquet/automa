@@ -94,15 +94,16 @@
         },
         "background": {
           "activeOnStart": true,
-          "beginsPattern": "Compiling",
-          "endsPattern": "Finished .* target\\(s\\) in"
+          "beginsPattern": "Compiling|Automa Core",
+          "endsPattern": "listening on"
         }
       }
     },
     {
       "label": "Workspace: Dev Rust Compiled EXE",
-      "type": "shell",
-      "command": ".\\automa-core.exe serve",
+      "type": "process",
+      "command": "${workspaceFolder}/automa-core/target/release/automa-core.exe",
+      "args": ["serve"],
       "options": {
         "cwd": "${workspaceFolder}/automa-core/target/release"
       },
@@ -119,7 +120,7 @@
         "background": {
           "activeOnStart": true,
           "beginsPattern": ".",
-          "endsPattern": "Listening on http"
+          "endsPattern": "listening on"
         }
       }
     },
