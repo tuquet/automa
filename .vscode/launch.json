@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "F5 (Live Rust Server)",
+      "name": "Debug (Live Rust)",
       "type": "extensionHost",
       "request": "launch",
       "args": [
@@ -11,10 +11,10 @@
       "outFiles": [
         "${workspaceFolder}/automa-vscode/dist/**/*.js"
       ],
-      "preLaunchTask": "Workspace: Dev VSCode (Live Rust)"
+      "preLaunchTask": "Serve (Live Rust)"
     },
     {
-      "name": "F5 (Compiled Rust EXE)",
+      "name": "Debug (Rust EXE)",
       "type": "extensionHost",
       "request": "launch",
       "args": [
@@ -23,7 +23,7 @@
       "outFiles": [
         "${workspaceFolder}/automa-vscode/dist/**/*.js"
       ],
-      "preLaunchTask": "Workspace: Dev VSCode (Compiled EXE)"
+      "preLaunchTask": "Serve (Rust EXE)"
     }
   ]
 }

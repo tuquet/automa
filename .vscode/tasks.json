@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Workspace: Install Dependencies",
+      "label": "Install",
       "type": "shell",
       "command": "pnpm install",
       "options": {
@@ -14,7 +14,7 @@
       }
     },
     {
-      "label": "Workspace: Build All",
+      "label": "Build All",
       "type": "shell",
       "command": "pnpm run build",
       "options": {
@@ -24,7 +24,7 @@
       "group": "build"
     },
     {
-      "label": "Workspace: Dev VSCode Host",
+      "label": "Watch: VSCode",
       "type": "shell",
       "command": "pnpm dev:vscode",
       "options": {
@@ -51,9 +51,8 @@
         }
       }
     },
-
     {
-      "label": "Workspace: Dev Source Runner",
+      "label": "Watch: Runner",
       "type": "shell",
       "command": "pnpm dev:source:runner",
       "options": {
@@ -76,7 +75,7 @@
       }
     },
     {
-      "label": "Workspace: Dev Rust Daemon",
+      "label": "Watch: Rust",
       "type": "shell",
       "command": "cargo run --bin automa-core serve",
       "options": {
@@ -100,7 +99,7 @@
       }
     },
     {
-      "label": "Workspace: Dev Rust Compiled EXE",
+      "label": "Run: Rust EXE",
       "type": "process",
       "command": "${workspaceFolder}/automa-core/target/release/automa-core.exe",
       "args": ["serve"],
@@ -125,25 +124,25 @@
       }
     },
     {
-      "label": "Workspace: Dev VSCode (Live Rust)",
+      "label": "Serve (Live Rust)",
       "dependsOn": [
-        "Workspace: Dev Rust Daemon",
-        "Workspace: Dev Source Runner",
-        "Workspace: Dev VSCode Host"
+        "Watch: Rust",
+        "Watch: Runner",
+        "Watch: VSCode"
       ],
       "problemMatcher": []
     },
     {
-      "label": "Workspace: Dev VSCode (Compiled EXE)",
+      "label": "Serve (Rust EXE)",
       "dependsOn": [
-        "Workspace: Dev Rust Compiled EXE",
-        "Workspace: Dev Source Runner",
-        "Workspace: Dev VSCode Host"
+        "Run: Rust EXE",
+        "Watch: Runner",
+        "Watch: VSCode"
       ],
       "problemMatcher": []
     },
     {
-      "label": "Workspace: Dev CLI",
+      "label": "Watch: CLI",
       "type": "shell",
       "command": "pnpm dev:cli",
       "options": {
@@ -153,7 +152,7 @@
       "problemMatcher": []
     },
     {
-      "label": "Workspace: Run CLI Tests",
+      "label": "Test: CLI",
       "type": "shell",
       "command": "pnpm run test:report",
       "options": {
