@@ -38,12 +38,9 @@
 
 # Knowledge Base & Documentation
 
-- **Primary Source of Truth**: Toàn bộ tài liệu dự án được tập trung tại một Obsidian Vault nằm ở thư mục `documents/`.
-- **Agent Initialization**: Khi được giao nhiệm vụ tìm hiểu kiến trúc hệ sinh thái, tính năng, hoặc các lệnh CLI/VSCode, **LUÔN LUÔN BẮT BUỘC** đọc `documents/Home.md` và `documents/_meta/All_Documents.base` trước tiên.
-- **Documentation Updates**: Bất cứ khi nào triển khai một tính năng lớn hoặc thay đổi kiến trúc, **BẮT BUỘC** cập nhật các tệp Markdown tương ứng trong `documents/` Vault.
-- **Mandatory Skills**: Khi làm việc với Vault, **BẮT BUỘC** nạp và áp dụng các kỹ năng cục bộ (local skills) sau:
-  1. `obsidian-markdown`: Để định dạng ghi chú, sử dụng wikilinks, callouts, và frontmatter.
-  2. `obsidian-bases`: Để tạo hoặc cập nhật tệp `.base` nhằm truy vấn và tóm tắt dữ liệu vault một cách động.
+- **Decentralized Docs (Microservices)**: Tài liệu dự án được phân tán về thư mục của từng microservice/submodule nhằm đảm bảo tính cập nhật (ví dụ: `automa-vscode/README.md`, `automa-core/README.md`). Thư mục `documents/` ở gốc chỉ đóng vai trò là một Hub chứa menu điều hướng phẳng.
+- **Agent Initialization**: Khi được giao nhiệm vụ tìm hiểu kiến trúc hệ sinh thái, tính năng, hoặc các lệnh CLI/VSCode, **BẮT BUỘC** đọc `documents/Home.md` để lấy đường dẫn tới các file `README.md` của các submodule tương ứng.
+- **Documentation Updates**: Bất cứ khi nào triển khai một tính năng lớn hoặc thay đổi kiến trúc, **BẮT BUỘC** cập nhật vào tệp `README.md` của submodule tương ứng (hoặc tạo thư mục `docs/` bên trong submodule nếu tài liệu quá dài).
 
 # Monorepo Architecture & Reusability Rules
 

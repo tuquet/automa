@@ -1,34 +1,19 @@
-<div align="center">
-  <h1>Automa Knowledge Base (documents)</h1>
-  <p><strong>Cơ Sở Dữ Liệu Tri Thức & Kiến Trúc (Obsidian Vault)</strong></p>
-</div>
+# Automa Ecosystem Knowledge Base (Hub)
+
+Chào mừng bạn đến với trung tâm tài liệu (Documentation Hub) của Automa Ecosystem.
+Từ ngày 18/08/2026, kiến trúc tài liệu đã được chuyển đổi thành dạng phân tán (Decentralized Docs) để tránh lỗi thời.
+Toàn bộ tài liệu chi tiết của từng thành phần (microservices) đã được di chuyển vào file `README.md` của chính nó.
+
+Vui lòng truy cập các liên kết dưới đây để đọc tài liệu:
+
+1. [Automa Core (Rust Daemon)](../automa-core/README.md)
+   - Core engine xử lý logic, HTTP server, Browser management.
+2. [Automa VS Code Extension](../automa-vscode/README.md)
+   - Extension UI (Studio) tích hợp vào Visual Studio Code.
+3. [Automa Chrome Extension](../automa-ext/README.md)
+   - Extension UI (Studio) và Background MV3 Native Engine, đã gỡ bỏ hoàn toàn polyfill.
+4. [Automa Vault](../automa-vault/README.md)
+   - Cấu trúc lưu trữ Local Vault, Campaigns, và Browser Profiles.
 
 ---
-
-Thư mục `documents/` không chỉ là nơi chứa file Markdown đơn thuần, mà là một **Obsidian Vault** hoàn chỉnh, đóng vai trò là "bộ não" lưu trữ toàn bộ kiến trúc, quy tắc thiết kế (Guidelines) và tài liệu kỹ thuật của Hệ sinh thái Automa.
-
----
-
-## 🧭 Cấu Trúc Phân Hệ Tài Liệu
-
-Tài liệu được chia thành các phân hệ tương ứng với cấu trúc Monorepo để dễ dàng tra cứu:
-
-- **`Core/`**: Chứa triết lý sản phẩm, lộ trình dài hạn (Roadmaps), cấu trúc lưu trữ và quy tắc bảo mật.
-- **`CLI/`**: Giải phẫu chi tiết về Node Daemon, hệ thống Anti-detection, Linter Engine và cơ chế HTTP Server.
-- **`VSCode/`**: Tài liệu cho nhóm phát triển VS Code Extension (Cách gọi RPC, Webview UI, Linter Diagnostics).
-- **`Ext/`**: Giải phẫu kiến trúc MV3 gốc, cơ chế loại bỏ Polyfill và quy tắc Alias lúc Build.
-
-## 🚀 Hướng Dẫn Truy Cập (Dành cho Dev & AI)
-
-1. **Mở bằng Obsidian (Dành cho Con người):**
-   - Tải và cài đặt phần mềm [Obsidian](https://obsidian.md/).
-   - Chọn "Open folder as vault" và trỏ vào thư mục `documents/` này.
-   - Bấm `Ctrl+G` để mở Graph View và xem mối quan hệ giữa các module hệ thống.
-   
-2. **Truy xuất tự động (Dành cho AI Agents):**
-   - Tất cả các Assistant/Agents khi làm việc với codebase này **bắt buộc** phải đọc file `Home.md` và `_meta/All_Documents.base` đầu tiên để hiểu bức tranh toàn cảnh trước khi viết code.
-
-## 📝 Quy Tắc Đóng Góp (Contribution Rules)
-
-- Mỗi khi có sự thay đổi lớn về kiến trúc (Ví dụ: Thêm tính năng IPC mới, thay đổi luồng Runner), Developer/AI Agent **phải chủ động cập nhật** tài liệu tương ứng trong Vault này.
-- Sử dụng thẻ Tag (như `#cli`, `#vscode`, `#core`) ở phần Frontmatter của file để hệ thống Dataview tự động phân loại.
+*Ghi chú: Thư mục `documents/` chỉ còn đóng vai trò là một Hub điều hướng. Vui lòng cập nhật tài liệu trực tiếp vào `README.md` của các submodule.*
