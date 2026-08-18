@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Automa VS Code Extension",
+      "name": "F5 (Live Rust Server)",
       "type": "extensionHost",
       "request": "launch",
       "args": [
@@ -11,7 +11,19 @@
       "outFiles": [
         "${workspaceFolder}/automa-vscode/dist/**/*.js"
       ],
-      "preLaunchTask": "Workspace: Dev VSCode"
+      "preLaunchTask": "Workspace: Dev VSCode (Live Rust)"
+    },
+    {
+      "name": "F5 (Compiled Rust EXE)",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/automa-vscode"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/automa-vscode/dist/**/*.js"
+      ],
+      "preLaunchTask": "Workspace: Dev VSCode (Compiled EXE)"
     }
   ]
 }

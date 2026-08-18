@@ -76,8 +76,66 @@
       }
     },
     {
-      "label": "Workspace: Dev VSCode",
+      "label": "Workspace: Dev Rust Daemon",
+      "type": "shell",
+      "command": "cargo run --bin automa-core serve",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-core"
+      },
+      "isBackground": true,
+      "presentation": {
+        "panel": "shared",
+        "clear": true
+      },
+      "problemMatcher": {
+        "owner": "rust",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Compiling",
+          "endsPattern": "Finished .* target\\(s\\) in"
+        }
+      }
+    },
+    {
+      "label": "Workspace: Dev Rust Compiled EXE",
+      "type": "shell",
+      "command": ".\\automa-core.exe serve",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-core/target/release"
+      },
+      "isBackground": true,
+      "presentation": {
+        "panel": "shared",
+        "clear": true
+      },
+      "problemMatcher": {
+        "owner": "rust-exe",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "Listening on http"
+        }
+      }
+    },
+    {
+      "label": "Workspace: Dev VSCode (Live Rust)",
       "dependsOn": [
+        "Workspace: Dev Rust Daemon",
+        "Workspace: Dev Source Runner",
+        "Workspace: Dev VSCode Host"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Workspace: Dev VSCode (Compiled EXE)",
+      "dependsOn": [
+        "Workspace: Dev Rust Compiled EXE",
         "Workspace: Dev Source Runner",
         "Workspace: Dev VSCode Host"
       ],
