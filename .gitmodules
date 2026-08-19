@@ -16,3 +16,6 @@
 [submodule "automa-core"]
 	path = automa-core
 	url = https://github.com/tuquet/automa-core.git
+[submodule "automa-bruno"]
+	path = automa-bruno
+	url = https://github.com/tuquet/automa-bruno.git

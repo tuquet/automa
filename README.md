@@ -111,31 +111,7 @@ Chiến lược phát triển dài hạn của Automa Ecosystem được chia l�
 
 ## 📚 Hệ Thống Trí Thức (Knowledge Base)
 
-Tất cả tài liệu kiến trúc chuyên sâu, quy tắc (Guidelines) và giải phẫu tính năng được lưu trữ dưới dạng **Obsidian Vault** tại thư mục `documents/`. Hãy xem tệp `documents/Home.md` để bắt đầu nghiên cứu cấu trúc thiết kế của hệ sinh thái.d automa-ecosystem
-
-# 2. Cài đặt toàn bộ module
-pnpm install
-
-# 3. Đóng gói hệ sinh thái
-pnpm run build
-
-# 4. Khởi chạy môi trường phát triển (Dev Mode)
-pnpm run dev
-```
-
----
-
-## 🗺️ Định Hướng Phát Triển (Roadmap)
-
-Chiến lược phát triển dài hạn của Automa Ecosystem được chia làm 4 giai đoạn (Horizons):
-
-- **Horizon 1 - Ổn định (Stabilize):** Tối ưu hóa MV3, hoàn thiện tính năng kill/stop Campaign, bổ sung Test Coverage và chuẩn bị hạ tầng CI/CD để phát hành bản chính thức lên VS Code Marketplace.
-- **Horizon 2 - Mở rộng (Grow):** Xây dựng trang tài liệu trực tuyến (VitePress), ra mắt **Workflow Hub** chia sẻ kịch bản cho cộng đồng và mở rộng khả năng biên dịch CI/CD.
-- **Horizon 3 - Chuyển dịch lõi (Rust Core):** *Mục tiêu tối thượng*. Thay thế Node.js runtime hiện tại bằng Native Rust Binary (`automa-core`), đạt được tốc độ khởi động <100ms, giảm RAM 80% và phân phối phần mềm **không cần cài đặt Node.js** (Zero-dependency).
-- **Horizon 4 - Nền tảng Doanh nghiệp (SaaS Platform):** Xây dựng Web Dashboard quản trị tập trung với cơ chế Cloud Sync thời gian thực (LWW), hỗ trợ cộng tác nhóm (Team Collaboration) và cung cấp Managed Cloud Runners.
-
----
-
-## 📚 Hệ Thống Trí Thức (Knowledge Base)
-
 Tất cả tài liệu kiến trúc chuyên sâu, quy tắc (Guidelines) và giải phẫu tính năng được lưu trữ dưới dạng **Obsidian Vault** tại thư mục `documents/`. Hãy xem tệp `documents/Home.md` để bắt đầu nghiên cứu cấu trúc thiết kế của hệ sinh thái.
+
+### 5. API Documentation (`automa-bruno`)
+Bộ tài liệu (collection) API nội bộ của hệ thống (REST/SSE) tương tác với Rust Core Daemon, sử dụng **Bruno** để lưu trữ và quản lý, được tích hợp qua Git Submodule tại thư mục `automa-bruno`.
