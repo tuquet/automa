@@ -10,6 +10,8 @@
     "dev:cli": "turbo run dev --filter=@tuquet/automa-cli",
     "dev:vscode": "turbo run dev --filter=vscode-automa",
     "dev:source:runner": "turbo run dev:runner --filter=automa",
+    "dev:core": "cd automa-core && cargo watch -x run",
+    "export:api-spec": "curl -s http://127.0.0.1:8765/api-docs/openapi.json -o automa-core/open-api.json",
     "test": "vitest run",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage"

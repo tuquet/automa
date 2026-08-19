@@ -77,7 +77,7 @@
     {
       "label": "Watch: Rust",
       "type": "shell",
-      "command": "cargo run --bin automa-core serve",
+      "command": "cargo watch -x run",
       "options": {
         "cwd": "${workspaceFolder}/automa-core"
       },
@@ -150,6 +150,19 @@
       },
       "isBackground": true,
       "problemMatcher": []
+    },
+    {
+      "label": "Export API Spec",
+      "type": "shell",
+      "command": "pnpm run export:api-spec",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
     },
     {
       "label": "Test: CLI",
