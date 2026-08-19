@@ -2,6 +2,11 @@
   <img src="automa-vscode/assets/logo.png" width="128" height="128" alt="Automa Ecosystem Logo" />
   <h1>Automa Ecosystem</h1>
   <p><strong>Nền tảng Orchestration Đa Trình Duyệt Chuẩn Doanh Nghiệp (Enterprise-Grade)</strong></p>
+  
+  [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18.x-brightgreen.svg)](https://nodejs.org/)
+  [![Rust](https://img.shields.io/badge/Rust-Cargo-orange.svg)](https://www.rust-lang.org/)
+  [![VS Code](https://img.shields.io/badge/VS%20Code-%3E%3D1.85.0-blue.svg)](https://code.visualstudio.com/)
+  [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 </div>
 
 <br/>
@@ -45,45 +50,53 @@ Hệ thống loại bỏ hoàn toàn các luồng xử lý phân mảnh bằng N
 │  [ Chromium / Chrome ]  ──(Loads)──> [ Automa MV3 ]    │
 │  (Trình duyệt thực thi)              (Extension Gốc)   │
 └────────────────────────────────────────────────────────┘
-
-==========================================================
-                 LOCAL VAULT & STORAGE
-==========================================================
-  (Mặc định) ──> 📁 ~/.automa-cli/      (Production)
-  (Khi Dev)  ──> 📁 ~/.automa-cli-dev/  (Dev Sandbox)
 ```
 
-### 1. Rust Core Engine (`automa-core`)
+## 📦 Các Thành Phần Cốt Lõi (Submodules)
+
+Kiến trúc dự án được thiết kế theo dạng **Monorepo** với hệ thống Submodules độc lập:
+
+### 1. `automa-core` (Rust Core Engine)
 Trái tim điều phối của toàn bộ hệ sinh thái. Hoạt động như một Native Daemon (viết bằng Rust Axum/Tokio).
 - **Tốc độ & An toàn:** Xử lý đa luồng (high-concurrency), giải quyết triệt để rò rỉ bộ nhớ (Memory Leak), tốc độ mã hóa AES siêu tốc, và tương tác SQLite không giật lag.
 - **Anti-Detection:** Quản lý khởi chạy trình duyệt thông qua cơ chế tàng hình cấp thấp và giao thức CDP.
 
-### 2. Automa CLI Wrapper (`automa-cli`)
-Công cụ giao diện dòng lệnh (Command-line Interface) gọn nhẹ.
-- **Cầu nối giao tiếp:** Dùng để gọi các API nội bộ, kích hoạt Server ngầm, nạp Chromium, và đóng vai trò cầu nối cho người dùng Terminal tương tác với `automa-core`.
+### 2. `automa-vscode` (Giao Diện IDE Trung Tâm)
+Hoạt động dưới dạng **Thin Client**, giao tiếp trực tiếp với `automa-core` qua HTTP REST/SSE.
+- Cung cấp các Tree Views chuyên dụng để quản lý Vault, Workflows, Campaigns và Profiles.
+- Nhúng các Custom Webviews để mang trải nghiệm Visual Editor (Kéo/Thả Vue Flow) vào ngay trong VS Code, nhưng tuyệt đối ủy quyền mọi tác vụ thực thi nặng cho Rust Daemon.
 
-### 3. Automa VS Code Extension (`automa-vscode`)
-Giao diện điều khiển trung tâm (GUI). Hoạt động hoàn toàn dưới dạng **Thin Client**, không nhúng các ứng dụng Webview (Vue) nặng nề. 
-- Giao tiếp với Daemon qua HTTP REST/SSE để thao tác Workspace, xem log thời gian thực, và điều phối các chiến dịch tự động hóa (Campaigns) ngầm một cách mượt mà.
+### 3. `automa-cli` (Wrapper Giao Diện Dòng Lệnh)
+Công cụ CLI (Command-line Interface) gọn nhẹ cho tự động hóa CI/CD.
+- Dùng để gọi các API nội bộ, kích hoạt Server ngầm, nạp Chromium, và đóng vai trò cầu nối cho người dùng Terminal tương tác với `automa-core`.
 
-### 4. Động Cơ Thực Thi Gốc (`automa-ext`)
+### 4. `automa-ext` (Động Cơ Thực Thi Trình Duyệt)
 Phân nhánh (fork) độc lập chuyên sâu, đóng vai trò chạy mã lệnh trực tiếp bên trong trình duyệt mục tiêu. Đã gỡ bỏ cấu trúc polyfill rườm rà, áp dụng Webpack Override để tạo ra một cấu trúc Extension MV3 hoàn toàn tương thích với cơ chế Silent Runner.
+
+### 5. `automa-vault` (Bảo Mật & Lưu Trữ)
+Quản lý cấu trúc thư mục, tệp cấu hình Campaigns và đối chiếu Workflow & Browser Profile.
+- Cấu trúc mặc định:
+  - `~/.automa-cli/` (Production)
+  - `~/.automa-cli-dev/` (Dev Sandbox)
+
+### 6. Thư mục `packages/` (Shared Packages)
+Chứa các package dùng chung toàn hệ thống như `core`, `automa-sdk`, `automa-hub`, `workflow-runner`, được quản lý bởi Turborepo/pnpm workspaces.
 
 ---
 
 ## 🚀 Hướng Dẫn Khởi Tạo (Getting Started)
 
-Dự án được quản lý dưới dạng **pnpm workspaces** kết hợp với hệ sinh thái Rust Cargo (Monorepo).
+Dự án sử dụng **pnpm workspaces**, **Turborepo** và **Cargo** cho quy trình Build.
 
-### Yêu Cầu
+### Yêu Cầu Hệ Thống
 - Node.js >= 18.x & pnpm >= 8.x
 - Rust toolchain (cargo)
-- VS Code >= 1.80.0
+- VS Code >= 1.85.0
 
 ### Biên Dịch & Chạy
 ```bash
-# 1. Tải mã nguồn
-git clone https://github.com/tuquet/automa-ecosystem.git
+# 1. Tải mã nguồn cùng toàn bộ submodules
+git clone --recursive https://github.com/tuquet/automa-ecosystem.git
 cd automa-ecosystem
 
 # 2. Cài đặt toàn bộ Node module & Rust dependencies
@@ -94,6 +107,13 @@ pnpm run build
 
 # 4. Khởi chạy môi trường phát triển (Dev Mode)
 pnpm run dev
+```
+
+### Chạy Unit Test Toàn Cục
+Dự án đã được thiết lập `vitest.workspace.ts` để bao phủ toàn bộ workspace.
+```bash
+pnpm run test
+pnpm run test:coverage
 ```
 
 ---
@@ -107,11 +127,20 @@ Chiến lược phát triển dài hạn của Automa Ecosystem được chia l�
 - **✅ Horizon 3 - Chuyển dịch lõi (Rust Core) [HOÀN THÀNH]:** Thay thế Node.js runtime bằng Native Rust Binary (`automa-core`), đạt được tốc độ xử lý siêu việt, tối ưu bộ nhớ triệt để và kiến trúc Thin Client.
 - **Horizon 4 - Nền tảng Doanh nghiệp (SaaS Platform):** Xây dựng Web Dashboard quản trị tập trung với cơ chế Cloud Sync thời gian thực (LWW), hỗ trợ cộng tác nhóm (Team Collaboration) và cung cấp Managed Cloud Runners.
 
+👉 **Xem chi tiết Lộ Trình Giao Diện (Frontend UI Roadmap) tại:** [ROADMAP.md](./ROADMAP.md)
+
 ---
 
 ## 📚 Hệ Thống Trí Thức (Knowledge Base)
 
-Tất cả tài liệu kiến trúc chuyên sâu, quy tắc (Guidelines) và giải phẫu tính năng được lưu trữ dưới dạng **Obsidian Vault** tại thư mục `documents/`. Hãy xem tệp `documents/Home.md` để bắt đầu nghiên cứu cấu trúc thiết kế của hệ sinh thái.
+Kiến trúc tài liệu được thiết kế theo dạng **Phân tán (Decentralized Docs)** nhằm tránh tình trạng tài liệu lỗi thời. Mỗi thành phần (microservice/submodule) tự bảo trì tài liệu kỹ thuật và kiến trúc chuyên sâu ngay trong file `README.md` gốc của mình.
 
-### 5. API Documentation (`automa-bruno`)
-Bộ tài liệu (collection) API nội bộ của hệ thống (REST/SSE) tương tác với Rust Core Daemon, sử dụng **Bruno** để lưu trữ và quản lý, được tích hợp qua Git Submodule tại thư mục `automa-bruno`.
+👉 **Hãy xem tệp [documents/Home.md](./documents/Home.md) để lấy danh sách liên kết điều hướng đến tài liệu của từng submodule.**
+
+### Giao Tiếp API (Automa Bruno)
+Bộ tài liệu đặc tả OpenAPI 3.1.0 và REST/SSE Client (`automa-core-api.json`) tương tác với Rust Core Daemon được sử dụng thông qua phần mềm **Bruno**. Tích hợp qua Git Submodule tại thư mục `automa-bruno` và `bruno/`.
+
+---
+
+## 🤝 Đóng Góp Phát Triển (Contributing)
+Mọi chỉnh sửa kiến trúc, quy tắc Code Audit (SOLID, SoC, KISS) đều phải tuân theo hướng dẫn quy chuẩn BẮT BUỘC. Hãy đọc kỹ tệp [AGENTS.md](./.agents/AGENTS.md) trước khi thực hiện quy trình Review Code hay Quality Control (QC).
