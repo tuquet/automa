@@ -14,12 +14,6 @@
     },
     {
       "path": "automa-ext"
-    },
-    {
-      "path": "automa-core"
-    },
-    {
-      "path": "automa-bruno"
     }
   ]
 }
