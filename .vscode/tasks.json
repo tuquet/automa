@@ -102,7 +102,9 @@
       "label": "Run: Rust EXE",
       "type": "process",
       "command": "${workspaceFolder}/automa-core/target/release/automa-core.exe",
-      "args": ["serve"],
+      "args": [
+        "serve"
+      ],
       "options": {
         "cwd": "${workspaceFolder}/automa-core/target/release"
       },
@@ -179,6 +181,19 @@
       "presentation": {
         "reveal": "always",
         "panel": "new"
+      }
+    },
+    {
+      "label": "Sync All APIs (Docs & Bruno)",
+      "type": "shell",
+      "command": "pnpm run sync:api",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
       }
     }
   ]
