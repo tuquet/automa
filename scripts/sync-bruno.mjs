@@ -2,7 +2,7 @@ import { execSync } from 'child_process';
 import { rmSync, writeFileSync, existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
-const API_JSON_PATH = 'bruno/specs/automa-core-api.json';
+const API_JSON_PATH = 'automa-bruno/specs/automa-core-api.json';
 const OUTPUT_DIR = 'automa-bruno/automa-core-api';
 
 console.log('Fetching OpenAPI spec from Rust Backend...');
