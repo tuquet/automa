@@ -76,8 +76,8 @@ Phân nhánh (fork) độc lập chuyên sâu, đóng vai trò chạy mã lệnh
 ### 5. `automa-vault` (Bảo Mật & Lưu Trữ)
 Quản lý cấu trúc thư mục, tệp cấu hình Campaigns và đối chiếu Workflow & Browser Browser.
 - Cấu trúc mặc định:
-  - `~/.automa-cli/` (Production)
-  - `~/.automa-cli-dev/` (Dev Sandbox)
+  - `~/.automa/core/` (Production)
+  - `~/.automa/core-dev/` (Dev Sandbox)
 
 ### 6. Thư mục `packages/` (Shared Packages)
 Chứa các package dùng chung toàn hệ thống như `core`, `automa-sdk`, `automa-hub`, `workflow-runner`, được quản lý bởi Turborepo/pnpm workspaces.

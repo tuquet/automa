@@ -11,7 +11,7 @@ scratch/
 packages/automa-hub/dist/
 coverage/
 *.sqlite
-.automa-cli-dev/
+.automa/
 
 automa-bruno/
 automa-obsidian/
