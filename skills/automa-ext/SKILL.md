@@ -31,7 +31,7 @@ description: Kiến trúc và các tính năng đã hoàn thiện của Automa E
 - **Cơ chế:** Vue Pinia Stores & Reactive UI
 - **File xử lý cốt lõi:** `src/newtab/App.vue`, `src/components/newtab/app/AppSidebar.vue`, `src/stores/user.js`, `src/stores/teamWorkflow.js`
 - **Luồng hoạt động:**
-  - `userStore` **BẮT BUỘC** tải User Profile và hiển thị Avatar trên AppSidebar nếu Auth Session tồn tại.
+  - `userStore` **BẮT BUỘC** tải User Browser và hiển thị Avatar trên AppSidebar nếu Auth Session tồn tại.
   - Dashboard UI (`newtab`) **BẮT BUỘC** phân loại, lọc và render workflows theo `teamId` thông qua `teamWorkflowStore`.
 - **Tình trạng:** Hoàn thiện 100%. UI **BẮT BUỘC** duy trì tính tương thích hoàn toàn với luồng Teamwork.
 

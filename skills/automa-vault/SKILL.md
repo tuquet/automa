@@ -1,11 +1,11 @@
 ---
 name: automa-vault
-description: Hướng dẫn cấu trúc thư mục, file cấu hình Campaigns và đặc tả Workflow & Browser Profile Mapping cho automa-vault.
+description: Hướng dẫn cấu trúc thư mục, file cấu hình Campaigns và đặc tả Workflow & Browser Browser Mapping cho automa-vault.
 ---
 
-# Automa Vault Campaigns & Profile Mapping Convention
+# Automa Vault Campaigns & Browser Mapping Convention
 
-**BẮT BUỘC** tuân thủ quy định cấu trúc thư mục Campaigns và Workflow & Browser Profile Mapping.
+**BẮT BUỘC** tuân thủ quy định cấu trúc thư mục Campaigns và Workflow & Browser Browser Mapping.
 
 ---
 
@@ -30,32 +30,32 @@ description: Hướng dẫn cấu trúc thư mục, file cấu hình Campaigns v
 
 ---
 
-## 2. Campaign Workflow & Browser Profile Mapping Specification
+## 2. Campaign Workflow & Browser Browser Mapping Specification
 
-Campaign Visual Editor ánh xạ Workflow local và Browser Profile cho Campaign Members và Tasks.
+Campaign Visual Editor ánh xạ Workflow local và Browser Browser cho Campaign Members và Tasks.
 
 ### 2.1 Backend (VS Code Extension Provider - `CampaignPreviewEditorProvider.ts`)
-* **BẮT BUỘC** tự động quét workspace tìm `**/*.profile.json` và `**/*.workflow.json`.
+* **BẮT BUỘC** tự động quét workspace tìm `**/*.browser.json` và `**/*.workflow.json`.
 * **BẮT BUỘC** trích xuất `id` và `name` độc bản.
-* **BẮT BUỘC** truyền dictionary vào Webview qua `postMessage({ type: 'update', text, workflows, profiles })`.
+* **BẮT BUỘC** truyền dictionary vào Webview qua `postMessage({ type: 'update', text, workflows, browsers })`.
 
 ### 2.2 Frontend (Webview UI - Thin Client)
 * **TUYỆT ĐỐI KHÔNG** sử dụng Vue/React hay Webpack cho Webview UI trong VS Code.
 * **BẮT BUỘC** dùng HTML/JS tĩnh thuần túy (Vanilla JS) để nhận dữ liệu từ Backend.
-* **BẮT BUỘC** hiển thị `<select>` dropdown chứa `profiles` tại Member header và tự động cập nhật `member.browser_id`.
+* **BẮT BUỘC** hiển thị `<select>` dropdown chứa `browsers` tại Member header và tự động cập nhật `member.browser_id`.
 * **BẮT BUỘC** hiển thị `<select>` dropdown chứa `workflows` tại Task card và cập nhật `task.workflow_id`.
 * **BẮT BUỘC** cảnh báo ID thiếu bằng tiền tố `[Missing]` hoặc `[Unknown]` trong dropdown.
 
-### 2.3 Demo Profile Targets (`automa-vault/profiles/`)
-Tệp profile mẫu được lưu trữ tại `automa-vault/profiles/`:
-- `marketing-profile-01.profile.json`
-- `accounting-profile-02.profile.json`
+### 2.3 Demo Browser Targets (`automa-vault/browsers/`)
+Tệp browser mẫu được lưu trữ tại `automa-vault/browsers/`:
+- `marketing-browser-01.browser.json`
+- `accounting-browser-02.browser.json`
 
-Format chuẩn của một `.profile.json`:
+Format chuẩn của một `.browser.json`:
 ```json
 {
-  "id": "accounting-profile-02",
-  "name": "Accounting Profile",
+  "id": "accounting-browser-02",
+  "name": "Accounting Browser",
   "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)...",
   "timezone": "Asia/Ho_Chi_Minh"
 }

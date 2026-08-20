@@ -115,7 +115,7 @@ class User {
   middleName?: string;
   secondaryEmail?: string;
   faxNumber?: string;
-  linkedinProfile?: string;
+  linkedinBrowser?: string;
   twitterHandle?: string;
 }
 

@@ -74,7 +74,7 @@ AI **BẮT BUỘC SINH CODE** dạng: `const mail = automaRefData('variables', '
 
 **Đáp án 40 (Modularization):** Để vượt rào Token Limit, AI **PHẢI THIẾT KẾ** kiến trúc Micro-Workflows: **BẮT BUỘC SINH RA** nhiều file `.workflow.json` nhỏ, mỗi file có ID Nanoid. SAU ĐÓ **PHẢI SINH** một file Main Workflow chỉ chứa các block `execute-workflow` (chỉ định `executeId` bằng ID các file con). `WorkflowLinter` **SẼ TỰ ĐỘNG** quét đệ quy Vault để Cross-Reference nối chúng lại.
 
-**Đáp án 41 (Auth/Cookies Bypass):** THAY VÌ viết chuỗi block vượt Captcha dễ sập, **BẮT BUỘC ƯU TIÊN SỬ DỤNG** `Browser Profiles`. **PHẢI LOGIN** tay 1 lần, **BẮT BUỘC LƯU** profile. KHI GỌI qua CLI, **PHẢI DÙNG** `--profile <ID>`. Trình duyệt **CHẮC CHẮN SẼ NẠP** thư mục `User Data Dir` chứa Cookies cũ, **BẮT BUỘC BYPASS** hoàn toàn màn hình Login.
+**Đáp án 41 (Auth/Cookies Bypass):** THAY VÌ viết chuỗi block vượt Captcha dễ sập, **BẮT BUỘC ƯU TIÊN SỬ DỤNG** `Browser Browsers`. **PHẢI LOGIN** tay 1 lần, **BẮT BUỘC LƯU** browser. KHI GỌI qua CLI, **PHẢI DÙNG** `--browser <ID>`. Trình duyệt **CHẮC CHẮN SẼ NẠP** thư mục `User Data Dir` chứa Cookies cũ, **BẮT BUỘC BYPASS** hoàn toàn màn hình Login.
 
 **Đáp án 42 (Headless Detection):** THEO `BrowserLauncher.ts`, Automa **BẮT BUỘC SỬ DỤNG** cờ `--headless=new` (thay vì `--headless` cũ) truyền vào hàm `execFile`. Phiên bản Headless mới này **BẮT BUỘC GIẢ LẬP** đầy đủ pipeline render đồ họa, **ĐẢM BẢO GIÚP** fingerprint giống hệt trình duyệt thật, **BẮT BUỘC VƯỢT QUA** phần lớn rào cản Cloudflare chống bot.
 

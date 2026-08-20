@@ -500,5 +500,5 @@ This helps recognize patterns even in unfamiliar code.
 | **God Object** | Class does everything | Split by responsibility |
 | **Spaghetti Code** | Tangled, no structure | Refactor to layers |
 | **Golden Hammer** | Using one pattern for everything | Match pattern to problem |
-| **Premature Optimization** | Optimizing before needed | YAGNI, profile first |
+| **Premature Optimization** | Optimizing before needed | YAGNI, browser first |
 | **Copy-Paste Programming** | Duplication | Extract, Rule of Three |

@@ -13,7 +13,7 @@ Vui lòng truy cập các liên kết dưới đây để đọc tài liệu:
 3. [Automa Chrome Extension](../automa-ext/README.md)
    - Extension UI (Studio) và Background MV3 Native Engine, đã gỡ bỏ hoàn toàn polyfill.
 4. [Automa Vault](../automa-vault/README.md)
-   - Cấu trúc lưu trữ Local Vault, Campaigns, và Browser Profiles.
+   - Cấu trúc lưu trữ Local Vault, Campaigns, và Browser Browsers.
 
 ---
 *Ghi chú: Thư mục `documents/` chỉ còn đóng vai trò là một Hub điều hướng. Vui lòng cập nhật tài liệu trực tiếp vào `README.md` của các submodule.*

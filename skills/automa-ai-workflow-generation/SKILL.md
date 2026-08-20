@@ -41,5 +41,5 @@ description: Quy tắc bắt buộc cho AI khi sinh mã (generate) JSON workflow
 - Main Workflow **CHỈ ĐƯỢC PHÉP CHỨA** các block `execute-workflow` (chỉ định `executeId` bằng ID các file con). `WorkflowLinter` **BẮT BUỘC SẼ** tự động quét đệ quy Vault để Cross-Reference nối chúng lại.
 
 ## 9. Auth/Cookies Bypass & Anti-Detection
-- **Browser Profiles**: **BẮT BUỘC ƯU TIÊN SỬ DỤNG** `--profile <ID>` khi chạy CLI thay vì block giải captcha. Trình duyệt **CHẮC CHẮN SẼ** nạp thư mục `User Data Dir` chứa Cookies cũ, bypass Login.
+- **Browser Browsers**: **BẮT BUỘC ƯU TIÊN SỬ DỤNG** `--browser <ID>` khi chạy CLI thay vì block giải captcha. Trình duyệt **CHẮC CHẮN SẼ** nạp thư mục `User Data Dir` chứa Cookies cũ, bypass Login.
 - **Headless Detection**: **BẮT BUỘC ĐẢM BẢO SỬ DỤNG** cờ `--headless=new` (không phải `--headless`) để giả lập đầy đủ pipeline render đồ họa, giúp fingerprint qua mặt Cloudflare.

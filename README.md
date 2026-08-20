@@ -63,7 +63,7 @@ Trái tim điều phối của toàn bộ hệ sinh thái. Hoạt động như m
 
 ### 2. `automa-vscode` (Giao Diện IDE Trung Tâm)
 Hoạt động dưới dạng **Thin Client**, giao tiếp trực tiếp với `automa-core` qua HTTP REST/SSE.
-- Cung cấp các Tree Views chuyên dụng để quản lý Vault, Workflows, Campaigns và Profiles.
+- Cung cấp các Tree Views chuyên dụng để quản lý Vault, Workflows, Campaigns và Browsers.
 - Nhúng các Custom Webviews để mang trải nghiệm Visual Editor (Kéo/Thả Vue Flow) vào ngay trong VS Code, nhưng tuyệt đối ủy quyền mọi tác vụ thực thi nặng cho Rust Daemon.
 
 ### 3. `automa-cli` (Wrapper Giao Diện Dòng Lệnh)
@@ -74,7 +74,7 @@ Công cụ CLI (Command-line Interface) gọn nhẹ cho tự động hóa CI/CD.
 Phân nhánh (fork) độc lập chuyên sâu, đóng vai trò chạy mã lệnh trực tiếp bên trong trình duyệt mục tiêu. Đã gỡ bỏ cấu trúc polyfill rườm rà, áp dụng Webpack Override để tạo ra một cấu trúc Extension MV3 hoàn toàn tương thích với cơ chế Silent Runner.
 
 ### 5. `automa-vault` (Bảo Mật & Lưu Trữ)
-Quản lý cấu trúc thư mục, tệp cấu hình Campaigns và đối chiếu Workflow & Browser Profile.
+Quản lý cấu trúc thư mục, tệp cấu hình Campaigns và đối chiếu Workflow & Browser Browser.
 - Cấu trúc mặc định:
   - `~/.automa-cli/` (Production)
   - `~/.automa-cli-dev/` (Dev Sandbox)

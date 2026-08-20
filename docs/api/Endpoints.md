@@ -5,6 +5,8 @@
 - [[[GET] _api_browsers_id]]
 - [[[PUT] _api_browsers_id]]
 - [[[DELETE] _api_browsers_id]]
+- [[[POST] _api_browsers_id_start]]
+- [[[POST] _api_browsers_id_stop]]
 - [[[GET] _api_events]]
 - [[[GET] _api_health]]
 - [[[GET] _api_history]]

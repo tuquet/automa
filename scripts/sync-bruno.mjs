@@ -3,7 +3,7 @@ import { rmSync, writeFileSync, existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
 const API_JSON_PATH = 'automa-bruno.tmp.json';
-const OUTPUT_DIR = 'automa-bruno/automa-core-api';
+const OUTPUT_DIR = 'automa-bruno';
 
 console.log('Fetching OpenAPI spec from Rust Backend...');
 try {
@@ -21,7 +21,7 @@ if (existsSync(OUTPUT_DIR)) {
 console.log('Importing OpenAPI spec to Bruno...');
 try {
   execSync(
-    `pnpm exec bru import openapi -s ${API_JSON_PATH} -o ./automa-bruno -n "automa-core-api" --collection-format bru -g path`,
+    `pnpm exec bru import openapi -s ${API_JSON_PATH} -o . -n "automa-bruno" --collection-format bru -g path`,
     { stdio: 'inherit' }
   );
 } catch (e) {
@@ -33,11 +33,11 @@ console.log('Injecting baseUrl into collection.bru...');
 const collectionPath = join(OUTPUT_DIR, 'collection.bru');
 if (existsSync(collectionPath)) {
   const fileContent = readFileSync(collectionPath, 'utf-8');
-  if (!fileContent.includes('vars:pre-request')) {
-    const appendContent = `\nvars:pre-request {\n  baseUrl: http://127.0.0.1:8765\n}\n`;
+  if (!fileContent.includes('script:pre-request')) {
+    const appendContent = `\nscript:pre-request {\n  bru.setVar("baseUrl", "http://127.0.0.1:8765");\n}\n`;
     writeFileSync(collectionPath, appendContent, { flag: 'a' });
   } else {
-    console.log('vars:pre-request already exists in collection.bru. Skipping injection.');
+    console.log('script:pre-request already exists in collection.bru. Skipping injection.');
   }
 }
 
