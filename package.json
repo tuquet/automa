@@ -11,7 +11,7 @@
     "dev:vscode": "turbo run dev --filter=vscode-automa",
     "dev:source:runner": "turbo run dev:runner --filter=automa",
     "dev:core": "cd automa-core && cargo watch -x run",
-    "sync-bruno": "curl -s http://127.0.0.1:8765/api-docs/openapi.json -o bruno/specs/automa-core-api.json && pnpm exec bru import openapi -s bruno/specs/automa-core-api.json -o ./automa-bruno -n \"automa-core-api\" --collection-format bru -g path",
+    "sync-bruno": "node scripts/sync-bruno.mjs",
     "test": "vitest run",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage"
