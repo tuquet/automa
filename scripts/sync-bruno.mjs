@@ -1,5 +1,5 @@
 import { execSync } from 'child_process';
-import { rmSync, mkdirSync, writeFileSync, existsSync } from 'fs';
+import { rmSync, writeFileSync, existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
 const API_JSON_PATH = 'bruno/specs/automa-core-api.json';
@@ -29,14 +29,16 @@ try {
   process.exit(1);
 }
 
-console.log('Restoring Local Environment variables...');
-const envDir = join(OUTPUT_DIR, 'environments');
-mkdirSync(envDir, { recursive: true });
-
-const localEnvContent = `vars {
-  baseUrl: http://127.0.0.1:8765
+console.log('Injecting baseUrl into collection.bru...');
+const collectionPath = join(OUTPUT_DIR, 'collection.bru');
+if (existsSync(collectionPath)) {
+  const fileContent = readFileSync(collectionPath, 'utf-8');
+  if (!fileContent.includes('vars:pre-request')) {
+    const appendContent = `\nvars:pre-request {\n  baseUrl: http://127.0.0.1:8765\n}\n`;
+    writeFileSync(collectionPath, appendContent, { flag: 'a' });
+  } else {
+    console.log('vars:pre-request already exists in collection.bru. Skipping injection.');
+  }
 }
-`;
-writeFileSync(join(envDir, 'Local.bru'), localEnvContent, 'utf-8');
 
 console.log('✅ Bruno collection synchronized successfully!');
