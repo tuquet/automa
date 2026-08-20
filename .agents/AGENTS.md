@@ -38,8 +38,8 @@
 
 # Knowledge Base & Documentation
 
-- **Decentralized Docs (Microservices)**: Tài liệu dự án được phân tán về thư mục của từng microservice/submodule nhằm đảm bảo tính cập nhật (ví dụ: `automa-vscode/README.md`, `automa-core/README.md`). Thư mục `documents/` ở gốc chỉ đóng vai trò là một Hub chứa menu điều hướng phẳng.
-- **Agent Initialization**: Khi được giao nhiệm vụ tìm hiểu kiến trúc hệ sinh thái, tính năng, hoặc các lệnh CLI/VSCode, **BẮT BUỘC** đọc `documents/Home.md` để lấy đường dẫn tới các file `README.md` của các submodule tương ứng.
+- **Decentralized Docs (Microservices)**: Tài liệu dự án được phân tán về thư mục của từng microservice/submodule nhằm đảm bảo tính cập nhật (ví dụ: `automa-vscode/README.md`, `automa-core/README.md`). Thư mục `docs/` ở gốc chỉ đóng vai trò là một Hub chứa menu điều hướng phẳng.
+- **Agent Initialization**: Khi được giao nhiệm vụ tìm hiểu kiến trúc hệ sinh thái, tính năng, hoặc các lệnh CLI/VSCode, **BẮT BUỘC** đọc `docs/Home.md` để lấy đường dẫn tới các file `README.md` của các submodule tương ứng.
 - **Documentation Updates**: Bất cứ khi nào triển khai một tính năng lớn hoặc thay đổi kiến trúc, **BẮT BUỘC** cập nhật vào tệp `README.md` của submodule tương ứng (hoặc tạo thư mục `docs/` bên trong submodule nếu tài liệu quá dài).
 
 # Monorepo Architecture & Reusability Rules
