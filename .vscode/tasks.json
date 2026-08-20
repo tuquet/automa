@@ -152,9 +152,9 @@
       "problemMatcher": []
     },
     {
-      "label": "Export API Spec",
+      "label": "Sync Bruno Collection",
       "type": "shell",
-      "command": "pnpm run export:api-spec",
+      "command": "pnpm run sync-bruno",
       "options": {
         "cwd": "${workspaceFolder}"
       },
