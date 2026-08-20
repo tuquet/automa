@@ -2,7 +2,7 @@ import { execSync } from 'child_process';
 import { rmSync, writeFileSync, existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
-const API_JSON_PATH = 'automa-bruno/specs/automa-core-api.json';
+const API_JSON_PATH = 'automa-bruno.tmp.json';
 const OUTPUT_DIR = 'automa-bruno/automa-core-api';
 
 console.log('Fetching OpenAPI spec from Rust Backend...');
@@ -39,6 +39,11 @@ if (existsSync(collectionPath)) {
   } else {
     console.log('vars:pre-request already exists in collection.bru. Skipping injection.');
   }
+}
+
+console.log('Cleaning up temporary spec file...');
+if (existsSync(API_JSON_PATH)) {
+  rmSync(API_JSON_PATH);
 }
 
 console.log('✅ Bruno collection synchronized successfully!');
