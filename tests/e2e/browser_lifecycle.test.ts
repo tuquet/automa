@@ -7,10 +7,10 @@ const API_BASE = 'http://127.0.0.1:8765/api';
 
 // Resolve the AppData path similar to Rust's dirs crate
 const getAppDataPath = () => {
-    if (process.platform === 'win32') {
-        return path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), 'AppData', 'Local'), '.automa');
-    }
-    return path.join(os.homedir(), '.automa');
+    // Determine if we are in dev mode (e.g. tests usually run against dev daemon)
+    const isDev = process.env.AUTOMA_ENV === 'development' || !process.env.AUTOMA_ENV;
+    const coreDir = isDev ? 'core-dev' : 'core';
+    return path.join(os.homedir(), '.automa', coreDir);
 };
 
 describe('Browser Lifecycle E2E', () => {

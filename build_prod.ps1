@@ -64,8 +64,8 @@ try {
 }
 
 # 5. Phân phối file tới Môi trường Dev (Vault Sandbox)
-Write-Host "`n[5/5] Deploying artifacts to Dev Sandbox (~/.automa\\core-dev/bin)..." -ForegroundColor Yellow
-$DEV_BIN = "$env:USERPROFILE\.automa/core-dev\bin"
+Write-Host "`n[5/5] Deploying artifacts to Dev Sandbox (~/.automa/core-dev/bin)..." -ForegroundColor Yellow
+$DEV_BIN = "$env:USERPROFILE\.automa\core-dev\bin"
 if (!(Test-Path $DEV_BIN)) { New-Item -ItemType Directory -Path $DEV_BIN | Out-Null }
 
 try {
