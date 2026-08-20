@@ -113,3 +113,14 @@
 - **Robust Error Handling**: **TUYỆT ĐỐI KHÔNG** dùng `.unwrap()` hay `.expect()` trong code production để tránh crash daemon. **PHẢI DÙNG** thư viện `thiserror` để định nghĩa các kiểu lỗi (Error Types) cấp độ Domain và xử lý chúng gọn gàng bằng toán tử `?`.
 - **State Management & Locks**: Khi lưu trữ State dùng chung (Shared State) trong Axum, **BẮT BUỘC** phải chia sẻ thông qua `Arc<T>`. Đối với dữ liệu cần thay đổi, **PHẢI DÙNG** `tokio::sync::RwLock` hoặc `tokio::sync::Mutex` (không dùng bản std::sync) để tránh lỗi Deadlocks trong môi trường bất đồng bộ.
 - **Pre-Reporting Validation**: Bất cứ khi nào Agent thực hiện chỉnh sửa mã nguồn bên trong `automa-core`, **BẮT BUỘC** phải chạy lệnh `cargo check` (hoặc đảm bảo `cargo watch` không báo lỗi) và xác nhận không có lỗi Borrow Checker hay Compile Errors trước khi báo cáo kết quả hoàn thành cho USER.
+
+
+# API Sync & Docs Generation Rule
+
+- **Trigger**: Bất cứ khi nào người dùng yêu cầu "sync api", "update bruno", "generate docs", hoặc đồng bộ tài liệu OpenAPI.
+- **Behavior**: 
+  1. **Pre-flight Check**: AI Agent **BẮT BUỘC** phải kiểm tra xem Rust Daemon (`automa-core`) có đang chạy ở cổng `8765` hay không (ví dụ: dùng lệnh `curl http://127.0.0.1:8765/api/health` hoặc kiểm tra process).
+  2. **Daemon Wakeup**: Nếu Daemon chưa chạy, Agent **BẮT BUỘC** phải báo cho người dùng hoặc tự động khởi động nó ở chế độ background (sử dụng `cargo run --bin automa-core -- serve` tại thư mục `automa-core` và chờ vài giây).
+  3. **Execution**: Sau khi chắc chắn Daemon đã sống, Agent **BẮT BUỘC** chuyển hướng ra thư mục gốc (root monorepo) và thực thi lệnh duy nhất: `pnpm run sync:api`. Lệnh này sẽ tự động lo liệu cả hai việc: import vào Bruno collection và sinh Markdown cho Obsidian.
+  4. **Strict Schema Reminder**: Nếu người dùng nhờ viết thêm API, Agent **TUYỆT ĐỐI KHÔNG** được dùng `serde_json::Value` trực tiếp (mà không có `#[schema(value_type = ...)]`) để tránh làm vỡ linter khắt khe của hệ thống.
+

@@ -1,6 +1,3 @@
-[submodule "automa-cli"]
-	path = automa-cli
-	url = https://github.com/tuquet/automa-cli.git
 [submodule "automa-vault"]
 	path = automa-vault
 	url = https://github.com/tuquet/automa-vault.git
