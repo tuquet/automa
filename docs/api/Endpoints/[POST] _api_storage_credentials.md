@@ -1,20 +1,20 @@
 ---
 tags:
   - api/endpoint
-  - api/Vault
-path: "/api/vault/credentials"
+  - api/Storage
+path: "/api/storage/credentials"
 method: "POST"
 ---
-# POST /api/vault/credentials
+# POST /api/storage/credentials
 
 > [!info] 
 > **Method**: `POST`
-> **Path**: `/api/vault/credentials`
+> **Path**: `/api/storage/credentials`
 
 ## Request Body
 
 - **Content-Type**: `application/json`
-- **Schema**: [[VaultCredential]]
+- **Schema**: [[StorageCredential]]
 
 ## Responses
 
@@ -22,5 +22,5 @@ method: "POST"
 Add credential
 
 - **Content-Type**: `application/json`
-- **Schema**: [[VaultCredential]]
+- **Schema**: [[StorageCredential]]
 

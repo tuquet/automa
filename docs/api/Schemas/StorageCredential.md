@@ -1,7 +1,7 @@
 ---
 tags: [api/schema]
 ---
-# VaultTable
+# StorageCredential
 
 **Type**: `object`
 
@@ -9,10 +9,7 @@ tags: [api/schema]
 
 | Name | Type | Description |
 |---|---|---|
-| `columns` | any |  |
-| `columnsIndex` | any |  |
-| `createdAt` | integer,null |  |
 | `id` | string,null |  |
-| `items` | any |  |
-| `modifiedAt` | integer,null |  |
+| `key` | string,null |  |
 | `name` | string,null |  |
+| `value` *(req)* | string |  |

@@ -1,7 +1,7 @@
 ---
 tags: [api/schema]
 ---
-# VaultCredential
+# StorageVariable
 
 **Type**: `object`
 
@@ -12,4 +12,4 @@ tags: [api/schema]
 | `id` | string,null |  |
 | `key` | string,null |  |
 | `name` | string,null |  |
-| `value` *(req)* | string |  |
+| `value` *(req)* | any |  |

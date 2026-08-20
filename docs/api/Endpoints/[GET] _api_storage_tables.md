@@ -1,15 +1,15 @@
 ---
 tags:
   - api/endpoint
-  - api/Vault
-path: "/api/vault/tables"
+  - api/Storage
+path: "/api/storage/tables"
 method: "GET"
 ---
-# GET /api/vault/tables
+# GET /api/storage/tables
 
 > [!info] 
 > **Method**: `GET`
-> **Path**: `/api/vault/tables`
+> **Path**: `/api/storage/tables`
 
 ## Responses
 
@@ -17,5 +17,5 @@ method: "GET"
 List tables
 
 - **Content-Type**: `application/json`
-- **Schema**: Array<[[VaultTable]]>
+- **Schema**: Array<[[StorageTable]]>
 

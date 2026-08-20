@@ -1,20 +1,20 @@
 ---
 tags:
   - api/endpoint
-  - api/Vault
-path: "/api/vault/variables"
+  - api/Storage
+path: "/api/storage/variables"
 method: "POST"
 ---
-# POST /api/vault/variables
+# POST /api/storage/variables
 
 > [!info] 
 > **Method**: `POST`
-> **Path**: `/api/vault/variables`
+> **Path**: `/api/storage/variables`
 
 ## Request Body
 
 - **Content-Type**: `application/json`
-- **Schema**: [[VaultVariable]]
+- **Schema**: [[StorageVariable]]
 
 ## Responses
 
@@ -22,5 +22,5 @@ method: "POST"
 Add variable
 
 - **Content-Type**: `application/json`
-- **Schema**: [[VaultVariable]]
+- **Schema**: [[StorageVariable]]
 

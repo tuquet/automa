@@ -1,20 +1,20 @@
 ---
 tags:
   - api/endpoint
-  - api/Vault
-path: "/api/vault/tables"
+  - api/Storage
+path: "/api/storage/tables"
 method: "POST"
 ---
-# POST /api/vault/tables
+# POST /api/storage/tables
 
 > [!info] 
 > **Method**: `POST`
-> **Path**: `/api/vault/tables`
+> **Path**: `/api/storage/tables`
 
 ## Request Body
 
 - **Content-Type**: `application/json`
-- **Schema**: [[VaultTable]]
+- **Schema**: [[StorageTable]]
 
 ## Responses
 
@@ -22,5 +22,5 @@ method: "POST"
 Add table
 
 - **Content-Type**: `application/json`
-- **Schema**: [[VaultTable]]
+- **Schema**: [[StorageTable]]
 

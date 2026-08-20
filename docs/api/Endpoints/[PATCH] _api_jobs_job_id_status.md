@@ -2,14 +2,14 @@
 tags:
   - api/endpoint
   - api/Jobs
-path: "/api/jobs/{job_id}/finish"
-method: "POST"
+path: "/api/jobs/{job_id}/status"
+method: "PATCH"
 ---
-# POST /api/jobs/{job_id}/finish
+# PATCH /api/jobs/{job_id}/status
 
 > [!info] 
-> **Method**: `POST`
-> **Path**: `/api/jobs/{job_id}/finish`
+> **Method**: `PATCH`
+> **Path**: `/api/jobs/{job_id}/status`
 
 ## Parameters
 

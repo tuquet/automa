@@ -1,15 +1,15 @@
 ---
 tags:
   - api/endpoint
-  - api/Vault
-path: "/api/vault/credentials/{id}"
+  - api/Storage
+path: "/api/storage/credentials/{id}"
 method: "DELETE"
 ---
-# DELETE /api/vault/credentials/{id}
+# DELETE /api/storage/credentials/{id}
 
 > [!info] 
 > **Method**: `DELETE`
-> **Path**: `/api/vault/credentials/{id}`
+> **Path**: `/api/storage/credentials/{id}`
 
 ## Parameters
 

@@ -1,15 +1,15 @@
 ---
 tags:
   - api/endpoint
-  - api/Vault
-path: "/api/vault/tables/{id}"
+  - api/Storage
+path: "/api/storage/tables/{id}"
 method: "DELETE"
 ---
-# DELETE /api/vault/tables/{id}
+# DELETE /api/storage/tables/{id}
 
 > [!info] 
 > **Method**: `DELETE`
-> **Path**: `/api/vault/tables/{id}`
+> **Path**: `/api/storage/tables/{id}`
 
 ## Parameters
 

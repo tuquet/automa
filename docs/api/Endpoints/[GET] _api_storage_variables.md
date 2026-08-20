@@ -1,15 +1,15 @@
 ---
 tags:
   - api/endpoint
-  - api/Vault
-path: "/api/vault/variables"
+  - api/Storage
+path: "/api/storage/variables"
 method: "GET"
 ---
-# GET /api/vault/variables
+# GET /api/storage/variables
 
 > [!info] 
 > **Method**: `GET`
-> **Path**: `/api/vault/variables`
+> **Path**: `/api/storage/variables`
 
 ## Responses
 
@@ -17,5 +17,5 @@ method: "GET"
 List variables
 
 - **Content-Type**: `application/json`
-- **Schema**: Array<[[VaultVariable]]>
+- **Schema**: Array<[[StorageVariable]]>
 

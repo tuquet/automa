@@ -1,15 +1,15 @@
 ---
 tags:
   - api/endpoint
-  - api/Vault
-path: "/api/vault/variables/{id}"
+  - api/Storage
+path: "/api/storage/variables/{id}"
 method: "DELETE"
 ---
-# DELETE /api/vault/variables/{id}
+# DELETE /api/storage/variables/{id}
 
 > [!info] 
 > **Method**: `DELETE`
-> **Path**: `/api/vault/variables/{id}`
+> **Path**: `/api/storage/variables/{id}`
 
 ## Parameters
 
