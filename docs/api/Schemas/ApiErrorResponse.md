@@ -1,7 +1,7 @@
 ---
 tags: [api/schema]
 ---
-# ErrorResponse
+# ApiErrorResponse
 
 **Type**: `object`
 
@@ -10,3 +10,4 @@ tags: [api/schema]
 | Name | Type | Description |
 |---|---|---|
 | `error` *(req)* | string |  |
+| `status` *(req)* | integer |  |

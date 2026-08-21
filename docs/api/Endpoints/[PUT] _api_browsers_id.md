@@ -27,9 +27,12 @@ method: "PUT"
 ### 200
 Browser updated successfully
 
+### 400
+Invalid browser ID
+
+### 404
+Browser not found
+
 ### 500
 Failed to update browser
-
-- **Content-Type**: `application/json`
-- **Schema**: any
 

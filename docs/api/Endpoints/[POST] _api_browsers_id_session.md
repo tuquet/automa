@@ -25,9 +25,9 @@ Browser session started
 - **Content-Type**: `application/json`
 - **Schema**: any
 
-### 404
-Browser not found
+### 400
+Invalid browser ID
 
-- **Content-Type**: `application/json`
-- **Schema**: [[ErrorResponse]]
+### 500
+Failed to start browser session
 

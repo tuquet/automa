@@ -23,5 +23,8 @@ method: "GET"
 Get job logs
 
 - **Content-Type**: `application/json`
-- **Schema**: null | [[JobDetails]]
+- **Schema**: [[JobDetails]]
+
+### 500
+Database or thread pool failure
 

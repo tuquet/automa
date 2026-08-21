@@ -24,3 +24,6 @@ Add table
 - **Content-Type**: `application/json`
 - **Schema**: [[StorageTable]]
 
+### 500
+Database error
+

@@ -25,3 +25,6 @@ List table rows
 - **Content-Type**: `application/json`
 - **Schema**: Array<[[TableRow]]>
 
+### 500
+Database error
+

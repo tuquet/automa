@@ -12,4 +12,4 @@ tags: [api/schema]
 | `id` | string,null |  |
 | `name` *(req)* | string |  |
 | `timezone` | string,null |  |
-| `user_agent` | string,null |  |
+| `userAgent` | string,null |  |

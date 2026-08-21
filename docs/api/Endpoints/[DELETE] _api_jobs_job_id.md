@@ -22,3 +22,6 @@ method: "DELETE"
 ### 200
 Job killed successfully
 
+### 404
+Job not found or not active
+

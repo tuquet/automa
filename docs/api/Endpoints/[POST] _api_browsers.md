@@ -21,9 +21,9 @@ method: "POST"
 ### 200
 Browser created successfully
 
+### 400
+Invalid input or browser ID
+
 ### 500
 Failed to create browser
-
-- **Content-Type**: `application/json`
-- **Schema**: any
 

@@ -9,10 +9,10 @@ tags: [api/schema]
 
 | Name | Type | Description |
 |---|---|---|
-| `created_at` *(req)* | string |  |
+| `createdAt` *(req)* | string |  |
 | `id` *(req)* | string |  |
-| `is_online` *(req)* | boolean |  |
+| `isOnline` *(req)* | boolean |  |
 | `name` *(req)* | string |  |
 | `timezone` | string,null |  |
-| `updated_at` *(req)* | string |  |
-| `user_agent` | string,null |  |
+| `updatedAt` *(req)* | string |  |
+| `userAgent` | string,null |  |

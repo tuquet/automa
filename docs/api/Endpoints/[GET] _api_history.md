@@ -25,3 +25,6 @@ Get job history
 - **Content-Type**: `application/json`
 - **Schema**: Array<[[JobHistoryItem]]>
 
+### 500
+Database or thread pool failure
+

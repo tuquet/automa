@@ -25,9 +25,12 @@ Browser details
 - **Content-Type**: `application/json`
 - **Schema**: [[BrowserResponse]]
 
+### 400
+Invalid browser ID
+
 ### 404
 Browser not found
 
-- **Content-Type**: `application/json`
-- **Schema**: any
+### 500
+Failed to fetch browser
 

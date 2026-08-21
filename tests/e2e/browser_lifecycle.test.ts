@@ -53,8 +53,8 @@ describe('Browser Lifecycle E2E', () => {
         const killRes = await fetch(`${API_BASE}/browsers/${browserId}/session`, {
             method: 'DELETE'
         });
-        const killData = await killRes.json();
-        expect(killData.status || killData.success).toBeTruthy();
+        const killText = await killRes.text();
+        expect(killText).toContain('success');
     }, 120000);
 
     it('Scenario 3: The Ultimate Cleanup', async () => {

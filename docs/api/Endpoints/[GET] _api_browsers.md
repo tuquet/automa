@@ -19,3 +19,6 @@ List of all browsers
 - **Content-Type**: `application/json`
 - **Schema**: Array<[[BrowserResponse]]>
 
+### 500
+Database error
+

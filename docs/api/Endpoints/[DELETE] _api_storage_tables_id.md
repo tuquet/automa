@@ -22,3 +22,6 @@ method: "DELETE"
 ### 200
 Table deleted
 
+### 500
+Database error
+

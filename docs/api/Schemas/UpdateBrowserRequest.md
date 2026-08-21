@@ -9,6 +9,6 @@ tags: [api/schema]
 
 | Name | Type | Description |
 |---|---|---|
-| `name` *(req)* | string |  |
+| `name` | string,null |  |
 | `timezone` | string,null |  |
-| `user_agent` | string,null |  |
+| `userAgent` | string,null |  |

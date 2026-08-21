@@ -27,12 +27,6 @@ Secret encrypted successfully
 ### 400
 Bad Request
 
-- **Content-Type**: `application/json`
-- **Schema**: [[ErrorResponse]]
-
 ### 500
 Internal Server Error
-
-- **Content-Type**: `application/json`
-- **Schema**: [[ErrorResponse]]
 

@@ -22,3 +22,6 @@ method: "PATCH"
 ### 200
 Job marked as finished
 
+### 404
+Job not found or not active
+

@@ -11,12 +11,6 @@ method: "GET"
 > **Method**: `GET`
 > **Path**: `/api/jobs`
 
-## Parameters
-
-| Name | In | Required | Type | Description |
-|---|---|---|---|---|
-| `status` | query |  | string | Filter by status |
-
 ## Responses
 
 ### 200

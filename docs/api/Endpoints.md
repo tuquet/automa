@@ -35,4 +35,7 @@
 - [[[POST] _api_storage_variables]]
 - [[[DELETE] _api_storage_variables_id]]
 - [[[POST] _api_system_browser-binaries]]
+- [[[GET] _api_system_settings]]
+- [[[PUT] _api_system_settings]]
+- [[[PATCH] _api_system_settings]]
 - [[[POST] _api_system_studio_session]]

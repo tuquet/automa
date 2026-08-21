@@ -24,3 +24,9 @@ Job submitted successfully
 - **Content-Type**: `application/json`
 - **Schema**: [[SubmitJobResponse]]
 
+### 400
+Invalid request payload or file
+
+### 503
+Browser worker unavailable
+

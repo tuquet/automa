@@ -16,3 +16,6 @@ method: "DELETE"
 ### 200
 All job history cleared successfully
 
+### 500
+Database or thread pool failure
+

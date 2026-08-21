@@ -30,3 +30,6 @@ Add table row
 - **Content-Type**: `application/json`
 - **Schema**: [[AddTableRowResponse]]
 
+### 500
+Database error
+

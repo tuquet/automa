@@ -19,3 +19,6 @@ List tables
 - **Content-Type**: `application/json`
 - **Schema**: Array<[[StorageTable]]>
 
+### 500
+Database error
+
