@@ -108,12 +108,12 @@
 
 # Automa Rust Core (automa-core) Architecture Rules
 
-- **Clean Architecture & SOLID**: Hệ thống **BẮT BUỘC** phân tách `core` (Domain/Engine/Models) hoàn toàn khỏi `infrastructure` (DB/Vault/External APIs) và `api` (Axum REST/SSE). Mô-đun `core` **TUYỆT ĐỐI KHÔNG** được import hoặc phụ thuộc trực tiếp vào các implementation cụ thể (như `rusqlite`, `tokio::fs`). **PHẢI DÙNG** các trait interfaces (Dependency Inversion).
+- **KISS & Pragmatic Architecture**: TUYỆT ĐỐI KHÔNG over-engineer bằng cách lạm dụng các Trait Interfaces (ví dụ: `JobRepository`, `BrowserRepository`) nếu dự án chỉ dùng một cơ sở dữ liệu duy nhất (SQLite). Hãy tuân thủ YAGNI bằng cách gọi trực tiếp các Concrete Structs (như `AutomaDb`, `SqliteJobRepository`) để loại bỏ boilerplate code. Chỉ sử dụng Trait/Dependency Inversion khi thực sự cần hoán đổi (swap) logic đa nền tảng hoặc mock test phức tạp.
 - **Concurrency & Async Runtime**: **PHẢI DÙNG** `tokio` làm nền tảng xử lý bất đồng bộ. Đối với các tác vụ nặng về CPU (như mã hóa AES, parse JSON dung lượng khổng lồ), **BẮT BUỘC** chạy trên `tokio::task::spawn_blocking` để không block async runtime thread pool.
 - **Robust Error Handling**: **TUYỆT ĐỐI KHÔNG** dùng `.unwrap()` hay `.expect()` trong code production để tránh crash daemon. **PHẢI DÙNG** thư viện `thiserror` để định nghĩa các kiểu lỗi (Error Types) cấp độ Domain và xử lý chúng gọn gàng bằng toán tử `?`.
 - **State Management & Locks**: Khi lưu trữ State dùng chung (Shared State) trong Axum, **BẮT BUỘC** phải chia sẻ thông qua `Arc<T>`. Đối với dữ liệu cần thay đổi, **PHẢI DÙNG** `tokio::sync::RwLock` hoặc `tokio::sync::Mutex` (không dùng bản std::sync) để tránh lỗi Deadlocks trong môi trường bất đồng bộ.
 - **Pre-Reporting Validation**:  Bất cứ khi nào Agent thực hiện chỉnh sửa mã nguồn bên trong `automa-core`, **BẮT BUỘC** phải chạy lệnh `cargo check` (hoặc đảm bảo `cargo watch` không báo lỗi) và xác nhận không có lỗi Borrow Checker hay Compile Errors trước khi báo cáo kết quả hoàn thành cho USER.
-- **RESTful API Standards (Senior Level)**: Hệ thống BẮT BUỘC tuân thủ khắt khe thiết kế RESTful. **TUYỆT ĐỐI KHÔNG** nhúng các động từ hành động vào URL Path (ví dụ: dùng `POST /api/jobs` thay vì `POST /api/jobs/submit`, hay `DELETE /api/jobs/{id}` thay vì `POST /api/jobs/{id}/kill`). Khi phát hiện sự không đồng nhất giữa Axum router và OpenAPI spec (`utoipa`), AI BẮT BUỘC phải sửa lại đường dẫn trong OpenAPI spec cho chuẩn RESTful thay vì "bẻ cong" Axum route thành kiểu RPC (Remote Procedure Call).
+- **RESTful API Standards (Senior Level)**: Hệ thống BẮT BUỘC tuân thủ khắt khe thiết kế RESTful. **TUYỆT ĐỐI KHÔNG** nhúng các động từ hành động vào URL Path (ví dụ: dùng `POST /api/jobs` thay vì `POST /api/jobs/submit`, hay `DELETE /api/browsers/{id}/session` thay vì `POST /api/browsers/{id}/stop`). Khi phát hiện sự không đồng nhất, AI BẮT BUỘC phải sửa lại đường dẫn trong OpenAPI spec và Axum router cho chuẩn RESTful.
 
 
 # API Sync & Docs Generation Rule
@@ -125,3 +125,45 @@
   3. **Execution**: Sau khi chắc chắn Daemon đã sống, Agent **BẮT BUỘC** chuyển hướng ra thư mục gốc (root monorepo) và thực thi lệnh duy nhất: `pnpm run sync:api`. Lệnh này sẽ tự động lo liệu cả hai việc: import vào Bruno collection và sinh Markdown cho Obsidian.
   4. **Strict Schema Reminder**: Nếu người dùng nhờ viết thêm API, Agent **TUYỆT ĐỐI KHÔNG** được dùng `serde_json::Value` trực tiếp (mà không có `#[schema(value_type = ...)]`) để tránh làm vỡ linter khắt khe của hệ thống.
 
+
+# API Endpoint Gap & Anti-Mocking Rule (Senior Mindset)
+
+- **Trigger**: Bất cứ khi nào phát hiện sự thiếu hụt hàm API (Gap Endpoints), lỗi TypeScript khi gọi SDK, hoặc cần thêm tính năng giao tiếp giữa Frontend (`automa-vscode`) và Backend (`automa-core`).
+- **Behavior (Tuyệt đối cấm)**: **TUYỆT ĐỐI KHÔNG** được "mock" (giả lập) API ở Frontend, không được hardcode trả về lỗi `Not implemented yet`, và cấm dùng `any` để bypass lỗi TypeScript compiler của Auto-generated SDK. Đây là tư duy của "Fresher".
+- **Action (Quy trình chuẩn của Chuyên gia)**:
+  1. **Backend First**: Bắt buộc phải implement endpoint bị thiếu trực tiếp bằng Rust bên trong `automa-core` (Axum routes).
+  2. **Schema Export**: Khai báo OpenAPI Schema (`utoipa::path` và `ToSchema`). Đảm bảo tuân thủ `Strict Schema Reminder` (bổ sung `value_type` cho `serde_json::Value`).
+  3. **Auto-Generate SDK**: Boot Daemon và chạy `pnpm run sync:api` tại thư mục gốc. Sau đó, chạy `pnpm run generate:api` bên trong `automa-vscode` nếu cần thiết để đè lại toàn bộ SDK Client.
+  4. **Wrapper Integration**: Khôi phục các wrapper classes nếu chúng bị OpenAPI xóa nhầm (đặt chúng vào thư mục `wrappers/` thay vì `client/`) và trỏ các hàm gọi vào client vừa được tự động sinh ra.
+
+# Unified Test Suite (E2E & Schema Validation)
+
+- **Trigger**: Sau khi thực hiện các thay đổi lớn về tính năng, refactor, hoặc sửa lỗi (bug fixes) ảnh hưởng tới nhiều service.
+- **Action**: Thay vì chạy test lẻ tẻ, **BẮT BUỘC** chuyển ra thư mục gốc (`root`) và chạy lệnh `node scripts/test-all.mjs`. Báo cáo kết quả của toàn bộ Unified Test Suite (Rust Cargo, Vitest E2E, Schema Linter) cho người dùng trước khi kết thúc công việc.
+
+# VS Code Webview Security & UI Rendering (Automa UI)
+
+- **Trigger**: Bất cứ khi nào tạo mới hoặc chỉnh sửa giao diện UI (Webview Providers) bên trong `automa-vscode`.
+- **Behavior (Bắt buộc tuân thủ 3 lớp bảo mật)**:
+  1. **Strict Sanitization**: **TUYỆT ĐỐI KHÔNG** nội suy biến trực tiếp vào chuỗi HTML (ví dụ: `${data.name}`). Toàn bộ dữ liệu động **BẮT BUỘC** phải được bọc qua hàm `escapeHtml(unsafe: string)` trước khi render để chống XSS.
+  2. **Content-Security-Policy (CSP)**: Giao diện UI **BẮT BUỘC** phải có thẻ `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' var(--vscode-editor-background); script-src 'nonce-${nonce}';">` ở phần `<head>`.
+  3. **Nonce Injection**: Phải tạo một chuỗi `nonce` ngẫu nhiên (32 ký tự alphanumeric) mỗi khi render, và nhúng vào CSP cũng như mọi thẻ `<script nonce="${nonce}">`. Tuyệt đối không dùng `unsafe-inline` cho script.
+
+# API E2E Testing Strategy (Vitest over Cargo)
+
+- **Trigger**: Bất cứ khi nào người dùng yêu cầu "viết test cho API", "test automa-core", hoặc bổ sung bài kiểm tra tích hợp (Integration Tests) cho hệ thống.
+- **Behavior (Tuyệt đối cấm)**: **TUYỆT ĐỐI KHÔNG** viết các bài test API bằng Rust (e.g. `#[tokio::test]`) bên trong thư mục `automa-core/tests`. Tư duy này không mô phỏng được hành vi gọi API từ một external client.
+- **Action (Quy trình chuẩn)**:
+  1. **Vitest Blackbox**: Toàn bộ API E2E Tests **BẮT BUỘC** phải được viết bằng TypeScript (Vitest) và đặt tại thư mục gốc `tests/e2e/`.
+  2. **Daemon Spawning**: Bài test phải sử dụng `child_process.spawn('cargo', ['run', '--bin', 'automa-core', '--', 'serve', ...])` trong `beforeAll` để khởi động Rust Daemon trên một port động (hoặc port test), và kill process này trong `afterAll`.
+  3. **Fetch API**: Sử dụng `fetch` API tiêu chuẩn của Node.js để kiểm thử các RESTful endpoints như một client độc lập.
+
+# Frontend-Backend State Sync Rule (Event-Driven vs Polling)
+
+- **Trigger**: Bất cứ khi nào cần theo dõi trạng thái, tiến trình chạy (jobs), hoặc đồng bộ dữ liệu theo thời gian thực giữa Frontend (`automa-vscode`) và Backend (`automa-core`).
+- **Behavior (Tuyệt đối cấm)**: **TUYỆT ĐỐI KHÔNG** sử dụng vòng lặp Polling (ví dụ: `while(!done) await sleep(500)`) hoặc gửi HTTP request dư thừa định kỳ (như `getJobStatus()`) ở Frontend. Tư duy này làm chết CPU và nghẽn Network (Anti-pattern).
+- **Action (Quy trình Hướng Sự Kiện)**:
+  1. **SSE First**: Frontend **BẮT BUỘC** phải lắng nghe Server-Sent Events (SSE) qua `GlobalSseListener.ts` (kết nối tới `/api/events` hoặc endpoint tương đương) để nhận trạng thái mới nhất từ Rust Daemon.
+  2. **Promise Resolution**: Bọc các tác vụ cần chờ đợi vào một `Promise` và chỉ resolve khi nhận được sự kiện SSE tương ứng (ví dụ: `workflow_finished`).
+  3. **Rust Channel Capacity**: Đảm bảo Backend (Rust `tokio::sync::broadcast`) có đủ capacity (ví dụ: `10000`) để không gây hoảng loạn (panic) lỗi `Lagged` khi có chớp nhoáng quá nhiều sự kiện.
+  4. **Leak Prevention**: Luôn dọn dẹp các SSE Listeners (e.g., `stopGlobalSseListener()`) khi ngắt kết nối để tránh Event/Socket Leaks.
