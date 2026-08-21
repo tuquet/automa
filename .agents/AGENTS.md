@@ -112,7 +112,8 @@
 - **Concurrency & Async Runtime**: **PHẢI DÙNG** `tokio` làm nền tảng xử lý bất đồng bộ. Đối với các tác vụ nặng về CPU (như mã hóa AES, parse JSON dung lượng khổng lồ), **BẮT BUỘC** chạy trên `tokio::task::spawn_blocking` để không block async runtime thread pool.
 - **Robust Error Handling**: **TUYỆT ĐỐI KHÔNG** dùng `.unwrap()` hay `.expect()` trong code production để tránh crash daemon. **PHẢI DÙNG** thư viện `thiserror` để định nghĩa các kiểu lỗi (Error Types) cấp độ Domain và xử lý chúng gọn gàng bằng toán tử `?`.
 - **State Management & Locks**: Khi lưu trữ State dùng chung (Shared State) trong Axum, **BẮT BUỘC** phải chia sẻ thông qua `Arc<T>`. Đối với dữ liệu cần thay đổi, **PHẢI DÙNG** `tokio::sync::RwLock` hoặc `tokio::sync::Mutex` (không dùng bản std::sync) để tránh lỗi Deadlocks trong môi trường bất đồng bộ.
-- **Pre-Reporting Validation**: Bất cứ khi nào Agent thực hiện chỉnh sửa mã nguồn bên trong `automa-core`, **BẮT BUỘC** phải chạy lệnh `cargo check` (hoặc đảm bảo `cargo watch` không báo lỗi) và xác nhận không có lỗi Borrow Checker hay Compile Errors trước khi báo cáo kết quả hoàn thành cho USER.
+- **Pre-Reporting Validation**:  Bất cứ khi nào Agent thực hiện chỉnh sửa mã nguồn bên trong `automa-core`, **BẮT BUỘC** phải chạy lệnh `cargo check` (hoặc đảm bảo `cargo watch` không báo lỗi) và xác nhận không có lỗi Borrow Checker hay Compile Errors trước khi báo cáo kết quả hoàn thành cho USER.
+- **RESTful API Standards (Senior Level)**: Hệ thống BẮT BUỘC tuân thủ khắt khe thiết kế RESTful. **TUYỆT ĐỐI KHÔNG** nhúng các động từ hành động vào URL Path (ví dụ: dùng `POST /api/jobs` thay vì `POST /api/jobs/submit`, hay `DELETE /api/jobs/{id}` thay vì `POST /api/jobs/{id}/kill`). Khi phát hiện sự không đồng nhất giữa Axum router và OpenAPI spec (`utoipa`), AI BẮT BUỘC phải sửa lại đường dẫn trong OpenAPI spec cho chuẩn RESTful thay vì "bẻ cong" Axum route thành kiểu RPC (Remote Procedure Call).
 
 
 # API Sync & Docs Generation Rule

@@ -1,15 +1,15 @@
 ---
 tags:
   - api/endpoint
-  - api/System
-path: "/api/system/browsers"
+  - api/Browsers
+path: "/api/browsers/sessions"
 method: "DELETE"
 ---
-# DELETE /api/system/browsers
+# DELETE /api/browsers/sessions
 
 > [!info] 
 > **Method**: `DELETE`
-> **Path**: `/api/system/browsers`
+> **Path**: `/api/browsers/sessions`
 
 ## Responses
 

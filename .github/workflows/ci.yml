@@ -42,6 +42,9 @@ jobs:
       - name: Lint
         run: pnpm run lint
 
+      - name: Inject Pass Key
+        run: echo "export default function() { return '${{ secrets.AUTOMA_MASTER_KEY }}'; }" > automa-ext/src/utils/getPassKey.js
+
       - name: Build
         run: pnpm run build
 

@@ -2,14 +2,14 @@
 tags:
   - api/endpoint
   - api/Secrets
-path: "/api/secrets/encrypt"
+path: "/api/secrets/encryption"
 method: "POST"
 ---
-# POST /api/secrets/encrypt
+# POST /api/secrets/encryption
 
 > [!info] 
 > **Method**: `POST`
-> **Path**: `/api/secrets/encrypt`
+> **Path**: `/api/secrets/encryption`
 
 ## Request Body
 

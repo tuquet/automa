@@ -2,19 +2,19 @@
 tags:
   - api/endpoint
   - api/System
-path: "/api/system/install-browser"
+path: "/api/system/studio/session"
 method: "POST"
 ---
-# POST /api/system/install-browser
+# POST /api/system/studio/session
 
 > [!info] 
 > **Method**: `POST`
-> **Path**: `/api/system/install-browser`
+> **Path**: `/api/system/studio/session`
 
 ## Responses
 
 ### 200
-Browser installed successfully
+Studio opened successfully
 
 - **Content-Type**: `application/json`
 - **Schema**: [[SystemResponse]]

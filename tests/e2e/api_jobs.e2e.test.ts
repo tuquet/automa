@@ -52,10 +52,12 @@ describe('API Jobs E2E', () => {
   let jobId = '';
 
   it('should create a job via POST /api/jobs', async () => {
+    const workflowPath = path.join(process.cwd(), 'automa-vault', 'google.com', 'workflows', 'search.workflow.json');
     const payload = {
-      workflow_id: 'test-wf-123',
-      workflowPath: path.join(process.cwd(), 'tests', 'e2e', 'test-workflow.json'),
-      status: 'pending'
+      workflowPath,
+      options: {
+        headless: true
+      }
     };
 
     const res = await fetch(`${BASE_URL}/api/jobs`, {

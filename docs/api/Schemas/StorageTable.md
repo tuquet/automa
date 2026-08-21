@@ -9,10 +9,10 @@ tags: [api/schema]
 
 | Name | Type | Description |
 |---|---|---|
-| `columns` | any |  |
-| `columnsIndex` | any |  |
+| `columns` | object,null |  |
+| `columnsIndex` | object,null |  |
 | `createdAt` | integer,null |  |
 | `id` | string,null |  |
-| `items` | any |  |
+| `items` | object,null |  |
 | `modifiedAt` | integer,null |  |
 | `name` | string,null |  |

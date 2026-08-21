@@ -2,14 +2,14 @@
 tags:
   - api/endpoint
   - api/Browsers
-path: "/api/browsers/{id}/start"
+path: "/api/browsers/{id}/session"
 method: "POST"
 ---
-# POST /api/browsers/{id}/start
+# POST /api/browsers/{id}/session
 
 > [!info] 
 > **Method**: `POST`
-> **Path**: `/api/browsers/{id}/start`
+> **Path**: `/api/browsers/{id}/session`
 
 ## Parameters
 
@@ -20,7 +20,7 @@ method: "POST"
 ## Responses
 
 ### 200
-Browser started
+Browser session started
 
 - **Content-Type**: `application/json`
 - **Schema**: any

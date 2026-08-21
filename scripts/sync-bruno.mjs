@@ -1,15 +1,18 @@
 import { execSync } from 'child_process';
-import { rmSync, writeFileSync, existsSync, readFileSync } from 'fs';
-import { join } from 'path';
+import fs, { rmSync, writeFileSync, existsSync, readFileSync } from 'fs';
+import path, { join } from 'path';
 
 const API_JSON_PATH = 'automa-bruno.tmp.json';
 const OUTPUT_DIR = 'automa-bruno';
 
 console.log('Fetching OpenAPI spec from Rust Backend...');
 try {
-  execSync(`curl -s http://127.0.0.1:8765/api-docs/openapi.json -o ${API_JSON_PATH}`);
+  const res = await fetch('http://127.0.0.1:8765/api-docs/openapi.json');
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  const openapiData = await res.text();
+  writeFileSync(API_JSON_PATH, openapiData, 'utf-8');
 } catch (e) {
-  console.error('Failed to fetch OpenAPI spec. Is the Rust backend running?');
+  console.error('Failed to fetch OpenAPI spec. Is the Rust backend running?', e.message);
   process.exit(1);
 }
 
@@ -29,17 +32,62 @@ try {
   process.exit(1);
 }
 
+
+
 console.log('Injecting baseUrl into collection.bru...');
 const collectionPath = join(OUTPUT_DIR, 'collection.bru');
 if (existsSync(collectionPath)) {
   const fileContent = readFileSync(collectionPath, 'utf-8');
-  if (!fileContent.includes('script:pre-request')) {
-    const appendContent = `\nscript:pre-request {\n  bru.setVar("baseUrl", "http://127.0.0.1:8765");\n}\n`;
+  if (!fileContent.includes('vars:pre-request')) {
+    const appendContent = '\nvars:pre-request {\n  baseUrl: http://127.0.0.1:8765\n}\n';
     writeFileSync(collectionPath, appendContent, { flag: 'a' });
   } else {
-    console.log('script:pre-request already exists in collection.bru. Skipping injection.');
+    console.log('vars:pre-request already exists in collection.bru. Skipping injection.');
   }
 }
+
+
+console.log('Automating path parameters in .bru files...');
+function walkDir(dir) {
+  let results = [];
+  const list = fs.readdirSync(dir);
+  for (let file of list) {
+    file = path.join(dir, file);
+    const stat = fs.statSync(file);
+    if (stat && stat.isDirectory()) {
+      results = results.concat(walkDir(file));
+    } else if (file.endsWith('.bru') && !file.endsWith('collection.bru')) {
+      results.push(file);
+    }
+  }
+  return results;
+}
+
+const bruFiles = walkDir(OUTPUT_DIR);
+let updatedCount = 0;
+for (const file of bruFiles) {
+  let fileContent = fs.readFileSync(file, 'utf-8');
+  
+  // Find the params:path { ... } block
+  const pathRegex = /params:path \{[\s\S]*?\n\}/g;
+  let hasChanges = false;
+  
+  fileContent = fileContent.replace(pathRegex, (match) => {
+    // Replace lines like '  id: 1234' or '  job_id: ' with '  id: {{id}}' and '  job_id: {{job_id}}'
+    // Ignore lines starting with '@'
+    return match.replace(/^(\s+)([a-zA-Z0-9_\-]+):.*$/gm, (lineMatch, indent, paramName) => {
+      if (paramName.startsWith('@')) return lineMatch;
+      hasChanges = true;
+      return `${indent}${paramName}: {{${paramName}}}`;
+    });
+  });
+  
+  if (hasChanges) {
+    fs.writeFileSync(file, fileContent);
+    updatedCount++;
+  }
+}
+console.log(`Automated path parameters in ${updatedCount} files.`);
 
 console.log('Cleaning up temporary spec file...');
 if (existsSync(API_JSON_PATH)) {

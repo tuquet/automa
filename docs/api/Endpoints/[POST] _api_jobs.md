@@ -2,14 +2,14 @@
 tags:
   - api/endpoint
   - api/Jobs
-path: "/api/jobs/submit"
+path: "/api/jobs"
 method: "POST"
 ---
-# POST /api/jobs/submit
+# POST /api/jobs
 
 > [!info] 
 > **Method**: `POST`
-> **Path**: `/api/jobs/submit`
+> **Path**: `/api/jobs`
 
 ## Request Body
 

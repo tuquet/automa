@@ -7,7 +7,6 @@
         "build": "turbo run build",
         "dev": "turbo run dev",
         "lint": "turbo run lint",
-        "dev:cli": "turbo run dev --filter=@tuquet/automa-cli",
         "dev:vscode": "turbo run dev --filter=vscode-automa",
         "dev:source:runner": "turbo run dev:runner --filter=automa",
         "dev:core": "cd automa-core && cargo watch -x run",
@@ -16,7 +15,8 @@
         "test:ui": "vitest --ui",
         "test:coverage": "vitest run --coverage",
         "docs:generate": "node scripts/generate-docs.mjs",
-        "sync:api": "pnpm run sync-bruno && pnpm run docs:generate",
+        "sync:api": "pnpm run sync-bruno && pnpm run docs:generate && pnpm -F vscode-automa run generate:api",
+        "postsync:api": "pnpm run lint",
         "lint:schema": "node scripts/enforce-strict-schema.mjs"
     },
     "devDependencies": {
@@ -30,7 +30,7 @@
         "vitest": "^4.1.10"
     },
     "lint-staged": {
-        "automa-cli/**/*.{js,ts,vue}": [
+        "automa-vscode/**/*.{js,ts,json}": [
             "npx @biomejs/biome check --write"
         ]
     }
