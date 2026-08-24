@@ -81,3 +81,38 @@ description: Kiến trúc và các tính năng đã hoàn thiện của Automa E
 - **Khai báo hàm:** Trong các SFC Vue 3 (`StudioApp.vue`, `WorkflowEditor.vue`), sắp xếp các hàm theo thứ tự phụ thuộc (top-down) để tránh lỗi `no-use-before-define`.
 - **Prettier & Arrow Functions:** Không sử dụng arrow function trả về biểu thức gán (như `(n) => (n.selected = false)`), thay bằng khối `{ n.selected = false; }` để tương thích với quy tắc `no-return-assign`.
 - **Cấu hình `.eslintrc.js`:** Luôn cập nhật `ignorePatterns` và `globals` khi thêm các script standalone hoặc mock adapter mới.
+
+## 8. Automa Visual Studio Architecture & Component Specification (SRS)
+
+### 8.1. Bố cục Giao diện & Phân quyền Thành phần (UI Layout & Component Responsibility)
+- **Top Header Bar (`studio-header` / `StudioApp.vue`)**:
+  - **Mục đích**: Điều hướng vĩ mô và quản lý file.
+  - **Thành phần**: Nút Toggle Sidebar, File Picker (`Open File`), Tạo mới (`New`), Modals triggers (`Table Data`, `Global Data`, `Settings`, `Logs`), `Export JSON` và `Run Workflow`.
+  - **Quy chuẩn Metadata**: Toàn bộ việc hiển thị và chỉnh sửa Title, Icon, Version của Workflow được tập trung duy nhất tại `studio-sidebar` (`WorkflowDetailsCard.vue`).
+- **Canvas Bottom Controls Bar (`editor-controls-bar` / `WorkflowEditor.vue`)**:
+  - **Mục đích**: Điều hướng Canvas và thao tác trực quan đồ thị workflow.
+  - **Thành phần `#controls-prepend` (Góc trái)**: Khối `[Undo | Redo]` + Nút chiếc đũa thần `Auto Align` (`riMagicLine`) kích hoạt Dagre graph layout animation.
+  - **Thành phần `#controls-append` (Góc phải)**: `Fit View` (`riFullscreenLine`) + `Zoom Out` (`riSubtractLine`) + `Zoom In` (`riAddLine`).
+- **Studio Sidebar (`studio-sidebar`)**:
+  - **Chế độ Default**: Hiển thị `WorkflowDetailsCard.vue` (Metadata workflow & Block Palette).
+  - **Chế độ Editing**: Hiển thị `WorkflowEditBlock.vue` (Form cấu hình chi tiết của Node được chọn).
+
+### 8.2. Đặc Tả Tương Tác Node & Luồng Dữ Liệu Hai Chiều (Node Interaction & Data Flow)
+- **Kích hoạt chỉnh sửa Node**:
+  1. *Double-Click*: Nhấp đúp chuột vào thân Node (`BlockBase.vue` -> `@dblclick.stop="$emit('edit')"`).
+  2. *Hover Action Bar*: Rê chuột lên đỉnh Node -> Bấm icon Cây bút ✏️ (`riPencilLine`).
+- **Luồng xử lý dữ liệu (Data Pipeline)**:
+  - `WorkflowEditor.vue` emit sự kiện `@edit` kèm thông tin `{ id: label, blockId: id, data }`.
+  - `StudioApp.vue` hòa trộn dữ liệu hiện tại với default block parameters qua `defu(data, blockDef.data)`.
+  - Gán `editState.editing = true` để chuyển đổi Sidebar sang `WorkflowEditBlock.vue`.
+  - `WorkflowEditBlock.vue` tự động nạp động dynamic component `Edit<BlockName>.vue` tương ứng.
+  - Mọi thay đổi trên form form sẽ phản hồi tức thì về `workflow.drawflow.nodes[i].data` theo cơ chế Two-way Binding.
+
+### 8.3. Đặc Tả Phục Vụ Live & Cơ Chế Smart Live Reload (Live Server & Reload Protocol)
+- **Axum Static ServeDir**: Rust Daemon (`automa-core`) phân phối thư mục `automa-ext/dist/studio/` tại endpoint `http://127.0.0.1:8765/studio/` thông qua `tower_http::services::ServeDir`.
+- **Client-side Bundle Poller**: Entry script `src/studio/studio-entry.js` thăm dò định kỳ header `Last-Modified`/`ETag` của `studio.bundle.js`. Khi Webpack watch hoàn thành build mới, trình duyệt tự động gọi `window.location.reload()`.
+- **Anti-Cache Guard**: File `src/studio/index.html` tích hợp thẻ `<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />` nhằm triệt tiêu hoàn toàn rủi ro lưu cache tĩnh trong môi trường dev.
+
+### 8.4. Điều Phối Tác Vụ VS Code (Task Orchestration)
+- **Task `Serve: Live Studio`**: Chạy đồng thời `Watch: Rust` (HTTP daemon trên cổng 8765) và `Watch: Studio` (Webpack re-compiler) ở chế độ song song (`parallel`).
+- **Task `Open: Live Studio (Browser)`**: Mở nhanh tab trình duyệt trỏ đến `http://127.0.0.1:8765/studio/`.
