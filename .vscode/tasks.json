@@ -221,6 +221,25 @@
       "problemMatcher": []
     },
     {
+      "label": "Serve: Live Studio",
+      "dependsOn": [
+        "Watch: Rust",
+        "Watch: Studio"
+      ],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    },
+    {
+      "label": "Open: Live Studio (Browser)",
+      "type": "shell",
+      "command": "cmd /c start http://127.0.0.1:8765/studio/",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "never",
+        "panel": "shared"
+      }
+    },
+    {
       "label": "Sync All APIs (Docs & Bruno)",
       "type": "shell",
       "command": "pnpm run sync:api",
