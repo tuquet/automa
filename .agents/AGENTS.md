@@ -167,3 +167,14 @@
   2. **Promise Resolution**: Bọc các tác vụ cần chờ đợi vào một `Promise` và chỉ resolve khi nhận được sự kiện SSE tương ứng (ví dụ: `workflow_finished`).
   3. **Rust Channel Capacity**: Đảm bảo Backend (Rust `tokio::sync::broadcast`) có đủ capacity (ví dụ: `10000`) để không gây hoảng loạn (panic) lỗi `Lagged` khi có chớp nhoáng quá nhiều sự kiện.
   4. **Leak Prevention**: Luôn dọn dẹp các SSE Listeners (e.g., `stopGlobalSseListener()`) khi ngắt kết nối để tránh Event/Socket Leaks.
+
+# Automa Unified Business Domain & Terminology Rule
+
+- **Hierarchy & Entity Relationship**:
+  - `Campaign` -> `Browsers` -> `Tasks` -> `Workflows` -> (Runtime) `Jobs`
+- **Standard Domain Vocabulary (Tuyệt đối tuân thủ)**:
+  1. **`Browser`**: Thực thể trình duyệt ảo độc lập (Anti-Detect Browser). **TUYỆT ĐỐI KHÔNG** dùng các từ rác/lỗi thời như `Profile`, `Browser Profile`, `Browser Browser`, hay `Member`. File: `*.browser.json`, Table: `browsers`, Router: `/api/browsers`.
+  2. **`Campaign`**: Tập hợp các Browsers và Lịch trình tự động hóa. File: `*.campaign.json` (fallback `*.campaigns.json`). Trong Campaign, danh sách thực thi là `browsers` (chứa các `tasks` được giao cho browser đó).
+  3. **`Task`**: Tác vụ được lập lịch trên Browser trong Campaign (`schedule`: `on-start`, `cron`, `delay`, `once`) chỉ định `workflow_id`.
+  4. **`Workflow`**: Kịch bản luồng Automa (`*.workflow.json`).
+  5. **`Job`**: Phiên thực thi động tại Runtime (`automa-core`), quản lý qua `/api/jobs` và SSE `/api/events`.

@@ -1,11 +1,11 @@
 ---
 name: automa-vault
-description: Hướng dẫn cấu trúc thư mục, file cấu hình Campaigns và đặc tả Workflow & Browser Browser Mapping cho automa-vault.
+description: Hướng dẫn cấu trúc thư mục, file cấu hình Campaigns và đặc tả Workflow & Browser Mapping cho automa-vault.
 ---
 
 # Automa Vault Campaigns & Browser Mapping Convention
 
-**BẮT BUỘC** tuân thủ quy định cấu trúc thư mục Campaigns và Workflow & Browser Browser Mapping.
+**BẮT BUỘC** tuân thủ quy định cấu trúc thư mục Campaigns và Workflow & Browser Mapping.
 
 ---
 
@@ -30,9 +30,9 @@ description: Hướng dẫn cấu trúc thư mục, file cấu hình Campaigns v
 
 ---
 
-## 2. Campaign Workflow & Browser Browser Mapping Specification
+## 2. Campaign Workflow & Browser Mapping Specification
 
-Campaign Visual Editor ánh xạ Workflow local và Browser Browser cho Campaign Members và Tasks.
+Campaign Visual Editor ánh xạ Workflow local và Browser cho Campaign Tasks.
 
 ### 2.1 Backend (VS Code Extension Provider - `CampaignPreviewEditorProvider.ts`)
 * **BẮT BUỘC** tự động quét workspace tìm `**/*.browser.json` và `**/*.workflow.json`.
@@ -42,11 +42,11 @@ Campaign Visual Editor ánh xạ Workflow local và Browser Browser cho Campaign
 ### 2.2 Frontend (Webview UI - Thin Client)
 * **TUYỆT ĐỐI KHÔNG** sử dụng Vue/React hay Webpack cho Webview UI trong VS Code.
 * **BẮT BUỘC** dùng HTML/JS tĩnh thuần túy (Vanilla JS) để nhận dữ liệu từ Backend.
-* **BẮT BUỘC** hiển thị `<select>` dropdown chứa `browsers` tại Member header và tự động cập nhật `member.browser_id`.
+* **BẮT BUỘC** hiển thị `<select>` dropdown chứa `browsers` tại Browser header và tự động cập nhật `browser.browser_id`.
 * **BẮT BUỘC** hiển thị `<select>` dropdown chứa `workflows` tại Task card và cập nhật `task.workflow_id`.
 * **BẮT BUỘC** cảnh báo ID thiếu bằng tiền tố `[Missing]` hoặc `[Unknown]` trong dropdown.
 
-### 2.3 Demo Browser Targets (`automa-vault/browsers/`)
+### 2.3 Demo Browsers (`automa-vault/browsers/`)
 Tệp browser mẫu được lưu trữ tại `automa-vault/browsers/`:
 - `marketing-browser-01.browser.json`
 - `accounting-browser-02.browser.json`

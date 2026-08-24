@@ -74,7 +74,7 @@ Công cụ CLI (Command-line Interface) gọn nhẹ cho tự động hóa CI/CD.
 Phân nhánh (fork) độc lập chuyên sâu, đóng vai trò chạy mã lệnh trực tiếp bên trong trình duyệt mục tiêu. Đã gỡ bỏ cấu trúc polyfill rườm rà, áp dụng Webpack Override để tạo ra một cấu trúc Extension MV3 hoàn toàn tương thích với cơ chế Silent Runner.
 
 ### 5. `automa-vault` (Bảo Mật & Lưu Trữ)
-Quản lý cấu trúc thư mục, tệp cấu hình Campaigns và đối chiếu Workflow & Browser Browser.
+Quản lý cấu trúc thư mục, tệp cấu hình Campaigns và đối chiếu Workflow & Browser.
 - Cấu trúc mặc định:
   - `~/.automa/core/` (Production)
   - `~/.automa/core-dev/` (Dev Sandbox)

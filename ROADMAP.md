@@ -68,7 +68,7 @@ Bảng dưới đây quy định danh sách các API Endpoint, phân loại theo
 
 Phần này quy định cách giao diện người dùng tiêu thụ (consume) các API Backend ở trên.
 
-### 3.1 Browser Browser Manager (Native TreeView)
+### 3.1 Browser Manager (Native TreeView)
 Giao diện quản lý chính nằm ở thanh Sidebar (Activity Bar) của VS Code.
 
 | Tính năng UI | API Tiêu thụ (Tích hợp) | Trạng thái |
