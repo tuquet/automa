@@ -52,6 +52,51 @@ Hệ thống loại bỏ hoàn toàn các luồng xử lý phân mảnh bằng N
 └────────────────────────────────────────────────────────┘
 ```
 
+---
+
+## 📖 Thuật Ngữ & Khái Niệm Xuyên Suốt (Project Terminology)
+
+Để đảm bảo tính nhất quán giữa Backend (Rust Core), Extension Engine, VS Code IDE và Standalone Studio, toàn bộ hệ sinh thái sử dụng bảng định nghĩa thuật ngữ chuẩn hóa chia theo 4 nhóm chức năng:
+
+### 1. 🏗️ Kiến Trúc & Runtime Engine
+| Thuật Ngữ (Term) | Khái Niệm & Định Nghĩa | Phạm Vi & Giao Diện Áp Dụng |
+| :--- | :--- | :--- |
+| **Rust Core Daemon** | Tiến trình Backend ngầm viết bằng Rust (Axum/Tokio HTTP REST & SSE tại port `:8765`), điều phối toàn bộ tài nguyên. | Lệnh `automa-core serve`, quản lý SQLite, CDP, AES Crypto, Linters. |
+| **Thin Client** | Mô hình UI mỏng (VS Code Extension, Standalone Studio) chỉ gửi lệnh API tới Daemon thay vì sinh V8 runtime con. | `automa-vscode`, `StudioApp.vue`. |
+| **Standalone Studio** | Trình thiết kế trực quan Visual Canvas (Vue 3 + Vue Flow) chạy qua Web Server tĩnh của Daemon tại `/studio`. | Lệnh `pnpm run build:studio`, tích hợp SSE live stream, Storage sync. |
+| **Silent Runner** | Bản build headless của extension (`dist/cli-runner`) không nạp UI nặng, chuyên dụng cho execution engine trong Chromium. | Lệnh `pnpm run build:runner`, cấu hình `webpack.runner.config.js`. |
+| **Offscreen Document** | Môi trường nền MV3 (`offscreen.html`) của Chromium chứa `WorkflowEngine` để chạy ngầm và xử lý DOM. | `BackgroundOffscreen.sendMessage` trong `automa-ext`. |
+| **Message Routing Prefix** | Tiền tố ngữ cảnh định tuyến tin nhắn giữa Service Worker và Offscreen Document (`background--`, `offscreen--`). | `MessageListener` trong `automa-ext`. |
+
+### 2. 🗄️ Quản Lý Dữ Liệu & Storage
+| Thuật Ngữ (Term) | Khái Niệm & Định Nghĩa | Phạm Vi & Giao Diện Áp Dụng |
+| :--- | :--- | :--- |
+| **Storage Tables** | Bảng dữ liệu SQLite dạng dòng/cột được quản lý bởi Daemon. Hỗ trợ lặp dòng dữ liệu và lưu trữ kết quả cào (scraping). | Endpoint `/api/storage/tables`, kết nối trực tiếp trong `WorkflowDataTable.vue`. |
+| **Storage Variables** | Các biến toàn cục (`{{variables.KEY}}`) lưu trong SQLite Daemon, dùng chung xuyên suốt các kịch bản trong Campaign. | Endpoint `/api/storage/variables`, Tab Storage trong `WorkflowGlobalData.vue`. |
+| **Storage Credentials** | Thông tin đăng nhập, token nhạy cảm được mã hóa bảo mật (`{{credentials.KEY}}`) bằng thuật toán AES. | Endpoint `/api/storage/credentials`, quản lý bởi Daemon SQLite. |
+| **Storage Workspace** | Cây thư mục kịch bản cục bộ (`automa-vault/`), chứa các file kịch bản và cấu hình chiến dịch. | Quét bởi `GET /api/storage/files`, giao diện `StorageFileExplorer.vue`. |
+| **Offline Cache & Sync Queue** | Cơ chế lưu snapshot trên Dexie IndexedDB và hàng đợi tự động đẩy thay đổi lên Rust Core khi Daemon online. | `storage-service.js` và `standalone-bridge.js`. |
+
+### 3. ⚡ Điều Phối & Thực Thi Kịch Bản (Orchestration)
+| Thuật Ngữ (Term) | Khái Niệm & Định Nghĩa | Phạm Vi & Giao Diện Áp Dụng |
+| :--- | :--- | :--- |
+| **Workflow** | Đồ thị kịch bản tự động hóa đơn lẻ (DAG: Directed Acyclic Graph) gồm các Blocks và Edges kết nối. | Định dạng file `*.workflow.json` hoặc `*.automa.json`. |
+| **Campaign** | Chiến dịch điều phối ma trận đa luồng: kết hợp danh sách Workflows $\times$ Browsers Profiles $\times$ Storage Data. | Định dạng file `*.campaign.json` hoặc `*.campaigns.json`. |
+| **Job / Task** | Một phiên thực thi kịch bản cụ thể trên một Browser Profile với định danh `jobId` duy nhất. | Endpoint `/api/jobs` và `/api/jobs/{id}/status`. |
+| **SSE Realtime Stream** | Luồng sự kiện 1 chiều Server-Sent Events phát trạng thái `job_log`, `step`, `job_finish` theo thời gian thực. | Kênh `/api/events`, lắng nghe qua `useAutomaCoreHealth`. |
+| **Active Node Pulse** | Hiệu ứng viền phát sáng động (`.node-running`) và Camera Auto-Focus di chuyển bám theo Block đang chạy trên Canvas. | Vue Flow dynamic class, đồng bộ thời gian thực qua SSE events. |
+| **Live Schema Lint** | Trình phân tích cú pháp DAG kịch bản thời gian thực (Debounced 800ms) gọi `/api/lint` để phát hiện cảnh báo và lỗi cấu trúc. | Thư mục `automa-core/src/core/linters/`, hiển thị badge trực quan trên Studio Header. |
+
+### 4. 🌐 Quản Lý Trình Duyệt & Tự Động Hóa (CDP & Browsers)
+| Thuật Ngữ (Term) | Khái Niệm & Định Nghĩa | Phạm Vi & Giao Diện Áp Dụng |
+| :--- | :--- | :--- |
+| **Browser Profile** | Cấu hình môi trường trình duyệt độc lập (User Data Dir, Proxy, Cookies, Fingerprints, Storage). | Quản lý qua `/api/browsers`, TreeView `automa-vscode`. |
+| **CDP (Chrome DevTools Protocol)** | Giao thức WebSocket điều khiển trình duyệt cấp thấp, hỗ trợ quản lý cookies, console và DOM. | Đóng gói trong `BrowserLauncher` & `CookieManager` của Rust Core. |
+| **Stealth & Anti-Detection** | Kỹ thuật loại bỏ cờ automation (`navigator.webdriver`) và che giấu runtime để chống phát hiện bot. | Áp dụng tự động khi Daemon khởi chạy Chromium worker. |
+| **Element Selector Bridge** | Tiện ích trích xuất và bắt phần tử (CSS/XPath) trực tiếp từ trang web đang mở đưa vào Block Configuration. | Tích hợp trong Studio và Extension popup. |
+
+---
+
 ## 📦 Các Thành Phần Cốt Lõi (Submodules)
 
 Kiến trúc dự án được thiết kế theo dạng **Monorepo** với hệ thống Submodules độc lập:
