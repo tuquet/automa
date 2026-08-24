@@ -126,3 +126,21 @@ export function updateDiagnostics(document: vscode.TextDocument, lintErrors: Arr
    - **Thư mục**: `src/test/e2e/`
    - Dùng để kiểm tra khả năng kích hoạt của Extension (Activation), khởi tạo UI, và Command Registration bên trong một Extension Host thực sự.
    - Đảm bảo các đường dẫn phân giải tĩnh được sử dụng an toàn thông qua `fileURLToPath` thay cho `__dirname` vì Extension này sử dụng chuẩn Node ESM.
+
+---
+
+## 10. VS Code Webview Semantic CSS Tokens & UX Standards
+
+1. **Border & Divider Semantic Tokens**:
+   - **TUYỆT ĐỐI KHÔNG** sử dụng `var(--vscode-widget-border)` cho các đường viền nội bộ (Card borders, list row dividers, section header borders) vì đây là token của Floating Overlay Widgets gây chói sáng.
+   - **BẮT BUỘC DÙNG**:
+     - **Card Border**: `var(--vscode-panel-border, rgba(128, 128, 128, 0.18))` hoặc `var(--vscode-editorGroup-border)`.
+     - **Section Header Divider**: `var(--vscode-sideBarSectionHeader-border, var(--vscode-panel-border, rgba(128, 128, 128, 0.18)))`.
+     - **Row / Table Divider**: `var(--vscode-panel-border, rgba(128, 128, 128, 0.12))` hoặc `.vscode-divider`.
+
+2. **Webview Accessibility (a11y)**:
+   - Các phần tử click được dạng `<span>` hoặc `<div>` **BẮT BUỘC** khai báo: `role="button"`, `tabindex="0"`, và `@keydown.enter.prevent` / `@keydown.space.prevent`.
+
+3. **Actionable Empty States**:
+   - Mọi trạng thái rỗng **BẮT BUỘC** hướng dẫn người dùng bước tiếp theo (ví dụ: `(Right click or run Automa: Add Variable to create)`).
+

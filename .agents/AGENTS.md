@@ -34,7 +34,14 @@
   - **Daemon Polling & Reused Processes**: Khi kết nối tới một tiến trình Daemon đang chạy (sử dụng lại port), `DaemonManager` **BẮT BUỘC** theo dõi trạng thái một cách chính xác thông qua cờ `isExternalDaemon`. Phương thức `isRunning()` **BẮT BUỘC** trả về true cho các external daemons để ngăn vòng lặp polling của `TaskRunner` bị sập đột ngột với các lỗi ngắt kết nối giả.
   - **Chromium Version & Download Source**: CLI (`automa-cli`) **PHẢI DÙNG** bản build Chromium `latest` (`PuppeteerBrowser.CHROMIUM`), KHÔNG PHẢI Chrome for Testing. Chromium executable này được tải về từ Google Cloud Storage thông qua `@puppeteer/browsers`, trong khi Automa Extension (`automa-ex`) được tải về từ GitHub Releases.
 - **MessageListener Routing Prefix**: Tiện ích `MessageListener` trong `automa-ext` tự động chặn các messages dựa trên tiền tố ngữ cảnh thực thi (ví dụ: `background--`, `offscreen--`).
-  - **Rule**: Khi gọi các sự kiện extension từ các script bên ngoài sử dụng `chrome.runtime.sendMessage` trực tiếp, **BẮT BUỘC** nối thủ công (prepend) tiền tố chính xác (ví dụ: `background--workflow:execute`). Nếu không, `MessageListener` sẽ không khớp (match) với tên sự kiện.
+  - **Rule**: Khi gọi các sự kiện extension từ các script bên ngoài sử dụng `chrome.runtime.sendMessage` trực tiếp, **BẮT BUỘC** nối thủ công (prepend) tiền tố chính xác (ví dụ: `background--workflow:execute` hoặc `offscreen--workflow:execute`). Nếu không, `MessageListener` sẽ không khớp (match) với tên sự kiện.
+- **MV3 Offscreen Document Resilience**: Trong Chrome MV3, toàn bộ engine thực thi workflow (`WorkflowEngine`) chạy ngầm trong Offscreen Document (`offscreen.html`).
+  - **Startup Race Prevention**: Khi trình duyệt vừa khởi động, `offscreen.bundle.js` mất vài trăm mili-giây để nạp và đăng ký `runtime.onMessage`. Bất kỳ lệnh gửi message nào tới Offscreen (như `BackgroundOffscreen.sendMessage`) **BẮT BUỘC** triển khai cơ chế *Retry with Backoff* (tối thiểu 5 lần, cách nhau 300ms) để xử lý lỗi `Could not establish connection. Receiving end does not exist`.
+  - **Document State Check**: **PHẢI DÙNG** `chrome.offscreen.hasDocument()` kết hợp khối `try/catch` bọc quanh `chrome.offscreen.createDocument()` để không bị gián đoạn bởi lỗi `Only a single offscreen document may be created at any given time`.
+- **NO Dynamic Imports in Extension Background Worker**: Bên trong `business/dev/index.js` và các entry point của Service Worker, **TUYỆT ĐỐI KHÔNG** dùng `await import(...)` cho các module cốt lõi (`BackgroundWorkflowUtils`, `WorkflowEngine`). **BẮT BUỘC DÙNG** Static Imports ở đầu tệp để tránh Webpack chia nhỏ chunk gây lỗi nạp module khi chạy headless.
+- **Worker Daemon Idempotency & Singleton Guard**:
+  - **Singleton Loop**: Bên trong `business/dev/index.js`, **BẮT BUỘC** sử dụng các cờ Singleton (`isWorkerDaemonInitialized`, `isOffscreenDaemonInitialized`) để đảm bảo trong suốt vòng đời trình duyệt chỉ duy nhất 1 kết nối SSE reader loop được khởi tạo.
+  - **Webpack Entry Invariant**: Trong `webpack.runner.config.js`, **TUYỆT ĐỐI KHÔNG** chèn các script inject khởi tạo (như `inject-background.js`) vào `config.entry.background` nếu entry gốc (`src/background/index.js`) đã có sẵn lệnh import và gọi `automa('background')`. Làm như vậy sẽ gây duplicate execution (gọi 1 API chạy 2 tab/task).
 
 # Knowledge Base & Documentation
 
@@ -178,3 +185,16 @@
   3. **`Task`**: Tác vụ được lập lịch trên Browser trong Campaign (`schedule`: `on-start`, `cron`, `delay`, `once`) chỉ định `workflow_id`.
   4. **`Workflow`**: Kịch bản luồng Automa (`*.workflow.json`).
   5. **`Job`**: Phiên thực thi động tại Runtime (`automa-core`), quản lý qua `/api/jobs` và SSE `/api/events`.
+
+# VS Code Webview Semantic CSS Tokens & UX Rules
+
+- **Border & Divider Semantic Tokens**:
+  - **TUYỆT ĐỐI KHÔNG** sử dụng `var(--vscode-widget-border)` cho các đường viền nội bộ (Card borders, list row dividers, section header borders). `widget.border` là token dành riêng cho Floating Overlay Widgets (như Ctrl+F Find Widget, IntelliSense popup) và sẽ hiển thị màu trắng gắt/chói mắt trên panel.
+  - **BẮT BUỘC DÙNG** các Semantic Tokens chuẩn sau:
+    - **Card / Container Border**: `var(--vscode-panel-border, rgba(128, 128, 128, 0.18))` hoặc `var(--vscode-editorGroup-border)`.
+    - **Section Header Divider**: `var(--vscode-sideBarSectionHeader-border, var(--vscode-panel-border, rgba(128, 128, 128, 0.18)))`.
+    - **List Row / Table Divider**: `var(--vscode-panel-border, rgba(128, 128, 128, 0.12))` hoặc `.vscode-divider`.
+- **Webview Accessibility (a11y) Invariant**:
+  - Bất kỳ phần tử tương tác nào không phải thẻ `<button>` hoặc `<a>` (ví dụ: `<span @click="...">`) **BẮT BUỘC** khai báo đầy đủ: `role="button"`, `tabindex="0"`, và lắng nghe sự kiện phím (`@keydown.enter.prevent`, `@keydown.space.prevent`).
+- **Actionable Empty States Invariant**:
+  - Toàn bộ các TreeItem và Webview Empty States **BẮT BUỘC** nêu rõ 2 vế: (1) Trạng thái hiện tại và (2) Hướng dẫn hành động tiếp theo (ví dụ: `(Right click or run Automa: Add Variable to create)`).

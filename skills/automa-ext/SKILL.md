@@ -63,3 +63,16 @@ description: Kiến trúc và các tính năng đã hoàn thiện của Automa E
   - **Message Delegation**: Nếu `block.debugMode === true`, Content Script **TUYỆT ĐỐI KHÔNG** sử dụng native JS (`element.click()`). **BẮT BUỘC** gửi `sendMessage('debugger:send-command', payload, 'background')`.
   - **Background Execution**: Service Worker **BẮT BUỘC** thực thi `chrome.debugger.sendCommand` để giả lập tương tác phần cứng.
 - **Tác dụng**: **BẮT BUỘC** sử dụng để vượt qua CSP hoặc Trusted Events nghiêm ngặt.
+
+## 6. Offscreen Workflow Execution & Headless Runner
+- **Cơ chế:** MV3 Offscreen Document Proxy
+- **Luồng khởi chạy:**
+  - Background Service Worker nhận lệnh `workflow:execute` qua SSE từ Rust Core Daemon (`http://127.0.0.1:8765/api/internal/worker/events`).
+  - Background đảm bảo Offscreen Document tồn tại qua `BackgroundOffscreen.instance.#ensureDocument()`.
+  - Background gửi message `offscreen--workflow:execute` tới Offscreen Document kèm cơ chế Retry tự động (5 lần, cách nhau 300ms) để triệt tiêu lỗi Race Condition khi trình duyệt vừa khởi tạo ở `about:blank`.
+  - Offscreen Document khởi tạo `WorkflowManager.instance.execute(workflow, options)` và báo cáo step logs ngược về Background qua `daemon:log` -> `POST /api/jobs/{id}/logs`.
+- **Quy tắc an toàn & Idempotency:**
+  - Không mở bất kỳ UI tab nào (`newtab.html#/welcome`) khi biến môi trường `__IS_RUNNER__ === true`.
+  - Luôn đảm bảo `offscreen.html` và `sandbox.html` có mặt trong bản build `dist/cli-runner`.
+  - Sử dụng Static Imports ở `business/dev/index.js` để tránh trễ module khi chạy headless.
+  - **BẮT BUỘC** kích hoạt cờ Singleton Guard `isWorkerDaemonInitialized` để ngăn chặn lỗi nhân đôi tiến trình khi nhận Job Payload.

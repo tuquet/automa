@@ -2,7 +2,19 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug (Live Rust)",
+      "name": "⚡ Extension: Fast Launch (1s)",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/automa-vscode"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/automa-vscode/dist/**/*.js"
+      ],
+      "preLaunchTask": "Build: VSCode"
+    },
+    {
+      "name": "🚀 Full-stack: Extension + Live Rust Backend",
       "type": "extensionHost",
       "request": "launch",
       "args": [
@@ -14,7 +26,7 @@
       "preLaunchTask": "Serve (Live Rust)"
     },
     {
-      "name": "Debug (Rust EXE)",
+      "name": "📦 Full-stack: Extension + Rust EXE",
       "type": "extensionHost",
       "request": "launch",
       "args": [

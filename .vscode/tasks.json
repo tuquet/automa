@@ -24,6 +24,19 @@
       "group": "build"
     },
     {
+      "label": "Build: VSCode",
+      "type": "shell",
+      "command": "pnpm -F vscode-automa run build",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
       "label": "Watch: VSCode",
       "type": "shell",
       "command": "pnpm dev:vscode",
@@ -52,6 +65,29 @@
       }
     },
     {
+      "label": "Watch: Webview",
+      "type": "shell",
+      "command": "pnpm -F vscode-automa run watch:webview",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "presentation": {
+        "hidden": true
+      },
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*(building|transforming).*$",
+          "endsPattern": "^.*(built in|modules transformed).*$"
+        }
+      }
+    },
+    {
       "label": "Watch: Runner",
       "type": "shell",
       "command": "pnpm dev:source:runner",
@@ -69,10 +105,44 @@
         },
         "background": {
           "activeOnStart": true,
-          "beginsPattern": ".",
-          "endsPattern": "compiled .*"
+          "beginsPattern": "^.*(building|compiling).*$",
+          "endsPattern": "^.*compiled.*$"
         }
       }
+    },
+    {
+      "label": "Watch: Studio",
+      "type": "shell",
+      "command": "pnpm dev:source:studio",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "presentation": {
+        "panel": "shared",
+        "clear": false
+      },
+      "problemMatcher": {
+        "owner": "webpack-studio",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*(building|compiling).*$",
+          "endsPattern": "^.*compiled.*$"
+        }
+      }
+    },
+    {
+      "label": "Build: Studio",
+      "type": "shell",
+      "command": "pnpm build:studio",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "group": "build"
     },
     {
       "label": "Watch: Rust",
@@ -93,15 +163,18 @@
         },
         "background": {
           "activeOnStart": true,
-          "beginsPattern": "Compiling|Automa Core",
-          "endsPattern": "listening on"
+          "beginsPattern": "^.*(Compiling|Automa Core|Checking).*$",
+          "endsPattern": "^.*(listening on|Server listening).*$"
         }
       }
     },
     {
       "label": "Run: Rust EXE",
       "type": "process",
-      "command": "${workspaceFolder}/automa-core/target/release/automa-core.exe",
+      "command": "${workspaceFolder}/automa-core/target/release/automa-core",
+      "windows": {
+        "command": "${workspaceFolder}/automa-core/target/release/automa-core.exe"
+      },
       "args": [
         "serve"
       ],
@@ -120,8 +193,8 @@
         },
         "background": {
           "activeOnStart": true,
-          "beginsPattern": ".",
-          "endsPattern": "listening on"
+          "beginsPattern": "^.*Automa Core.*$",
+          "endsPattern": "^.*listening on.*$"
         }
       }
     },
@@ -130,8 +203,10 @@
       "dependsOn": [
         "Watch: Rust",
         "Watch: Runner",
-        "Watch: VSCode"
+        "Watch: VSCode",
+        "Watch: Webview"
       ],
+      "dependsOrder": "parallel",
       "problemMatcher": []
     },
     {
@@ -139,49 +214,11 @@
       "dependsOn": [
         "Run: Rust EXE",
         "Watch: Runner",
-        "Watch: VSCode"
+        "Watch: VSCode",
+        "Watch: Webview"
       ],
+      "dependsOrder": "parallel",
       "problemMatcher": []
-    },
-    {
-      "label": "Watch: CLI",
-      "type": "shell",
-      "command": "pnpm dev:cli",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "isBackground": true,
-      "problemMatcher": []
-    },
-    {
-      "label": "Sync Bruno Collection",
-      "type": "shell",
-      "command": "pnpm run sync-bruno",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "shared"
-      }
-    },
-    {
-      "label": "Test: CLI",
-      "type": "shell",
-      "command": "pnpm run test:report",
-      "options": {
-        "cwd": "${workspaceFolder}/automa-cli"
-      },
-      "group": {
-        "kind": "test",
-        "isDefault": true
-      },
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "new"
-      }
     },
     {
       "label": "Sync All APIs (Docs & Bruno)",

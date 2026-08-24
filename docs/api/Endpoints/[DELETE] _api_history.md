@@ -16,6 +16,9 @@ method: "DELETE"
 ### 200
 All job history cleared successfully
 
+- **Content-Type**: `application/json`
+- **Schema**: [[HistoryActionResponse]]
+
 ### 500
 Database or thread pool failure
 

@@ -66,9 +66,9 @@ Format chuẩn của một `.browser.json`:
 
 ---
 
-## 3. Global Vault (Variables, Credentials, Tables)
+## 3. Global Storage (Variables, Credentials, Tables)
 
-Global Vault sử dụng kiến trúc phi tập trung (Decentralized Vault).
+Global Storage sử dụng kiến trúc phi tập trung (Decentralized Vault).
 Daemon nạp tổng thể (`loadAll()`) **BẮT BUỘC** tuân thủ quy tắc đuôi mở rộng:
 - **Workflow:** `**/*.workflow.json`
 - **Packages:** `**/*.package.json`

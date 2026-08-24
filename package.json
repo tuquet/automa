@@ -9,6 +9,8 @@
         "lint": "turbo run lint",
         "dev:vscode": "turbo run dev --filter=vscode-automa",
         "dev:source:runner": "turbo run dev:runner --filter=automa",
+        "dev:source:studio": "turbo run dev:studio --filter=automa",
+        "build:studio": "pnpm -F automa run build:studio",
         "dev:core": "cd automa-core && cargo watch -x run",
         "sync-bruno": "node scripts/sync-bruno.mjs",
         "test": "node scripts/test-all.mjs",
