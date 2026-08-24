@@ -204,3 +204,22 @@
   - Bất kỳ phần tử tương tác nào không phải thẻ `<button>` hoặc `<a>` (ví dụ: `<span @click="...">`) **BẮT BUỘC** khai báo đầy đủ: `role="button"`, `tabindex="0"`, và lắng nghe sự kiện phím (`@keydown.enter.prevent`, `@keydown.space.prevent`).
 - **Actionable Empty States Invariant**:
   - Toàn bộ các TreeItem và Webview Empty States **BẮT BUỘC** nêu rõ 2 vế: (1) Trạng thái hiện tại và (2) Hướng dẫn hành động tiếp theo (ví dụ: `(Right click or run Automa: Add Variable to create)`).
+
+# Rust Daemon OpenAPI Strict Typing & Raw Content Invariant
+
+- **Trigger**: Khi định nghĩa hoặc chỉnh sửa bất kỳ Axum Route Handler nào trong `automa-core/src/api/handlers/`.
+- **Behavior (Tuyệt đối cấm)**: **TUYỆT ĐỐI KHÔNG** sử dụng `Json<serde_json::Value>` trong chữ ký hàm hoặc kiểu trả về. Làm như vậy sẽ vi phạm kiểm tra nghiêm ngặt của `scripts/enforce-strict-schema.mjs`.
+- **Action (Quy chuẩn thực hiện)**:
+  1. **Structured Data**: Bắt buộc tạo struct cụ thể có derive `#[derive(Serialize, Deserialize, ToSchema)]`. Mọi trường sử dụng `serde_json::Value` trong struct bắt buộc có annotation `#[schema(value_type = Object)]`.
+  2. **Raw File / JSON Content Handlers**: Đối với các endpoint đọc tệp JSON thô từ đĩa (như `/api/vault/workflow`), hàm **BẮT BUỘC** trả về `Result<axum::response::Response, AutomaError>` với header `content-type: application/json` và `Body::from(content)` sau khi đã parse kiểm tra tính hợp lệ bằng `serde_json::from_str`.
+  3. **Error Handling**: Sử dụng `AutomaError` (implement `IntoResponse`) để trả về lỗi tự động map sang status code và `ApiErrorResponse`.
+
+# Automa Studio Standalone Build & ServeDir Pipeline
+
+- **Repository Target**: `automa-ext` chứa target build standalone độc lập cho Studio:
+  - **Lệnh build**: `pnpm run build:studio` (hoặc `pnpm run dev:source:studio` cho chế độ watch/HMR).
+  - **Cấu hình**: `webpack.studio.config.js`, xuất bundle ra `automa-ext/dist/studio/`.
+  - **Browser Mocking**: Sử dụng `src/studio/standalone-browser-mock.js` để chạy thuần túy trên web mà không cần chrome extension APIs.
+- **Daemon Hosting**: `automa-core` **BẮT BUỘC** mount thư mục `dist/studio/` tại endpoint static `/studio` thông qua `tower_http::services::ServeDir`.
+- **Client Execution**: Khi người dùng kích hoạt "Open in Automa Studio" từ VS Code hoặc CLI, **BẮT BUỘC** mở URL `http://127.0.0.1:8765/studio/` trên trình duyệt mặc định thông qua `vscode.env.openExternal`. **TUYỆT ĐỐI KHÔNG** nhúng toàn bộ Studio vào VS Code Webview hay spawn process thủ công.
+
