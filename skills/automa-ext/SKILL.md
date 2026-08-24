@@ -76,3 +76,8 @@ description: Kiến trúc và các tính năng đã hoàn thiện của Automa E
   - Luôn đảm bảo `offscreen.html` và `sandbox.html` có mặt trong bản build `dist/cli-runner`.
   - Sử dụng Static Imports ở `business/dev/index.js` để tránh trễ module khi chạy headless.
   - **BẮT BUỘC** kích hoạt cờ Singleton Guard `isWorkerDaemonInitialized` để ngăn chặn lỗi nhân đôi tiến trình khi nhận Job Payload.
+
+## 7. Code Quality & ESLint Compliance
+- **Khai báo hàm:** Trong các SFC Vue 3 (`StudioApp.vue`, `WorkflowEditor.vue`), sắp xếp các hàm theo thứ tự phụ thuộc (top-down) để tránh lỗi `no-use-before-define`.
+- **Prettier & Arrow Functions:** Không sử dụng arrow function trả về biểu thức gán (như `(n) => (n.selected = false)`), thay bằng khối `{ n.selected = false; }` để tương thích với quy tắc `no-return-assign`.
+- **Cấu hình `.eslintrc.js`:** Luôn cập nhật `ignorePatterns` và `globals` khi thêm các script standalone hoặc mock adapter mới.

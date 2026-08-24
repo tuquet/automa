@@ -60,6 +60,12 @@
 - **JSON Dynamic Imports**: Khi tải động các tệp JSON (ví dụ: thông điệp locale cho vue-i18n) thông qua `await import(...)`, **BẮT BUỘC** xử lý an toàn việc giải quyết (resolution) export mặc định. Quá trình giải quyết JSON module của Webpack 5 có sự khác biệt giữa các bản build dev và production.
 - **Implementation**: **PHẢI DÙNG** một hằng số dự phòng (fallback) `const content = messages.default || messages;` trước khi tiêm nó vào state (ví dụ: `i18n.global.mergeLocaleMessage(locale, content)`). **TUYỆT ĐỐI KHÔNG** chỉ dựa hoàn toàn vào `messages.default`.
 
+# Vue & ESLint Code Quality Invariants (automa-ext & Studio)
+
+- **Function Ordering in `<script setup>`**: Trong các Vue 3 Single File Components sử dụng `<script setup>` và `@babel/eslint-parser`, toàn bộ các hàm helper hoặc event handlers (như `syncWorkflowFromCanvas`, `fetchLogs`, `selectLog`) **BẮT BUỘC** được khai báo *trước* khi được gọi ở các hàm phía sau nhằm ngăn ngừa lỗi `no-use-before-define`.
+- **Catch Block Invariant**: Tất cả các khối `catch (e) {}` được thiết kế để bỏ qua lỗi (swallow errors) **BẮT BUỘC** chứa một dòng comment tường minh (ví dụ: `// Ignored` hoặc `/* ignore */`) để tuân thủ quy tắc `no-empty`.
+- **Webpack DefinePlugin Globals**: Bất kỳ hằng số build-time nào được tiêm qua Webpack `DefinePlugin` (ví dụ: `__IS_RUNNER__`, `BROWSER_TYPE`) **BẮT BUỘC** được khai báo trong từ điển `globals` của tệp `.eslintrc.js`.
+
 # VS Code Webview Build & Asset Loading Workflow
 
 - **Silent Runner Mode (CLI Target)**: Lệnh `pnpm run build` tiêu chuẩn sẽ xây dựng native browser extension chuẩn.
