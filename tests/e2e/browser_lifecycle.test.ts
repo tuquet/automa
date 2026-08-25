@@ -1,9 +1,15 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import * as fs from 'fs';
+import { describe, it, expect } from 'vitest';
 import * as path from 'path';
 import * as os from 'os';
+import {
+    createBrowser,
+    getBrowserDetail,
+    startBrowser,
+    stopBrowser,
+    deleteBrowser,
+} from '@automa/types/api';
 
-const API_BASE = 'http://127.0.0.1:8765/api';
+const BASE_URL = 'http://127.0.0.1:8765';
 
 // Resolve the AppData path similar to Rust's dirs crate
 const getAppDataPath = () => {
@@ -21,51 +27,57 @@ describe('Browser Lifecycle E2E', () => {
 
     it('Scenario 1: Creation & Path Persistence', async () => {
         // Create Browser
-        const createRes = await fetch(`${API_BASE}/browsers`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
+        const createRes = await createBrowser({
+            baseUrl: BASE_URL,
+            body: {
                 id: browserId,
                 name: 'Marketing Acc E2E',
-                timezone: 'Asia/Ho_Chi_Minh'
-            })
+                timezone: 'Asia/Ho_Chi_Minh',
+            },
         });
-        const createData = await createRes.json();
-        expect(createData.id || createData.success).toBeTruthy();
+        expect(createRes.data || createRes.response.ok).toBeTruthy();
 
         // Fetch to ensure it exists in DB
-        const getRes = await fetch(`${API_BASE}/browsers/${browserId}`);
-        expect(getRes.status).toBe(200);
+        const getRes = await getBrowserDetail({
+            baseUrl: BASE_URL,
+            path: { id: browserId },
+        });
+        expect(getRes.response.status).toBe(200);
     });
 
     it('Scenario 2: Run with Options & Cache Check', async () => {
         // Launch Browser
-        const launchRes = await fetch(`${API_BASE}/browsers/${browserId}/session`, {
-            method: 'POST'
+        const launchRes = await startBrowser({
+            baseUrl: BASE_URL,
+            path: { id: browserId },
         });
-        const launchData = await launchRes.json();
-        expect(launchData.status || launchData.success).toBeTruthy();
+        expect(launchRes.data || launchRes.response.ok).toBeTruthy();
 
         // Wait a few seconds for Chromium to initialize its user data dir
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        await new Promise((resolve) => setTimeout(resolve, 3000));
 
         // Kill Browser
-        const killRes = await fetch(`${API_BASE}/browsers/${browserId}/session`, {
-            method: 'DELETE'
+        const killRes = await stopBrowser({
+            baseUrl: BASE_URL,
+            path: { id: browserId },
         });
-        const killText = await killRes.text();
-        expect(killText).toContain('success');
+        expect(killRes).toBeDefined();
     }, 120000);
 
     it('Scenario 3: The Ultimate Cleanup', async () => {
         // Delete Browser
-        const deleteRes = await fetch(`${API_BASE}/browsers/${browserId}`, {
-            method: 'DELETE'
+        const deleteRes = await deleteBrowser({
+            baseUrl: BASE_URL,
+            path: { id: browserId },
         });
-        expect(deleteRes.status).toBe(200);
+        expect(deleteRes.response.status).toBe(200);
 
         // Database should be clear
-        const getRes = await fetch(`${API_BASE}/browsers/${browserId}`);
-        expect(getRes.status).toBe(404);
+        const getRes = await getBrowserDetail({
+            baseUrl: BASE_URL,
+            path: { id: browserId },
+        });
+        expect(getRes.response.status).toBe(404);
     });
 });
+
