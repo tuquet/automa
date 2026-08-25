@@ -389,6 +389,10 @@ importers:
         version: 4.15.2(debug@4.4.3(supports-color@8.1.1))(supports-color@8.1.1)(webpack-cli@5.1.4)(webpack@5.76.0)
 
   automa-vscode:
+    dependencies:
+      '@automa/types':
+        specifier: workspace:*
+        version: link:../packages/automa-types
     devDependencies:
       '@biomejs/biome':
         specifier: 2.5.5
@@ -471,6 +475,15 @@ importers:
       vue:
         specifier: 3.4.38
         version: 3.4.38(typescript@5.9.3)
+
+  packages/automa-types:
+    devDependencies:
+      rimraf:
+        specifier: ^5.0.5
+        version: 5.0.10
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.3
 
   packages/webextension-polyfill: {}
 

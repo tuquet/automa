@@ -1,0 +1,54 @@
+{
+  "name": "@automa/types",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared TypeScript definitions and contracts for the Automa Ecosystem",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./workflow": {
+      "types": "./dist/workflow.d.ts",
+      "import": "./dist/workflow.js",
+      "default": "./dist/workflow.js"
+    },
+    "./campaign": {
+      "types": "./dist/campaign.d.ts",
+      "import": "./dist/campaign.js",
+      "default": "./dist/campaign.js"
+    },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "import": "./dist/browser.js",
+      "default": "./dist/browser.js"
+    },
+    "./job": {
+      "types": "./dist/job.d.ts",
+      "import": "./dist/job.js",
+      "default": "./dist/job.js"
+    },
+    "./ipc": {
+      "types": "./dist/ipc.d.ts",
+      "import": "./dist/ipc.js",
+      "default": "./dist/ipc.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
+  }
+}

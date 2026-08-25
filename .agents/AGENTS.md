@@ -223,3 +223,11 @@
 - **Daemon Hosting**: `automa-core` **BẮT BUỘC** mount thư mục `dist/studio/` tại endpoint static `/studio` thông qua `tower_http::services::ServeDir`.
 - **Client Execution**: Khi người dùng kích hoạt "Open in Automa Studio" từ VS Code hoặc CLI, **BẮT BUỘC** mở URL `http://127.0.0.1:8765/studio/` trên trình duyệt mặc định thông qua `vscode.env.openExternal`. **TUYỆT ĐỐI KHÔNG** nhúng toàn bộ Studio vào VS Code Webview hay spawn process thủ công.
 
+# Automa Storage vs Storage Workspace Terminology Invariant
+
+- **Ngữ Cảnh Người Dùng (User Experience)**: Người dùng Automa gốc chỉ biết đến khái niệm **`Storage`** (Global Storage gồm Tables, Variables, Credentials).
+- **Quy Chuẩn Định Danh**:
+  1. **Global Storage**: Áp dụng duy nhất cho cơ sở dữ liệu nghiệp vụ của Automa (`Tables`, `Variables`, `Credentials`) lưu trữ trong SQLite/Dexie qua `/api/storage/*`. Trên giao diện UI (VS Code Sidebar, Webviews, Studio) **BẮT BUỘC** ghi là **`Global Storage`**, **TUYỆT ĐỐI KHÔNG** gọi là *"Global Vault"*.
+  2. **Storage Workspace**: Áp dụng cho cấu trúc thư mục chứa các tệp kịch bản (`.workflow.json`), chiến dịch (`.campaigns.json`), và trình duyệt (`.browser.json`) trên đĩa (tương ứng với submodule `automa-vault`).
+
+

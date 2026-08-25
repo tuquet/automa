@@ -1,11 +1,14 @@
 ---
 name: automa-vault
-description: Hướng dẫn cấu trúc thư mục, file cấu hình Campaigns và đặc tả Workflow & Browser Mapping cho automa-vault.
+description: Hướng dẫn cấu trúc thư mục Storage Workspace, file cấu hình Campaigns và đặc tả Workflow & Browser Mapping cho automa-vault.
 ---
 
-# Automa Vault Campaigns & Browser Mapping Convention
+# Automa Storage Workspace (automa-vault) & Campaign Mapping Convention
 
-**BẮT BUỘC** tuân thủ quy định cấu trúc thư mục Campaigns và Workflow & Browser Mapping.
+> [!NOTE]
+> **Phân Định Ngữ Nghĩa**:
+> - **Storage Workspace (`automa-vault`)**: Thư mục chứa các tệp kịch bản (`workflows/`), ma trận chiến dịch (`campaigns/`), và cấu hình trình duyệt (`browsers/`).
+> - **Global Storage**: Cơ sở dữ liệu nghiệp vụ của Automa (Tables, Variables, Credentials) lưu trong SQLite.
 
 ---
 
