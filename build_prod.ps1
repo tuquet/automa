@@ -23,17 +23,17 @@ try {
     Pop-Location
 }
 
-# 3. Build automa-ext (Browser Extension)
-Write-Host "`n[3/4] Building Browser Extensions (automa-ext)..." -ForegroundColor Yellow
-Push-Location automa-ext
+# 3. Build automa-webe (Browser Extension)
+Write-Host "`n[3/4] Building Browser Extensions (automa-webe)..." -ForegroundColor Yellow
+Push-Location automa-webe
 try {
     Write-Host "      > Building Full UI (.zip)..." -ForegroundColor Gray
     pnpm run build:prod-chrome
-    if ($LASTEXITCODE -ne 0) { throw "Build automa-ext Full thất bại!" }
+    if ($LASTEXITCODE -ne 0) { throw "Build automa-webe Full thất bại!" }
 
     Write-Host "      > Building Silent Runner (.zip)..." -ForegroundColor Gray
     pnpm run build:runner
-    if ($LASTEXITCODE -ne 0) { throw "Build automa-ext Runner thất bại!" }
+    if ($LASTEXITCODE -ne 0) { throw "Build automa-webe Runner thất bại!" }
     
     # Nén riêng bản Runner thành runner.zip
     if (!(Test-Path "build-zip")) { New-Item -ItemType Directory -Path "build-zip" | Out-Null }
@@ -43,9 +43,9 @@ try {
     Pop-Location
 }
 
-# 4. Build automa-vscode (VS Code Extension)
-Write-Host "`n[4/4] Building VS Code Extension (automa-vscode)..." -ForegroundColor Yellow
-Push-Location automa-vscode
+# 4. Build automa-vsce (VS Code Extension)
+Write-Host "`n[4/4] Building VS Code Extension (automa-vsce)..." -ForegroundColor Yellow
+Push-Location automa-vsce
 try {
     # Chạy build trước (tsc / webpack của extension nếu có script build)
     if (Test-Path "package.json") {
@@ -58,7 +58,7 @@ try {
     
     # Đóng gói VSIX (Bỏ qua check dependencies vì là monorepo)
     npx @vscode/vsce package --no-dependencies
-    if ($LASTEXITCODE -ne 0) { throw "Build automa-vscode thất bại!" }
+    if ($LASTEXITCODE -ne 0) { throw "Build automa-vsce thất bại!" }
 } finally {
     Pop-Location
 }
@@ -74,9 +74,9 @@ try {
     # Copy CLI
     Copy-Item -Path "automa-cli\dist\cli.js" -Destination "$DEV_BIN\cli.js" -Force
     # Copy Runner Zip
-    Copy-Item -Path "automa-ext\build-zip\runner.zip" -Destination "$DEV_BIN\runner.zip" -Force
+    Copy-Item -Path "automa-webe\build-zip\runner.zip" -Destination "$DEV_BIN\runner.zip" -Force
     # Copy VS Code VSIX
-    $vsixFile = Get-ChildItem -Path "automa-vscode\*.vsix" | Select-Object -First 1
+    $vsixFile = Get-ChildItem -Path "automa-vsce\*.vsix" | Select-Object -First 1
     if ($vsixFile) {
         Copy-Item -Path $vsixFile.FullName -Destination "$DEV_BIN\$($vsixFile.Name)" -Force
     }

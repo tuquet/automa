@@ -64,7 +64,6 @@ export function updateDiagnostics(document: vscode.TextDocument, lintErrors: Arr
 - **TUYỆT ĐỐI KHÔNG** gọi lệnh CLI trực tiếp thông qua `child_process.exec` hay `vscode.ProcessExecution` để thực thi script (ngoại trừ lệnh khởi động Daemon). Mọi yêu cầu xử lý **BẮT BUỘC** gửi qua API tới Daemon.
 - **BẮT BUỘC** sử dụng SDK tự động sinh (auto-generated) từ OpenAPI là `@hey-api/client-fetch` (ví dụ: `getBrowsers()`, `startBrowser()`) đặt tại `src/core/api/client/` để giao tiếp với Daemon thay vì tự viết các hàm `fetch` thô.
 - **SSE & Real-time Progress (Zero-Latency Polling)**: Đối với các tác vụ chạy ngầm tốn thời gian (khởi động browser, chạy workflow), **TUYỆT ĐỐI KHÔNG** dùng vòng lặp `while` hoặc `setInterval` để gọi polling thủ công `/status`. **BẮT BUỘC** sử dụng cơ chế Server-Sent Events (SSE) thông qua hàm `sse()` của `@hey-api`.
-  - *Lưu ý TypeScript (Node.js Fetch Streams)*: Đối tượng `response.body` trả về từ Node 18+ `fetch` có hỗ trợ `Symbol.asyncIterator`, nhưng kiểu DOM mặc định của TS sẽ không nhận dạng được. Bạn **BẮT BUỘC** ép kiểu để tránh lỗi biên dịch `tsc`: `for await (const chunk of (res.body as any))` thay vì gọi `.getReader()`.
 ---
 
 ## 5. Native Debugger UI Reuse
@@ -95,7 +94,7 @@ export function updateDiagnostics(document: vscode.TextDocument, lintErrors: Arr
 **BẮT BUỘC** áp dụng các cơ chế sau để đồng bộ VS Code Sidebar:
 - **`createFileSystemWatcher`**: Trigger `refresh()` khi có thay đổi file `.json`, `.yaml`.
 - **`onDidChangeVisibility`**: Tự động fetch data khi chuyển tab.
-- **`EventEmitter`**: Gọi `this._onDidChangeTreeData.fire()` để vẽ lại cây thư mục.
+- **`EventEmitter`**: Gọi `this._onDidChangeTreeData.fire(undefined)` để vẽ lại cây thư mục (sử dụng `EventEmitter<T | undefined>()` để tuân thủ quy tắc `noConfusingVoidType` của Biome).
 
 ---
 
@@ -117,15 +116,18 @@ export function updateDiagnostics(document: vscode.TextDocument, lintErrors: Arr
 **BẮT BUỘC** tuân thủ tháp kiểm thử (Bottom-Up) cho VS Code Extension:
 
 1. **Unit Testing (`vitest`)**:
-   - **Thư mục**: `src/test/core/`
+   - **Thư mục**: `src/test/core/`, `src/test/commands/`, `src/test/providers/`
    - Các API cốt lõi như `TaskRunner`, `DaemonService`, và `GlobalSseListener` **BẮT BUỘC** được test độc lập bằng `vitest`.
-   - **Mocking**: Extension Host API (`vscode`) không tồn tại trong môi trường Vitest. Bạn **BẮT BUỘC** cập nhật và duy trì các hàm mock trong `src/test/setup.ts` (ví dụ mock `vscode.window`, `vscode.workspace`, `vscode.Uri`).
+   - **Strict TypeScript & Zero-Warning Mandate**: **TUYỆT ĐỐI KHÔNG** dùng `// biome-ignore` hay `as any` để bỏ qua lỗi linter trong tests. **BẮT BUỘC** dùng `vi.mocked(...)` với kiểu `Awaited<ReturnType<typeof fn>>` hoặc domain types chuẩn từ `@automa/types` & `@automa/types/api`.
+   - **OpenAPI Type Alignment**: `getBrowsers()` trả về `BrowserResponse[]` từ OpenAPI client, phân biệt rõ với `Browser` domain model.
+   - **Mocking**: Extension Host API (`vscode`) không tồn tại trong môi trường Vitest. Bạn **BẮT BUỘC** cập nhật và duy trì các hàm mock trong `src/test/setup.ts` (ví dụ mock `vscode.window`, `vscode.workspace`, `vscode.Uri`, `MockEventEmitter<T = unknown>`).
    - **ESM Caveat**: Không sử dụng `require()` động trong các file nguồn chạy trên nền Vitest. **BẮT BUỘC** dùng `await import()` để tránh lỗi `ERR_REQUIRE_ESM`.
 
 2. **E2E Integration Testing (`@vscode/test-electron` + `mocha`)**:
    - **Thư mục**: `src/test/e2e/`
    - Dùng để kiểm tra khả năng kích hoạt của Extension (Activation), khởi tạo UI, và Command Registration bên trong một Extension Host thực sự.
    - Đảm bảo các đường dẫn phân giải tĩnh được sử dụng an toàn thông qua `fileURLToPath` thay cho `__dirname` vì Extension này sử dụng chuẩn Node ESM.
+
 
 ---
 

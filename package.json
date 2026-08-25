@@ -4,7 +4,7 @@
     "packageManager": "pnpm@11.21.0+sha512.521705bce689924eac72f5a3587122f362689ef6571e55ba80076fd637c11132ecffada26fad4ea79c485bfddbfd3d5a2a5b05805a77e893de71ec8a6cca3bb1",
     "engines": {
         "node": ">=18.0.0",
-        "pnpm": ">=9.0.0"
+        "pnpm": ">=11.0.0"
     },
     "scripts": {
         "prepare": "husky",
@@ -12,12 +12,17 @@
         "build:runner": "turbo run build:runner",
         "build:studio": "turbo run build:studio",
         "build:webview": "turbo run build:webview",
-        "dev": "turbo run dev",
-        "dev:all": "node scripts/dev-orchestrator.mjs",
-        "dev:vscode": "turbo run dev --filter=vscode-automa",
+        "build:core": "cargo build --release --manifest-path automa-core/Cargo.toml",
+        "build:desk": "turbo run build --filter=@automa/desk",
+        "dev": "node scripts/dev-orchestrator.mjs",
+        "dev:all": "node scripts/dev-orchestrator.mjs --all",
+        "dev:turbo": "turbo run dev",
+        "dev:vsce": "turbo run dev --filter=vscode-automa",
+        "dev:desk": "turbo run dev --filter=@automa/desk",
         "dev:source:runner": "turbo run dev:runner --filter=automa",
         "dev:source:studio": "turbo run dev:studio --filter=automa",
         "dev:core": "cd automa-core && cargo watch -x run",
+        "test:desk": "pnpm -F @automa/desk test:unit",
         "lint": "turbo run lint",
         "lint:fix": "turbo run lint:fix",
         "format": "turbo run format",
@@ -30,7 +35,7 @@
         "test": "node scripts/test-all.mjs",
         "test:all": "node scripts/test-all.mjs",
         "test:core": "cargo test --manifest-path automa-core/Cargo.toml",
-        "test:vscode": "pnpm -F vscode-automa test",
+        "test:vsce": "pnpm -F vscode-automa test",
         "test:e2e": "vitest run",
         "test:ui": "vitest --ui",
         "test:coverage": "pnpm -F vscode-automa run test:coverage",
@@ -40,18 +45,20 @@
         "lint:schema": "node scripts/enforce-strict-schema.mjs"
     },
     "devDependencies": {
+        "@clack/prompts": "^1.7.0",
         "@usebruno/cli": "^4.0.0",
         "@usebruno/converters": "^0.22.0",
         "@vitest/coverage-v8": "^4.1.10",
         "@vitest/ui": "^4.1.10",
         "husky": "^9.1.7",
         "lint-staged": "^17.2.0",
+        "picocolors": "^1.1.1",
         "rimraf": "^5.0.5",
         "turbo": "^2.1.2",
         "vitest": "^4.1.10"
     },
     "lint-staged": {
-        "automa-vscode/**/*.{js,ts,json}": [
+        "automa-vsce/**/*.{js,ts,json}": [
             "npx @biomejs/biome check --write"
         ]
     }

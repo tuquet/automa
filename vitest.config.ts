@@ -21,8 +21,9 @@ export default defineConfig({
 		fileParallelism: false,
 		include: ["tests/**/*.test.ts"],
 		exclude: [
-			"automa-vscode/**",
-			"automa-ext/**",
+			"automa-vsce/**",
+			"automa-webe/**",
+			"automa-desk/**",
 			"node_modules/**",
 			".vscode-test/**",
 			"out/**",

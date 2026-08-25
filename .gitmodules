@@ -1,13 +1,15 @@
 [submodule "automa-vault"]
 	path = automa-vault
 	url = https://github.com/tuquet/automa-vault.git
-[submodule "automa-vscode"]
-	path = automa-vscode
-	url = https://github.com/tuquet/automa-vscode.git
-[submodule "automa-ext"]
-	path = automa-ext
-	url = https://github.com/tuquet/automa-ext.git
+[submodule "automa-vsce"]
+	path = automa-vsce
+	url = https://github.com/tuquet/automa-vsce.git
+[submodule "automa-webe"]
+	path = automa-webe
+	url = https://github.com/tuquet/automa-webe.git
 [submodule "automa-core"]
 	path = automa-core
 	url = https://github.com/tuquet/automa-core.git
-
+[submodule "automa-desk"]
+	path = automa-desk
+	url = https://github.com/tuquet/automa-desk.git

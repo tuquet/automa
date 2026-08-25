@@ -39,7 +39,7 @@ function getSubmodules() {
       .filter(Boolean)
       .map((line) => line.split(' ')[1].trim());
   } catch (_) {
-    return ['automa-core', 'automa-ext', 'automa-vault', 'automa-vscode'];
+    return ['automa-core', 'automa-webe', 'automa-vsce', 'automa-desk', 'automa-vault'];
   }
 }
 

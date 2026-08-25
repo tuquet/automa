@@ -64,6 +64,7 @@
   "devDependencies": {
     "@hey-api/openapi-ts": "^0.99.0",
     "rimraf": "^5.0.5",
-    "typescript": "^5.3.3"
+    "typescript": "^7.0.2"
   }
 }
+

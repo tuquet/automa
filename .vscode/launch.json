@@ -6,7 +6,7 @@
       "type": "chrome",
       "request": "launch",
       "url": "http://127.0.0.1:8765/studio/",
-      "webRoot": "${workspaceFolder}/automa-ext",
+      "webRoot": "${workspaceFolder}/automa-webe",
       "preLaunchTask": "[Preset] Live Studio (Rust + Canvas)"
     },
     {
@@ -14,10 +14,10 @@
       "type": "extensionHost",
       "request": "launch",
       "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}/automa-vscode"
+        "--extensionDevelopmentPath=${workspaceFolder}/automa-vsce"
       ],
       "outFiles": [
-        "${workspaceFolder}/automa-vscode/dist/**/*.js"
+        "${workspaceFolder}/automa-vsce/dist/**/*.js"
       ],
       "preLaunchTask": "[Preset] Full-stack (Rust + Runner + VSCode)"
     },
@@ -26,12 +26,12 @@
       "type": "extensionHost",
       "request": "launch",
       "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}/automa-vscode"
+        "--extensionDevelopmentPath=${workspaceFolder}/automa-vsce"
       ],
       "outFiles": [
-        "${workspaceFolder}/automa-vscode/dist/**/*.js"
+        "${workspaceFolder}/automa-vsce/dist/**/*.js"
       ],
-      "preLaunchTask": "automa-vscode: Build Extension"
+      "preLaunchTask": "automa-vsce: Build Extension"
     }
   ]
 }

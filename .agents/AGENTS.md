@@ -53,23 +53,35 @@
 
 - **Prioritize Existing WIPs (Work-in-Progress)**: Trước khi sáng chế hoặc đề xuất các tích hợp kiến trúc phức tạp, polyfills, hoặc cầu nối liên gói (cross-package bridges) (ví dụ: nhúng ứng dụng Vue vào một VS Code Webview), **BẮT BUỘC** tìm kiếm triệt để trong monorepo các giải pháp WIP đã có.
   - **Action**: **LUÔN LUÔN** kiểm tra scripts trong `package.json`, các biến thể `webpack.*.config.js`, và workspaces `packages/` để xem liệu một mục tiêu build (build target) hoặc adapter (như `vscode-compat.js`) cụ thể đã được người dùng triển khai một phần hay chưa. **TUYỆT ĐỐI KHÔNG** xây dựng từ đầu nếu nền tảng đã tồn tại.
-- **VSCE Packaging**: Trong cấu trúc Monorepo, nếu `npx vsce package` thất bại do xác thực phụ thuộc (dependency validation) khắt khe trong `package.json` (ví dụ: thiếu dependencies ở root), **ƯU TIÊN DÙNG** cờ `--no-dependencies` thay vì chỉnh sửa cấu trúc workspace và phá vỡ thiết kế monorepo gốc.
-
-# Central Type Hub & Contract-First Architecture
-
-- **Single Source of Truth cho Typescript**: Package `@automa/types` (`packages/automa-types`) là nơi tập trung DUY NHẤT cho toàn bộ TypeScript interfaces, Domain Models và API Contracts của hệ sinh thái.
-- **Phân Định 2 Tầng Types**:
-  1. **Domain Models & Client State**: `@automa/types` (Workflow AST, VueFlow Canvas, Campaigns, Webview IPC messages).
-  2. **API Wire Contracts & SDK Client**: `@automa/types/api` (Tự động sinh từ `automa-core` OpenAPI v3 qua `@hey-api/openapi-ts`).
-  3. **Bidirectional WebSocket Protocols**: `@automa/types/ws` (Giao thức tin nhắn 2 chiều `AutomaWsCommand` & `AutomaWsEvent` cho các tác vụ tương tác thời gian thực).
-- **NO Duplicate API Generators**: **TUYỆT ĐỐI KHÔNG** cấu hình `openapi-ts` riêng rẽ bên trong các submodules (`automa-vscode`, `automa-ext`). Toàn bộ việc sinh API types **BẮT BUỘC** tập trung tại `@automa/types` thông qua lệnh `pnpm run sync:api`.
-- **Workspace Consumption**: Các submodule (`automa-vscode`, `automa-ext`) **BẮT BUỘC** tiêu thụ types qua giao thức workspace: `"@automa/types": "workspace:*"` và `import { ... } from "@automa/types/api"`.
-- **Offline-First OpenAPI Sync Invariant**: Toàn bộ các scripts đồng bộ OpenAPI (`sync:api`, `sync-bruno`, `docs:generate`, `openapi-ts`) **BẮT BUỘC KHÔNG ĐƯỢC PHỤ THUỘC ĐỘC NHẤT** vào một daemon HTTP đang chạy. **PHẢI DÙNG** module `scripts/export-openapi.mjs` với cơ chế tự động fallback trích xuất tĩnh từ mã nguồn Rust (`cargo run -- --export-openapi`) để đảm bảo các môi trường CI/CD hoặc cold-build không bao giờ bị lỗi `fetch failed`.
-- **SSE vs WebSocket Protocol Invariants**:
+- **VSCE Packaging**: Trong cấu trúc Monorepo, nếu `npx vsce package` thất bại do xác thực phụ thuộc (dependency validation) khắt khe trong `package.json` (ví dụ: thiếu dependencies ở root), **ƯU TIÊN DÙNG** cờ `--no-dependencies` thay vì chỉnh sửa cấu trúc workspace và phá vỡ thiết kế monorepo g�  - **SSE vs WebSocket Protocol Invariants**:
   - **Server-Sent Events (SSE)**: Dùng cho dữ liệu 1 chiều (Logs, Telemetry, Matrix progress) và **BẮT BUỘC** khai báo `content_type = "text/event-stream"` trong `utoipa` để `@hey-api/openapi-ts` tự động sinh SDK client `.sse.get()`.
   - **WebSocket (WS)**: Dùng cho điều khiển 2 chiều độ trễ thấp (`/api/v1/ws`) và **BẮT BUỘC** tiêu thụ các kiểu tin nhắn tường minh từ `@automa/types/ws`.
+- **Zero Fallback & Explicit Error Contract**: Toàn bộ hệ sinh thái Automa Ecosystem là phiên bản phát triển mới (Greenfield / Modernized), **TUYỆT ĐỐI KHÔNG** sử dụng legacy fallback routing hay dual-path trong API handlers và client SDK. Toàn bộ endpoints **BẮT BUỘC** sử dụng chuẩn `/api/v1/...` và trả về mã lỗi HTTP tường minh (`BadRequest`, `NotFound`, `Validation`, `InternalServerError`) đi kèm cấu trúc `ApiErrorResponse` chuẩn. **TUYỆT ĐỐI KHÔNG** swallow lỗi âm thầm hoặc ngầm fallback sang các hàm cũ.
+
+# Strict TypeScript & Zero-Warning Quality Standards
+
+- **Zero Linter Bypass Invariant**: **TUYỆT ĐỐI KHÔNG** cấu hình bỏ qua linter trong `biome.json` hoặc thêm các chú thích `// biome-ignore` / `// @ts-ignore` để lách qua các quy tắc kiểm tra kiểu dữ liệu (`noExplicitAny`, `noConfusingVoidType`, `useOptionalChain`, `noNonNullAssertion`).
+- **Strict Testing Standard**: Toàn bộ các bộ kiểm thử Vitest **BẮT BUỘC** viết chuẩn mực với `vi.mocked(...)`, tiêu thụ types từ `@automa/types` & `@automa/types/api`, gán kiểu an toàn `Awaited<ReturnType<typeof ...>>` thay vì ép kiểu thô `as any`. Mọi PR/Commit **BẮT BUỘC** đạt **0 errors, 0 warnings** trên lệnh lint của package tương ứng.
 
 # Submodule Pointer Sync Protocol
+
+- **Root & Submodule Pointer Alignment**: Trong mô hình Hybrid Monorepo, mỗi khi có commit mới bên trong bất kỳ submodule nào (`automa-core`, `automa-ext`, `automa-vault`, `automa-vscode`), con trỏ commit tại Root Monorepo **BẮT BUỘC** được cập nhật tương ứng.
+- **Pre-commit Guard**: Husky pre-commit hook (`.husky/pre-commit`) tự động chạy `node scripts/check-submodules.mjs` để phát hiện lệch con trỏ.
+- **Auto-Sync Command**: Khi phát hiện lệch pointer, **BẮT BUỘC** sử dụng lệnh `pnpm run sync:submodules` để tự động stage (`git add`) toàn bộ con trỏ submodule hợp lệ trước khi commit ở root.
+
+# Unified Multi-Service Dev Orchestration
+
+- **Single Dev Command**: Khi chạy môi trường phát triển đầy đủ (Rust Core + Studio + VS Code), **ƯU TIÊN DÙNG** lệnh `pnpm run dev:all` (`scripts/dev-orchestrator.mjs`).
+- **Zombie Process Prevention**: Script Orchestrator tích hợp bắt tín hiệu `SIGINT` (Ctrl+C) / `SIGTERM` và diệt toàn bộ cây tiến trình con (`taskkill /t /f` trên Windows) để ngăn chặn rò rỉ tiến trình treo ngầm chiếm dụng port `8765`.
+- **Watch Mode & Build Lock Guard**: Khi USER đang bật chế độ Watch Code ngầm (`cargo watch`, `pnpm run dev`, `tsup --watch`), **TUYỆT ĐỐI KHÔNG** tự ý chạy các lệnh build/check thủ công (như `cargo build`, `cargo check`) có nguy cơ chiếm dụng khóa file (file lock contention trên thư mục `target/` hoặc `dist/`). Ưu tiên chạy các unit tests độc lập (`vitest run`) hoặc kiểm tra kiểu không khóa (`tsc --noEmit`).kiểu tin nhắn tường minh từ `@automa/types/ws`.
+
+# Strict TypeScript & Zero-Warning Quality Standards
+
+- **Zero Linter Bypass Invariant**: **TUYỆT ĐỐI KHÔNG** cấu hình bỏ qua linter trong `biome.json` hoặc thêm các chú thích `// biome-ignore` / `// @ts-ignore` để lách qua các quy tắc kiểm tra kiểu dữ liệu (`noExplicitAny`, `noConfusingVoidType`, `useOptionalChain`, `noNonNullAssertion`).
+- **Strict Testing Standard**: Toàn bộ các bộ kiểm thử Vitest **BẮT BUỘC** viết chuẩn mực với `vi.mocked(...)`, tiêu thụ types từ `@automa/types` & `@automa/types/api`, gán kiểu an toàn `Awaited<ReturnType<typeof ...>>` thay vì ép kiểu thô `as any`. Mọi PR/Commit **BẮT BUỘC** đạt **0 errors, 0 warnings** trên lệnh lint của package tương ứng.
+
+# Submodule Pointer Sync Protocol
+
 
 - **Root & Submodule Pointer Alignment**: Trong mô hình Hybrid Monorepo, mỗi khi có commit mới bên trong bất kỳ submodule nào (`automa-core`, `automa-ext`, `automa-vault`, `automa-vscode`), con trỏ commit tại Root Monorepo **BẮT BUỘC** được cập nhật tương ứng.
 - **Pre-commit Guard**: Husky pre-commit hook (`.husky/pre-commit`) tự động chạy `node scripts/check-submodules.mjs` để phát hiện lệch con trỏ.

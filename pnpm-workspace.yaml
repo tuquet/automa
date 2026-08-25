@@ -1,6 +1,7 @@
 packages:
-  - 'automa-vscode'
-  - 'automa-ext'
+  - 'automa-vsce'
+  - 'automa-webe'
+  - 'automa-desk'
   - 'packages/*'
 allowBuilds:
   core-js: true

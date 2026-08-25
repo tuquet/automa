@@ -5,7 +5,7 @@
       "label": "[Preset] Live Studio (Rust + Canvas)",
       "dependsOn": [
         "automa-core: Watch Daemon (cargo watch)",
-        "automa-ext: Watch Studio (Canvas)"
+        "automa-webe: Watch Studio (Canvas)"
       ],
       "dependsOrder": "parallel",
       "problemMatcher": []
@@ -14,9 +14,9 @@
       "label": "[Preset] Full-stack (Rust + Runner + VSCode)",
       "dependsOn": [
         "automa-core: Watch Daemon (cargo watch)",
-        "automa-ext: Watch Runner (Headless)",
-        "automa-vscode: Watch Extension",
-        "automa-vscode: Watch Webview"
+        "automa-webe: Watch Runner (Headless)",
+        "automa-vsce: Watch Extension",
+        "automa-vsce: Watch Webview"
       ],
       "dependsOrder": "parallel",
       "problemMatcher": []
@@ -75,11 +75,11 @@
       }
     },
     {
-      "label": "automa-ext: Watch Studio (Canvas)",
+      "label": "automa-webe: Watch Studio (Canvas)",
       "type": "shell",
       "command": "pnpm run dev:studio",
       "options": {
-        "cwd": "${workspaceFolder}/automa-ext"
+        "cwd": "${workspaceFolder}/automa-webe"
       },
       "isBackground": true,
       "presentation": {
@@ -99,11 +99,11 @@
       }
     },
     {
-      "label": "automa-ext: Watch Runner (Headless)",
+      "label": "automa-webe: Watch Runner (Headless)",
       "type": "shell",
       "command": "pnpm run dev:runner",
       "options": {
-        "cwd": "${workspaceFolder}/automa-ext"
+        "cwd": "${workspaceFolder}/automa-webe"
       },
       "isBackground": true,
       "presentation": {
@@ -123,11 +123,11 @@
       }
     },
     {
-      "label": "automa-vscode: Watch Extension",
+      "label": "automa-vsce: Watch Extension",
       "type": "shell",
       "command": "pnpm run watch",
       "options": {
-        "cwd": "${workspaceFolder}/automa-vscode"
+        "cwd": "${workspaceFolder}/automa-vsce"
       },
       "isBackground": true,
       "presentation": {
@@ -152,11 +152,11 @@
       }
     },
     {
-      "label": "automa-vscode: Watch Webview",
+      "label": "automa-vsce: Watch Webview",
       "type": "shell",
       "command": "pnpm run watch:webview",
       "options": {
-        "cwd": "${workspaceFolder}/automa-vscode"
+        "cwd": "${workspaceFolder}/automa-vsce"
       },
       "isBackground": true,
       "presentation": {
@@ -176,11 +176,11 @@
       }
     },
     {
-      "label": "automa-vscode: Build Extension",
+      "label": "automa-vsce: Build Extension",
       "type": "shell",
       "command": "pnpm run build",
       "options": {
-        "cwd": "${workspaceFolder}/automa-vscode"
+        "cwd": "${workspaceFolder}/automa-vsce"
       },
       "problemMatcher": [],
       "presentation": {

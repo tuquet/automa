@@ -9,12 +9,16 @@
       "path": "automa-core"
     },
     {
-      "name": "automa-ext",
-      "path": "automa-ext"
+      "name": "automa-webe",
+      "path": "automa-webe"
     },
     {
-      "name": "automa-vscode",
-      "path": "automa-vscode"
+      "name": "automa-vsce",
+      "path": "automa-vsce"
+    },
+    {
+      "name": "automa-desk",
+      "path": "automa-desk"
     },
     {
       "name": "automa-vault",
