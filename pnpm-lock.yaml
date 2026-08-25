@@ -38,6 +38,9 @@ importers:
 
   automa-ext:
     dependencies:
+      '@automa/types':
+        specifier: workspace:*
+        version: link:../packages/automa-types
       '@codemirror/autocomplete':
         specifier: ^6.9.0
         version: 6.20.3
