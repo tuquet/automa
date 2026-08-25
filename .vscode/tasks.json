@@ -2,19 +2,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "🚀 Dev: Interactive Orchestrator",
+      "label": "🚀 Dev: Automa Ecosystem",
       "type": "shell",
       "command": "pnpm run dev",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated"
-      }
-    },
-    {
-      "label": "🚀 Dev: All Services (Headless)",
-      "type": "shell",
-      "command": "pnpm run dev:all",
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
@@ -32,7 +22,7 @@
       "problemMatcher": []
     },
     {
-      "label": "🧪 Test: All Suites (Monorepo Unified)",
+      "label": "🧪 Test: All Suites (Unified)",
       "type": "shell",
       "command": "pnpm run test",
       "group": {
@@ -42,37 +32,7 @@
       "problemMatcher": []
     },
     {
-      "label": "🦀 Dev: Rust Core Daemon (Watch)",
-      "type": "shell",
-      "command": "pnpm run dev:core",
-      "problemMatcher": []
-    },
-    {
-      "label": "🧩 Dev: VS Code Extension (Watch)",
-      "type": "shell",
-      "command": "pnpm run dev:vsce",
-      "problemMatcher": []
-    },
-    {
-      "label": "🎨 Dev: Studio Canvas (dev:studio)",
-      "type": "shell",
-      "command": "pnpm run dev:source:studio",
-      "problemMatcher": []
-    },
-    {
-      "label": "🖥️ Dev: Desktop Companion (automa-desk)",
-      "type": "shell",
-      "command": "pnpm run dev:desk",
-      "problemMatcher": []
-    },
-    {
-      "label": "📖 Dev: Scalar API Docs Server",
-      "type": "shell",
-      "command": "pnpm run dev:docs",
-      "problemMatcher": []
-    },
-    {
-      "label": "🔄 Sync: OpenAPI & Bruno Collections",
+      "label": "🔄 Sync: OpenAPI, Docs & Types SDK",
       "type": "shell",
       "command": "pnpm run sync:api",
       "problemMatcher": []
