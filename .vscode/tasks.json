@@ -2,48 +2,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "[Preset] Live Studio (Rust + Canvas)",
-      "dependsOn": [
-        "automa-core: Watch Daemon (cargo watch)",
-        "automa-webe: Watch Studio (Canvas)"
-      ],
-      "dependsOrder": "parallel",
-      "problemMatcher": []
-    },
-    {
-      "label": "[Preset] Full-stack (Rust + Runner + VSCode)",
-      "dependsOn": [
-        "automa-core: Watch Daemon (cargo watch)",
-        "automa-webe: Watch Runner (Headless)",
-        "automa-vsce: Watch Extension",
-        "automa-vsce: Watch Webview"
-      ],
-      "dependsOrder": "parallel",
-      "problemMatcher": []
-    },
-    {
-      "label": "[Preset] Build All (Turbo)",
+      "label": "🚀 Dev Orchestrator (Interactive TUI)",
       "type": "shell",
-      "command": "pnpm run build",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "presentation": {
-        "panel": "dedicated"
-      }
-    },
-    {
-      "label": "[Preset] Sync APIs & Docs",
-      "type": "shell",
-      "command": "pnpm run sync:api",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
+      "command": "pnpm run dev:all",
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
@@ -51,141 +12,30 @@
       }
     },
     {
-      "label": "automa-core: Watch Daemon (cargo watch)",
-      "type": "shell",
-      "command": "cargo watch -x run",
-      "options": {
-        "cwd": "${workspaceFolder}/automa-core"
-      },
-      "isBackground": true,
-      "presentation": {
-        "panel": "dedicated",
-        "clear": false
-      },
-      "problemMatcher": {
-        "owner": "rust",
-        "pattern": {
-          "regexp": "^$"
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "^.*(Compiling|Automa Core|Checking).*$",
-          "endsPattern": "^.*(listening on|Server listening|could not compile|error: aborting).*$"
-        }
-      }
-    },
-    {
-      "label": "automa-webe: Watch Studio (Canvas)",
-      "type": "shell",
-      "command": "pnpm run dev:studio",
-      "options": {
-        "cwd": "${workspaceFolder}/automa-webe"
-      },
-      "isBackground": true,
-      "presentation": {
-        "panel": "dedicated",
-        "clear": false
-      },
-      "problemMatcher": {
-        "owner": "webpack-studio",
-        "pattern": {
-          "regexp": "^$"
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "^.*(building|compiling).*$",
-          "endsPattern": "^.*(compiled successfully|compiled with|Failed to compile|compiled).*$"
-        }
-      }
-    },
-    {
-      "label": "automa-webe: Watch Runner (Headless)",
-      "type": "shell",
-      "command": "pnpm run dev:runner",
-      "options": {
-        "cwd": "${workspaceFolder}/automa-webe"
-      },
-      "isBackground": true,
-      "presentation": {
-        "panel": "dedicated",
-        "clear": false
-      },
-      "problemMatcher": {
-        "owner": "webpack-runner",
-        "pattern": {
-          "regexp": "^$"
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "^.*(building|compiling).*$",
-          "endsPattern": "^.*(compiled successfully|compiled with|Failed to compile|compiled).*$"
-        }
-      }
-    },
-    {
-      "label": "automa-vsce: Watch Extension",
-      "type": "shell",
-      "command": "pnpm run watch",
-      "options": {
-        "cwd": "${workspaceFolder}/automa-vsce"
-      },
-      "isBackground": true,
-      "presentation": {
-        "panel": "dedicated",
-        "clear": false
-      },
-      "problemMatcher": {
-        "owner": "tsup",
-        "pattern": {
-          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-          "file": 1,
-          "line": 2,
-          "column": 3,
-          "severity": 4,
-          "message": 5
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "^.*Build start.*$",
-          "endsPattern": "^.*(Build success|Build failed|Error:).*$"
-        }
-      }
-    },
-    {
-      "label": "automa-vsce: Watch Webview",
-      "type": "shell",
-      "command": "pnpm run watch:webview",
-      "options": {
-        "cwd": "${workspaceFolder}/automa-vsce"
-      },
-      "isBackground": true,
-      "presentation": {
-        "panel": "dedicated",
-        "clear": false
-      },
-      "problemMatcher": {
-        "owner": "vite",
-        "pattern": {
-          "regexp": "^$"
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "^.*(building|transforming).*$",
-          "endsPattern": "^.*(built in|modules transformed|error during build|failed).*$"
-        }
-      }
-    },
-    {
-      "label": "automa-vsce: Build Extension",
+      "label": "📦 Build All (Turborepo)",
       "type": "shell",
       "command": "pnpm run build",
-      "options": {
-        "cwd": "${workspaceFolder}/automa-vsce"
+      "group": {
+        "kind": "build",
+        "isDefault": true
       },
-      "problemMatcher": [],
-      "presentation": {
-        "panel": "dedicated"
-      }
+      "problemMatcher": []
+    },
+    {
+      "label": "🧪 Test All (Unit & Rust)",
+      "type": "shell",
+      "command": "pnpm run test && pnpm run test:core",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "🧩 Build VS Code Extension",
+      "type": "shell",
+      "command": "pnpm --filter=vscode-automa run build",
+      "problemMatcher": []
     }
   ]
 }

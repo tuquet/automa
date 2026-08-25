@@ -22,6 +22,8 @@
         "dev:source:runner": "turbo run dev:runner --filter=automa",
         "dev:source:studio": "turbo run dev:studio --filter=automa",
         "dev:core": "cd automa-core && cargo watch -x run",
+        "dev:docs": "node scripts/serve-docs.mjs",
+        "docs:serve": "node scripts/serve-docs.mjs",
         "test:desk": "pnpm -F @automa/desk test:unit",
         "lint": "turbo run lint",
         "lint:fix": "turbo run lint:fix",

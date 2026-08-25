@@ -59,7 +59,7 @@ const TASKS = [
   {
     id: 'desk',
     name: 'DESK',
-    label: '🖥️ Automa Desk',
+    label: '🖥️  Automa Desk',
     hint: 'Tauri v2 + Vue 3.5 Desktop Application (port :1420)',
     color: pc.blue,
     cmd: process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
@@ -82,13 +82,14 @@ const TASKS = [
   {
     id: 'docs',
     name: 'DOCS',
-    label: '📖 API Docs & Sync',
-    hint: 'Export OpenAPI, sync Bruno & generate docs',
-    color: pc.gray,
-    cmd: process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
-    args: ['run', 'sync:api'],
+    label: '📖 Scalar API Docs',
+    hint: 'Live Interactive API Reference (port :8767)',
+    color: pc.magenta,
+    cmd: 'node',
+    args: ['scripts/serve-docs.mjs'],
     cwd: rootDir,
-    description: 'OpenAPI Schema & Bruno Collection Sync',
+    description: 'Scalar OpenAPI Live Documentation Server',
+    url: 'http://127.0.0.1:8767',
   },
 ];
 
