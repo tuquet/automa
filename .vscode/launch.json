@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "⚡ Extension: Fast Launch (1s)",
+      "name": "⚡ Extension: Fast Launch (UI Only)",
       "type": "extensionHost",
       "request": "launch",
       "args": [
@@ -26,16 +26,12 @@
       "preLaunchTask": "Serve (Live Rust)"
     },
     {
-      "name": "📦 Full-stack: Extension + Rust EXE",
-      "type": "extensionHost",
+      "name": "🌐 Studio: Debug Web Studio (Chrome)",
+      "type": "chrome",
       "request": "launch",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}/automa-vscode"
-      ],
-      "outFiles": [
-        "${workspaceFolder}/automa-vscode/dist/**/*.js"
-      ],
-      "preLaunchTask": "Serve (Rust EXE)"
+      "url": "http://127.0.0.1:8765/studio/",
+      "webRoot": "${workspaceFolder}/automa-ext",
+      "preLaunchTask": "Serve: Live Studio"
     }
   ]
 }

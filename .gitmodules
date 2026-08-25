@@ -7,12 +7,7 @@
 [submodule "automa-ext"]
 	path = automa-ext
 	url = https://github.com/tuquet/automa-ext.git
-[submodule "packages/core-engine"]
-	path = packages/core-engine
-	url = https://github.com/tuquet/automa-core
 [submodule "automa-core"]
 	path = automa-core
 	url = https://github.com/tuquet/automa-core.git
-[submodule "automa-bruno"]
-	path = automa-bruno
-	url = https://github.com/tuquet/automa-bruno.git
+

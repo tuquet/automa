@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Install",
+      "label": "Install Dependencies",
       "type": "shell",
       "command": "pnpm install",
       "options": {
@@ -10,18 +10,25 @@
       },
       "problemMatcher": [],
       "presentation": {
-        "group": "install"
+        "group": "install",
+        "panel": "dedicated"
       }
     },
     {
-      "label": "Build All",
+      "label": "Build All (Turbo)",
       "type": "shell",
       "command": "pnpm run build",
       "options": {
         "cwd": "${workspaceFolder}"
       },
       "problemMatcher": [],
-      "group": "build"
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "panel": "dedicated"
+      }
     },
     {
       "label": "Build: VSCode",
@@ -31,9 +38,36 @@
         "cwd": "${workspaceFolder}"
       },
       "problemMatcher": [],
-      "group": {
-        "kind": "build",
-        "isDefault": true
+      "group": "build",
+      "presentation": {
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Build: Studio",
+      "type": "shell",
+      "command": "pnpm run build:studio",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Dev: All Workspaces (Turbo)",
+      "type": "shell",
+      "command": "pnpm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "dedicated",
+        "clear": false
       }
     },
     {
@@ -45,7 +79,8 @@
       },
       "isBackground": true,
       "presentation": {
-        "hidden": true
+        "panel": "dedicated",
+        "clear": false
       },
       "problemMatcher": {
         "owner": "tsup",
@@ -60,7 +95,7 @@
         "background": {
           "activeOnStart": true,
           "beginsPattern": "^.*Build start.*$",
-          "endsPattern": "^.*Build success.*$"
+          "endsPattern": "^.*(Build success|Build failed|Error:).*$"
         }
       }
     },
@@ -73,7 +108,8 @@
       },
       "isBackground": true,
       "presentation": {
-        "hidden": true
+        "panel": "dedicated",
+        "clear": false
       },
       "problemMatcher": {
         "owner": "vite",
@@ -83,7 +119,7 @@
         "background": {
           "activeOnStart": true,
           "beginsPattern": "^.*(building|transforming).*$",
-          "endsPattern": "^.*(built in|modules transformed).*$"
+          "endsPattern": "^.*(built in|modules transformed|error during build|failed).*$"
         }
       }
     },
@@ -96,17 +132,18 @@
       },
       "isBackground": true,
       "presentation": {
-        "hidden": true
+        "panel": "dedicated",
+        "clear": false
       },
       "problemMatcher": {
-        "owner": "webpack",
+        "owner": "webpack-runner",
         "pattern": {
           "regexp": "^$"
         },
         "background": {
           "activeOnStart": true,
           "beginsPattern": "^.*(building|compiling).*$",
-          "endsPattern": "^.*compiled.*$"
+          "endsPattern": "^.*(compiled successfully|compiled with|Failed to compile|compiled).*$"
         }
       }
     },
@@ -119,7 +156,7 @@
       },
       "isBackground": true,
       "presentation": {
-        "panel": "shared",
+        "panel": "dedicated",
         "clear": false
       },
       "problemMatcher": {
@@ -130,31 +167,21 @@
         "background": {
           "activeOnStart": true,
           "beginsPattern": "^.*(building|compiling).*$",
-          "endsPattern": "^.*compiled.*$"
+          "endsPattern": "^.*(compiled successfully|compiled with|Failed to compile|compiled).*$"
         }
       }
     },
     {
-      "label": "Build: Studio",
+      "label": "Watch: Rust",
       "type": "shell",
-      "command": "pnpm build:studio",
+      "command": "pnpm dev:core",
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "problemMatcher": [],
-      "group": "build"
-    },
-    {
-      "label": "Watch: Rust",
-      "type": "shell",
-      "command": "cargo watch -x run",
-      "options": {
-        "cwd": "${workspaceFolder}/automa-core"
-      },
       "isBackground": true,
       "presentation": {
-        "panel": "shared",
-        "clear": true
+        "panel": "dedicated",
+        "clear": false
       },
       "problemMatcher": {
         "owner": "rust",
@@ -164,37 +191,7 @@
         "background": {
           "activeOnStart": true,
           "beginsPattern": "^.*(Compiling|Automa Core|Checking).*$",
-          "endsPattern": "^.*(listening on|Server listening).*$"
-        }
-      }
-    },
-    {
-      "label": "Run: Rust EXE",
-      "type": "process",
-      "command": "${workspaceFolder}/automa-core/target/release/automa-core",
-      "windows": {
-        "command": "${workspaceFolder}/automa-core/target/release/automa-core.exe"
-      },
-      "args": [
-        "serve"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}/automa-core/target/release"
-      },
-      "isBackground": true,
-      "presentation": {
-        "panel": "shared",
-        "clear": true
-      },
-      "problemMatcher": {
-        "owner": "rust-exe",
-        "pattern": {
-          "regexp": "^$"
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "^.*Automa Core.*$",
-          "endsPattern": "^.*listening on.*$"
+          "endsPattern": "^.*(listening on|Server listening|could not compile|error: aborting).*$"
         }
       }
     },
@@ -202,17 +199,6 @@
       "label": "Serve (Live Rust)",
       "dependsOn": [
         "Watch: Rust",
-        "Watch: Runner",
-        "Watch: VSCode",
-        "Watch: Webview"
-      ],
-      "dependsOrder": "parallel",
-      "problemMatcher": []
-    },
-    {
-      "label": "Serve (Rust EXE)",
-      "dependsOn": [
-        "Run: Rust EXE",
         "Watch: Runner",
         "Watch: VSCode",
         "Watch: Webview"
@@ -232,11 +218,19 @@
     {
       "label": "Open: Live Studio (Browser)",
       "type": "shell",
-      "command": "cmd /c start http://127.0.0.1:8765/studio/",
+      "windows": {
+        "command": "cmd /c start http://127.0.0.1:8765/studio/"
+      },
+      "osx": {
+        "command": "open http://127.0.0.1:8765/studio/"
+      },
+      "linux": {
+        "command": "xdg-open http://127.0.0.1:8765/studio/"
+      },
       "problemMatcher": [],
       "presentation": {
         "reveal": "never",
-        "panel": "shared"
+        "panel": "dedicated"
       }
     },
     {
@@ -249,7 +243,7 @@
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
-        "panel": "shared"
+        "panel": "dedicated"
       }
     }
   ]
