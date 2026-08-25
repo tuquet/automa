@@ -35,7 +35,7 @@
         "test:ui": "vitest --ui",
         "test:coverage": "pnpm -F vscode-automa run test:coverage",
         "docs:generate": "node scripts/generate-docs.mjs",
-        "sync:api": "pnpm run sync-bruno && pnpm run docs:generate && pnpm -F @automa/types run generate:api && pnpm -F @automa/types run build",
+        "sync:api": "node scripts/export-openapi.mjs && pnpm run sync-bruno && pnpm run docs:generate && pnpm -F @automa/types run generate:api && pnpm -F @automa/types run build",
         "postsync:api": "pnpm run lint",
         "lint:schema": "node scripts/enforce-strict-schema.mjs"
     },

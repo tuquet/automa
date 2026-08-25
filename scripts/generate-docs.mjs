@@ -120,14 +120,12 @@ function generateEndpointFile(pathStr, method, op) {
     return filename;
 }
 
+import { getOpenApiSpec } from './export-openapi.mjs';
+
 async function main() {
-    console.log(`[Docs] Fetching OpenAPI from ${OPENAPI_URL}...`);
+    console.log(`[Docs] Loading OpenAPI specification...`);
     try {
-        const response = await fetch(OPENAPI_URL);
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-        const spec = await response.json();
+        const spec = await getOpenApiSpec();
         
         // Setup dirs
         ensureDir(API_DIR);

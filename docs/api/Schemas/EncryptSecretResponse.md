@@ -3,10 +3,12 @@ tags: [api/schema]
 ---
 # EncryptSecretResponse
 
+Response containing ciphertext secret
+
 **Type**: `object`
 
 ## Properties
 
 | Name | Type | Description |
 |---|---|---|
-| `encrypted_secret` *(req)* | string |  |
+| `encryptedSecret` *(req)* | string | Base64 encrypted secret ciphertext |

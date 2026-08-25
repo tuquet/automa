@@ -3,7 +3,7 @@ tags: [api/schema]
 ---
 # SubmitJobPayload
 
-Payload for submitting a new background job
+Request payload for submitting a new workflow execution job
 
 **Type**: `object`
 
@@ -12,4 +12,5 @@ Payload for submitting a new background job
 | Name | Type | Description |
 |---|---|---|
 | `options` | null | [[SubmitJobOptions]] |  |
-| `workflowPath` *(req)* | string | Absolute or relative path to the `.workflow.json` file. |
+| `workflowData` | object,null | Raw inline workflow JSON payload (alternative to workflowPath) |
+| `workflowPath` | string,null | Absolute or relative filesystem path to the `.workflow.json` file |

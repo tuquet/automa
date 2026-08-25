@@ -2,17 +2,17 @@ import { execSync } from 'child_process';
 import fs, { rmSync, writeFileSync, existsSync, readFileSync } from 'fs';
 import path, { join } from 'path';
 
+import { getOpenApiSpec } from './export-openapi.mjs';
+
 const API_JSON_PATH = 'automa-bruno.tmp.json';
 const OUTPUT_DIR = 'automa-bruno';
 
-console.log('Fetching OpenAPI spec from Rust Backend...');
+console.log('Obtaining OpenAPI spec for Bruno collection...');
 try {
-  const res = await fetch('http://127.0.0.1:8765/api-docs/openapi.json');
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const openapiData = await res.text();
-  writeFileSync(API_JSON_PATH, openapiData, 'utf-8');
+  const spec = await getOpenApiSpec();
+  writeFileSync(API_JSON_PATH, JSON.stringify(spec, null, 2), 'utf-8');
 } catch (e) {
-  console.error('Failed to fetch OpenAPI spec. Is the Rust backend running?', e.message);
+  console.error('Failed to obtain OpenAPI spec for Bruno:', e.message);
   process.exit(1);
 }
 

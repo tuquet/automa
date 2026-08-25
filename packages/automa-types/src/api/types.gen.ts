@@ -2193,3 +2193,10 @@ export type OpenWebStudioResponses = {
 };
 
 export type OpenWebStudioResponse = OpenWebStudioResponses[keyof OpenWebStudioResponses];
+
+export type WsHandlerData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/ws';
+};

@@ -3,12 +3,14 @@ tags: [api/schema]
 ---
 # LintIssue
 
+Diagnostic issue report detected by the workflow linter
+
 **Type**: `object`
 
 ## Properties
 
 | Name | Type | Description |
 |---|---|---|
-| `message` *(req)* | string |  |
-| `path` | string,null |  |
-| `severity` *(req)* | string |  |
+| `message` *(req)* | string | Detailed diagnostic explanation |
+| `path` | string,null | JSONPath location of the affected element |
+| `severity` *(req)* | string | Severity level ("warning", "error") |
