@@ -1,11 +1,33 @@
-import { spawn, type ChildProcess } from 'node:child_process';
+import { spawn, execSync, type ChildProcess } from 'node:child_process';
 import path from 'node:path';
 
 let daemonProcess: ChildProcess | undefined;
 const TEST_PORT = 8766;
 const BASE_URL = `http://127.0.0.1:${TEST_PORT}`;
 
+function killProcessOnPort(port: number): void {
+  try {
+    if (process.platform === 'win32') {
+      const output = execSync(`netstat -ano | findstr :${port}`, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
+      const lines = output.trim().split('\n');
+      for (const line of lines) {
+        const parts = line.trim().split(/\s+/);
+        const pid = parts[parts.length - 1];
+        if (pid && pid !== '0') {
+          try {
+            execSync(`taskkill /pid ${pid} /f /t`, { stdio: 'ignore' });
+          } catch {}
+        }
+      }
+    }
+  } catch {}
+}
+
 export async function setup(): Promise<void> {
+  // Pre-cleanup any dangling process on TEST_PORT
+  killProcessOnPort(TEST_PORT);
+  await new Promise((r) => setTimeout(r, 500));
+
   console.log(`\n[E2E Global Setup] Starting Automa Core Test Daemon on port ${TEST_PORT}...`);
   const corePath = path.join(process.cwd(), 'automa-core');
 
@@ -50,21 +72,21 @@ export async function setup(): Promise<void> {
 }
 
 export function teardown(): void {
-  if (!daemonProcess || daemonProcess.killed || !daemonProcess.pid) {
-    return;
+  if (daemonProcess && daemonProcess.pid) {
+    console.log(`\n[E2E Global Teardown] Terminating Automa Core Test Daemon PID ${daemonProcess.pid}...`);
+    try {
+      if (process.platform === 'win32') {
+        spawn('taskkill', ['/pid', daemonProcess.pid.toString(), '/f', '/t'], {
+          stdio: 'ignore',
+          shell: true,
+        });
+      } else {
+        daemonProcess.kill('SIGTERM');
+      }
+    } catch (err) {
+      console.warn(`[E2E Global Teardown] Warning when stopping daemon:`, err);
+    }
   }
 
-  console.log(`\n[E2E Global Teardown] Terminating Automa Core Test Daemon PID ${daemonProcess.pid}...`);
-  try {
-    if (process.platform === 'win32') {
-      spawn('taskkill', ['/pid', daemonProcess.pid.toString(), '/f', '/t'], {
-        stdio: 'ignore',
-        shell: true,
-      });
-    } else {
-      daemonProcess.kill('SIGTERM');
-    }
-  } catch (err) {
-    console.warn(`[E2E Global Teardown] Warning when stopping daemon:`, err);
-  }
+  killProcessOnPort(TEST_PORT);
 }

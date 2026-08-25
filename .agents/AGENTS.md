@@ -273,4 +273,26 @@
   1. **Global Storage**: Áp dụng duy nhất cho cơ sở dữ liệu nghiệp vụ của Automa (`Tables`, `Variables`, `Credentials`) lưu trữ trong SQLite/Dexie qua `/api/storage/*`. Trên giao diện UI (VS Code Sidebar, Webviews, Studio) **BẮT BUỘC** ghi là **`Global Storage`**, **TUYỆT ĐỐI KHÔNG** gọi là *"Global Vault"*.
   2. **Storage Workspace**: Áp dụng cho cấu trúc thư mục chứa các tệp kịch bản (`.workflow.json`), chiến dịch (`.campaigns.json`), và trình duyệt (`.browser.json`) trên đĩa (tương ứng với submodule `automa-vault`).
 
+# Ecosystem Test Architecture & Directory Standard
+
+- **Quy Chuẩn Thư Mục Test Nhất Quán (Directory Structure)**:
+  1. **Submodule Unit Tests (`src/test/` hoặc `tests/`)**:
+     - `automa-vscode/src/test/`: Chứa toàn bộ Unit tests (Extension Commands, Providers, Webview IPC Harness) sử dụng Vitest và Puppeteer/JSDOM.
+     - `automa-core/src/` & `automa-core/src/e2e_tests.rs`: Chứa Unit & Integration tests nội bộ của Rust core chạy qua `cargo test`.
+  2. **Monorepo Cross-Service E2E Suite (`tests/e2e/`)**:
+     - Thư mục `tests/e2e/` tại Monorepo Root là nơi tập trung DUY NHẤT cho các bài kiểm thử tự động xuyên suốt các dịch vụ (Cross-Service E2E API Tests).
+     - **Helpers**: `tests/e2e/helpers/globalSetup.ts` quản lý vòng đời Test Daemon (tự động khởi chạy trên port cô lập `8766`, dọn dẹp port và tiến trình treo trước/sau khi test).
+     - **Test Suites**:
+       * `tests/e2e/system.e2e.test.ts`: Health check, System CPU/Memory metrics, Grid matrix settings, Workflow AST Linter.
+       * `tests/e2e/browsers.e2e.test.ts`: Browser Profile CRUD, Session Cookies import/export, Extensions sideload.
+       * `tests/e2e/storage.e2e.test.ts`: Global Storage Variables, AES-encrypted Credentials, Dynamic SQLite Tables & Rows.
+       * `tests/e2e/jobs.e2e.test.ts`: Inline workflow execution jobs, SSE logs, Job status, History query/cleanup.
+- **Contract-First Testing Invariant**: Toàn bộ các test E2E tại Monorepo Root **BẮT BUỘC** tiêu thụ API thông qua Generated SDK Client từ `@automa/types/api` (`getHealth()`, `submitJob()`, `createBrowser()`, `addStorageVariable()`, v.v.). **TUYỆT ĐỐI KHÔNG** dùng `fetch()` thủ công với hardcoded URL strings trong tests nhằm đảm bảo 100% Type Safety và phát hiện breaking changes ngay khi compile test.
+- **Unified Test Command**: Lệnh `pnpm run test` (`node scripts/test-all.mjs`) **BẮT BUỘC** chạy và kiểm tra cả 4 tầng kiểm thử:
+  1. Rust Core Engine & API Tests (`cargo test`)
+  2. VS Code Extension & Webview Tests (`pnpm -F vscode-automa test`)
+  3. Cross-Service E2E API Tests (`vitest run --config vitest.config.ts`)
+  4. Strict OpenAPI & JSON Schema Linter (`node scripts/enforce-strict-schema.mjs`)
+
+
 
