@@ -103,3 +103,14 @@ Daemon nạp tổng thể (`loadAll()`) **BẮT BUỘC** tuân thủ quy tắc �
 - `items`: (Mảng) Chứa các hàng dữ liệu (rows).
 - `columnsIndex`: (Object) Tra cứu ID cột.
 - `createdAt` / `modifiedAt`: (Timestamp) Thời gian khởi tạo/cập nhật.
+
+### 3.2 Credentials Cryptographic Storage & Decryption
+Global Credentials/Secrets được mã hóa đa tầng và quản lý theo chuẩn bảo mật không lưu Plaintext:
+- **Thuật toán mã hóa**: `HMAC-SHA256` (chữ ký toàn vẹn 64 ký tự hex) + `AES-256-CBC` (ciphertext Base64 bắt đầu bằng `Salted__`).
+- **Master Passphrase Storage**:
+  - Lưu trữ tự động 1 lần duy nhất trong `vscode.SecretStorage` (OS Keychain của VS Code Extension).
+  - Tự động nạp qua biến môi trường `AUTOMA_PASSPHRASE` khi chạy headless trên Server/CI-CD.
+- **Workflow Templating & On-the-fly Decryption**:
+  - Trong Workflow blocks, tham chiếu mật khẩu qua cú pháp mustache: `{{secrets.tên_secret}}` hoặc `{{$secrets.tên_secret}}`.
+  - **Zero-Leak Pipeline**: Workflow Engine giải mã ciphertext trong RAM khi thực thi, inject trực tiếp vào browser/input form, và giải phóng bộ nhớ RAM ngay sau đó. **TUYỆT ĐỐI KHÔNG** in mật khẩu giải mã ra file log.
+

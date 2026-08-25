@@ -1,17 +1,18 @@
 ---
-name: automa-vscode
-description: Hướng dẫn phát triển VS Code Extension cho Automa (automa-vscode), tích hợp Linter Diagnostics, Context Menu commands và VS Code Tasks.
+name: automa-vsce
+description: Hướng dẫn phát triển VS Code Extension cho Automa (automa-vsce), tích hợp Linter Diagnostics, Context Menu commands và VS Code Tasks.
 ---
 
-# Automa VS Code Extension (`automa-vscode`)
+# Automa VS Code Extension (`automa-vsce`)
 
-**BẮT BUỘC** tuân thủ quy định kiến trúc và quy trình phát triển submodule `automa-vscode`.
+**BẮT BUỘC** tuân thủ quy định kiến trúc và quy trình phát triển submodule `automa-vsce`.
 
 ---
 
 ## 1. Extension Architecture & Key Responsibilities
 
-`automa-vscode` **BẮT BUỘC** đảm nhiệm các vai trò sau:
+`automa-vsce` **BẮT BUỘC** đảm nhiệm các vai trò sau:
+
 1. **Context Menu Commands**: Cung cấp thao tác cho file `.json`:
    - `Automa: Lint Check Workflow/Package`
    - `Automa: Open in Automa Studio`

@@ -1,9 +1,10 @@
 ---
-name: tauri-ui-ux
-description: Quy chuan kien truc, thiet ke cong thai hoc (Desktop Ergonomics) va xay dung Prototype Desktop App tren nen tang Tauri v2, Vue 3.5 va shadcn-vue cho Automa Ecosystem (automa-desk).
+name: automa-desk
+description: Quy chuẩn kiến trúc, thiết kế công thái học (Desktop Ergonomics) và xây dựng Desktop App trên nền tảng Tauri v2, Vue 3.5 và shadcn-vue cho Automa Ecosystem (automa-desk).
 ---
 
 # Tauri v2 Desktop UI/UX & Architecture Skill (`automa-desk`)
+
 
 Ky nang nay quy chuan toan bo nguyen ly thiet ke giao dien, cong thai hoc Desktop va kien truc Clean Architecture cho ung dung Desktop Native (**`automa-desk`**) trong he sinh thai Automa.
 

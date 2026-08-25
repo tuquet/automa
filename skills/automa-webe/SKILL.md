@@ -1,18 +1,19 @@
 ---
-name: automa-ext
-description: Kiến trúc và các tính năng đã hoàn thiện của Automa Extension (automa-ext / automa-ex). Kích hoạt khi làm việc với UI, Auth, Sync, hoặc Teamwork của automa-ext.
+name: automa-webe
+description: Kiến trúc và các tính năng đã hoàn thiện của Automa Web Extension (automa-webe / automa-ext / automa-ex). Kích hoạt khi làm việc với UI, Auth, Sync, hoặc Teamwork của automa-webe.
 ---
 
-# Automa Extension (`automa-ext`) - System Requirements Specification (SRS) & Feature List
+# Automa Web Extension (`automa-webe`) - System Requirements Specification (SRS) & Feature List
 
-> **Repository**: [`tuquet/automa-ext`](https://github.com/tuquet/automa-ext) (forked from `AutomaApp/automa`)
+> **Repository**: [`tuquet/automa-webe`](https://github.com/tuquet/automa-webe) (forked from `AutomaApp/automa`)
 > **Browser API**: Native `chrome.*` / `browser.*` thông qua `src/lib/browser-compat.js` (không sử dụng `webextension-polyfill`)
 > **Manifest**: MV3 (Chrome), MV2 (Firefox)
 
-**BẮT BUỘC** tham khảo tài liệu này khi làm việc với `automa-ext` (`automa-ex`) để tận dụng hệ thống có sẵn, **TUYỆT ĐỐI KHÔNG** triển khai trùng lặp.
+**BẮT BUỘC** tham khảo tài liệu này khi làm việc với `automa-webe` (`automa-ext` / `automa-ex`) để tận dụng hệ thống có sẵn, **TUYỆT ĐỐI KHÔNG** triển khai trùng lặp.
 
-## Sub-Skills thuộc `automa-ext`:
+## Sub-Skills thuộc `automa-webe`:
 - 💉 **[Automa Extension Injection](./automa-extension-injection/SKILL.md)**: Kiến trúc Vòng đời Chromium Extension & Các nguyên tắc tương tác an toàn qua Puppeteer.
+
 
 ---
 

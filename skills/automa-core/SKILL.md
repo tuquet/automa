@@ -1,9 +1,10 @@
 ---
-name: automa-core-engine
-description: Kiến trúc và nguyên lý hoạt động của Automa Core Engine (packages/core). Kích hoạt khi làm việc với WorkflowEngine, Block Execution, Backward Compatibility Facade, hoặc các Browser Adapters.
+name: automa-core
+description: Kiến trúc và nguyên lý hoạt động của Automa Core Engine (automa-core / @automa/core). Kích hoạt khi làm việc với WorkflowEngine, Block Execution, Backward Compatibility Facade, hoặc các Browser Adapters.
 ---
 
-# Kiến Trúc Automa Core Engine
+# Kiến Trúc Automa Core Engine (`automa-core`)
+
 
 ## 1. Mục Đích & Vị Trí Trong Hệ Sinh Thái
 `@automa/core` (`packages/core`) BẮT BUỘC HOẠT ĐỘNG như Execution Engine cốt lõi của hệ sinh thái Automa. BẮT BUỘC DUY TRÌ dưới dạng một thư viện TypeScript độc lập, không phụ thuộc vào môi trường (Environment-Agnostic).
