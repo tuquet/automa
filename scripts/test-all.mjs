@@ -79,7 +79,16 @@ async function main() {
 	);
 	results.push(e2eRes);
 
-	// Step 4: Strict Schema Validation
+	// Step 4: Desktop OS App Unit Tests (Tauri v2 + Vue 3.5)
+	const deskRes = await runStep(
+		"Automa Desktop OS App (Tauri v2 & Vue 3.5)",
+		"pnpm",
+		["-F", "@automa/desk", "run", "test:unit"],
+		rootDir
+	);
+	results.push(deskRes);
+
+	// Step 5: Strict Schema Validation
 	const schemaRes = await runStep(
 		"Strict OpenAPI & JSON Schema Linter",
 		"node",
