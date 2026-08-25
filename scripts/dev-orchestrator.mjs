@@ -97,6 +97,26 @@ function classifyLogLevel(cleanLine, isStderr = false) {
   return isStderr ? 'WARN' : 'INFO';
 }
 
+function getLocalTimestamp(date = new Date()) {
+  const pad = (n) => String(n).padStart(2, '0');
+  const padMs = (n) => String(n).padStart(3, '0');
+
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1);
+  const day = pad(date.getDate());
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+  const seconds = pad(date.getSeconds());
+  const ms = padMs(date.getMilliseconds());
+
+  const offsetMinutes = -date.getTimezoneOffset();
+  const sign = offsetMinutes >= 0 ? '+' : '-';
+  const absOffsetHours = pad(Math.floor(Math.abs(offsetMinutes) / 60));
+  const absOffsetMinutes = pad(Math.abs(offsetMinutes) % 60);
+
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${ms}${sign}${absOffsetHours}:${absOffsetMinutes}`;
+}
+
 function appendLog(taskName, level, rawLine) {
   const clean = stripAnsi(rawLine).trim();
   if (!clean) return;
@@ -105,7 +125,7 @@ function appendLog(taskName, level, rawLine) {
   checkRotateLog(allLogFile);
   checkRotateLog(errorLogFile);
 
-  const timestamp = new Date().toISOString();
+  const timestamp = getLocalTimestamp();
   const logEntry = `[${timestamp}] [${taskName}] [${level}] ${clean}\n`;
 
   try {
@@ -134,7 +154,7 @@ function initLogSession(tasks) {
   } catch (_) {}
 
   // Rewrite fresh for the new dev session
-  const header = `======================================================\n🚀 Dev Session Started: ${new Date().toISOString()}\nActive Services: ${tasks.map((t) => t.name).join(', ')}\n======================================================\n`;
+  const header = `======================================================\n🚀 Dev Session Started: ${getLocalTimestamp()}\nActive Services: ${tasks.map((t) => t.name).join(', ')}\n======================================================\n`;
   try {
     fs.writeFileSync(allLogFile, header, 'utf8');
     fs.writeFileSync(errorLogFile, '', 'utf8'); // Start completely clean

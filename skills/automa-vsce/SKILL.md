@@ -59,23 +59,33 @@ export function updateDiagnostics(document: vscode.TextDocument, lintErrors: Arr
 
 ---
 
-## 4. Daemon API Communication
+## 4. Daemon API Communication & Typed SDK Invariant
 
-- **BẮT BUỘC** sử dụng REST/HTTP: Lớp `TaskRunner.ts` luôn gọi API qua HTTP POST/GET (ví dụ: `submitJob`).
+- **BẮT BUỘC** sử dụng Typed SDK client (`@automa/types/api`) tự động sinh từ OpenAPI (ví dụ: `getHealth()`, `createClient()`, `getBrowsers()`, `startBrowserSession()`, `submitJob()`) đặt tại `src/core/api/client/`.
+- **TUYỆT ĐỐI KHÔNG** tự viết các lệnh `fetch('http://127.0.0.1:8765/...')` thủ công hoặc hardcode URL endpoints trong các services.
 - **TUYỆT ĐỐI KHÔNG** gọi lệnh CLI trực tiếp thông qua `child_process.exec` hay `vscode.ProcessExecution` để thực thi script (ngoại trừ lệnh khởi động Daemon). Mọi yêu cầu xử lý **BẮT BUỘC** gửi qua API tới Daemon.
-- **BẮT BUỘC** sử dụng SDK tự động sinh (auto-generated) từ OpenAPI là `@hey-api/client-fetch` (ví dụ: `getBrowsers()`, `startBrowser()`) đặt tại `src/core/api/client/` để giao tiếp với Daemon thay vì tự viết các hàm `fetch` thô.
-- **SSE & Real-time Progress (Zero-Latency Polling)**: Đối với các tác vụ chạy ngầm tốn thời gian (khởi động browser, chạy workflow), **TUYỆT ĐỐI KHÔNG** dùng vòng lặp `while` hoặc `setInterval` để gọi polling thủ công `/status`. **BẮT BUỘC** sử dụng cơ chế Server-Sent Events (SSE) thông qua hàm `sse()` của `@hey-api`.
+- **SSE & Real-time Progress (Zero-Latency Polling)**: Đối với các tác vụ chạy ngầm tốn thời gian (khởi động browser, chạy workflow), **TUYỆT ĐỐI KHÔNG** dùng vòng lặp `while` hoặc `setInterval` để gọi polling thủ công `/status`. **BẮT BUỘC** sử dụng cơ chế Server-Sent Events (SSE) thông qua hàm `sse()` / `subscribeEventsSse()` của SDK.
+- **OpenAPI TypeScript ESM & Bundling**:
+  - File sinh mã từ `@hey-api/openapi-ts` trong package ESM (`@automa/types`) **BẮT BUỘC** dùng đuôi mở rộng `.js` tường minh (`from './sdk.gen.js'`).
+  - `automa-vsce/tsup.config.ts` **BẮT BUỘC** cấu hình `noExternal: ["@automa/types"]` để inline mã nguồn SDK vào CommonJS bundle `dist/extension.js`.
+
 ---
 
-## 5. Native Debugger UI Reuse
+## 5. Native Debugger UI Reuse & 1-Click Toolbar UX
 
+- **1-Click Toolbar UX Preference**:
+  - Ưu tiên tối đa các nút bấm trực quan 1-Click trên thanh tiêu đề Toolbar (`editor/title`, `view/title`) như `Open in Studio` (`$(link-external)`), `Live Log` (`$(output)`).
+  - **HẠN CHẾ / KHÔNG LẠM DỤNG** menu chuột phải (`explorer/context`) gây rối mắt cho người dùng.
+- **Clean Command Palette & Internal IPC Guard**:
+  - Các lệnh chỉ phục vụ tương tác nội bộ của Webview qua IPC (`launchBrowser`, `deleteBrowser`, `editBrowser`, `deleteHistoryItem`) **TUYỆT ĐỐI KHÔNG** khai báo trong `package.json: contributes.commands`.
+  - Các lệnh nội bộ này được đăng ký trực tiếp ở runtime trong `CommandManager.ts`.
 - **TUYỆT ĐỐI KHÔNG** xây dựng lại UI Inspector bên trong VS Code.
 - **BẮT BUỘC** dùng Daemon để gọi Automa Studio nguyên bản từ trình duyệt thông qua API.
 - Extension đóng vai trò là **Thin Client**, chỉ hiển thị giao diện cấu hình tĩnh hoặc Welcome Panel và đẩy mọi tác vụ nặng sang Daemon xử lý.
 
 ---
 
-## 6. Build, Packaging & Tasks
+## 6. Build, Packaging & Instant F5 Debugging
 
 * **Packaging VSIX**:
   **BẮT BUỘC** dùng cờ `--no-dependencies`:
@@ -83,10 +93,10 @@ export function updateDiagnostics(document: vscode.TextDocument, lintErrors: Arr
   npx @vscode/vsce package --no-dependencies
   ```
 
-* **Composite Debugging Flow (F5)**:
-  **BẮT BUỘC** sử dụng task tổng `Workspace: Dev VSCode` (`F5`) để chạy song song:
-  1. `Workspace: Dev Source Runner`
-  2. `Workspace: Dev VSCode Host`
+* **Instant F5 Debugging Flow**:
+  - Khi Orchestrator (`pnpm dev:all`) đang chạy, `automa-vsce` đã được biên dịch liên tục bởi `tsup --watch`.
+  - **TUYỆT ĐỐI KHÔNG** cấu hình `preLaunchTask` chạy lệnh `pnpm run build` (hoặc `build:webview`) trong `.vscode/launch.json` để tránh tắc nghẽn build 10-15s do `lucide-vue-next`.
+  - Bỏ `preLaunchTask` để đảm bảo F5 mở Extension Development Host **tức thì (< 0.5 giây)**.
 
 ---
 

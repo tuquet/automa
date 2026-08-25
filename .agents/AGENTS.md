@@ -39,6 +39,19 @@
   - **Startup Race Prevention**: Khi trình duyệt vừa khởi động, `offscreen.bundle.js` mất vài trăm mili-giây để nạp và đăng ký `runtime.onMessage`. Bất kỳ lệnh gửi message nào tới Offscreen (như `BackgroundOffscreen.sendMessage`) **BẮT BUỘC** triển khai cơ chế *Retry with Backoff* (tối thiểu 5 lần, cách nhau 300ms) để xử lý lỗi `Could not establish connection. Receiving end does not exist`.
   - **Document State Check**: **PHẢI DÙNG** `chrome.offscreen.hasDocument()` kết hợp khối `try/catch` bọc quanh `chrome.offscreen.createDocument()` để không bị gián đoạn bởi lỗi `Only a single offscreen document may be created at any given time`.
 - **NO Dynamic Imports in Extension Background Worker**: Bên trong `business/dev/index.js` và các entry point của Service Worker, **TUYỆT ĐỐI KHÔNG** dùng `await import(...)` cho các module cốt lõi (`BackgroundWorkflowUtils`, `WorkflowEngine`). **BẮT BUỘC DÙNG** Static Imports ở đầu tệp để tránh Webpack chia nhỏ chunk gây lỗi nạp module khi chạy headless.
+- **Typed SDK Invariant (Zero Hardcoded Fetch)**:
+  - Toàn bộ các tương tác từ client (`automa-vsce`, webview, tooling) tới Daemon Core **BẮT BUỘC** thông qua Typed SDK client được sinh tự động từ `@automa/types/api` (ví dụ: `getHealth`, `createClient`, `startBrowserSession`).
+  - **TUYỆT ĐỐI KHÔNG** tự viết các hàm `fetch('http://127.0.0.1:8765/...')` thủ công hoặc hardcode URL/endpoints trong các services (như `DaemonService`).
+- **Instant F5 Extension Debugging Guard**:
+  - Khi Orchestrator (`pnpm dev:all` / `scripts/dev-orchestrator.mjs`) đang chạy, `automa-vsce` đã được biên dịch liên tục theo thời gian thực bởi `tsup --watch`.
+  - **TUYỆT ĐỐI KHÔNG** cấu hình `preLaunchTask` chạy lệnh `pnpm run build` (hoặc `build:webview`) trong `.vscode/launch.json` vì quá trình build Vite với hàng nghìn icon của `lucide-vue-next` sẽ gây nghẽn F5 mất 10-15 giây.
+  - Loại bỏ `preLaunchTask` để đảm bảo F5 mở Extension Development Host **tức thì (< 0.5 giây)**.
+- **Clean Command Palette & Internal IPC Guard**:
+  - Các lệnh chỉ phục vụ tương tác nội bộ của Webview qua IPC (như `launchBrowser`, `deleteBrowser`, `editBrowser`, `deleteHistoryItem` vốn yêu cầu payload arguments) **TUYỆT ĐỐI KHÔNG** khai báo trong `package.json: contributes.commands`.
+  - Các lệnh nội bộ này được đăng ký trực tiếp ở runtime trong `CommandManager.ts` để tránh làm bẩn Command Palette (`Ctrl+Shift+P`) và ngăn ngừa lỗi thiếu đối số khi người dùng vô tình bấm từ palette.
+- **1-Click Toolbar UX Preference**:
+  - Ưu tiên tối đa các nút bấm trực quan 1-Click trên thanh tiêu đề Toolbar (`editor/title`, `view/title`) như `Open in Studio` (`$(link-external)`), `Live Log` (`$(output)`).
+  - **HẠN CHẾ / KHÔNG LẠM DỤNG** menu chuột phải (`explorer/context`) gây rối mắt cho người dùng.
 - **Worker Daemon Idempotency & Singleton Guard**:
   - **Singleton Loop**: Bên trong `business/dev/index.js`, **BẮT BUỘC** sử dụng các cờ Singleton (`isWorkerDaemonInitialized`, `isOffscreenDaemonInitialized`) để đảm bảo trong suốt vòng đời trình duyệt chỉ duy nhất 1 kết nối SSE reader loop được khởi tạo.
   - **Webpack Entry Invariant**: Trong `webpack.runner.config.js`, **TUYỆT ĐỐI KHÔNG** chèn các script inject khởi tạo (như `inject-background.js`) vào `config.entry.background` nếu entry gốc (`src/background/index.js`) đã có sẵn lệnh import và gọi `automa('background')`. Làm như vậy sẽ gây duplicate execution (gọi 1 API chạy 2 tab/task).
