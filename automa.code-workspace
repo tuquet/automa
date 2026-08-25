@@ -1,25 +1,38 @@
 {
   "folders": [
     {
+      "name": "automa-ecosystem (Root)",
       "path": "."
     },
     {
-      "path": "automa-vscode"
-    },
-    {
-      "path": "automa-cli"
-    },
-    {
-      "path": "automa-vault"
-    },
-    {
-      "path": "automa-ext"
-    },
-    {
+      "name": "automa-core (Rust Engine)",
       "path": "automa-core"
     },
     {
-      "path": "automa-bruno"
+      "name": "automa-ext (Studio & Runner)",
+      "path": "automa-ext"
+    },
+    {
+      "name": "automa-vscode (VS Code Extension)",
+      "path": "automa-vscode"
+    },
+    {
+      "name": "automa-vault (Storage)",
+      "path": "automa-vault"
     }
-  ]
+  ],
+  "settings": {
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "files.exclude": {
+      "**/.git": true,
+      "**/.DS_Store": true,
+      "**/Thumbs.db": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/target": true,
+      "**/.turbo": true
+    }
+  }
 }

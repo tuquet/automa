@@ -22,7 +22,7 @@ describe('API Jobs E2E', () => {
     let isReady = false;
     for (let i = 0; i < 30; i++) {
       try {
-        const res = await fetch(`${BASE_URL}/api/health`);
+        const res = await fetch(`${BASE_URL}/api/v1/health`);
         if (res.ok || res.status === 404) {
           isReady = true;
           break;
@@ -51,7 +51,7 @@ describe('API Jobs E2E', () => {
 
   let jobId = '';
 
-  it('should create a job via POST /api/jobs', async () => {
+  it('should create a job via POST /api/v1/jobs', async () => {
     const workflowPath = path.join(process.cwd(), 'automa-vault', 'google.com', 'workflows', 'search.workflow.json');
     const payload = {
       workflowPath,
@@ -60,7 +60,7 @@ describe('API Jobs E2E', () => {
       }
     };
 
-    const res = await fetch(`${BASE_URL}/api/jobs`, {
+    const res = await fetch(`${BASE_URL}/api/v1/jobs`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -77,10 +77,10 @@ describe('API Jobs E2E', () => {
     jobId = data.jobId || data.id || data.job_id || '1';
   }, 120000);
 
-  it('should update job status via PATCH /api/jobs/{job_id}/status', async () => {
+  it('should update job status via PATCH /api/v1/jobs/{job_id}/status', async () => {
     expect(jobId).not.toBe('');
 
-    const res = await fetch(`${BASE_URL}/api/jobs/${jobId}/status`, {
+    const res = await fetch(`${BASE_URL}/api/v1/jobs/${jobId}/status`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'

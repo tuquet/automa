@@ -2,36 +2,36 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "⚡ Extension: Fast Launch (UI Only)",
-      "type": "extensionHost",
-      "request": "launch",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}/automa-vscode"
-      ],
-      "outFiles": [
-        "${workspaceFolder}/automa-vscode/dist/**/*.js"
-      ],
-      "preLaunchTask": "Build: VSCode"
-    },
-    {
-      "name": "🚀 Full-stack: Extension + Live Rust Backend",
-      "type": "extensionHost",
-      "request": "launch",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}/automa-vscode"
-      ],
-      "outFiles": [
-        "${workspaceFolder}/automa-vscode/dist/**/*.js"
-      ],
-      "preLaunchTask": "Serve (Live Rust)"
-    },
-    {
-      "name": "🌐 Studio: Debug Web Studio (Chrome)",
+      "name": "Studio: Debug Web Studio (Chrome)",
       "type": "chrome",
       "request": "launch",
       "url": "http://127.0.0.1:8765/studio/",
       "webRoot": "${workspaceFolder}/automa-ext",
-      "preLaunchTask": "Serve: Live Studio"
+      "preLaunchTask": "[Preset] Live Studio (Rust + Canvas)"
+    },
+    {
+      "name": "VSCode: Full-stack Debug (Extension + Live Engine)",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/automa-vscode"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/automa-vscode/dist/**/*.js"
+      ],
+      "preLaunchTask": "[Preset] Full-stack (Rust + Runner + VSCode)"
+    },
+    {
+      "name": "VSCode: Fast Launch (UI Only)",
+      "type": "extensionHost",
+      "request": "launch",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/automa-vscode"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/automa-vscode/dist/**/*.js"
+      ],
+      "preLaunchTask": "automa-vscode: Build Extension"
     }
   ]
 }

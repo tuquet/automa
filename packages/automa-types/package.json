@@ -12,6 +12,11 @@
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
+    "./api": {
+      "types": "./dist/api/index.d.ts",
+      "import": "./dist/api/index.js",
+      "default": "./dist/api/index.js"
+    },
     "./workflow": {
       "types": "./dist/workflow.d.ts",
       "import": "./dist/workflow.js",
@@ -45,9 +50,14 @@
   "scripts": {
     "build": "tsc",
     "typecheck": "tsc --noEmit",
+    "generate:api": "openapi-ts",
     "clean": "rimraf dist"
   },
+  "dependencies": {
+    "@hey-api/client-fetch": "^0.13.1"
+  },
   "devDependencies": {
+    "@hey-api/openapi-ts": "^0.99.0",
     "rimraf": "^5.0.5",
     "typescript": "^5.3.3"
   }

@@ -55,6 +55,26 @@
   - **Action**: **LUÔN LUÔN** kiểm tra scripts trong `package.json`, các biến thể `webpack.*.config.js`, và workspaces `packages/` để xem liệu một mục tiêu build (build target) hoặc adapter (như `vscode-compat.js`) cụ thể đã được người dùng triển khai một phần hay chưa. **TUYỆT ĐỐI KHÔNG** xây dựng từ đầu nếu nền tảng đã tồn tại.
 - **VSCE Packaging**: Trong cấu trúc Monorepo, nếu `npx vsce package` thất bại do xác thực phụ thuộc (dependency validation) khắt khe trong `package.json` (ví dụ: thiếu dependencies ở root), **ƯU TIÊN DÙNG** cờ `--no-dependencies` thay vì chỉnh sửa cấu trúc workspace và phá vỡ thiết kế monorepo gốc.
 
+# Central Type Hub & Contract-First Architecture
+
+- **Single Source of Truth cho Typescript**: Package `@automa/types` (`packages/automa-types`) là nơi tập trung DUY NHẤT cho toàn bộ TypeScript interfaces, Domain Models và API Contracts của hệ sinh thái.
+- **Phân Định 2 Tầng Types**:
+  1. **Domain Models & Client State**: `@automa/types` (Workflow AST, VueFlow Canvas, Campaigns, Webview IPC messages).
+  2. **API Wire Contracts & SDK Client**: `@automa/types/api` (Tự động sinh từ `automa-core` OpenAPI v3 qua `@hey-api/openapi-ts`).
+- **NO Duplicate API Generators**: **TUYỆT ĐỐI KHÔNG** cấu hình `openapi-ts` riêng rẽ bên trong các submodules (`automa-vscode`, `automa-ext`). Toàn bộ việc sinh API types **BẮT BUỘC** tập trung tại `@automa/types` thông qua lệnh `pnpm run sync:api`.
+- **Workspace Consumption**: Các submodule (`automa-vscode`, `automa-ext`) **BẮT BUỘC** tiêu thụ types qua giao thức workspace: `"@automa/types": "workspace:*"` và `import { ... } from "@automa/types/api"`.
+
+# Submodule Pointer Sync Protocol
+
+- **Root & Submodule Pointer Alignment**: Trong mô hình Hybrid Monorepo, mỗi khi có commit mới bên trong bất kỳ submodule nào (`automa-core`, `automa-ext`, `automa-vault`, `automa-vscode`), con trỏ commit tại Root Monorepo **BẮT BUỘC** được cập nhật tương ứng.
+- **Pre-commit Guard**: Husky pre-commit hook (`.husky/pre-commit`) tự động chạy `node scripts/check-submodules.mjs` để phát hiện lệch con trỏ.
+- **Auto-Sync Command**: Khi phát hiện lệch pointer, **BẮT BUỘC** sử dụng lệnh `pnpm run sync:submodules` để tự động stage (`git add`) toàn bộ con trỏ submodule hợp lệ trước khi commit ở root.
+
+# Unified Multi-Service Dev Orchestration
+
+- **Single Dev Command**: Khi chạy môi trường phát triển đầy đủ (Rust Core + Studio + VS Code), **ƯU TIÊN DÙNG** lệnh `pnpm run dev:all` (`scripts/dev-orchestrator.mjs`).
+- **Zombie Process Prevention**: Script Orchestrator tích hợp bắt tín hiệu `SIGINT` (Ctrl+C) / `SIGTERM` và diệt toàn bộ cây tiến trình con (`taskkill /t /f` trên Windows) để ngăn chặn rò rỉ tiến trình treo ngầm chiếm dụng port `8765`.
+
 # Vue i18n & Webpack 5 Dynamic Imports Rule
 
 - **JSON Dynamic Imports**: Khi tải động các tệp JSON (ví dụ: thông điệp locale cho vue-i18n) thông qua `await import(...)`, **BẮT BUỘC** xử lý an toàn việc giải quyết (resolution) export mặc định. Quá trình giải quyết JSON module của Webpack 5 có sự khác biệt giữa các bản build dev và production.

@@ -2,20 +2,27 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Install Dependencies",
-      "type": "shell",
-      "command": "pnpm install",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [],
-      "presentation": {
-        "group": "install",
-        "panel": "dedicated"
-      }
+      "label": "[Preset] Live Studio (Rust + Canvas)",
+      "dependsOn": [
+        "automa-core: Watch Daemon (cargo watch)",
+        "automa-ext: Watch Studio (Canvas)"
+      ],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
     },
     {
-      "label": "Build All (Turbo)",
+      "label": "[Preset] Full-stack (Rust + Runner + VSCode)",
+      "dependsOn": [
+        "automa-core: Watch Daemon (cargo watch)",
+        "automa-ext: Watch Runner (Headless)",
+        "automa-vscode: Watch Extension",
+        "automa-vscode: Watch Webview"
+      ],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    },
+    {
+      "label": "[Preset] Build All (Turbo)",
       "type": "shell",
       "command": "pnpm run build",
       "options": {
@@ -31,210 +38,7 @@
       }
     },
     {
-      "label": "Build: VSCode",
-      "type": "shell",
-      "command": "pnpm -F vscode-automa run build",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [],
-      "group": "build",
-      "presentation": {
-        "panel": "dedicated"
-      }
-    },
-    {
-      "label": "Build: Studio",
-      "type": "shell",
-      "command": "pnpm run build:studio",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [],
-      "group": "build",
-      "presentation": {
-        "panel": "dedicated"
-      }
-    },
-    {
-      "label": "Dev: All Workspaces (Turbo)",
-      "type": "shell",
-      "command": "pnpm run dev",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "isBackground": true,
-      "problemMatcher": [],
-      "presentation": {
-        "panel": "dedicated",
-        "clear": false
-      }
-    },
-    {
-      "label": "Watch: VSCode",
-      "type": "shell",
-      "command": "pnpm dev:vscode",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "isBackground": true,
-      "presentation": {
-        "panel": "dedicated",
-        "clear": false
-      },
-      "problemMatcher": {
-        "owner": "tsup",
-        "pattern": {
-          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-          "file": 1,
-          "line": 2,
-          "column": 3,
-          "severity": 4,
-          "message": 5
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "^.*Build start.*$",
-          "endsPattern": "^.*(Build success|Build failed|Error:).*$"
-        }
-      }
-    },
-    {
-      "label": "Watch: Webview",
-      "type": "shell",
-      "command": "pnpm -F vscode-automa run watch:webview",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "isBackground": true,
-      "presentation": {
-        "panel": "dedicated",
-        "clear": false
-      },
-      "problemMatcher": {
-        "owner": "vite",
-        "pattern": {
-          "regexp": "^$"
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "^.*(building|transforming).*$",
-          "endsPattern": "^.*(built in|modules transformed|error during build|failed).*$"
-        }
-      }
-    },
-    {
-      "label": "Watch: Runner",
-      "type": "shell",
-      "command": "pnpm dev:source:runner",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "isBackground": true,
-      "presentation": {
-        "panel": "dedicated",
-        "clear": false
-      },
-      "problemMatcher": {
-        "owner": "webpack-runner",
-        "pattern": {
-          "regexp": "^$"
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "^.*(building|compiling).*$",
-          "endsPattern": "^.*(compiled successfully|compiled with|Failed to compile|compiled).*$"
-        }
-      }
-    },
-    {
-      "label": "Watch: Studio",
-      "type": "shell",
-      "command": "pnpm dev:source:studio",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "isBackground": true,
-      "presentation": {
-        "panel": "dedicated",
-        "clear": false
-      },
-      "problemMatcher": {
-        "owner": "webpack-studio",
-        "pattern": {
-          "regexp": "^$"
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "^.*(building|compiling).*$",
-          "endsPattern": "^.*(compiled successfully|compiled with|Failed to compile|compiled).*$"
-        }
-      }
-    },
-    {
-      "label": "Watch: Rust",
-      "type": "shell",
-      "command": "pnpm dev:core",
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "isBackground": true,
-      "presentation": {
-        "panel": "dedicated",
-        "clear": false
-      },
-      "problemMatcher": {
-        "owner": "rust",
-        "pattern": {
-          "regexp": "^$"
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "^.*(Compiling|Automa Core|Checking).*$",
-          "endsPattern": "^.*(listening on|Server listening|could not compile|error: aborting).*$"
-        }
-      }
-    },
-    {
-      "label": "Serve (Live Rust)",
-      "dependsOn": [
-        "Watch: Rust",
-        "Watch: Runner",
-        "Watch: VSCode",
-        "Watch: Webview"
-      ],
-      "dependsOrder": "parallel",
-      "problemMatcher": []
-    },
-    {
-      "label": "Serve: Live Studio",
-      "dependsOn": [
-        "Watch: Rust",
-        "Watch: Studio"
-      ],
-      "dependsOrder": "parallel",
-      "problemMatcher": []
-    },
-    {
-      "label": "Open: Live Studio (Browser)",
-      "type": "shell",
-      "windows": {
-        "command": "cmd /c start http://127.0.0.1:8765/studio/"
-      },
-      "osx": {
-        "command": "open http://127.0.0.1:8765/studio/"
-      },
-      "linux": {
-        "command": "xdg-open http://127.0.0.1:8765/studio/"
-      },
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "never",
-        "panel": "dedicated"
-      }
-    },
-    {
-      "label": "Sync All APIs (Docs & Bruno)",
+      "label": "[Preset] Sync APIs & Docs",
       "type": "shell",
       "command": "pnpm run sync:api",
       "options": {
