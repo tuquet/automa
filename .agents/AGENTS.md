@@ -61,8 +61,13 @@
 - **Phân Định 2 Tầng Types**:
   1. **Domain Models & Client State**: `@automa/types` (Workflow AST, VueFlow Canvas, Campaigns, Webview IPC messages).
   2. **API Wire Contracts & SDK Client**: `@automa/types/api` (Tự động sinh từ `automa-core` OpenAPI v3 qua `@hey-api/openapi-ts`).
+  3. **Bidirectional WebSocket Protocols**: `@automa/types/ws` (Giao thức tin nhắn 2 chiều `AutomaWsCommand` & `AutomaWsEvent` cho các tác vụ tương tác thời gian thực).
 - **NO Duplicate API Generators**: **TUYỆT ĐỐI KHÔNG** cấu hình `openapi-ts` riêng rẽ bên trong các submodules (`automa-vscode`, `automa-ext`). Toàn bộ việc sinh API types **BẮT BUỘC** tập trung tại `@automa/types` thông qua lệnh `pnpm run sync:api`.
 - **Workspace Consumption**: Các submodule (`automa-vscode`, `automa-ext`) **BẮT BUỘC** tiêu thụ types qua giao thức workspace: `"@automa/types": "workspace:*"` và `import { ... } from "@automa/types/api"`.
+- **Offline-First OpenAPI Sync Invariant**: Toàn bộ các scripts đồng bộ OpenAPI (`sync:api`, `sync-bruno`, `docs:generate`, `openapi-ts`) **BẮT BUỘC KHÔNG ĐƯỢC PHỤ THUỘC ĐỘC NHẤT** vào một daemon HTTP đang chạy. **PHẢI DÙNG** module `scripts/export-openapi.mjs` với cơ chế tự động fallback trích xuất tĩnh từ mã nguồn Rust (`cargo run -- --export-openapi`) để đảm bảo các môi trường CI/CD hoặc cold-build không bao giờ bị lỗi `fetch failed`.
+- **SSE vs WebSocket Protocol Invariants**:
+  - **Server-Sent Events (SSE)**: Dùng cho dữ liệu 1 chiều (Logs, Telemetry, Matrix progress) và **BẮT BUỘC** khai báo `content_type = "text/event-stream"` trong `utoipa` để `@hey-api/openapi-ts` tự động sinh SDK client `.sse.get()`.
+  - **WebSocket (WS)**: Dùng cho điều khiển 2 chiều độ trễ thấp (`/api/v1/ws`) và **BẮT BUỘC** tiêu thụ các kiểu tin nhắn tường minh từ `@automa/types/ws`.
 
 # Submodule Pointer Sync Protocol
 
@@ -250,7 +255,7 @@
      - `automa-core` **BẮT BUỘC** duy trì cờ CLI `--export-openapi [path]` cho phép xuất tĩnh `openapi.json` mà không cần khởi động live HTTP server.
      - Bổ sung/duy trì unit test `test_openapi_spec_validity` trong `automa-core/src/api/routes.rs` để phát hiện lỗi schema ngay khi biên dịch `cargo test`.
      - `packages/automa-types/openapi-ts.config.ts` đọc tĩnh từ `./openapi.json`.
-     - Khi thêm/sửa `operation_id`, **BẮT BUỘC** duy trì các export alias tương thích ngược (backward-compatible aliases) trong `@automa/types/api` và `automa-vscode/src/core/api/client/index.ts` để không làm gián đoạn mã nguồn hiện hữu.
+     - **Canonical SDK Methods Invariant**: Toàn bộ submodules (`automa-vscode`, `automa-ext`, tests) **BẮT BUỘC** sử dụng trực tiếp các phương thức SDK chuẩn được sinh từ `@hey-api/openapi-ts` (`addStorageVariable`, `getStorageCredentials`, `getHealth`, `installBrowserBinary`, `startBrowserSession`, `killAllBrowsers`, v.v.). **TUYỆT ĐỐI KHÔNG** tạo các export alias thủ công trong `@automa/types/api` hay `automa-vscode` để đảm bảo tệp sinh mã là nguồn chân lý duy nhất (Single Source of Truth) và hoàn toàn tự động hóa không có xung đột khi chạy `pnpm run sync:api`.
 
 # Automa Studio Standalone Build & ServeDir Pipeline
 

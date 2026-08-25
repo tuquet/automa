@@ -70,7 +70,16 @@ async function main() {
 	);
 	results.push(vscodeRes);
 
-	// Step 3: Strict Schema Validation
+	// Step 3: Cross-Service E2E API Tests (Generated SDK against Isolated Core)
+	const e2eRes = await runStep(
+		"Cross-Service E2E API Tests (Generated SDK)",
+		"pnpm",
+		["exec", "vitest", "run", "--config", "vitest.config.ts"],
+		rootDir
+	);
+	results.push(e2eRes);
+
+	// Step 4: Strict Schema Validation
 	const schemaRes = await runStep(
 		"Strict OpenAPI & JSON Schema Linter",
 		"node",
