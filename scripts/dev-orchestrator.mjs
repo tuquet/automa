@@ -47,16 +47,54 @@ function checkRotateLog(filePath, maxSize = 5 * 1024 * 1024) {
   } catch (_) {}
 }
 
+const NOISE_PATTERNS = [
+  /\[webpack\.Progress\]/,
+  /^\$\s+/,
+  /^\s*(Compiling|Checking|Finished|Running|Downloading|Downloaded|Updating|Locking)\b/,
+  /^\s*(VITE v|ready in \d+|➜\s+Local:|➜\s+Network:|➜\s+press h)\b/,
+];
+
+const ERROR_PATTERNS = [
+  /\bERROR(\s+in\b|:|\b)/i,
+  /\berror\[E\d+\]:/i,
+  /\berror:/i,
+  /\b(SyntaxError|TypeError|ReferenceError|RangeError|URIError|EvalError|HookWebpackError|AggregateError)\b/,
+  /\b(Module\s+build\s+failed|Module\s+not\s+found|Failed\s+to\s+compile|Compilation\s+failed)\b/i,
+  /\b(UnhandledPromiseRejection|uncaughtException)\b/,
+  /\b(panic|fatal|exception|ERR_[A-Z0-9_]+|Cannot\s+find\s+module)\b/i,
+  /\bTS\d{4}:/,
+];
+
+const WARN_PATTERNS = [
+  /\bWARNING(\s+in\b|:|\b)/i,
+  /\b(warn:|warning:)\b/i,
+  /\[@vue\/compiler-sfc\]/,
+  /\[vite\]\s+warning/i,
+  /\b(deprecated|deprecation)\b/i,
+];
+
 function isBenignNoise(line) {
-  return (
-    line.includes('[webpack.Progress]') ||
-    line.startsWith('$ ') ||
-    line.includes('[@vue/compiler-sfc]') ||
-    line.includes('Compiling ') ||
-    line.includes('Checking ') ||
-    line.includes('Finished `dev`') ||
-    line.includes('Running unittests')
-  );
+  return NOISE_PATTERNS.some((pattern) => pattern.test(line));
+}
+
+function classifyLogLevel(cleanLine, isStderr = false) {
+  if (isBenignNoise(cleanLine)) {
+    return 'INFO';
+  }
+
+  for (const pattern of ERROR_PATTERNS) {
+    if (pattern.test(cleanLine)) {
+      return 'ERROR';
+    }
+  }
+
+  for (const pattern of WARN_PATTERNS) {
+    if (pattern.test(cleanLine)) {
+      return 'WARN';
+    }
+  }
+
+  return isStderr ? 'WARN' : 'INFO';
 }
 
 function appendLog(taskName, level, rawLine) {
@@ -73,14 +111,10 @@ function appendLog(taskName, level, rawLine) {
   try {
     fs.appendFileSync(allLogFile, logEntry, 'utf8');
 
-    // Only log genuine fatal errors to dev-errors.log (filter out progress bars and compiler warnings)
-    const isActualError =
-      level === 'ERROR' &&
-      !isBenignNoise(clean) &&
-      !clean.startsWith('warning:') &&
-      /\b(error|failed|exception|panic|fatal|ERR_|Cannot find module)\b/i.test(clean);
+    // Catch all Problems (Errors and Warnings) in dev-errors.log while filtering out noisy progress bars
+    const isProblem = (level === 'ERROR' || level === 'WARN') && !isBenignNoise(clean);
 
-    if (isActualError) {
+    if (isProblem) {
       fs.appendFileSync(errorLogFile, logEntry, 'utf8');
     }
   } catch (_) {}
@@ -88,10 +122,22 @@ function appendLog(taskName, level, rawLine) {
 
 function initLogSession(tasks) {
   ensureLogsDir();
-  const header = `\n======================================================\n🚀 Dev Session Started: ${new Date().toISOString()}\nActive Services: ${tasks.map((t) => t.name).join(', ')}\n======================================================\n`;
+
+  // Backup previous session logs to .prev
   try {
-    fs.appendFileSync(allLogFile, header, 'utf8');
-    fs.appendFileSync(errorLogFile, header, 'utf8');
+    if (fs.existsSync(allLogFile)) {
+      fs.copyFileSync(allLogFile, `${allLogFile}.prev`);
+    }
+    if (fs.existsSync(errorLogFile)) {
+      fs.copyFileSync(errorLogFile, `${errorLogFile}.prev`);
+    }
+  } catch (_) {}
+
+  // Rewrite fresh for the new dev session
+  const header = `======================================================\n🚀 Dev Session Started: ${new Date().toISOString()}\nActive Services: ${tasks.map((t) => t.name).join(', ')}\n======================================================\n`;
+  try {
+    fs.writeFileSync(allLogFile, header, 'utf8');
+    fs.writeFileSync(errorLogFile, '', 'utf8'); // Start completely clean
   } catch (_) {}
 }
 
@@ -261,12 +307,14 @@ function openBrowser(url) {
 function pipeOutput(proc, name, color) {
   const prefix = `${color(`[${name}]`)} `;
 
-  const processChunk = (chunk, isError = false) => {
+  const processChunk = (chunk, isStderr = false) => {
     const rawLines = chunk.toString().split('\n');
     const filteredLines = rawLines.filter((line, idx, arr) => idx < arr.length - 1 || line.trim().length > 0);
 
     filteredLines.forEach((line) => {
-      appendLog(name, isError ? 'ERROR' : 'INFO', line);
+      const clean = stripAnsi(line).trim();
+      const level = classifyLogLevel(clean, isStderr);
+      appendLog(name, level, line);
     });
 
     return filteredLines.map((line) => `${prefix}${line}`).join('\n');
@@ -278,9 +326,7 @@ function pipeOutput(proc, name, color) {
   });
 
   proc.stderr?.on('data', (data) => {
-    const raw = data.toString();
-    const isRealError = !isBenignNoise(raw) && !raw.includes('warning:');
-    const formatted = processChunk(data, isRealError);
+    const formatted = processChunk(data, true);
     if (formatted) console.error(formatted);
   });
 }

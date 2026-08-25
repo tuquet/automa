@@ -36,6 +36,12 @@
       "type": "shell",
       "command": "pnpm run sync:api",
       "problemMatcher": []
+    },
+    {
+      "label": "🧩 Build: VS Code Extension (vsce)",
+      "type": "shell",
+      "command": "pnpm --filter=vscode-automa build",
+      "problemMatcher": ["$tsup"]
     }
   ]
 }
