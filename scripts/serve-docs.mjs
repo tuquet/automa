@@ -28,52 +28,28 @@ function getScalarHtml() {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦀</text></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+      :root {
+        --scalar-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        --scalar-font-code: 'JetBrains Mono', ui-monospace, monospace;
+        --scalar-radius: 8px;
+      }
       body {
         margin: 0;
-        background-color: #0b0f19;
-      }
-      .automa-live-badge {
-        position: fixed;
-        bottom: 16px;
-        right: 16px;
-        background: rgba(15, 23, 42, 0.85);
-        backdrop-filter: blur(8px);
-        border: 1px solid rgba(139, 92, 246, 0.3);
-        color: #a78bfa;
-        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-        font-size: 11px;
-        padding: 6px 12px;
-        border-radius: 9999px;
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      }
-      .automa-live-dot {
-        width: 8px;
-        height: 8px;
-        background-color: #10b981;
-        border-radius: 50%;
-        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-      }
-      @keyframes pulse {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.5; transform: scale(0.85); }
+        background-color: #050811;
+        font-family: var(--scalar-font);
       }
     </style>
   </head>
   <body>
-    <div class="automa-live-badge">
-      <div class="automa-live-dot"></div>
-      Automa Core API • Live Reload
-    </div>
     <script
       id="api-reference"
       data-url="/openapi.json"
       data-configuration='{
-        "theme": "purple",
+        "theme": "deepSpace",
         "darkMode": true,
         "layout": "modern",
         "showSidebar": true,
@@ -102,6 +78,8 @@ function getScalarHtml() {
   </body>
 </html>`;
 }
+
+
 
 const server = http.createServer((req, res) => {
   const url = req.url.split('?')[0];
