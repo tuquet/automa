@@ -67,9 +67,20 @@
 
 # Monorepo Architecture & Reusability Rules
 
+- **Canonical 4-Letter Codes**: Toàn bộ các submodules trong Monorepo tuân thủ tiền tố `automa-` kết hợp 4 ký tự định danh:
+  - `automa-webe`: Web Browser Extension (Engine gốc)
+  - `automa-vsce`: Visual Studio Code Extension
+  - `automa-desk`: Desktop OS App (Tauri v2 + Vue 3.5)
+  - `automa-core`: Rust Core Engine Daemon
+  - `automa-vault`: Local Storage Workspace & Campaign Storage
+- **Dual Reusable Build Targets from `automa-webe`**:
+  - `pnpm run build:runner` (`webpack.runner.config.js`) $\rightarrow$ Xuất headless execution engine vào `dist/cli-runner`.
+  - `pnpm run build:studio` (`vite.studio.config.ts`) $\rightarrow$ Xuất standalone web canvas vào `dist/studio`.
+  - **Reusability Rule**: Các submodule khác (`automa-core`, `automa-vsce`, `automa-desk`) trực tiếp tiêu thụ 2 artifacts này, **TUYỆT ĐỐI KHÔNG** sao chép (duplicate) mã nguồn canvas/runner.
 - **Prioritize Existing WIPs (Work-in-Progress)**: Trước khi sáng chế hoặc đề xuất các tích hợp kiến trúc phức tạp, polyfills, hoặc cầu nối liên gói (cross-package bridges) (ví dụ: nhúng ứng dụng Vue vào một VS Code Webview), **BẮT BUỘC** tìm kiếm triệt để trong monorepo các giải pháp WIP đã có.
   - **Action**: **LUÔN LUÔN** kiểm tra scripts trong `package.json`, các biến thể `webpack.*.config.js`, và workspaces `packages/` để xem liệu một mục tiêu build (build target) hoặc adapter (như `vscode-compat.js`) cụ thể đã được người dùng triển khai một phần hay chưa. **TUYỆT ĐỐI KHÔNG** xây dựng từ đầu nếu nền tảng đã tồn tại.
-- **VSCE Packaging**: Trong cấu trúc Monorepo, nếu `npx vsce package` thất bại do xác thực phụ thuộc (dependency validation) khắt khe trong `package.json` (ví dụ: thiếu dependencies ở root), **ƯU TIÊN DÙNG** cờ `--no-dependencies` thay vì chỉnh sửa cấu trúc workspace và phá vỡ thiết kế monorepo g�  - **SSE vs WebSocket Protocol Invariants**:
+- **VSCE Packaging**: Trong cấu trúc Monorepo, nếu `npx vsce package` thất bại do xác thực phụ thuộc (dependency validation) khắt khe trong `package.json` (ví dụ: thiếu dependencies ở root), **ƯU TIÊN DÙNG** cờ `--no-dependencies` thay vì chỉnh sửa cấu trúc workspace và phá vỡ thiết kế monorepo.
+- **SSE vs WebSocket Protocol Invariants**:
   - **Server-Sent Events (SSE)**: Dùng cho dữ liệu 1 chiều (Logs, Telemetry, Matrix progress) và **BẮT BUỘC** khai báo `content_type = "text/event-stream"` trong `utoipa` để `@hey-api/openapi-ts` tự động sinh SDK client `.sse.get()`.
   - **WebSocket (WS)**: Dùng cho điều khiển 2 chiều độ trễ thấp (`/api/v1/ws`) và **BẮT BUỘC** tiêu thụ các kiểu tin nhắn tường minh từ `@automa/types/ws`.
 - **Zero Fallback & Explicit Error Contract**: Toàn bộ hệ sinh thái Automa Ecosystem là phiên bản phát triển mới (Greenfield / Modernized), **TUYỆT ĐỐI KHÔNG** sử dụng legacy fallback routing hay dual-path trong API handlers và client SDK. Toàn bộ endpoints **BẮT BUỘC** sử dụng chuẩn `/api/v1/...` và trả về mã lỗi HTTP tường minh (`BadRequest`, `NotFound`, `Validation`, `InternalServerError`) đi kèm cấu trúc `ApiErrorResponse` chuẩn. **TUYỆT ĐỐI KHÔNG** swallow lỗi âm thầm hoặc ngầm fallback sang các hàm cũ.

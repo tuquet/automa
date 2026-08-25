@@ -71,3 +71,20 @@ export interface Workflow {
   updatedAt?: number;
   isTesting?: boolean;
 }
+
+export interface TriggerParameter extends Partial<WorkflowVariable> {
+  name: string;
+  defaultValue?: unknown;
+  isImplicit?: boolean;
+  [key: string]: unknown;
+}
+
+export interface WorkflowUpdatePayload
+  extends Omit<Partial<Workflow>, 'table' | 'settings'> {
+  triggerParams?: Record<string, unknown>;
+  extVersion?: string;
+  globalData?: unknown;
+  includedWorkflows?: unknown;
+  settings?: unknown;
+  table?: unknown;
+}

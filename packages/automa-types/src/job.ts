@@ -36,3 +36,33 @@ export interface Job {
   };
   errorMessage?: string;
 }
+
+export interface RunnerItem {
+  jobId?: string;
+  id?: string;
+  label?: string;
+  name?: string;
+  status?: string;
+}
+
+export interface LiveLogCommandArgs {
+  jobId?: string;
+  task?: {
+    name?: string;
+    definition?: {
+      id?: string;
+      [key: string]: unknown;
+    };
+  };
+}
+
+export interface TaskOptions {
+  id: string;
+  name: string;
+  source?: string;
+  startMessage?: string;
+  successMessage?: string;
+  errorMessage?: string;
+  statusBarText?: string;
+  useTelemetry?: boolean;
+}

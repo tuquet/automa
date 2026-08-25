@@ -49,6 +49,24 @@ export type ExecutionTelemetryMessage =
   | { type: 'task:completed' }
   | { type: 'task:stopped' };
 
+export type WebviewViewType = 'dashboard' | 'browsers' | 'workflow' | 'campaign' | 'logs' | 'table';
+
+export interface WebviewInitialData<T = unknown> {
+  viewType: WebviewViewType;
+  payload?: T;
+}
+
+export type DashboardToExtensionMessage =
+  | { type: 'ready' }
+  | { type: 'refresh' }
+  | { type: 'runCampaign'; path: string }
+  | { type: 'toggleCron'; path: string }
+  | { type: 'openCampaign'; path: string }
+  | { type: 'showLog'; id: string }
+  | { type: 'killJob'; id: string }
+  | { type: 'deleteHistory'; id: string }
+  | { type: 'clearHistory' };
+
 export type WebviewMessage =
   | CampaignPreviewMessage
   | WorkflowPreviewMessage
@@ -56,11 +74,19 @@ export type WebviewMessage =
   | LogEditorMessage
   | BrowserPreviewMessage
   | PackagePreviewMessage
-  | ExecutionTelemetryMessage;
+  | ExecutionTelemetryMessage
+  | DashboardToExtensionMessage;
 
 export interface SseEvent<T = unknown> {
   event?: string;
   data: T;
   id?: string;
   retry?: number;
+}
+
+export interface AutomaEventData {
+  type: string;
+  jobId?: string;
+  data?: unknown;
+  [key: string]: unknown;
 }
