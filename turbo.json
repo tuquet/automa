@@ -3,10 +3,40 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "public/dist/**"]
+      "outputs": ["dist/**", "out/**"]
+    },
+    "build:runner": {
+      "outputs": ["dist/cli-runner/**"]
+    },
+    "build:studio": {
+      "outputs": ["dist/studio/**"]
+    },
+    "build:webview": {
+      "outputs": ["dist/webview/**", "webview-ui/dist/**"]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": ["^build"]
+    },
+    "lint:fix": {
+      "cache": false
+    },
+    "format": {
+      "cache": false
+    },
+    "format:check": {},
+    "typecheck": {
+      "dependsOn": ["^build"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "test:coverage": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "clean": {
+      "cache": false
     },
     "dev": {
       "cache": false,
@@ -23,13 +53,6 @@
     "dev:studio": {
       "cache": false,
       "persistent": true
-    },
-    "build:studio": {
-      "outputs": ["dist/studio/**"]
-    },
-    "test": {
-      "dependsOn": ["^build"],
-      "outputs": []
     }
   }
 }
