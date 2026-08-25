@@ -41,6 +41,11 @@
       "types": "./dist/ipc.d.ts",
       "import": "./dist/ipc.js",
       "default": "./dist/ipc.js"
+    },
+    "./ws": {
+      "types": "./dist/ws.d.ts",
+      "import": "./dist/ws.js",
+      "default": "./dist/ws.js"
     }
   },
   "files": [

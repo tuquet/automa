@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, ServerSentEventsResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AddCredentialData, AddCredentialResponses, AddTableData, AddTableErrors, AddTableResponses, AddTableRowData, AddTableRowErrors, AddTableRowResponses, AddVariableData, AddVariableResponses, AppendJobLogsData, AppendJobLogsResponses, ClearHistoryData, ClearHistoryErrors, ClearHistoryResponses, CreateBrowserData, CreateBrowserErrors, CreateBrowserResponses, DeleteBrowserData, DeleteBrowserErrors, DeleteBrowserResponses, DeleteCredentialData, DeleteCredentialResponses, DeleteHistoryItemData, DeleteHistoryItemErrors, DeleteHistoryItemResponses, DeleteTableData, DeleteTableErrors, DeleteTableResponses, DeleteVariableData, DeleteVariableResponses, EncryptSecretData, EncryptSecretErrors, EncryptSecretResponses, FinishJobData, FinishJobErrors, FinishJobResponses, GetActiveJobsData, GetActiveJobsResponses, GetBrowserDetailData, GetBrowserDetailErrors, GetBrowserDetailResponses, GetBrowsersData, GetBrowsersErrors, GetBrowsersResponses, GetCookiesData, GetCookiesErrors, GetCookiesResponses, GetCredentialsData, GetCredentialsResponses, GetHistoryData, GetHistoryErrors, GetHistoryResponses, GetJobStatusData, GetJobStatusResponses, GetLogsData, GetLogsErrors, GetLogsResponses, GetMatrixStatusData, GetMatrixStatusErrors, GetMatrixStatusResponses, GetMetricsData, GetMetricsResponses, GetSettingsData, GetSettingsResponses, GetTableRowsData, GetTableRowsErrors, GetTableRowsResponses, GetTablesData, GetTablesErrors, GetTablesResponses, GetVariablesData, GetVariablesResponses, GetWorkflowData, GetWorkflowResponses, HealthData, HealthResponses, ImportBrowsersCsvData, ImportBrowsersCsvResponses, InstallBrowserData, InstallBrowserResponses, KillBrowsersData, KillBrowsersResponses, KillJobData, KillJobErrors, KillJobResponses, LintWorkflowData, LintWorkflowResponses, ListStorageFilesData, ListStorageFilesResponses, ListenToWorkerEventsData, ListenToWorkerEventsResponses, OpenStudioData, OpenStudioResponses, PatchSettingsData, PatchSettingsResponses, PostCookiesData, PostCookiesErrors, PostCookiesResponses, SaveWorkflowData, SaveWorkflowResponses, SideloadExtensionData, SideloadExtensionResponses, SseData, SseResponses, StartBrowserData, StartBrowserErrors, StartBrowserResponses, StopBrowserData, StopBrowserResponses, SubmitJobData, SubmitJobErrors, SubmitJobResponses, UpdateBrowserData, UpdateBrowserErrors, UpdateBrowserResponses, UpdateSettingsData, UpdateSettingsResponses } from './types.gen';
+import type { AbortCampaignData, AbortCampaignErrors, AbortCampaignResponses, AddStorageCredentialData, AddStorageCredentialErrors, AddStorageCredentialResponses, AddStorageTableData, AddStorageTableErrors, AddStorageTableResponses, AddStorageTableRowData, AddStorageTableRowErrors, AddStorageTableRowResponses, AddStorageVariableData, AddStorageVariableErrors, AddStorageVariableResponses, AppendJobLogData, AppendJobLogErrors, AppendJobLogResponses, ClearAllJobHistoryData, ClearAllJobHistoryErrors, ClearAllJobHistoryResponses, CreateBrowserData, CreateBrowserErrors, CreateBrowserResponses, DeleteBrowserData, DeleteBrowserErrors, DeleteBrowserResponses, DeleteJobHistoryItemData, DeleteJobHistoryItemErrors, DeleteJobHistoryItemResponses, DeleteStorageCredentialData, DeleteStorageCredentialErrors, DeleteStorageCredentialResponses, DeleteStorageTableData, DeleteStorageTableErrors, DeleteStorageTableResponses, DeleteStorageVariableData, DeleteStorageVariableErrors, DeleteStorageVariableResponses, EncryptSecretData, EncryptSecretErrors, EncryptSecretResponses, ExecuteCampaignData, ExecuteCampaignErrors, ExecuteCampaignResponses, FinishJobData, FinishJobErrors, FinishJobResponses, GetActiveJobsData, GetActiveJobsResponses, GetAppSettingsData, GetAppSettingsErrors, GetAppSettingsResponses, GetBrowserCookiesData, GetBrowserCookiesErrors, GetBrowserCookiesResponses, GetBrowserDetailData, GetBrowserDetailErrors, GetBrowserDetailResponses, GetBrowsersData, GetBrowsersErrors, GetBrowsersResponses, GetCampaignMatrixStatusData, GetCampaignMatrixStatusErrors, GetCampaignMatrixStatusResponses, GetHealthData, GetHealthResponses, GetJobExecutionLogsData, GetJobExecutionLogsErrors, GetJobExecutionLogsResponses, GetJobHistoryData, GetJobHistoryErrors, GetJobHistoryResponses, GetJobStatusData, GetJobStatusErrors, GetJobStatusResponses, GetStorageCredentialsData, GetStorageCredentialsErrors, GetStorageCredentialsResponses, GetStorageTableRowsData, GetStorageTableRowsErrors, GetStorageTableRowsResponses, GetStorageTablesData, GetStorageTablesErrors, GetStorageTablesResponses, GetStorageVariablesData, GetStorageVariablesErrors, GetStorageVariablesResponses, GetSystemMetricsData, GetSystemMetricsResponses, GetWorkflowData, GetWorkflowErrors, GetWorkflowResponses, ImportBrowserCookiesData, ImportBrowserCookiesErrors, ImportBrowserCookiesResponses, ImportBrowsersCsvData, ImportBrowsersCsvErrors, ImportBrowsersCsvResponses, InstallBrowserBinaryData, InstallBrowserBinaryErrors, InstallBrowserBinaryResponses, KillAllBrowsersData, KillAllBrowsersResponses, KillJobData, KillJobErrors, KillJobResponses, LintWorkflowData, LintWorkflowResponses, ListStorageFilesData, ListStorageFilesErrors, ListStorageFilesResponses, OpenWebStudioData, OpenWebStudioResponses, PatchAppSettingsData, PatchAppSettingsErrors, PatchAppSettingsResponses, SaveWorkflowData, SaveWorkflowErrors, SaveWorkflowResponses, SideloadBrowserExtensionData, SideloadBrowserExtensionErrors, SideloadBrowserExtensionResponses, StartBrowserSessionData, StartBrowserSessionErrors, StartBrowserSessionResponses, StopBrowserSessionData, StopBrowserSessionResponses, SubmitJobData, SubmitJobErrors, SubmitJobResponses, SubscribeEventsSseData, SubscribeEventsSseResponses, UpdateAppSettingsData, UpdateAppSettingsErrors, UpdateAppSettingsResponses, UpdateBrowserData, UpdateBrowserErrors, UpdateBrowserResponses, WorkerSseData, WorkerSseResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -18,8 +18,18 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
     meta?: keyof ClientMeta extends never ? Record<string, unknown> : ClientMeta;
 };
 
+/**
+ * List all browser profiles
+ *
+ * Retrieves an array of all persisted browser profiles, including their active online/offline connection state.
+ */
 export const getBrowsers = <ThrowOnError extends boolean = false>(options?: Options<GetBrowsersData, ThrowOnError>): RequestResult<GetBrowsersResponses, GetBrowsersErrors, ThrowOnError> => (options?.client ?? client).get<GetBrowsersResponses, GetBrowsersErrors, ThrowOnError>({ url: '/api/v1/browsers', ...options });
 
+/**
+ * Create a new browser profile
+ *
+ * Persists a new isolated browser profile with custom fingerprint settings (User-Agent, Timezone) in SQLite.
+ */
 export const createBrowser = <ThrowOnError extends boolean = false>(options: Options<CreateBrowserData, ThrowOnError>): RequestResult<CreateBrowserResponses, CreateBrowserErrors, ThrowOnError> => (options.client ?? client).post<CreateBrowserResponses, CreateBrowserErrors, ThrowOnError>({
     url: '/api/v1/browsers',
     ...options,
@@ -29,7 +39,12 @@ export const createBrowser = <ThrowOnError extends boolean = false>(options: Opt
     }
 });
 
-export const importBrowsersCsv = <ThrowOnError extends boolean = false>(options: Options<ImportBrowsersCsvData, ThrowOnError>): RequestResult<ImportBrowsersCsvResponses, unknown, ThrowOnError> => (options.client ?? client).post<ImportBrowsersCsvResponses, unknown, ThrowOnError>({
+/**
+ * Batch import browser profiles from CSV
+ *
+ * Parses a multi-line CSV string and batch inserts new browser profiles into SQLite.
+ */
+export const importBrowsersCsv = <ThrowOnError extends boolean = false>(options: Options<ImportBrowsersCsvData, ThrowOnError>): RequestResult<ImportBrowsersCsvResponses, ImportBrowsersCsvErrors, ThrowOnError> => (options.client ?? client).post<ImportBrowsersCsvResponses, ImportBrowsersCsvErrors, ThrowOnError>({
     url: '/api/v1/browsers/import-csv',
     ...options,
     headers: {
@@ -38,12 +53,32 @@ export const importBrowsersCsv = <ThrowOnError extends boolean = false>(options:
     }
 });
 
-export const killBrowsers = <ThrowOnError extends boolean = false>(options?: Options<KillBrowsersData, ThrowOnError>): RequestResult<KillBrowsersResponses, unknown, ThrowOnError> => (options?.client ?? client).delete<KillBrowsersResponses, unknown, ThrowOnError>({ url: '/api/v1/browsers/sessions', ...options });
+/**
+ * Terminate all running browser processes
+ *
+ * Forcefully shuts down all managed browser processes, child workers, and zombie processes across all profiles.
+ */
+export const killAllBrowsers = <ThrowOnError extends boolean = false>(options?: Options<KillAllBrowsersData, ThrowOnError>): RequestResult<KillAllBrowsersResponses, unknown, ThrowOnError> => (options?.client ?? client).delete<KillAllBrowsersResponses, unknown, ThrowOnError>({ url: '/api/v1/browsers/sessions', ...options });
 
+/**
+ * Delete a browser profile
+ *
+ * Permanently removes a browser profile from SQLite storage and cleans up associated session data.
+ */
 export const deleteBrowser = <ThrowOnError extends boolean = false>(options: Options<DeleteBrowserData, ThrowOnError>): RequestResult<DeleteBrowserResponses, DeleteBrowserErrors, ThrowOnError> => (options.client ?? client).delete<DeleteBrowserResponses, DeleteBrowserErrors, ThrowOnError>({ url: '/api/v1/browsers/{id}', ...options });
 
+/**
+ * Get browser profile details
+ *
+ * Retrieves full configuration details and live online status for a specific browser profile.
+ */
 export const getBrowserDetail = <ThrowOnError extends boolean = false>(options: Options<GetBrowserDetailData, ThrowOnError>): RequestResult<GetBrowserDetailResponses, GetBrowserDetailErrors, ThrowOnError> => (options.client ?? client).get<GetBrowserDetailResponses, GetBrowserDetailErrors, ThrowOnError>({ url: '/api/v1/browsers/{id}', ...options });
 
+/**
+ * Update a browser profile
+ *
+ * Updates the configuration and metadata of an existing browser profile by ID.
+ */
 export const updateBrowser = <ThrowOnError extends boolean = false>(options: Options<UpdateBrowserData, ThrowOnError>): RequestResult<UpdateBrowserResponses, UpdateBrowserErrors, ThrowOnError> => (options.client ?? client).put<UpdateBrowserResponses, UpdateBrowserErrors, ThrowOnError>({
     url: '/api/v1/browsers/{id}',
     ...options,
@@ -53,9 +88,19 @@ export const updateBrowser = <ThrowOnError extends boolean = false>(options: Opt
     }
 });
 
-export const getCookies = <ThrowOnError extends boolean = false>(options: Options<GetCookiesData, ThrowOnError>): RequestResult<GetCookiesResponses, GetCookiesErrors, ThrowOnError> => (options.client ?? client).get<GetCookiesResponses, GetCookiesErrors, ThrowOnError>({ url: '/api/v1/browsers/{id}/cookies', ...options });
+/**
+ * Export cookies for a browser profile
+ *
+ * Extracts and decrypts all network cookies stored in the browser profile's Chromium SQLite cookie database.
+ */
+export const getBrowserCookies = <ThrowOnError extends boolean = false>(options: Options<GetBrowserCookiesData, ThrowOnError>): RequestResult<GetBrowserCookiesResponses, GetBrowserCookiesErrors, ThrowOnError> => (options.client ?? client).get<GetBrowserCookiesResponses, GetBrowserCookiesErrors, ThrowOnError>({ url: '/api/v1/browsers/{id}/cookies', ...options });
 
-export const postCookies = <ThrowOnError extends boolean = false>(options: Options<PostCookiesData, ThrowOnError>): RequestResult<PostCookiesResponses, PostCookiesErrors, ThrowOnError> => (options.client ?? client).post<PostCookiesResponses, PostCookiesErrors, ThrowOnError>({
+/**
+ * Import cookies into a browser profile
+ *
+ * Batch writes and encrypts an array of cookies directly into the browser profile's Chromium SQLite cookie database.
+ */
+export const importBrowserCookies = <ThrowOnError extends boolean = false>(options: Options<ImportBrowserCookiesData, ThrowOnError>): RequestResult<ImportBrowserCookiesResponses, ImportBrowserCookiesErrors, ThrowOnError> => (options.client ?? client).post<ImportBrowserCookiesResponses, ImportBrowserCookiesErrors, ThrowOnError>({
     url: '/api/v1/browsers/{id}/cookies',
     ...options,
     headers: {
@@ -64,7 +109,12 @@ export const postCookies = <ThrowOnError extends boolean = false>(options: Optio
     }
 });
 
-export const sideloadExtension = <ThrowOnError extends boolean = false>(options: Options<SideloadExtensionData, ThrowOnError>): RequestResult<SideloadExtensionResponses, unknown, ThrowOnError> => (options.client ?? client).post<SideloadExtensionResponses, unknown, ThrowOnError>({
+/**
+ * Sideload unpacked extension into browser profile
+ *
+ * Copies and configures an external unpacked extension into the specified browser profile's data directory.
+ */
+export const sideloadBrowserExtension = <ThrowOnError extends boolean = false>(options: Options<SideloadBrowserExtensionData, ThrowOnError>): RequestResult<SideloadBrowserExtensionResponses, SideloadBrowserExtensionErrors, ThrowOnError> => (options.client ?? client).post<SideloadBrowserExtensionResponses, SideloadBrowserExtensionErrors, ThrowOnError>({
     url: '/api/v1/browsers/{id}/extensions',
     ...options,
     headers: {
@@ -73,28 +123,109 @@ export const sideloadExtension = <ThrowOnError extends boolean = false>(options:
     }
 });
 
-export const stopBrowser = <ThrowOnError extends boolean = false>(options: Options<StopBrowserData, ThrowOnError, unknown>): Promise<ServerSentEventsResult<StopBrowserResponses>> => (options.client ?? client).sse.delete<StopBrowserResponses, unknown, ThrowOnError>({ url: '/api/v1/browsers/{id}/session', ...options });
+/**
+ * Terminate an active browser session
+ *
+ * Gracefully closes the running browser process associated with the profile ID, cleans up temporary locks, and streams teardown progress via SSE.
+ */
+export const stopBrowserSession = <ThrowOnError extends boolean = false>(options: Options<StopBrowserSessionData, ThrowOnError, unknown>): Promise<ServerSentEventsResult<StopBrowserSessionResponses>> => (options.client ?? client).sse.delete<StopBrowserSessionResponses, unknown, ThrowOnError>({ url: '/api/v1/browsers/{id}/session', ...options });
 
-export const startBrowser = <ThrowOnError extends boolean = false>(options: Options<StartBrowserData, ThrowOnError>): RequestResult<StartBrowserResponses, StartBrowserErrors, ThrowOnError> => (options.client ?? client).post<StartBrowserResponses, StartBrowserErrors, ThrowOnError>({ url: '/api/v1/browsers/{id}/session', ...options });
+/**
+ * Launch an active browser session
+ *
+ * Launches an actual browser process (Chromium/Chrome) assigned to the specified profile, loads the Automa extension runner, and positions the window according to the active grid matrix.
+ */
+export const startBrowserSession = <ThrowOnError extends boolean = false>(options: Options<StartBrowserSessionData, ThrowOnError>): RequestResult<StartBrowserSessionResponses, StartBrowserSessionErrors, ThrowOnError> => (options.client ?? client).post<StartBrowserSessionResponses, StartBrowserSessionErrors, ThrowOnError>({ url: '/api/v1/browsers/{id}/session', ...options });
 
-export const getMatrixStatus = <ThrowOnError extends boolean = false>(options: Options<GetMatrixStatusData, ThrowOnError>): RequestResult<GetMatrixStatusResponses, GetMatrixStatusErrors, ThrowOnError> => (options.client ?? client).get<GetMatrixStatusResponses, GetMatrixStatusErrors, ThrowOnError>({ url: '/api/v1/campaigns/{id}/matrix-status', ...options });
+/**
+ * Execute a multi-instance automation campaign
+ *
+ * Parses a campaign descriptor, provisions required browser profiles, allocates grid matrix slots, and starts parallel workflow execution jobs.
+ */
+export const executeCampaign = <ThrowOnError extends boolean = false>(options: Options<ExecuteCampaignData, ThrowOnError>): RequestResult<ExecuteCampaignResponses, ExecuteCampaignErrors, ThrowOnError> => (options.client ?? client).post<ExecuteCampaignResponses, ExecuteCampaignErrors, ThrowOnError>({
+    url: '/api/v1/campaigns/execute',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
-export const sse = <ThrowOnError extends boolean = false>(options?: Options<SseData, ThrowOnError, unknown>): Promise<ServerSentEventsResult<SseResponses>> => (options?.client ?? client).sse.get<SseResponses, unknown, ThrowOnError>({ url: '/api/v1/events', ...options });
+/**
+ * Abort a running multi-instance campaign
+ *
+ * Immediately halts all sub-jobs associated with the campaign, stops all browser processes in the grid matrix, and emits a matrix_finished SSE event.
+ */
+export const abortCampaign = <ThrowOnError extends boolean = false>(options: Options<AbortCampaignData, ThrowOnError>): RequestResult<AbortCampaignResponses, AbortCampaignErrors, ThrowOnError> => (options.client ?? client).delete<AbortCampaignResponses, AbortCampaignErrors, ThrowOnError>({ url: '/api/v1/campaigns/{id}', ...options });
 
-export const health = <ThrowOnError extends boolean = false>(options?: Options<HealthData, ThrowOnError>): RequestResult<HealthResponses, unknown, ThrowOnError> => (options?.client ?? client).get<HealthResponses, unknown, ThrowOnError>({ url: '/api/v1/health', ...options });
+/**
+ * Get campaign grid matrix execution status
+ *
+ * Retrieves real-time slot layout and execution status for a multi-instance grid campaign.
+ */
+export const getCampaignMatrixStatus = <ThrowOnError extends boolean = false>(options: Options<GetCampaignMatrixStatusData, ThrowOnError>): RequestResult<GetCampaignMatrixStatusResponses, GetCampaignMatrixStatusErrors, ThrowOnError> => (options.client ?? client).get<GetCampaignMatrixStatusResponses, GetCampaignMatrixStatusErrors, ThrowOnError>({ url: '/api/v1/campaigns/{id}/matrix-status', ...options });
 
-export const clearHistory = <ThrowOnError extends boolean = false>(options?: Options<ClearHistoryData, ThrowOnError>): RequestResult<ClearHistoryResponses, ClearHistoryErrors, ThrowOnError> => (options?.client ?? client).delete<ClearHistoryResponses, ClearHistoryErrors, ThrowOnError>({ url: '/api/v1/history', ...options });
+/**
+ * Subscribe to global telemetry and logs SSE stream
+ *
+ * Establishes a real-time Server-Sent Events stream for task progression, job lifecycle changes, logs, and matrix events.
+ */
+export const subscribeEventsSse = <ThrowOnError extends boolean = false>(options?: Options<SubscribeEventsSseData, ThrowOnError, unknown>): Promise<ServerSentEventsResult<SubscribeEventsSseResponses>> => (options?.client ?? client).sse.get<SubscribeEventsSseResponses, unknown, ThrowOnError>({ url: '/api/v1/events', ...options });
 
-export const getHistory = <ThrowOnError extends boolean = false>(options?: Options<GetHistoryData, ThrowOnError>): RequestResult<GetHistoryResponses, GetHistoryErrors, ThrowOnError> => (options?.client ?? client).get<GetHistoryResponses, GetHistoryErrors, ThrowOnError>({ url: '/api/v1/history', ...options });
+/**
+ * Check daemon health status
+ *
+ * Returns active operational health status, daemon version, and server readiness for clients.
+ */
+export const getHealth = <ThrowOnError extends boolean = false>(options?: Options<GetHealthData, ThrowOnError>): RequestResult<GetHealthResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetHealthResponses, unknown, ThrowOnError>({ url: '/api/v1/health', ...options });
 
-export const deleteHistoryItem = <ThrowOnError extends boolean = false>(options: Options<DeleteHistoryItemData, ThrowOnError>): RequestResult<DeleteHistoryItemResponses, DeleteHistoryItemErrors, ThrowOnError> => (options.client ?? client).delete<DeleteHistoryItemResponses, DeleteHistoryItemErrors, ThrowOnError>({ url: '/api/v1/history/{job_id}', ...options });
+/**
+ * Clear entire job execution history
+ *
+ * Permanently truncates the job execution history and purge all logs from the database.
+ */
+export const clearAllJobHistory = <ThrowOnError extends boolean = false>(options?: Options<ClearAllJobHistoryData, ThrowOnError>): RequestResult<ClearAllJobHistoryResponses, ClearAllJobHistoryErrors, ThrowOnError> => (options?.client ?? client).delete<ClearAllJobHistoryResponses, ClearAllJobHistoryErrors, ThrowOnError>({ url: '/api/v1/history', ...options });
 
-export const getLogs = <ThrowOnError extends boolean = false>(options: Options<GetLogsData, ThrowOnError>): RequestResult<GetLogsResponses, GetLogsErrors, ThrowOnError> => (options.client ?? client).get<GetLogsResponses, GetLogsErrors, ThrowOnError>({ url: '/api/v1/history/{job_id}/logs', ...options });
+/**
+ * Get paginated job execution history
+ *
+ * Queries previous workflow execution runs and audit logs persisted in the SQLite database.
+ */
+export const getJobHistory = <ThrowOnError extends boolean = false>(options?: Options<GetJobHistoryData, ThrowOnError>): RequestResult<GetJobHistoryResponses, GetJobHistoryErrors, ThrowOnError> => (options?.client ?? client).get<GetJobHistoryResponses, GetJobHistoryErrors, ThrowOnError>({ url: '/api/v1/history', ...options });
 
-export const listenToWorkerEvents = <ThrowOnError extends boolean = false>(options?: Options<ListenToWorkerEventsData, ThrowOnError>): RequestResult<ListenToWorkerEventsResponses, unknown, ThrowOnError> => (options?.client ?? client).get<ListenToWorkerEventsResponses, unknown, ThrowOnError>({ url: '/api/v1/internal/worker/events', ...options });
+/**
+ * Delete a single job history item
+ *
+ * Removes a specific job run and its associated logs from the SQLite history store.
+ */
+export const deleteJobHistoryItem = <ThrowOnError extends boolean = false>(options: Options<DeleteJobHistoryItemData, ThrowOnError>): RequestResult<DeleteJobHistoryItemResponses, DeleteJobHistoryItemErrors, ThrowOnError> => (options.client ?? client).delete<DeleteJobHistoryItemResponses, DeleteJobHistoryItemErrors, ThrowOnError>({ url: '/api/v1/history/{job_id}', ...options });
 
+/**
+ * Get execution details and logs for a job
+ *
+ * Retrieves full execution audit trail, timing breakdown, and detailed step logs for a specific job.
+ */
+export const getJobExecutionLogs = <ThrowOnError extends boolean = false>(options: Options<GetJobExecutionLogsData, ThrowOnError>): RequestResult<GetJobExecutionLogsResponses, GetJobExecutionLogsErrors, ThrowOnError> => (options.client ?? client).get<GetJobExecutionLogsResponses, GetJobExecutionLogsErrors, ThrowOnError>({ url: '/api/v1/history/{job_id}/logs', ...options });
+
+/**
+ * Subscribe to worker event stream (SSE)
+ *
+ * Establishes a long-lived Server-Sent Events (SSE) connection used by browser workers to receive workflow job dispatches and cancellation commands.
+ */
+export const workerSse = <ThrowOnError extends boolean = false>(options?: Options<WorkerSseData, ThrowOnError, unknown>): Promise<ServerSentEventsResult<WorkerSseResponses>> => (options?.client ?? client).sse.get<WorkerSseResponses, unknown, ThrowOnError>({ url: '/api/v1/internal/worker/events', ...options });
+
+/**
+ * List all active running jobs
+ *
+ * Returns an array of identifiers for all workflow execution jobs currently running in the daemon.
+ */
 export const getActiveJobs = <ThrowOnError extends boolean = false>(options?: Options<GetActiveJobsData, ThrowOnError>): RequestResult<GetActiveJobsResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetActiveJobsResponses, unknown, ThrowOnError>({ url: '/api/v1/jobs', ...options });
 
+/**
+ * Submit a workflow execution job
+ *
+ * Submits a new automation workflow job to be executed by a browser worker instance. Supports either a filesystem `workflowPath` or raw inline `workflowData`. Automatically ensures the required browser instance is launched and connected.
+ */
 export const submitJob = <ThrowOnError extends boolean = false>(options: Options<SubmitJobData, ThrowOnError>): RequestResult<SubmitJobResponses, SubmitJobErrors, ThrowOnError> => (options.client ?? client).post<SubmitJobResponses, SubmitJobErrors, ThrowOnError>({
     url: '/api/v1/jobs',
     ...options,
@@ -104,9 +235,19 @@ export const submitJob = <ThrowOnError extends boolean = false>(options: Options
     }
 });
 
+/**
+ * Abort a running job
+ *
+ * Immediately triggers the cancellation token for the specified job, sends a stop signal to the browser worker, and updates job state.
+ */
 export const killJob = <ThrowOnError extends boolean = false>(options: Options<KillJobData, ThrowOnError>): RequestResult<KillJobResponses, KillJobErrors, ThrowOnError> => (options.client ?? client).delete<KillJobResponses, KillJobErrors, ThrowOnError>({ url: '/api/v1/jobs/{job_id}', ...options });
 
-export const appendJobLogs = <ThrowOnError extends boolean = false>(options: Options<AppendJobLogsData, ThrowOnError>): RequestResult<AppendJobLogsResponses, unknown, ThrowOnError> => (options.client ?? client).post<AppendJobLogsResponses, unknown, ThrowOnError>({
+/**
+ * Append execution log entry for a job
+ *
+ * Receives runtime log entries and block execution telemetry from the browser worker, persisting them to the database and broadcasting via SSE.
+ */
+export const appendJobLog = <ThrowOnError extends boolean = false>(options: Options<AppendJobLogData, ThrowOnError>): RequestResult<AppendJobLogResponses, AppendJobLogErrors, ThrowOnError> => (options.client ?? client).post<AppendJobLogResponses, AppendJobLogErrors, ThrowOnError>({
     url: '/api/v1/jobs/{job_id}/logs',
     ...options,
     headers: {
@@ -115,10 +256,25 @@ export const appendJobLogs = <ThrowOnError extends boolean = false>(options: Opt
     }
 });
 
-export const getJobStatus = <ThrowOnError extends boolean = false>(options: Options<GetJobStatusData, ThrowOnError>): RequestResult<GetJobStatusResponses, unknown, ThrowOnError> => (options.client ?? client).get<GetJobStatusResponses, unknown, ThrowOnError>({ url: '/api/v1/jobs/{job_id}/status', ...options });
+/**
+ * Get current status of a job
+ *
+ * Queries the runtime lifecycle status of a specific job by its unique identifier.
+ */
+export const getJobStatus = <ThrowOnError extends boolean = false>(options: Options<GetJobStatusData, ThrowOnError>): RequestResult<GetJobStatusResponses, GetJobStatusErrors, ThrowOnError> => (options.client ?? client).get<GetJobStatusResponses, GetJobStatusErrors, ThrowOnError>({ url: '/api/v1/jobs/{job_id}/status', ...options });
 
+/**
+ * Mark a job as completed
+ *
+ * Signals the completion of a workflow execution job, records the final status in SQLite, releases active tokens, and notifies subscribers.
+ */
 export const finishJob = <ThrowOnError extends boolean = false>(options: Options<FinishJobData, ThrowOnError>): RequestResult<FinishJobResponses, FinishJobErrors, ThrowOnError> => (options.client ?? client).patch<FinishJobResponses, FinishJobErrors, ThrowOnError>({ url: '/api/v1/jobs/{job_id}/status', ...options });
 
+/**
+ * Validate and lint workflow AST graph
+ *
+ * Performs static analysis on workflow nodes, edge connections, parameter schemas, and detects structural defects.
+ */
 export const lintWorkflow = <ThrowOnError extends boolean = false>(options: Options<LintWorkflowData, ThrowOnError>): RequestResult<LintWorkflowResponses, unknown, ThrowOnError> => (options.client ?? client).post<LintWorkflowResponses, unknown, ThrowOnError>({
     url: '/api/v1/lint',
     ...options,
@@ -128,8 +284,13 @@ export const lintWorkflow = <ThrowOnError extends boolean = false>(options: Opti
     }
 });
 
+/**
+ * Encrypt sensitive token or secret with AES-256
+ *
+ * Encrypts plaintext secrets using PBKDF2 and AES-GCM-256 authenticated encryption.
+ */
 export const encryptSecret = <ThrowOnError extends boolean = false>(options: Options<EncryptSecretData, ThrowOnError>): RequestResult<EncryptSecretResponses, EncryptSecretErrors, ThrowOnError> => (options.client ?? client).post<EncryptSecretResponses, EncryptSecretErrors, ThrowOnError>({
-    url: '/api/v1/secrets/encryption',
+    url: '/api/v1/secrets/encrypt',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -137,9 +298,19 @@ export const encryptSecret = <ThrowOnError extends boolean = false>(options: Opt
     }
 });
 
-export const getCredentials = <ThrowOnError extends boolean = false>(options?: Options<GetCredentialsData, ThrowOnError>): RequestResult<GetCredentialsResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetCredentialsResponses, unknown, ThrowOnError>({ url: '/api/v1/storage/credentials', ...options });
+/**
+ * List all stored credentials
+ *
+ * Retrieves all saved authentication credentials from storage.
+ */
+export const getStorageCredentials = <ThrowOnError extends boolean = false>(options?: Options<GetStorageCredentialsData, ThrowOnError>): RequestResult<GetStorageCredentialsResponses, GetStorageCredentialsErrors, ThrowOnError> => (options?.client ?? client).get<GetStorageCredentialsResponses, GetStorageCredentialsErrors, ThrowOnError>({ url: '/api/v1/storage/credentials', ...options });
 
-export const addCredential = <ThrowOnError extends boolean = false>(options: Options<AddCredentialData, ThrowOnError>): RequestResult<AddCredentialResponses, unknown, ThrowOnError> => (options.client ?? client).post<AddCredentialResponses, unknown, ThrowOnError>({
+/**
+ * Add or update a stored credential
+ *
+ * Persists a new credential or updates an existing credential in storage.
+ */
+export const addStorageCredential = <ThrowOnError extends boolean = false>(options: Options<AddStorageCredentialData, ThrowOnError>): RequestResult<AddStorageCredentialResponses, AddStorageCredentialErrors, ThrowOnError> => (options.client ?? client).post<AddStorageCredentialResponses, AddStorageCredentialErrors, ThrowOnError>({
     url: '/api/v1/storage/credentials',
     ...options,
     headers: {
@@ -148,11 +319,33 @@ export const addCredential = <ThrowOnError extends boolean = false>(options: Opt
     }
 });
 
-export const deleteCredential = <ThrowOnError extends boolean = false>(options: Options<DeleteCredentialData, ThrowOnError>): RequestResult<DeleteCredentialResponses, unknown, ThrowOnError> => (options.client ?? client).delete<DeleteCredentialResponses, unknown, ThrowOnError>({ url: '/api/v1/storage/credentials/{id}', ...options });
+/**
+ * Delete a stored credential
+ *
+ * Permanently removes a credential from storage by ID or key.
+ */
+export const deleteStorageCredential = <ThrowOnError extends boolean = false>(options: Options<DeleteStorageCredentialData, ThrowOnError>): RequestResult<DeleteStorageCredentialResponses, DeleteStorageCredentialErrors, ThrowOnError> => (options.client ?? client).delete<DeleteStorageCredentialResponses, DeleteStorageCredentialErrors, ThrowOnError>({ url: '/api/v1/storage/credentials/{id}', ...options });
 
-export const getTables = <ThrowOnError extends boolean = false>(options?: Options<GetTablesData, ThrowOnError>): RequestResult<GetTablesResponses, GetTablesErrors, ThrowOnError> => (options?.client ?? client).get<GetTablesResponses, GetTablesErrors, ThrowOnError>({ url: '/api/v1/storage/tables', ...options });
+/**
+ * List all workflow and campaign files in storage workspace
+ *
+ * Recursively traverses the `automa-vault` storage directory and returns metadata for all `.workflow.json` and `.campaign.json` files.
+ */
+export const listStorageFiles = <ThrowOnError extends boolean = false>(options?: Options<ListStorageFilesData, ThrowOnError>): RequestResult<ListStorageFilesResponses, ListStorageFilesErrors, ThrowOnError> => (options?.client ?? client).get<ListStorageFilesResponses, ListStorageFilesErrors, ThrowOnError>({ url: '/api/v1/storage/files', ...options });
 
-export const addTable = <ThrowOnError extends boolean = false>(options: Options<AddTableData, ThrowOnError>): RequestResult<AddTableResponses, AddTableErrors, ThrowOnError> => (options.client ?? client).post<AddTableResponses, AddTableErrors, ThrowOnError>({
+/**
+ * List all storage tables
+ *
+ * Retrieves schemas for all user data tables stored in SQLite.
+ */
+export const getStorageTables = <ThrowOnError extends boolean = false>(options?: Options<GetStorageTablesData, ThrowOnError>): RequestResult<GetStorageTablesResponses, GetStorageTablesErrors, ThrowOnError> => (options?.client ?? client).get<GetStorageTablesResponses, GetStorageTablesErrors, ThrowOnError>({ url: '/api/v1/storage/tables', ...options });
+
+/**
+ * Create or update a storage table schema
+ *
+ * Defines a new data table schema or modifies column definitions for an existing table.
+ */
+export const addStorageTable = <ThrowOnError extends boolean = false>(options: Options<AddStorageTableData, ThrowOnError>): RequestResult<AddStorageTableResponses, AddStorageTableErrors, ThrowOnError> => (options.client ?? client).post<AddStorageTableResponses, AddStorageTableErrors, ThrowOnError>({
     url: '/api/v1/storage/tables',
     ...options,
     headers: {
@@ -161,11 +354,26 @@ export const addTable = <ThrowOnError extends boolean = false>(options: Options<
     }
 });
 
-export const deleteTable = <ThrowOnError extends boolean = false>(options: Options<DeleteTableData, ThrowOnError>): RequestResult<DeleteTableResponses, DeleteTableErrors, ThrowOnError> => (options.client ?? client).delete<DeleteTableResponses, DeleteTableErrors, ThrowOnError>({ url: '/api/v1/storage/tables/{id}', ...options });
+/**
+ * Delete a storage table
+ *
+ * Drops the specified data table and purges all of its associated rows from SQLite.
+ */
+export const deleteStorageTable = <ThrowOnError extends boolean = false>(options: Options<DeleteStorageTableData, ThrowOnError>): RequestResult<DeleteStorageTableResponses, DeleteStorageTableErrors, ThrowOnError> => (options.client ?? client).delete<DeleteStorageTableResponses, DeleteStorageTableErrors, ThrowOnError>({ url: '/api/v1/storage/tables/{id}', ...options });
 
-export const getTableRows = <ThrowOnError extends boolean = false>(options: Options<GetTableRowsData, ThrowOnError>): RequestResult<GetTableRowsResponses, GetTableRowsErrors, ThrowOnError> => (options.client ?? client).get<GetTableRowsResponses, GetTableRowsErrors, ThrowOnError>({ url: '/api/v1/storage/tables/{id}/rows', ...options });
+/**
+ * Get rows from a storage table
+ *
+ * Queries paginated row documents belonging to the specified data table.
+ */
+export const getStorageTableRows = <ThrowOnError extends boolean = false>(options: Options<GetStorageTableRowsData, ThrowOnError>): RequestResult<GetStorageTableRowsResponses, GetStorageTableRowsErrors, ThrowOnError> => (options.client ?? client).get<GetStorageTableRowsResponses, GetStorageTableRowsErrors, ThrowOnError>({ url: '/api/v1/storage/tables/{id}/rows', ...options });
 
-export const addTableRow = <ThrowOnError extends boolean = false>(options: Options<AddTableRowData, ThrowOnError>): RequestResult<AddTableRowResponses, AddTableRowErrors, ThrowOnError> => (options.client ?? client).post<AddTableRowResponses, AddTableRowErrors, ThrowOnError>({
+/**
+ * Insert a row into a storage table
+ *
+ * Appends a new document row into the specified data table.
+ */
+export const addStorageTableRow = <ThrowOnError extends boolean = false>(options: Options<AddStorageTableRowData, ThrowOnError>): RequestResult<AddStorageTableRowResponses, AddStorageTableRowErrors, ThrowOnError> => (options.client ?? client).post<AddStorageTableRowResponses, AddStorageTableRowErrors, ThrowOnError>({
     url: '/api/v1/storage/tables/{id}/rows',
     ...options,
     headers: {
@@ -174,9 +382,19 @@ export const addTableRow = <ThrowOnError extends boolean = false>(options: Optio
     }
 });
 
-export const getVariables = <ThrowOnError extends boolean = false>(options?: Options<GetVariablesData, ThrowOnError>): RequestResult<GetVariablesResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetVariablesResponses, unknown, ThrowOnError>({ url: '/api/v1/storage/variables', ...options });
+/**
+ * List all storage variables
+ *
+ * Retrieves all global and local variables persisted in Automa SQLite storage.
+ */
+export const getStorageVariables = <ThrowOnError extends boolean = false>(options?: Options<GetStorageVariablesData, ThrowOnError>): RequestResult<GetStorageVariablesResponses, GetStorageVariablesErrors, ThrowOnError> => (options?.client ?? client).get<GetStorageVariablesResponses, GetStorageVariablesErrors, ThrowOnError>({ url: '/api/v1/storage/variables', ...options });
 
-export const addVariable = <ThrowOnError extends boolean = false>(options: Options<AddVariableData, ThrowOnError>): RequestResult<AddVariableResponses, unknown, ThrowOnError> => (options.client ?? client).post<AddVariableResponses, unknown, ThrowOnError>({
+/**
+ * Add or update a storage variable
+ *
+ * Creates a new variable or updates an existing variable by ID/key in storage.
+ */
+export const addStorageVariable = <ThrowOnError extends boolean = false>(options: Options<AddStorageVariableData, ThrowOnError>): RequestResult<AddStorageVariableResponses, AddStorageVariableErrors, ThrowOnError> => (options.client ?? client).post<AddStorageVariableResponses, AddStorageVariableErrors, ThrowOnError>({
     url: '/api/v1/storage/variables',
     ...options,
     headers: {
@@ -185,40 +403,26 @@ export const addVariable = <ThrowOnError extends boolean = false>(options: Optio
     }
 });
 
-export const deleteVariable = <ThrowOnError extends boolean = false>(options: Options<DeleteVariableData, ThrowOnError>): RequestResult<DeleteVariableResponses, unknown, ThrowOnError> => (options.client ?? client).delete<DeleteVariableResponses, unknown, ThrowOnError>({ url: '/api/v1/storage/variables/{id}', ...options });
+/**
+ * Delete a storage variable
+ *
+ * Permanently removes a variable from storage by ID or key.
+ */
+export const deleteStorageVariable = <ThrowOnError extends boolean = false>(options: Options<DeleteStorageVariableData, ThrowOnError>): RequestResult<DeleteStorageVariableResponses, DeleteStorageVariableErrors, ThrowOnError> => (options.client ?? client).delete<DeleteStorageVariableResponses, DeleteStorageVariableErrors, ThrowOnError>({ url: '/api/v1/storage/variables/{id}', ...options });
 
-export const installBrowser = <ThrowOnError extends boolean = false>(options?: Options<InstallBrowserData, ThrowOnError>): RequestResult<InstallBrowserResponses, unknown, ThrowOnError> => (options?.client ?? client).post<InstallBrowserResponses, unknown, ThrowOnError>({ url: '/api/v1/system/browser-binaries', ...options });
+/**
+ * Read workflow JSON file from filesystem
+ *
+ * Reads and parses an automation workflow file (.workflow.json) from the given filesystem path.
+ */
+export const getWorkflow = <ThrowOnError extends boolean = false>(options: Options<GetWorkflowData, ThrowOnError>): RequestResult<GetWorkflowResponses, GetWorkflowErrors, ThrowOnError> => (options.client ?? client).get<GetWorkflowResponses, GetWorkflowErrors, ThrowOnError>({ url: '/api/v1/storage/workflow', ...options });
 
-export const getMetrics = <ThrowOnError extends boolean = false>(options?: Options<GetMetricsData, ThrowOnError>): RequestResult<GetMetricsResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetMetricsResponses, unknown, ThrowOnError>({ url: '/api/v1/system/metrics', ...options });
-
-export const getSettings = <ThrowOnError extends boolean = false>(options?: Options<GetSettingsData, ThrowOnError>): RequestResult<GetSettingsResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetSettingsResponses, unknown, ThrowOnError>({ url: '/api/v1/system/settings', ...options });
-
-export const patchSettings = <ThrowOnError extends boolean = false>(options: Options<PatchSettingsData, ThrowOnError>): RequestResult<PatchSettingsResponses, unknown, ThrowOnError> => (options.client ?? client).patch<PatchSettingsResponses, unknown, ThrowOnError>({
-    url: '/api/v1/system/settings',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-export const updateSettings = <ThrowOnError extends boolean = false>(options: Options<UpdateSettingsData, ThrowOnError>): RequestResult<UpdateSettingsResponses, unknown, ThrowOnError> => (options.client ?? client).put<UpdateSettingsResponses, unknown, ThrowOnError>({
-    url: '/api/v1/system/settings',
-    ...options,
-    headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
-
-export const openStudio = <ThrowOnError extends boolean = false>(options?: Options<OpenStudioData, ThrowOnError>): RequestResult<OpenStudioResponses, unknown, ThrowOnError> => (options?.client ?? client).post<OpenStudioResponses, unknown, ThrowOnError>({ url: '/api/v1/system/studio/session', ...options });
-
-export const getWorkflow = <ThrowOnError extends boolean = false>(options: Options<GetWorkflowData, ThrowOnError>): RequestResult<GetWorkflowResponses, unknown, ThrowOnError> => (options.client ?? client).get<GetWorkflowResponses, unknown, ThrowOnError>({
-    url: '/api/v1/storage/workflow',
-    ...options
-});
-
-export const saveWorkflow = <ThrowOnError extends boolean = false>(options: Options<SaveWorkflowData, ThrowOnError>): RequestResult<SaveWorkflowResponses, unknown, ThrowOnError> => (options.client ?? client).put<SaveWorkflowResponses, unknown, ThrowOnError>({
+/**
+ * Save or update workflow JSON file
+ *
+ * Serializes and writes the workflow content to the specified path on disk, creating parent directories automatically if needed.
+ */
+export const saveWorkflow = <ThrowOnError extends boolean = false>(options: Options<SaveWorkflowData, ThrowOnError>): RequestResult<SaveWorkflowResponses, SaveWorkflowErrors, ThrowOnError> => (options.client ?? client).put<SaveWorkflowResponses, SaveWorkflowErrors, ThrowOnError>({
     url: '/api/v1/storage/workflow',
     ...options,
     headers: {
@@ -227,9 +431,58 @@ export const saveWorkflow = <ThrowOnError extends boolean = false>(options: Opti
     }
 });
 
-export const listStorageFiles = <ThrowOnError extends boolean = false>(options?: Options<ListStorageFilesData, ThrowOnError>): RequestResult<ListStorageFilesResponses, unknown, ThrowOnError> => (options?.client ?? client).get<ListStorageFilesResponses, unknown, ThrowOnError>({
-    url: '/api/v1/storage/files',
-    ...options
+/**
+ * Download and install Chromium binary
+ *
+ * Downloads and extracts the latest compatible Chromium build into the local cache via `@puppeteer/browsers`.
+ */
+export const installBrowserBinary = <ThrowOnError extends boolean = false>(options?: Options<InstallBrowserBinaryData, ThrowOnError>): RequestResult<InstallBrowserBinaryResponses, InstallBrowserBinaryErrors, ThrowOnError> => (options?.client ?? client).post<InstallBrowserBinaryResponses, InstallBrowserBinaryErrors, ThrowOnError>({ url: '/api/v1/system/browser-binaries', ...options });
+
+/**
+ * Get host system performance metrics
+ *
+ * Samples current CPU load, memory utilization, and active browser runner counts.
+ */
+export const getSystemMetrics = <ThrowOnError extends boolean = false>(options?: Options<GetSystemMetricsData, ThrowOnError>): RequestResult<GetSystemMetricsResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GetSystemMetricsResponses, unknown, ThrowOnError>({ url: '/api/v1/system/metrics', ...options });
+
+/**
+ * Get current application and grid settings
+ *
+ * Retrieves current daemon configuration including Grid Matrix layout, default browser preferences, and Runner concurrency settings.
+ */
+export const getAppSettings = <ThrowOnError extends boolean = false>(options?: Options<GetAppSettingsData, ThrowOnError>): RequestResult<GetAppSettingsResponses, GetAppSettingsErrors, ThrowOnError> => (options?.client ?? client).get<GetAppSettingsResponses, GetAppSettingsErrors, ThrowOnError>({ url: '/api/v1/system/settings', ...options });
+
+/**
+ * Partially update application settings
+ *
+ * Selectively updates specific sections of settings (e.g. grid matrix rows/columns or browser default type) without overwriting other properties.
+ */
+export const patchAppSettings = <ThrowOnError extends boolean = false>(options: Options<PatchAppSettingsData, ThrowOnError>): RequestResult<PatchAppSettingsResponses, PatchAppSettingsErrors, ThrowOnError> => (options.client ?? client).patch<PatchAppSettingsResponses, PatchAppSettingsErrors, ThrowOnError>({
+    url: '/api/v1/system/settings',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
 });
 
+/**
+ * Overwrite application and grid settings
+ *
+ * Replaces the entire application configuration and persists new grid, browser, and runner settings.
+ */
+export const updateAppSettings = <ThrowOnError extends boolean = false>(options: Options<UpdateAppSettingsData, ThrowOnError>): RequestResult<UpdateAppSettingsResponses, UpdateAppSettingsErrors, ThrowOnError> => (options.client ?? client).put<UpdateAppSettingsResponses, UpdateAppSettingsErrors, ThrowOnError>({
+    url: '/api/v1/system/settings',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
+/**
+ * Open Web Studio in default system browser
+ *
+ * Spawns the default OS web browser and navigates to the locally served Automa Web Studio canvas editor.
+ */
+export const openWebStudio = <ThrowOnError extends boolean = false>(options?: Options<OpenWebStudioData, ThrowOnError>): RequestResult<OpenWebStudioResponses, unknown, ThrowOnError> => (options?.client ?? client).post<OpenWebStudioResponses, unknown, ThrowOnError>({ url: '/api/v1/system/studio/session', ...options });

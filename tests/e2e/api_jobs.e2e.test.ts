@@ -79,7 +79,7 @@ describe('API Jobs E2E', () => {
 
     const res = await finishJob({
       baseUrl: BASE_URL,
-      path: { job_id: jobId }
+      path: { id: jobId }
     });
 
     expect(res.response.ok).toBe(true);

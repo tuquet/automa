@@ -49,6 +49,143 @@
         "reveal": "always",
         "panel": "dedicated"
       }
+    },
+    {
+      "label": "automa-core: Watch Daemon (cargo watch)",
+      "type": "shell",
+      "command": "cargo watch -x run",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-core"
+      },
+      "isBackground": true,
+      "presentation": {
+        "panel": "dedicated",
+        "clear": false
+      },
+      "problemMatcher": {
+        "owner": "rust",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*(Compiling|Automa Core|Checking).*$",
+          "endsPattern": "^.*(listening on|Server listening|could not compile|error: aborting).*$"
+        }
+      }
+    },
+    {
+      "label": "automa-ext: Watch Studio (Canvas)",
+      "type": "shell",
+      "command": "pnpm run dev:studio",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-ext"
+      },
+      "isBackground": true,
+      "presentation": {
+        "panel": "dedicated",
+        "clear": false
+      },
+      "problemMatcher": {
+        "owner": "webpack-studio",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*(building|compiling).*$",
+          "endsPattern": "^.*(compiled successfully|compiled with|Failed to compile|compiled).*$"
+        }
+      }
+    },
+    {
+      "label": "automa-ext: Watch Runner (Headless)",
+      "type": "shell",
+      "command": "pnpm run dev:runner",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-ext"
+      },
+      "isBackground": true,
+      "presentation": {
+        "panel": "dedicated",
+        "clear": false
+      },
+      "problemMatcher": {
+        "owner": "webpack-runner",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*(building|compiling).*$",
+          "endsPattern": "^.*(compiled successfully|compiled with|Failed to compile|compiled).*$"
+        }
+      }
+    },
+    {
+      "label": "automa-vscode: Watch Extension",
+      "type": "shell",
+      "command": "pnpm run watch",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-vscode"
+      },
+      "isBackground": true,
+      "presentation": {
+        "panel": "dedicated",
+        "clear": false
+      },
+      "problemMatcher": {
+        "owner": "tsup",
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*Build start.*$",
+          "endsPattern": "^.*(Build success|Build failed|Error:).*$"
+        }
+      }
+    },
+    {
+      "label": "automa-vscode: Watch Webview",
+      "type": "shell",
+      "command": "pnpm run watch:webview",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-vscode"
+      },
+      "isBackground": true,
+      "presentation": {
+        "panel": "dedicated",
+        "clear": false
+      },
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*(building|transforming).*$",
+          "endsPattern": "^.*(built in|modules transformed|error during build|failed).*$"
+        }
+      }
+    },
+    {
+      "label": "automa-vscode: Build Extension",
+      "type": "shell",
+      "command": "pnpm run build",
+      "options": {
+        "cwd": "${workspaceFolder}/automa-vscode"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "panel": "dedicated"
+      }
     }
   ]
 }

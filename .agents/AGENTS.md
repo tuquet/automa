@@ -225,14 +225,32 @@
 - **Actionable Empty States Invariant**:
   - Toàn bộ các TreeItem và Webview Empty States **BẮT BUỘC** nêu rõ 2 vế: (1) Trạng thái hiện tại và (2) Hướng dẫn hành động tiếp theo (ví dụ: `(Right click or run Automa: Add Variable to create)`).
 
-# Rust Daemon OpenAPI Strict Typing & Raw Content Invariant
+# Rust Daemon OpenAPI v3 Documentation & Strict Typing Standards
 
-- **Trigger**: Khi định nghĩa hoặc chỉnh sửa bất kỳ Axum Route Handler nào trong `automa-core/src/api/handlers/`.
-- **Behavior (Tuyệt đối cấm)**: **TUYỆT ĐỐI KHÔNG** sử dụng `Json<serde_json::Value>` trong chữ ký hàm hoặc kiểu trả về. Làm như vậy sẽ vi phạm kiểm tra nghiêm ngặt của `scripts/enforce-strict-schema.mjs`.
-- **Action (Quy chuẩn thực hiện)**:
-  1. **Structured Data**: Bắt buộc tạo struct cụ thể có derive `#[derive(Serialize, Deserialize, ToSchema)]`. Mọi trường sử dụng `serde_json::Value` trong struct bắt buộc có annotation `#[schema(value_type = Object)]`.
-  2. **Raw File / JSON Content Handlers**: Đối với các endpoint đọc tệp JSON thô từ đĩa (như `/api/vault/workflow`), hàm **BẮT BUỘC** trả về `Result<axum::response::Response, AutomaError>` với header `content-type: application/json` và `Body::from(content)` sau khi đã parse kiểm tra tính hợp lệ bằng `serde_json::from_str`.
-  3. **Error Handling**: Sử dụng `AutomaError` (implement `IntoResponse`) để trả về lỗi tự động map sang status code và `ApiErrorResponse`.
+- **Trigger**: Khi định nghĩa hoặc chỉnh sửa bất kỳ Axum Route Handler nào trong `automa-core/src/api/handlers/` hoặc các DTO structs.
+- **Behavior (Tuyệt đối cấm)**:
+  - **TUYỆT ĐỐI KHÔNG** sử dụng `Json<serde_json::Value>` trong chữ ký hàm hoặc kiểu trả về (tránh vi phạm `scripts/enforce-strict-schema.mjs`).
+  - **TUYỆT ĐỐI KHÔNG** bỏ trống hoặc đặt tên `operation_id` ngẫu hứng/camelCase trong `utoipa::path`.
+  - **TUYỆT ĐỐI KHÔNG** bỏ sót doc comments (`///`) trên các trường của DTO structs.
+- **Action (Quy chuẩn OpenAPI v3 bắt buộc)**:
+  1. **Endpoint Annotations (`#[utoipa::path(...)]`)**:
+     - `operation_id`: **BẮT BUỘC** khai báo tường minh dạng `snake_case` (ví dụ: `submit_job`, `get_job_history`, `get_app_settings`, `install_browser_binary`, `start_browser_session`). `@hey-api/openapi-ts` sẽ chuyển đổi chính xác thành tên hàm TypeScript SDK tương ứng (`submitJob()`, `getJobHistory()`, `installBrowserBinary()`).
+     - `summary`: Câu mô tả hành động ngắn gọn, súc tích (< 60 ký tự).
+     - `description`: Đoạn văn bản định dạng Markdown giải thích rõ luồng xử lý và tác động của endpoint.
+     - `tag`: Thuộc 1 trong 10 domain tags chuẩn (`Jobs`, `Storage`, `Browsers`, `Campaigns`, `System`, `History`, `Settings`, `Secrets`, `Lint`, `Events`).
+     - `responses`: Khai báo đầy đủ status code thành công lẫn lỗi (400, 404, 500), body lỗi sử dụng `crate::core::error::ApiErrorResponse`.
+  2. **DTO & Schema Documentation**:
+     - Mọi struct Request/Response **BẮT BUỘC** derive `#[derive(Serialize, Deserialize, ToSchema)]`.
+     - Toàn bộ struct và từng trường dữ liệu **BẮT BUỘC** có doc comment `///` mô tả ý nghĩa.
+     - Sử dụng `#[schema(example = json!(...))]` trên struct hoặc `#[schema(example = "...")]` trên field để cung cấp ví dụ thực tế cho Swagger UI và client devs.
+     - Mọi trường sử dụng `serde_json::Value` bắt buộc có annotation `#[schema(value_type = Object)]` hoặc `#[schema(value_type = Option<Vec<Object>>)]`.
+  3. **Raw File / JSON Content Handlers**: Đối với các endpoint đọc tệp JSON thô từ đĩa (như `/api/vault/workflow`), hàm **BẮT BUỘC** trả về `Result<axum::response::Response, AutomaError>` với header `content-type: application/json` và `Body::from(content)` sau khi đã parse kiểm tra tính hợp lệ bằng `serde_json::from_str`.
+  4. **Error Handling**: Sử dụng `AutomaError` (implement `IntoResponse`) để trả về lỗi tự động map sang status code và `ApiErrorResponse`.
+  5. **Offline OpenAPI Spec Export & SDK Generation**:
+     - `automa-core` **BẮT BUỘC** duy trì cờ CLI `--export-openapi [path]` cho phép xuất tĩnh `openapi.json` mà không cần khởi động live HTTP server.
+     - Bổ sung/duy trì unit test `test_openapi_spec_validity` trong `automa-core/src/api/routes.rs` để phát hiện lỗi schema ngay khi biên dịch `cargo test`.
+     - `packages/automa-types/openapi-ts.config.ts` đọc tĩnh từ `./openapi.json`.
+     - Khi thêm/sửa `operation_id`, **BẮT BUỘC** duy trì các export alias tương thích ngược (backward-compatible aliases) trong `@automa/types/api` và `automa-vscode/src/core/api/client/index.ts` để không làm gián đoạn mã nguồn hiện hữu.
 
 # Automa Studio Standalone Build & ServeDir Pipeline
 
