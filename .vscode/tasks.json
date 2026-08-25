@@ -2,7 +2,17 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "🚀 Dev Orchestrator (Interactive TUI)",
+      "label": "🚀 Dev: Interactive Orchestrator",
+      "type": "shell",
+      "command": "pnpm run dev",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "🚀 Dev: All Services (Headless)",
       "type": "shell",
       "command": "pnpm run dev:all",
       "problemMatcher": [],
@@ -12,7 +22,7 @@
       }
     },
     {
-      "label": "📦 Build All (Turborepo)",
+      "label": "📦 Build: All Packages (Turborepo)",
       "type": "shell",
       "command": "pnpm run build",
       "group": {
@@ -22,9 +32,9 @@
       "problemMatcher": []
     },
     {
-      "label": "🧪 Test All (Unit & Rust)",
+      "label": "🧪 Test: All Suites (Monorepo Unified)",
       "type": "shell",
-      "command": "pnpm run test && pnpm run test:core",
+      "command": "pnpm run test",
       "group": {
         "kind": "test",
         "isDefault": true
@@ -32,9 +42,39 @@
       "problemMatcher": []
     },
     {
-      "label": "🧩 Build VS Code Extension",
+      "label": "🦀 Dev: Rust Core Daemon (Watch)",
       "type": "shell",
-      "command": "pnpm --filter=vscode-automa run build",
+      "command": "pnpm run dev:core",
+      "problemMatcher": []
+    },
+    {
+      "label": "🧩 Dev: VS Code Extension (Watch)",
+      "type": "shell",
+      "command": "pnpm run dev:vsce",
+      "problemMatcher": []
+    },
+    {
+      "label": "🎨 Dev: Studio Canvas (dev:studio)",
+      "type": "shell",
+      "command": "pnpm run dev:source:studio",
+      "problemMatcher": []
+    },
+    {
+      "label": "🖥️ Dev: Desktop Companion (automa-desk)",
+      "type": "shell",
+      "command": "pnpm run dev:desk",
+      "problemMatcher": []
+    },
+    {
+      "label": "📖 Dev: Scalar API Docs Server",
+      "type": "shell",
+      "command": "pnpm run dev:docs",
+      "problemMatcher": []
+    },
+    {
+      "label": "🔄 Sync: OpenAPI & Bruno Collections",
+      "type": "shell",
+      "command": "pnpm run sync:api",
       "problemMatcher": []
     }
   ]

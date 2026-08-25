@@ -47,6 +47,18 @@ function checkRotateLog(filePath, maxSize = 5 * 1024 * 1024) {
   } catch (_) {}
 }
 
+function isBenignNoise(line) {
+  return (
+    line.includes('[webpack.Progress]') ||
+    line.startsWith('$ ') ||
+    line.includes('[@vue/compiler-sfc]') ||
+    line.includes('Compiling ') ||
+    line.includes('Checking ') ||
+    line.includes('Finished `dev`') ||
+    line.includes('Running unittests')
+  );
+}
+
 function appendLog(taskName, level, rawLine) {
   const clean = stripAnsi(rawLine).trim();
   if (!clean) return;
@@ -61,10 +73,14 @@ function appendLog(taskName, level, rawLine) {
   try {
     fs.appendFileSync(allLogFile, logEntry, 'utf8');
 
-    const isErrLevel = level === 'ERROR' || level === 'WARN';
-    const isErrText = /\b(error|failed|exception|panic|warn|fatal|warning)\b/i.test(clean);
+    // Only log genuine fatal errors to dev-errors.log (filter out progress bars and compiler warnings)
+    const isActualError =
+      level === 'ERROR' &&
+      !isBenignNoise(clean) &&
+      !clean.startsWith('warning:') &&
+      /\b(error|failed|exception|panic|fatal|ERR_|Cannot find module)\b/i.test(clean);
 
-    if (isErrLevel || isErrText) {
+    if (isActualError) {
       fs.appendFileSync(errorLogFile, logEntry, 'utf8');
     }
   } catch (_) {}
@@ -262,7 +278,9 @@ function pipeOutput(proc, name, color) {
   });
 
   proc.stderr?.on('data', (data) => {
-    const formatted = processChunk(data, true);
+    const raw = data.toString();
+    const isRealError = !isBenignNoise(raw) && !raw.includes('warning:');
+    const formatted = processChunk(data, isRealError);
     if (formatted) console.error(formatted);
   });
 }
