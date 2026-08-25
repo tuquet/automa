@@ -1,28 +1,27 @@
 {
   "folders": [
     {
-      "name": "automa-ecosystem (Root)",
+      "name": "automa-ecosystem",
       "path": "."
     },
     {
-      "name": "automa-core (Rust Engine)",
+      "name": "automa-core",
       "path": "automa-core"
     },
     {
-      "name": "automa-ext (Studio & Runner)",
+      "name": "automa-ext",
       "path": "automa-ext"
     },
     {
-      "name": "automa-vscode (VS Code Extension)",
+      "name": "automa-vscode",
       "path": "automa-vscode"
     },
     {
-      "name": "automa-vault (Storage)",
+      "name": "automa-vault",
       "path": "automa-vault"
     }
   ],
   "settings": {
-    "typescript.tsdk": "node_modules/typescript/lib",
     "files.exclude": {
       "**/.git": true,
       "**/.DS_Store": true,
