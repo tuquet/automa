@@ -18,6 +18,66 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
 const automaDir = path.join(rootDir, '.automa');
 const stateFile = path.join(automaDir, '.dev-selection.json');
+const logsDir = path.join(automaDir, 'logs');
+const allLogFile = path.join(logsDir, 'dev-all.log');
+const errorLogFile = path.join(logsDir, 'dev-errors.log');
+
+// --- Logging & File Tracking System ---
+const ANSI_REGEX = /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+function stripAnsi(str) {
+  return typeof str === 'string' ? str.replace(ANSI_REGEX, '') : String(str);
+}
+
+function ensureLogsDir() {
+  if (!fs.existsSync(logsDir)) {
+    fs.mkdirSync(logsDir, { recursive: true });
+  }
+}
+
+function checkRotateLog(filePath, maxSize = 5 * 1024 * 1024) {
+  try {
+    if (fs.existsSync(filePath)) {
+      const stats = fs.statSync(filePath);
+      if (stats.size > maxSize) {
+        const backupPath = `${filePath}.old`;
+        if (fs.existsSync(backupPath)) fs.unlinkSync(backupPath);
+        fs.renameSync(filePath, backupPath);
+      }
+    }
+  } catch (_) {}
+}
+
+function appendLog(taskName, level, rawLine) {
+  const clean = stripAnsi(rawLine).trim();
+  if (!clean) return;
+
+  ensureLogsDir();
+  checkRotateLog(allLogFile);
+  checkRotateLog(errorLogFile);
+
+  const timestamp = new Date().toISOString();
+  const logEntry = `[${timestamp}] [${taskName}] [${level}] ${clean}\n`;
+
+  try {
+    fs.appendFileSync(allLogFile, logEntry, 'utf8');
+
+    const isErrLevel = level === 'ERROR' || level === 'WARN';
+    const isErrText = /\b(error|failed|exception|panic|warn|fatal|warning)\b/i.test(clean);
+
+    if (isErrLevel || isErrText) {
+      fs.appendFileSync(errorLogFile, logEntry, 'utf8');
+    }
+  } catch (_) {}
+}
+
+function initLogSession(tasks) {
+  ensureLogsDir();
+  const header = `\n======================================================\n🚀 Dev Session Started: ${new Date().toISOString()}\nActive Services: ${tasks.map((t) => t.name).join(', ')}\n======================================================\n`;
+  try {
+    fs.appendFileSync(allLogFile, header, 'utf8');
+    fs.appendFileSync(errorLogFile, header, 'utf8');
+  } catch (_) {}
+}
 
 // --- Task Definitions ---
 const TASKS = [
@@ -185,22 +245,24 @@ function openBrowser(url) {
 function pipeOutput(proc, name, color) {
   const prefix = `${color(`[${name}]`)} `;
 
-  const formatChunk = (chunk) => {
-    return chunk
-      .toString()
-      .split('\n')
-      .filter((line, idx, arr) => idx < arr.length - 1 || line.trim().length > 0)
-      .map((line) => `${prefix}${line}`)
-      .join('\n');
+  const processChunk = (chunk, isError = false) => {
+    const rawLines = chunk.toString().split('\n');
+    const filteredLines = rawLines.filter((line, idx, arr) => idx < arr.length - 1 || line.trim().length > 0);
+
+    filteredLines.forEach((line) => {
+      appendLog(name, isError ? 'ERROR' : 'INFO', line);
+    });
+
+    return filteredLines.map((line) => `${prefix}${line}`).join('\n');
   };
 
   proc.stdout?.on('data', (data) => {
-    const formatted = formatChunk(data);
+    const formatted = processChunk(data, false);
     if (formatted) console.log(formatted);
   });
 
   proc.stderr?.on('data', (data) => {
-    const formatted = formatChunk(data);
+    const formatted = processChunk(data, true);
     if (formatted) console.error(formatted);
   });
 }
@@ -223,6 +285,8 @@ function startTasks(taskList) {
   childProcesses = [];
   taskList.forEach((task) => {
     console.log(`${task.color(`[${task.name}]`)} Khởi chạy: ${task.description}...`);
+    appendLog(task.name, 'INFO', `Khởi chạy tiến trình: ${task.cmd} ${task.args.join(' ')}`);
+
     const proc = spawn(task.cmd, task.args, {
       cwd: task.cwd,
       shell: true,
@@ -234,12 +298,16 @@ function startTasks(taskList) {
 
     proc.on('close', (code) => {
       if (!isShuttingDown) {
-        console.log(`${task.color(`[${task.name}]`)} Tiến trình dừng với mã ${code}.`);
+        const msg = `Tiến trình dừng với mã ${code}.`;
+        console.log(`${task.color(`[${task.name}]`)} ${msg}`);
+        appendLog(task.name, code === 0 ? 'INFO' : 'ERROR', msg);
       }
     });
 
     proc.on('error', (err) => {
-      console.error(`${pc.red(`[${task.name}] Lỗi tiến trình: ${err.message}`)}`);
+      const msg = `Lỗi tiến trình: ${err.message}`;
+      console.error(`${pc.red(`[${task.name}] ${msg}`)}`);
+      appendLog(task.name, 'ERROR', msg);
     });
 
     childProcesses.push({ task, proc });
@@ -248,6 +316,7 @@ function startTasks(taskList) {
 
 function restartAll() {
   console.log(`\n${pc.yellow('🔄 Đang khởi động lại tất cả các tiến trình...')}\n`);
+  appendLog('SYSTEM', 'INFO', 'Người dùng yêu cầu khởi động lại tất cả các tiến trình.');
   childProcesses.forEach(({ proc }) => killProcess(proc));
   setTimeout(() => {
     startTasks(activeTasks);
@@ -258,22 +327,51 @@ function cleanup() {
   if (isShuttingDown) return;
   isShuttingDown = true;
   console.log(`\n${pc.yellow('🛑 Đang dọn dẹp và dừng tất cả tiến trình con...')}`);
+  appendLog('SYSTEM', 'INFO', 'Đang dừng phiên làm việc Dev Orchestrator.');
   childProcesses.forEach(({ proc }) => killProcess(proc));
   setTimeout(() => {
     process.exit(0);
   }, 600);
 }
 
+function showRecentErrors() {
+  try {
+    if (fs.existsSync(errorLogFile)) {
+      const content = fs.readFileSync(errorLogFile, 'utf8');
+      const lines = content.split('\n').filter(Boolean).slice(-15);
+      console.log(`\n${pc.bold(pc.red('🚨 15 Lỗi & Cảnh báo gần nhất:'))}`);
+      if (lines.length === 0) {
+        console.log(pc.green('  (Chưa có lỗi nào được ghi nhận)'));
+      } else {
+        lines.forEach((l) => console.log(`  ${pc.dim(l)}`));
+      }
+      console.log(`\n${pc.dim(`Xem toàn bộ tại: ${errorLogFile}\n`)}`);
+    } else {
+      console.log(pc.green('\n✔ Chưa có file log lỗi (Tất cả dịch vụ đều ổn định)'));
+    }
+  } catch (err) {
+    console.error(pc.red(`Không thể đọc file lỗi: ${err.message}`));
+  }
+}
+
+function showLogPaths() {
+  console.log(`\n${pc.bold(pc.cyan('📂 Thư mục & File Log Dev Tracking:'))}`);
+  console.log(`  • Toàn bộ Log  : ${pc.bold(allLogFile)}`);
+  console.log(`  • Log Lỗi/Warn : ${pc.bold(errorLogFile)}\n`);
+}
+
 function showHotkeysBar() {
   const hotkeys = [
-    `${pc.bold('r')} Khởi động lại`,
-    `${pc.bold('c')} Xóa màn hình`,
-    `${pc.bold('o')} Mở Swagger/Dashboards`,
+    `${pc.bold('r')} Restart`,
+    `${pc.bold('c')} Clear`,
+    `${pc.bold('e')} Lỗi gần nhất`,
+    `${pc.bold('l')} File logs`,
+    `${pc.bold('o')} Mở browser`,
     `${pc.bold('q')} Thoát`,
   ];
-  console.log(`\n${pc.dim('────────────────────────────────────────────────────')}`);
+  console.log(`\n${pc.dim('────────────────────────────────────────────────────────────────────────────')}`);
   console.log(`  ${pc.cyan('Hotkeys:')} ${hotkeys.join(pc.dim('  │  '))}`);
-  console.log(`${pc.dim('────────────────────────────────────────────────────')}\n`);
+  console.log(`${pc.dim('────────────────────────────────────────────────────────────────────────────')}\n`);
 }
 
 function setupHotkeys() {
@@ -299,6 +397,14 @@ function setupHotkeys() {
       if (key.name === 'c') {
         console.clear();
         showHotkeysBar();
+        return;
+      }
+      if (key.name === 'e') {
+        showRecentErrors();
+        return;
+      }
+      if (key.name === 'l') {
+        showLogPaths();
         return;
       }
       if (key.name === 'o') {
@@ -329,9 +435,11 @@ async function main() {
     activeTasks.forEach((t) => {
       console.log(`  ${t.color(`[${t.name}]`)} ${t.label} → ${pc.dim(`${t.cmd} ${t.args.join(' ')}`)}`);
     });
+    console.log(`\n${pc.dim(`Logs target: ${logsDir}`)}`);
     process.exit(0);
   }
 
+  initLogSession(activeTasks);
   p.outro(pc.green(`Khởi chạy ${activeTasks.length} dịch vụ: ${activeTasks.map((t) => t.name).join(', ')}`));
   showHotkeysBar();
 
