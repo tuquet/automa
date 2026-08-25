@@ -78,7 +78,9 @@ export function updateDiagnostics(document: vscode.TextDocument, lintErrors: Arr
   - **HẠN CHẾ / KHÔNG LẠM DỤNG** menu chuột phải (`explorer/context`) gây rối mắt cho người dùng.
 - **Clean Command Palette & Internal IPC Guard**:
   - Các lệnh chỉ phục vụ tương tác nội bộ của Webview qua IPC (`launchBrowser`, `deleteBrowser`, `editBrowser`, `deleteHistoryItem`) **TUYỆT ĐỐI KHÔNG** khai báo trong `package.json: contributes.commands`.
-  - Các lệnh nội bộ này được đăng ký trực tiếp ở runtime trong `CommandManager.ts`.
+- **Zero Dummy UI & Action Completeness Invariant (Cấm Nút Bấm / Hành Động "Ma")**:
+  - Toàn bộ các nút bấm (Buttons), Context Menu Items, Icon Actions, hoặc Toolbar Controls hiển thị trên giao diện (Webviews, Custom Editors, Toolbars, TreeViews) **BẮT BUỘC** có implementation xử lý hoàn chỉnh 100% (kết nối 2 chiều giữa Webview `sendMessage` và Provider `onDidReceiveMessage`, kèm thông báo phản hồi toast/thị giác rõ ràng khi hoàn tất).
+  - **TUYỆT ĐỐI KHÔNG** để lại các nút bấm rỗng (no-op), không có handler, mock placeholder, hoặc nuốt lỗi âm thầm (silent failure). Nếu một tính năng chưa hoàn thiện, **BẮT BUỘC** ẩn hoàn toàn khỏi UI để không gây khó chịu cho người dùng.
 - **TUYỆT ĐỐI KHÔNG** xây dựng lại UI Inspector bên trong VS Code.
 - **BẮT BUỘC** dùng Daemon để gọi Automa Studio nguyên bản từ trình duyệt thông qua API.
 - Extension đóng vai trò là **Thin Client**, chỉ hiển thị giao diện cấu hình tĩnh hoặc Welcome Panel và đẩy mọi tác vụ nặng sang Daemon xử lý.
@@ -229,6 +231,23 @@ Mọi Webview Editor hoặc Runner UI trong `automa-vsce` **BẮT BUỘC** tuân
      - Chuyển tiếp log về Webview: `webviewPanel.webview.postMessage({ type: 'task:log', data: logText })`.
      - Ghi đồng thời vào `Logger.getOutputChannel()?.appendLine(...)`.
    - Luôn sử dụng `outputChannel.show(false)` khi bắt đầu thực thi job để đảm bảo panel Output không bị ẩn ngầm.
+
+---
+
+## 15. Strict Typing & Canonical Schema Reference Protocol
+
+Mọi thành phần trong `automa-vsce` **BẮT BUỘC** tiêu thụ các Types và Schema từ `@automa/types` & `@automa/types/api`:
+
+1. **Zero Ad-hoc Signatures**:
+   - **CẤM**: `params?: Record<string, unknown>`, `runOptions?: { keepBrowserOpen?: boolean }`, `(nodeOrUri as Record<string, unknown>).fsPath`.
+   - **BẮT BUỘC**: Sử dụng `SubmitJobOptions`, `SubmitJobPayload`, `ExecuteCampaignRequest`, `StorageVariable`, `StorageCredential`, `Workflow`, `WorkflowNode`, `Campaign`.
+2. **Type-Safe Target Resolvers**:
+   - Sử dụng `resolveTargetUri(nodeOrUri)` trả về `vscode.Uri | null` thay vì ép kiểu thô `as Record<string, unknown>`.
+3. **OpenAPI API Client Invariant**:
+   - Sử dụng các API client methods chuẩn (`submitJob`, `executeCampaign`, `addStorageVariable`, `addStorageCredential`, `encryptSecret`) với payload types tương ứng.
+4. **Strongly-typed IPC Routers**:
+   - Giao tiếp giữa Webview và Extension Host **BẮT BUỘC** định nghĩa bằng Discriminated Unions trong `@automa/types/ipc` (`WorkflowPreviewMessage`, `CampaignPreviewMessage`, `TableEditorMessage`, `ExecutionTelemetryMessage`).
+
 
 
 

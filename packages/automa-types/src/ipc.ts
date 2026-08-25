@@ -1,37 +1,62 @@
+import type { BrowserProfile } from './browser.js';
+import type { Campaign } from './campaign.js';
+import type { Workflow } from './workflow.js';
+
+export interface WorkflowRunPayload {
+  parameters?: Record<string, unknown>;
+  keepBrowserOpen?: boolean;
+  browserId?: string;
+}
+
 export type CampaignPreviewMessage =
-  | { command: 'ready' }
-  | { command: 'run-campaign'; keepBrowserOpen: boolean }
-  | { command: 'stop-campaign' }
-  | { command: 'save-campaign'; data: unknown }
-  | { command: 'open-workflow'; id: string }
-  | { command: 'open-browser'; id: string }
-  | { command: 'error'; text?: string };
+  | { command: 'ready'; type?: 'ready' }
+  | { command: 'run-campaign'; type?: 'run-campaign'; keepBrowserOpen?: boolean; browserId?: string }
+  | { command: 'stop-campaign'; type?: 'stop-campaign' }
+  | { command: 'save-campaign'; type?: 'save-campaign'; data: Partial<Campaign> }
+  | { command: 'open-workflow'; type?: 'open-workflow'; id: string }
+  | { command: 'open-browser'; type?: 'open-browser'; id: string }
+  | { command: 'error'; type?: 'error'; text?: string };
 
 export type WorkflowPreviewMessage =
-  | { command: 'ready' }
-  | { command: 'runWorkflow'; keepBrowserOpen: boolean; parameters?: unknown }
-  | { command: 'stopWorkflow' }
-  | { command: 'saveWorkflow'; data: unknown }
-  | { command: 'viewLogs' }
-  | { command: 'openInStudio' };
+  | { command?: 'ready'; type: 'ready' }
+  | { command?: 'runWorkflow' | 'automa:run-workflow'; type: 'runWorkflow' | 'automa:run-workflow'; keepBrowserOpen?: boolean; parameters?: Record<string, unknown>; browserId?: string; data?: WorkflowRunPayload }
+  | { command?: 'stopWorkflow'; type: 'stopWorkflow' }
+  | { command?: 'showOutput'; type: 'showOutput' }
+  | { command?: 'saveWorkflow' | 'automa:workflow-changed'; type: 'saveWorkflow' | 'automa:workflow-changed'; data: Partial<Workflow> }
+  | { command?: 'viewLogs'; type: 'viewLogs' }
+  | { command?: 'openInStudio'; type: 'openInStudio' }
+  | { command?: 'pickWorkflowFile' | 'automa:pick-file'; type: 'pickWorkflowFile' | 'automa:pick-file' };
+
+export type TableEditorMessage =
+  | { command?: 'getTableRows'; type: 'getTableRows'; query?: string }
+  | { command?: 'addTableRow'; type: 'addTableRow'; row: Record<string, unknown> };
 
 export type LogEditorMessage =
-  | { command: 'ready' }
-  | { command: 'open-workflow'; id: string };
+  | { command: 'ready'; type?: 'ready' }
+  | { command: 'open-workflow'; type?: 'open-workflow'; id: string };
 
 export type BrowserPreviewMessage =
-  | { command: 'ready' }
-  | { command: 'save-browser'; data: unknown }
-  | { command: 'error'; text?: string };
+  | { command: 'ready'; type?: 'ready' }
+  | { command: 'save-browser'; type?: 'save-browser'; data: Partial<BrowserProfile> }
+  | { command: 'error'; type?: 'error'; text?: string };
 
-export type PackagePreviewMessage = { command: 'ready' };
+export type PackagePreviewMessage = { command: 'ready'; type?: 'ready' };
+
+export type ExecutionTelemetryMessage =
+  | { type: 'task:started' }
+  | { type: 'task:log'; data: { timestamp: string; level: 'info' | 'warn' | 'error'; message: string } }
+  | { type: 'task:error'; error: string }
+  | { type: 'task:completed' }
+  | { type: 'task:stopped' };
 
 export type WebviewMessage =
   | CampaignPreviewMessage
   | WorkflowPreviewMessage
+  | TableEditorMessage
   | LogEditorMessage
   | BrowserPreviewMessage
-  | PackagePreviewMessage;
+  | PackagePreviewMessage
+  | ExecutionTelemetryMessage;
 
 export interface SseEvent<T = unknown> {
   event?: string;

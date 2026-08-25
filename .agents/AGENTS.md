@@ -52,6 +52,9 @@
 - **1-Click Toolbar UX Preference**:
   - Ưu tiên tối đa các nút bấm trực quan 1-Click trên thanh tiêu đề Toolbar (`editor/title`, `view/title`) như `Open in Studio` (`$(link-external)`), `Live Log` (`$(output)`).
   - **HẠN CHẾ / KHÔNG LẠM DỤNG** menu chuột phải (`explorer/context`) gây rối mắt cho người dùng.
+- **Zero Dummy UI & Action Completeness Invariant (Cấm Nút Bấm / Hành Động "Ma")**:
+  - Toàn bộ các nút bấm (Buttons), Context Menu Items, Icon Actions, hoặc Toolbar Controls hiển thị trên giao diện (Webviews, Custom Editors, Toolbars, TreeViews) **BẮT BUỘC** có implementation xử lý hoàn chỉnh 100% (kết nối 2 chiều giữa Webview `sendMessage` và Provider `onDidReceiveMessage`, kèm thông báo phản hồi toast/thị giác rõ ràng khi hoàn tất).
+  - **TUYỆT ĐỐI KHÔNG** để lại các nút bấm rỗng (no-op), không có handler, mock placeholder, hoặc nuốt lỗi âm thầm (silent failure). Nếu một tính năng chưa hoàn thiện, **BẮT BUỘC** ẩn hoàn toàn khỏi UI để không gây khó chịu cho người dùng.
 - **Worker Daemon Idempotency & Singleton Guard**:
   - **Singleton Loop**: Bên trong `business/dev/index.js`, **BẮT BUỘC** sử dụng các cờ Singleton (`isWorkerDaemonInitialized`, `isOffscreenDaemonInitialized`) để đảm bảo trong suốt vòng đời trình duyệt chỉ duy nhất 1 kết nối SSE reader loop được khởi tạo.
   - **Webpack Entry Invariant**: Trong `webpack.runner.config.js`, **TUYỆT ĐỐI KHÔNG** chèn các script inject khởi tạo (như `inject-background.js`) vào `config.entry.background` nếu entry gốc (`src/background/index.js`) đã có sẵn lệnh import và gọi `automa('background')`. Làm như vậy sẽ gây duplicate execution (gọi 1 API chạy 2 tab/task).
@@ -75,6 +78,9 @@
 
 - **Zero Linter Bypass Invariant**: **TUYỆT ĐỐI KHÔNG** cấu hình bỏ qua linter trong `biome.json` hoặc thêm các chú thích `// biome-ignore` / `// @ts-ignore` để lách qua các quy tắc kiểm tra kiểu dữ liệu (`noExplicitAny`, `noConfusingVoidType`, `useOptionalChain`, `noNonNullAssertion`).
 - **Strict Testing Standard**: Toàn bộ các bộ kiểm thử Vitest **BẮT BUỘC** viết chuẩn mực với `vi.mocked(...)`, tiêu thụ types từ `@automa/types` & `@automa/types/api`, gán kiểu an toàn `Awaited<ReturnType<typeof ...>>` thay vì ép kiểu thô `as any`. Mọi PR/Commit **BẮT BUỘC** đạt **0 errors, 0 warnings** trên lệnh lint của package tương ứng.
+- **Canonical Schema & Strict Typing Invariant (Zero Loose Signatures)**:
+  - **Mandate**: Toàn bộ Command Handlers (`runWorkflowCommand`, `runCampaignCommand`, `storageCommands`), IPC Message Payloads, Providers, và Services trong `automa-vsce` và toàn bộ Monorepo **BẮT BUỘC** sử dụng trực tiếp các kiểu dữ liệu từ `@automa/types` và `@automa/types/api` (`SubmitJobOptions`, `SubmitJobPayload`, `ExecuteCampaignRequest`, `Workflow`, `WorkflowNode`, `WorkflowVariable`, `Campaign`, `StorageVariable`, `StorageCredential`, `StorageTable`, v.v.).
+  - **Zero Loose/Ad-hoc Signatures**: **TUYỆT ĐỐI KHÔNG** tự sáng chế các chữ ký hàm lỏng lẻo như `params?: Record<string, unknown>`, `runOptions?: { keepBrowserOpen?: boolean }`, `(nodeOrUri as Record<string, unknown>).fsPath`, hoặc ép kiểu thô `as any` khi Schema đã được định nghĩa trong `@automa/types`. Toàn bộ thao tác truyền nhận tham số phải bảo đảm type safety 100%.
 
 # Submodule & Skill Naming Alignment
 
