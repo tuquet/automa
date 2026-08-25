@@ -194,6 +194,22 @@
 - **Trigger**: Sau khi thực hiện các thay đổi lớn về tính năng, refactor, hoặc sửa lỗi (bug fixes) ảnh hưởng tới nhiều service.
 - **Action**: Thay vì chạy test lẻ tẻ, **BẮT BUỘC** chuyển ra thư mục gốc (`root`) và chạy lệnh `node scripts/test-all.mjs`. Báo cáo kết quả của toàn bộ Unified Test Suite (Rust Cargo, Vitest E2E, Schema Linter) cho người dùng trước khi kết thúc công việc.
 
+# VS Code Extension 3-Panel, Flat List & Visual Form Invariants
+
+- **3-Panel Sidebar Structure (GitHub Actions Standard)**:
+  - Sidebar của VS Code Extension **BẮT BUỘC** chỉ gồm đúng 3 Panel: `AUTOMATIONS` (`automa.workspace`), `BROWSERS` (`automa.browsers`), `STORAGE` (`automa.storage`).
+  - **Gỡ bỏ hoàn toàn**: Panel `DASHBOARD` khỏi Activity Bar để tránh phân mảnh chiều cao sidebar và trùng lặp kịch bản.
+  - **Xóa bỏ từ khóa Vault**: Toàn bộ nhãn, view ID và tài liệu trong VS Code Extension **BẮT BUỘC** dùng `Storage` thay cho `Vault`.
+- **Flat List Namespace Tagging (Zero Nested Folders)**:
+  - Trong `AutomaFilesProvider`, **TUYỆT ĐỐI KHÔNG** tạo cây thư mục lồng nhau sâu tạo ra các cấp chevron rỗng (`automa-vault > google.com > fleets > file`).
+  - **BẮT BUỘC** hiển thị danh sách phẳng trực quan kèm namespace badge `[parent/namespace]` (ví dụ: `[google.com/fleets] • v1.28.0 • 8 blocks`).
+- **Concise Terms Invariant**:
+  - **TUYỆT ĐỐI KHÔNG** dùng thuật ngữ dài dòng. **BẮT BUỘC** dùng các nhãn ngắn gọn, súc tích: `Workflows (N)`, `Campaigns (N)`, `Packages (N)`, `Secrets`, `Variables`, `Tables`.
+- **Visual Form vs Raw JSON Invariant**:
+  - Người dùng cuối không bắt buộc phải biết cú pháp JSON để nhập dữ liệu bảng hoặc cấu hình. Các Webview dialog (như `TableView.vue`) **BẮT BUỘC** cung cấp giao diện **Visual Form** với các ô input tự động nhận diện từ cột và nút `+ Add Column` động. Khung soạn thảo `JSON` chỉ đóng vai trò là Tab phụ (Advanced Mode) cho power users.
+- **Webview Testing & `data-testid`**:
+  - Toàn bộ các phần tử tương tác (inputs, selects, buttons, table rows/cells, modal tabs) trong Webviews **BẮT BUỘC** có thuộc tính `data-testid` rõ ràng để phục vụ kiểm thử tự động Vitest & Playwright.
+
 # VS Code Webview Security & UI Rendering (Automa UI)
 
 - **Trigger**: Bất cứ khi nào tạo mới hoặc chỉnh sửa giao diện UI (Webview Providers) bên trong `automa-vscode`.
@@ -244,6 +260,12 @@
   - Bất kỳ phần tử tương tác nào không phải thẻ `<button>` hoặc `<a>` (ví dụ: `<span @click="...">`) **BẮT BUỘC** khai báo đầy đủ: `role="button"`, `tabindex="0"`, và lắng nghe sự kiện phím (`@keydown.enter.prevent`, `@keydown.space.prevent`).
 - **Actionable Empty States Invariant**:
   - Toàn bộ các TreeItem và Webview Empty States **BẮT BUỘC** nêu rõ 2 vế: (1) Trạng thái hiện tại và (2) Hướng dẫn hành động tiếp theo (ví dụ: `(Right click or run Automa: Add Variable to create)`).
+
+# Runner Transparency & Output Feedback Invariant
+
+- **Zero Silent Execution**: **TUYỆT ĐỐI KHÔNG** để các lệnh thực thi tác vụ (`runWorkflow`, `runCampaign`, `install-browser`) diễn ra trong im lặng mà không có phản hồi trực quan về tiến trình cho người dùng.
+- **Explicit Output Channel Focus**: Khi kích hoạt chạy workflow hoặc campaign từ VS Code Extension, **BẮT BUỘC** gọi `outputChannel.show(false)` (thay vì `show(true)`) để kéo panel Output của VS Code lên hiển thị nổi bật trên màn hình.
+- **Webview Live Console Stream**: Bất kỳ Custom Webview Editor nào hỗ trợ chạy trực tiếp (như `WorkflowEditorView.vue`) **BẮT BUỘC** tích hợp Tab `Output & Logs` dạng Terminal, tự động switch tab khi bắt đầu chạy, hiển thị Pulsating Status Dot (🟢 Running / ✅ Completed / 🔴 Failed), Execution Timer (`⏱ 00:0X.Xs`), và bắt buộc bridge luồng log qua IPC (`task:log`, `task:error`).
 
 # Rust Daemon OpenAPI v3 Documentation & Strict Typing Standards
 

@@ -147,3 +147,79 @@ export function updateDiagnostics(document: vscode.TextDocument, lintErrors: Arr
 3. **Actionable Empty States**:
    - Mọi trạng thái rỗng **BẮT BUỘC** hướng dẫn người dùng bước tiếp theo (ví dụ: `(Right click or run Automa: Add Variable to create)`).
 
+---
+
+## 11. Sidebar 3-Panel Architecture & Flat List Standard
+
+1. **Cấu trúc 3 Panel Tinh Gọn (GitHub Actions Standard)**:
+   - `⚡ AUTOMATIONS` (`automa.workspace`): Workflows, Campaigns, Packages.
+   - `🌐 BROWSERS` (`automa.browsers`): Browser Profiles Manager.
+   - `🔒 STORAGE` (`automa.storage`): Secrets, Variables, Tables.
+   - **Gỡ bỏ hoàn toàn**: Panel `DASHBOARD` khỏi Activity Bar để tránh chia nhỏ chiều cao sidebar và trùng lặp kịch bản.
+   - **Xóa bỏ từ khóa Vault**: Toàn bộ giao diện VS Code Extension **BẮT BUỘC** dùng `Storage` thay cho `Vault`.
+
+2. **Flat List Namespace Tagging (Zero Nested Folders)**:
+   - Trong `AutomaFilesProvider`, **TUYỆT ĐỐI KHÔNG** tạo cây thư mục lồng nhau sâu tạo ra 4 cấp chevron rỗng (`automa-vault > google.com > fleets > file`).
+   - **BẮT BUỘC** hiển thị danh sách phẳng trực quan kèm namespace badge: `[parent/namespace]` (ví dụ: `[google.com/fleets] • v1.28.0 • 8 blocks`).
+
+3. **Concise Terms Invariant**:
+   - Sử dụng các nhãn ngắn gọn, súc tích:
+     - `Workflows (N)`, `Campaigns (N)`, `Packages (N)`
+     - `Secrets (N)`, `Variables (N)`, `Tables (N)`
+
+---
+
+## 12. Visual Form vs Raw JSON UX Standards
+
+1. **Zero Raw JSON Burden**:
+   - Người dùng cuối không bắt buộc phải biết cú pháp JSON để nhập liệu hay cấu hình bảng dữ liệu.
+2. **Visual Form Mode (Mặc định)**:
+   - Tự động nhận diện các cột sẵn có trong bảng để render các ô `input` trực quan tương ứng.
+   - Cung cấp nút `+ Add Column` để thêm cặp `[ Column Name ] : [ Value ]` linh hoạt khi bảng rỗng hoặc muốn thêm cột mới.
+   - Tự động parse kiểu dữ liệu (`number`, `boolean`, `array`, `object`).
+3. **JSON Mode (Tùy chọn)**:
+   - Chỉ đóng vai trò là một Tab phụ (Advanced Mode) cho phép power users copy/paste hàng loạt, đồng bộ 2 chiều (two-way sync) với Form mode.
+
+---
+
+## 13. Webview data-testid & Testing Invariants
+
+1. **Toàn Diện `data-testid`**:
+   - Mọi thành phần tương tác trong Webviews (`TableView`, `BrowserManagerView`, `CampaignMatrixView`, `LiveLogView`, `WorkflowEditorView`) **BẮT BUỘC** có thuộc tính `data-testid` tường minh để phục vụ Unit & E2E Testing (ví dụ: `table-search-input`, `add-row-modal`, `browser-row-${id}`, `campaign-save-btn`, `log-entry-${idx}`).
+2. **Vitest Mocking Setup**:
+   - File `src/test/setup.ts` **BẮT BUỘC** mock đầy đủ `vscode.MarkdownString` và `vscode.ViewColumn` để ngăn ngừa lỗi `TypeError` âm thầm trong các Provider.
+
+---
+
+## 14. Webview Runner UX & Live Terminal Console Standards
+
+Mọi Webview Editor hoặc Runner UI trong `automa-vsce` **BẮT BUỘC** tuân thủ các chuẩn mực sau khi thực thi tác vụ:
+
+1. **Auto-Switching Live Console Tab**:
+   - Khi người dùng nhấn nút **Run**, UI **BẮT BUỘC** tự động chuyển sang tab `Output & Logs` (hoặc mở Drawer Console) để hiển thị ngay luồng log đang chạy.
+
+2. **Real-time Status & Execution Metrics**:
+   - **Header State**:
+     - Đang chạy: `🟢 Running Workflow...` (Pulse animation) kèm bộ đếm thời gian `⏱ 00:03.2s`.
+     - Thành công: `✅ Execution Completed in X.Xs`.
+     - Thất bại: `🔴 Execution Failed in X.Xs` (Kèm nút xem chi tiết lỗi).
+   - **Quick Action Toolbar**: `[⏹ Stop]`, `[▶ Run Again]`, `[🗑 Clear Logs]`, `[🔍 Output Panel]`.
+
+3. **Terminal Console Formatting**:
+   - Sử dụng font `font-mono text-[11px]`, nền `bg-[var(--vscode-terminal-background)]`.
+   - Phân biệt màu sắc log level rõ ràng:
+     - `[INFO]`: Màu xanh Cyan / Blue (`text-blue-400`).
+     - `[WARN]`: Màu vàng Warning (`text-yellow-400`).
+     - `[ERROR]`: Màu đỏ Error (`text-red-400 font-semibold`).
+   - Tự động auto-scroll xuống dòng log mới nhất (`logContainer.scrollTop = logContainer.scrollHeight`).
+
+4. **Dual Telemetry Bridge (IPC + OutputChannel)**:
+   - Trong Provider (`WorkflowPreviewEditorProvider.ts`):
+     - Gắn listener vào `TaskRunner.telemetryEmitter`.
+     - Chuyển tiếp log về Webview: `webviewPanel.webview.postMessage({ type: 'task:log', data: logText })`.
+     - Ghi đồng thời vào `Logger.getOutputChannel()?.appendLine(...)`.
+   - Luôn sử dụng `outputChannel.show(false)` khi bắt đầu thực thi job để đảm bảo panel Output không bị ẩn ngầm.
+
+
+
+
