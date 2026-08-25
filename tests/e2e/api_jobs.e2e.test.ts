@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { spawn, ChildProcess } from 'child_process';
 import path from 'path';
+import { health, submitJob, finishJob } from '@automa/types/api';
 
 describe('API Jobs E2E', () => {
   let daemonProcess: ChildProcess;
@@ -22,8 +23,8 @@ describe('API Jobs E2E', () => {
     let isReady = false;
     for (let i = 0; i < 30; i++) {
       try {
-        const res = await fetch(`${BASE_URL}/api/v1/health`);
-        if (res.ok || res.status === 404) {
+        const res = await health({ baseUrl: BASE_URL });
+        if (res.data || res.response.status === 404) {
           isReady = true;
           break;
         }
@@ -51,7 +52,7 @@ describe('API Jobs E2E', () => {
 
   let jobId = '';
 
-  it('should create a job via POST /api/v1/jobs', async () => {
+  it('should create a job via submitJob SDK', async () => {
     const workflowPath = path.join(process.cwd(), 'automa-vault', 'google.com', 'workflows', 'search.workflow.json');
     const payload = {
       workflowPath,
@@ -60,34 +61,28 @@ describe('API Jobs E2E', () => {
       }
     };
 
-    const res = await fetch(`${BASE_URL}/api/v1/jobs`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
+    const res = await submitJob({
+      baseUrl: BASE_URL,
+      body: payload as any
     });
-    const text = await res.text();
-    if (!res.ok) {
-      console.log('Failed job creation status:', res.status, text);
+
+    if (res.error) {
+      console.log('Failed job creation status:', res.error);
     }
-    const data = JSON.parse(text) as any;
-    expect(data).toBeDefined();
-    expect(data.jobId || data.id || data.job_id).toBeDefined();
-    jobId = data.jobId || data.id || data.job_id || '1';
+    expect(res.data).toBeDefined();
+    expect((res.data as any)?.jobId).toBeDefined();
+    jobId = (res.data as any)?.jobId || '1';
   }, 120000);
 
-  it('should update job status via PATCH /api/v1/jobs/{job_id}/status', async () => {
+  it('should update job status via finishJob SDK', async () => {
     expect(jobId).not.toBe('');
 
-    const res = await fetch(`${BASE_URL}/api/v1/jobs/${jobId}/status`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ status: 'completed' })
+    const res = await finishJob({
+      baseUrl: BASE_URL,
+      path: { job_id: jobId }
     });
 
-    expect(res.ok).toBe(true);
+    expect(res.response.ok).toBe(true);
   }, 30000);
 });
+
