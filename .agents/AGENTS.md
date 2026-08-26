@@ -1,365 +1,83 @@
-# Git Repository Rules
+# Git Repository & Submodule Operations
 
-- **TUYỆT ĐỐI KHÔNG** tự ý sử dụng lệnh `git push` nếu không được yêu cầu.
-- Đẩy mã nguồn lên remote là một hành động quan trọng và nhạy cảm. **CHỈ USER** mới được phép đẩy mã nguồn và sử dụng `git push`.
-- Trừ khi được USER yêu cầu cụ thể, **PHẢI ĐỂ LẠI** toàn bộ các thay đổi đã hoàn thành trong Staging Area hoặc Working Directory để USER tự đánh giá và commit thủ công.
-
-# Automa Ecosystem Validation & Data Flow
-
-- **Permissive Studio / Strict Runner**: Các luồng công việc (workflows) từ cộng đồng xuất ra từ các phiên bản extension cũ thường có cấu trúc JSON lỏng lẻo (ví dụ: node IDs như `n1`, thiếu trường `type`, thiếu `version` ở root).
-- **Auto-Sanitization on Load**: Bởi vì Automa Studio (VueFlow canvas) yêu cầu khắt khe các thuộc tính như nanoid hợp lệ để render chính xác, **TUYỆT ĐỐI KHÔNG** từ chối các file này bằng các lỗi nghiêm trọng. Thay vào đó, VS Code Extension hoặc logic import **BẮT BUỘC auto-inject** và làm sạch dữ liệu (ví dụ: thay thế `n1` bằng một nanoid, cập nhật edge handles tương ứng, đặt mặc định `type` là `BlockBasic`) *trước khi* tải lên Studio.
-- **Linter UX**: CLI Linter (`automa lint`) **PHẢI XỬ LÝ** các sai lệch cấu trúc schema trong ngữ cảnh Editor dưới dạng `Warnings` thay vì `Errors` để duy trì trải nghiệm người dùng thoải mái và nhất quán. Kiểm tra tính hợp lệ khắt khe (strict validation) chỉ được dành riêng cho Runner.
-
-# Automa Blocks JSON Recognition
-
-- **Trigger**: Bất cứ khi nào người dùng gửi một đoạn mã JSON có `"name": "automa-blocks"` (chứa nodes, dimensions, và block data được xuất từ Automa Editor).
-- **Behavior**: **BẮT BUỘC** nhận diện đây là một cấu hình Automa Node/Block.
-- **Action**: **PHẢI DÙNG** ngay lập tức các kỹ năng về Automa ecosystem (ví dụ: `automa-cli`, `automa-ex-architecture`) để phân tích các tham số `type`, `label`, và `data` của node. **PHẢI CUNG CẤP** lời khuyên kỹ thuật, gỡ lỗi (debugging) hoặc mẹo tối ưu hóa chuyên biệt cho hệ sinh thái Automa.
-
-# File Organization Rules
-- **Scratch Files**: Bất kỳ tệp tạm thời, kiểm thử, dùng một lần hoặc script nháp nào được tạo ra trong phiên làm việc **BẮT BUỘC** được lưu bên trong thư mục \scratch/\ tương đối so với submodule/sub-project đang hoạt động (ví dụ: \automa-cli\scratch\ hoặc \automa-vault\scratch\). **TUYỆT ĐỐI KHÔNG** làm bẩn thư mục gốc của dự án bằng các tệp này.
-
-# Automa Extension Architecture & Constraints
-
-- **Repository**: `automa-ext` hiện là một nhánh (fork) độc lập tại `tuquet/automa-ext` (fork từ `AutomaApp/automa`). **ĐƯỢC PHÉP** chỉnh sửa trực tiếp.
-  - **Upstream tracking**: `upstream` remote trỏ đến `AutomaApp/automa.git` để cherry-pick các bản vá lỗi (fixes) từ upstream khi cần thiết.
-- **Daemon Architecture (VS Code / CLI)**:
-  - **Primary Engine**: VS Code Extension (`automa-vscode`) **BẮT BUỘC** sử dụng Node Daemon cục bộ (`automa-cli serve`) thông qua REST/SSE APIs (ví dụ: `fetch`) cho TOÀN BỘ các tác vụ nặng về tài nguyên (`run`, `lint`, `install-browser`, `encrypt-secret`, history).
-  - **NO Raw CLI**: **TUYỆT ĐỐI KHÔNG** sử dụng `child_process.exec` hoặc `spawn` để chạy các lệnh raw CLI (`automa-cli run ...`) như một phương án dự phòng bên trong VS Code trừ khi thật sự cần thiết (ví dụ: daemon bị sập). Lệnh raw CLI sinh ra (spawn) các V8 contexts mới, tiêu tốn quá nhiều RAM và dễ dẫn đến lỗi parse JSON từ stdout.
-  - **NO Dynamic Imports in API Handlers**: Bên trong Daemon Server (`automa-cli/src/core/server`), **TUYỆT ĐỐI KHÔNG** sử dụng `await import(...)` bên trong các Route Handlers nóng. **PHẢI DÙNG** Static Imports ở đầu tệp để ngăn chặn độ trễ và phát hiện các module bị thiếu khi khởi động.
-  - **DRY Async Handlers**: **BẮT BUỘC** bọc các Express Async Routes bằng một `asyncHandler` để tự động bắt và trả về lỗi 500. **TUYỆT ĐỐI KHÔNG** sao chép (duplicate) các khối `try/catch`.
-  - **Zombie Process Prevention**: Khi viết các trình quản lý tiến trình con (như `BrowserManager`), **BẮT BUỘC** triển khai *Registry Pattern* (lưu trữ `instances` trong một `Set` tĩnh) và dọn dẹp sạch sẽ chúng bằng phương thức `destroyAll()` khi có tín hiệu tắt (graceful shutdown signals).
-- **No `webextension-polyfill`**: Extension sử dụng các native `chrome.*` API (MV3) và `browser.*` API (Firefox) thông qua một wrapper tối giản tại `src/lib/browser-compat.js`.
-  - **Build-time Aliasing Rule**: Để duy trì việc không có xung đột (zero conflicts) với kho lưu trữ `automa` thượng nguồn (upstream), **TUYỆT ĐỐI KHÔNG** thay thế thủ công lệnh `import browser from "webextension-polyfill"` trong các tệp mã nguồn. Thay vào đó, **PHẢI GIỮ NGUYÊN** mã nguồn upstream và **PHẢI DÙNG** Webpack `resolve.alias` (trong `webpack.config.js`) để chuyển hướng các import `webextension-polyfill` sang `src/lib/browser-compat.js` trong quá trình build.
-  - **Daemon Polling & Reused Processes**: Khi kết nối tới một tiến trình Daemon đang chạy (sử dụng lại port), `DaemonManager` **BẮT BUỘC** theo dõi trạng thái một cách chính xác thông qua cờ `isExternalDaemon`. Phương thức `isRunning()` **BẮT BUỘC** trả về true cho các external daemons để ngăn vòng lặp polling của `TaskRunner` bị sập đột ngột với các lỗi ngắt kết nối giả.
-  - **Chromium Version & Download Source**: CLI (`automa-cli`) **PHẢI DÙNG** bản build Chromium `latest` (`PuppeteerBrowser.CHROMIUM`), KHÔNG PHẢI Chrome for Testing. Chromium executable này được tải về từ Google Cloud Storage thông qua `@puppeteer/browsers`, trong khi Automa Extension (`automa-ex`) được tải về từ GitHub Releases.
-- **MessageListener Routing Prefix**: Tiện ích `MessageListener` trong `automa-ext` tự động chặn các messages dựa trên tiền tố ngữ cảnh thực thi (ví dụ: `background--`, `offscreen--`).
-  - **Rule**: Khi gọi các sự kiện extension từ các script bên ngoài sử dụng `chrome.runtime.sendMessage` trực tiếp, **BẮT BUỘC** nối thủ công (prepend) tiền tố chính xác (ví dụ: `background--workflow:execute` hoặc `offscreen--workflow:execute`). Nếu không, `MessageListener` sẽ không khớp (match) với tên sự kiện.
-- **MV3 Offscreen Document Resilience**: Trong Chrome MV3, toàn bộ engine thực thi workflow (`WorkflowEngine`) chạy ngầm trong Offscreen Document (`offscreen.html`).
-  - **Startup Race Prevention**: Khi trình duyệt vừa khởi động, `offscreen.bundle.js` mất vài trăm mili-giây để nạp và đăng ký `runtime.onMessage`. Bất kỳ lệnh gửi message nào tới Offscreen (như `BackgroundOffscreen.sendMessage`) **BẮT BUỘC** triển khai cơ chế *Retry with Backoff* (tối thiểu 5 lần, cách nhau 300ms) để xử lý lỗi `Could not establish connection. Receiving end does not exist`.
-  - **Document State Check**: **PHẢI DÙNG** `chrome.offscreen.hasDocument()` kết hợp khối `try/catch` bọc quanh `chrome.offscreen.createDocument()` để không bị gián đoạn bởi lỗi `Only a single offscreen document may be created at any given time`.
-- **NO Dynamic Imports in Extension Background Worker**: Bên trong `business/dev/index.js` và các entry point của Service Worker, **TUYỆT ĐỐI KHÔNG** dùng `await import(...)` cho các module cốt lõi (`BackgroundWorkflowUtils`, `WorkflowEngine`). **BẮT BUỘC DÙNG** Static Imports ở đầu tệp để tránh Webpack chia nhỏ chunk gây lỗi nạp module khi chạy headless.
-- **Typed SDK Invariant (Zero Hardcoded Fetch)**:
-  - Toàn bộ các tương tác từ client (`automa-vsce`, webview, tooling) tới Daemon Core **BẮT BUỘC** thông qua Typed SDK client được sinh tự động từ `@automa/types/api` (ví dụ: `getHealth`, `createClient`, `startBrowserSession`).
-  - **TUYỆT ĐỐI KHÔNG** tự viết các hàm `fetch('http://127.0.0.1:8765/...')` thủ công hoặc hardcode URL/endpoints trong các services (như `DaemonService`).
-- **Instant F5 Extension Debugging Guard**:
-  - Khi Orchestrator (`pnpm dev:all` / `scripts/dev-orchestrator.mjs`) đang chạy, `automa-vsce` đã được biên dịch liên tục theo thời gian thực bởi `tsup --watch`.
-  - **TUYỆT ĐỐI KHÔNG** cấu hình `preLaunchTask` chạy lệnh `pnpm run build` (hoặc `build:webview`) trong `.vscode/launch.json` vì quá trình build Vite với hàng nghìn icon của `lucide-vue-next` sẽ gây nghẽn F5 mất 10-15 giây.
-  - Loại bỏ `preLaunchTask` để đảm bảo F5 mở Extension Development Host **tức thì (< 0.5 giây)**.
-- **Clean Command Palette & Internal IPC Guard**:
-  - Các lệnh chỉ phục vụ tương tác nội bộ của Webview qua IPC (như `launchBrowser`, `deleteBrowser`, `editBrowser`, `deleteHistoryItem` vốn yêu cầu payload arguments) **TUYỆT ĐỐI KHÔNG** khai báo trong `package.json: contributes.commands`.
-  - Các lệnh nội bộ này được đăng ký trực tiếp ở runtime trong `CommandManager.ts` để tránh làm bẩn Command Palette (`Ctrl+Shift+P`) và ngăn ngừa lỗi thiếu đối số khi người dùng vô tình bấm từ palette.
-- **1-Click Toolbar UX Preference**:
-  - Ưu tiên tối đa các nút bấm trực quan 1-Click trên thanh tiêu đề Toolbar (`editor/title`, `view/title`) như `Open in Studio` (`$(link-external)`), `Live Log` (`$(output)`).
-  - **HẠN CHẾ / KHÔNG LẠM DỤNG** menu chuột phải (`explorer/context`) gây rối mắt cho người dùng.
-- **Zero Dummy UI & Action Completeness Invariant (Cấm Nút Bấm / Hành Động "Ma")**:
-  - Toàn bộ các nút bấm (Buttons), Context Menu Items, Icon Actions, hoặc Toolbar Controls hiển thị trên giao diện (Webviews, Custom Editors, Toolbars, TreeViews) **BẮT BUỘC** có implementation xử lý hoàn chỉnh 100% (kết nối 2 chiều giữa Webview `sendMessage` và Provider `onDidReceiveMessage`, kèm thông báo phản hồi toast/thị giác rõ ràng khi hoàn tất).
-  - **TUYỆT ĐỐI KHÔNG** để lại các nút bấm rỗng (no-op), không có handler, mock placeholder, hoặc nuốt lỗi âm thầm (silent failure). Nếu một tính năng chưa hoàn thiện, **BẮT BUỘC** ẩn hoàn toàn khỏi UI để không gây khó chịu cho người dùng.
-- **Worker Daemon Idempotency & Singleton Guard**:
-  - **Singleton Loop**: Bên trong `business/dev/index.js`, **BẮT BUỘC** sử dụng các cờ Singleton (`isWorkerDaemonInitialized`, `isOffscreenDaemonInitialized`) để đảm bảo trong suốt vòng đời trình duyệt chỉ duy nhất 1 kết nối SSE reader loop được khởi tạo.
-  - **Webpack Entry Invariant**: Trong `webpack.runner.config.js`, **TUYỆT ĐỐI KHÔNG** chèn các script inject khởi tạo (như `inject-background.js`) vào `config.entry.background` nếu entry gốc (`src/background/index.js`) đã có sẵn lệnh import và gọi `automa('background')`. Làm như vậy sẽ gây duplicate execution (gọi 1 API chạy 2 tab/task).
-
-# Knowledge Base & Documentation
-
-- **Decentralized Docs (Microservices)**: Tài liệu dự án được phân tán về thư mục của từng microservice/submodule nhằm đảm bảo tính cập nhật (ví dụ: `automa-vscode/README.md`, `automa-core/README.md`). Thư mục `docs/` ở gốc chỉ đóng vai trò là một Hub chứa menu điều hướng phẳng.
-- **Agent Initialization**: Khi được giao nhiệm vụ tìm hiểu kiến trúc hệ sinh thái, tính năng, hoặc các lệnh CLI/VSCode, **BẮT BUỘC** đọc `docs/Home.md` để lấy đường dẫn tới các file `README.md` của các submodule tương ứng.
-- **Documentation Updates**: Bất cứ khi nào triển khai một tính năng lớn hoặc thay đổi kiến trúc, **BẮT BUỘC** cập nhật vào tệp `README.md` của submodule tương ứng (hoặc tạo thư mục `docs/` bên trong submodule nếu tài liệu quá dài).
+- **Zero Git Push Mandate**: **TUYỆT ĐỐI KHÔNG** tự ý sử dụng lệnh `git push`. Chỉ USER mới được phép đẩy mã nguồn lên remote. Toàn bộ thay đổi phải được lưu trữ trong Local Git hoặc Staging Area.
+- **Submodule Pointer Sync**: Trong Hybrid Monorepo, mỗi khi commit trong bất kỳ submodule nào (`automa-core`, `automa-webe`, `automa-vault`, `automa-vsce`), **BẮT BUỘC** chạy `pnpm run sync:submodules` để cập nhật con trỏ submodule tại Root trước khi commit ở Root.
+- **Branching Strategy (`dev` vs `main`)**: Toàn bộ phát triển tính năng và vá lỗi **BẮT BUỘC** trên nhánh `dev`. Nhánh `main` chỉ dùng cho release sản xuất.
+- **Decoupled Changesets**: `@changesets/cli` chạy độc lập bên trong từng submodule (chuyển vào thư mục submodule trước khi chạy `pnpm changeset`). Tuyệt đối không chạy changesets tại root.
+- **File Organization (Scratch Files)**: Toàn bộ file nháp/test tạm thời **BẮT BUỘC** lưu trong thư mục `scratch/` tương ứng của submodule (ví dụ: `automa-vsce/scratch/`), không làm bẩn thư mục gốc.
 
 # Monorepo Architecture & Reusability Rules
 
-- **Canonical 4-Letter Codes**: Toàn bộ các submodules trong Monorepo tuân thủ tiền tố `automa-` kết hợp 4 ký tự định danh:
-  - `automa-webe`: Web Browser Extension (Engine gốc)
-  - `automa-vsce`: Visual Studio Code Extension
-  - `automa-desk`: Desktop OS App (Tauri v2 + Vue 3.5)
-  - `automa-core`: Rust Core Engine Daemon
-  - `automa-vault`: Local Storage Workspace & Campaign Storage
-- **Dual Reusable Build Targets from `automa-webe`**:
-  - `pnpm run build:runner` (`webpack.runner.config.js`) $\rightarrow$ Xuất headless execution engine vào `dist/cli-runner`.
-  - `pnpm run build:studio` (`vite.studio.config.ts`) $\rightarrow$ Xuất standalone web canvas vào `dist/studio`.
-  - **Reusability Rule**: Các submodule khác (`automa-core`, `automa-vsce`, `automa-desk`) trực tiếp tiêu thụ 2 artifacts này, **TUYỆT ĐỐI KHÔNG** sao chép (duplicate) mã nguồn canvas/runner.
-- **Prioritize Existing WIPs (Work-in-Progress)**: Trước khi sáng chế hoặc đề xuất các tích hợp kiến trúc phức tạp, polyfills, hoặc cầu nối liên gói (cross-package bridges) (ví dụ: nhúng ứng dụng Vue vào một VS Code Webview), **BẮT BUỘC** tìm kiếm triệt để trong monorepo các giải pháp WIP đã có.
-  - **Action**: **LUÔN LUÔN** kiểm tra scripts trong `package.json`, các biến thể `webpack.*.config.js`, và workspaces `packages/` để xem liệu một mục tiêu build (build target) hoặc adapter (như `vscode-compat.js`) cụ thể đã được người dùng triển khai một phần hay chưa. **TUYỆT ĐỐI KHÔNG** xây dựng từ đầu nếu nền tảng đã tồn tại.
-- **VSCE Packaging**: Trong cấu trúc Monorepo, nếu `npx vsce package` thất bại do xác thực phụ thuộc (dependency validation) khắt khe trong `package.json` (ví dụ: thiếu dependencies ở root), **ƯU TIÊN DÙNG** cờ `--no-dependencies` thay vì chỉnh sửa cấu trúc workspace và phá vỡ thiết kế monorepo.
-- **SSE vs WebSocket Protocol Invariants**:
-  - **Server-Sent Events (SSE)**: Dùng cho dữ liệu 1 chiều (Logs, Telemetry, Matrix progress) và **BẮT BUỘC** khai báo `content_type = "text/event-stream"` trong `utoipa` để `@hey-api/openapi-ts` tự động sinh SDK client `.sse.get()`.
-  - **WebSocket (WS)**: Dùng cho điều khiển 2 chiều độ trễ thấp (`/api/v1/ws`) và **BẮT BUỘC** tiêu thụ các kiểu tin nhắn tường minh từ `@automa/types/ws`.
-- **Zero Fallback & Explicit Error Contract**: Toàn bộ hệ sinh thái Automa Ecosystem là phiên bản phát triển mới (Greenfield / Modernized), **TUYỆT ĐỐI KHÔNG** sử dụng legacy fallback routing hay dual-path trong API handlers và client SDK. Toàn bộ endpoints **BẮT BUỘC** sử dụng chuẩn `/api/v1/...` và trả về mã lỗi HTTP tường minh (`BadRequest`, `NotFound`, `Validation`, `InternalServerError`) đi kèm cấu trúc `ApiErrorResponse` chuẩn. **TUYỆT ĐỐI KHÔNG** swallow lỗi âm thầm hoặc ngầm fallback sang các hàm cũ.
+- **Canonical 4-Letter Submodule Codes**: `automa-webe` (Browser Extension), `automa-vsce` (VS Code Extension), `automa-desk` (Desktop Tauri), `automa-core` (Rust Daemon), `automa-vault` (Storage Workspace). Tên thư mục trong `skills/` phải khớp 100% với tên submodule.
+- **Dual Reusable Build Targets từ `automa-webe`**:
+  - `pnpm run build:runner` $\rightarrow$ Xuất Headless Execution Engine vào `dist/cli-runner`.
+  - `pnpm run build:studio` $\rightarrow$ Xuất Standalone Web Canvas vào `dist/studio`.
+  - **Reusability Mandate**: Các submodule khác (`automa-core`, `automa-vsce`, `automa-desk`) trực tiếp tiêu thụ 2 artifacts này, **TUYỆT ĐỐI KHÔNG** duplicate mã nguồn canvas/runner.
+- **Dev Orchestration**: Dùng lệnh duy nhất `pnpm run dev:all` (`scripts/dev-orchestrator.mjs`) để khởi động toàn bộ môi trường phát triển (Rust Core + Studio + VS Code). Script tự động diệt tiến trình con khi tắt để ngăn rò rỉ port `8765`.
+- **SSE vs WebSocket Protocols**:
+  - **SSE (Server-Sent Events)**: Dùng cho dữ liệu 1 chiều (`/api/events`: Logs, Telemetry, Matrix progress).
+  - **WebSocket (`/api/v1/ws`)**: Dùng cho điều khiển 2 chiều độ trễ thấp (`PAUSE_JOB`, `RESUME_JOB`, `KILL_JOB`, live breakpoints) tiêu thụ types từ `@automa/types/ws`.
+- **Zero Fallback & Explicit Errors**: Toàn bộ endpoints dùng chuẩn `/api/v1/...` và trả về mã lỗi HTTP tường minh (`BadRequest`, `NotFound`, `Validation`, `InternalServerError`) với cấu trúc `ApiErrorResponse`. Tuyệt đối không dùng legacy fallback routing.
 
-# Strict TypeScript & Zero-Warning Quality Standards
+# Strict TypeScript, SOLID & Quality Standards
 
-- **Zero Linter Bypass Invariant**: **TUYỆT ĐỐI KHÔNG** cấu hình bỏ qua linter trong `biome.json` hoặc thêm các chú thích `// biome-ignore` / `// @ts-ignore` để lách qua các quy tắc kiểm tra kiểu dữ liệu (`noExplicitAny`, `noConfusingVoidType`, `useOptionalChain`, `noNonNullAssertion`).
-- **Strict Testing Standard**: Toàn bộ các bộ kiểm thử Vitest **BẮT BUỘC** viết chuẩn mực với `vi.mocked(...)`, tiêu thụ types từ `@automa/types` & `@automa/types/api`, gán kiểu an toàn `Awaited<ReturnType<typeof ...>>` thay vì ép kiểu thô `as any`. Mọi PR/Commit **BẮT BUỘC** đạt **0 errors, 0 warnings** trên lệnh lint của package tương ứng.
-- **Canonical Schema & Strict Typing Invariant (Zero Loose Signatures)**:
-  - **Mandate**: Toàn bộ Command Handlers (`runWorkflowCommand`, `runCampaignCommand`, `storageCommands`), IPC Message Payloads, Providers, và Services trong `automa-vsce` và toàn bộ Monorepo **BẮT BUỘC** sử dụng trực tiếp các kiểu dữ liệu từ `@automa/types` và `@automa/types/api` (`SubmitJobOptions`, `SubmitJobPayload`, `ExecuteCampaignRequest`, `Workflow`, `WorkflowNode`, `WorkflowVariable`, `Campaign`, `StorageVariable`, `StorageCredential`, `StorageTable`, v.v.).
-  - **Zero Loose/Ad-hoc Signatures**: **TUYỆT ĐỐI KHÔNG** tự sáng chế các chữ ký hàm lỏng lẻo như `params?: Record<string, unknown>`, `runOptions?: { keepBrowserOpen?: boolean }`, `(nodeOrUri as Record<string, unknown>).fsPath`, hoặc ép kiểu thô `as any` khi Schema đã được định nghĩa trong `@automa/types`. Toàn bộ thao tác truyền nhận tham số phải bảo đảm type safety 100%.
+- **Zero Linter Bypass Invariant**: **TUYỆT ĐỐI KHÔNG** dùng `// biome-ignore` hay `// @ts-ignore` để lách luật. Mọi commit **BẮT BUỘC** đạt **0 errors, 0 warnings** trên lệnh lint (`pnpm run lint` / `biome check`).
+- **Canonical Schema & Strict Typing**: Toàn bộ Command Handlers, IPC Message Payloads, Providers và Services **BẮT BUỘC** dùng trực tiếp kiểu dữ liệu từ `@automa/types` & `@automa/types/api`. Cấm tự sáng chế chữ ký lỏng lẻo (`Record<string, unknown>`, `as any`).
+- **SOLID & Clean Code Principles**:
+  - TDD Red-Green-Refactor (viết test mô tả hành vi trước khi viết production code).
+  - Áp dụng 5 nguyên tắc SOLID, Object Calisthenics (tối đa 1 mức thụt lề, hàm < 10 dòng, class < 50 dòng, early returns, Demeter law).
+  - Triệt tiêu Accidental Complexity bằng **YAGNI**, **KISS**, và **Rule of Three**.
+- **Code Review & QA Swarm Protocols**:
+  - Khi người dùng yêu cầu *Review / Refactor*: Dùng `invoke_subagent` spawn 5 Subagents chuyên biệt (SOLID, KISS/YAGNI, Demeter, Flow/Complexity, Safety) ở chế độ Read-only.
+  - Khi người dùng yêu cầu *QC / Test*: Dùng `invoke_subagent` spawn 3 Subagents (Functional QA, Performance/Leak, Security) ở chế độ Read-only.
+  - Agent chính là người duy nhất tổng hợp báo cáo và trực tiếp sửa code sau khi user chốt phương án.
 
-# Submodule & Skill Naming Alignment
+# Backend API, OpenAPI & SDK Synchronization
 
-- **100% Name Matching**: Tên thư mục trong `skills/` và thuộc tính `name:` trong tệp `SKILL.md` **BẮT BUỘC** trùng khớp hoàn toàn với tên thư mục submodule thực tế trong `.gitmodules`:
-  - `automa-vsce` ↔ `skills/automa-vsce/` (`name: automa-vsce`)
-  - `automa-webe` ↔ `skills/automa-webe/` (`name: automa-webe`)
-  - `automa-core` ↔ `skills/automa-core/` (`name: automa-core`)
-  - `automa-desk` ↔ `skills/automa-desk/` (`name: automa-desk`)
-  - `automa-vault` ↔ `skills/automa-vault/` (`name: automa-vault`)
+- **Backend-First & Anti-Mocking Rule**: **TUYỆT ĐỐI CẤM** mock API ở Frontend hay hardcode trả lỗi `Not implemented yet`. Mọi API mới hoặc thiếu hụt **BẮT BUỘC** implement trực tiếp bằng Rust trong `automa-core` (Axum routes) trước.
+- **Strict OpenAPI v3 Specification (`utoipa`)**:
+  - `operation_id`: Bắt buộc dạng `snake_case` (e.g. `submit_job`, `get_job_history`) để `@hey-api/openapi-ts` sinh tên hàm TypeScript SDK chuẩn (`submitJob()`, `getJobHistory()`).
+  - `tag`: Thuộc 1 trong 10 domain tags chuẩn (`Jobs`, `Storage`, `Browsers`, `Campaigns`, `System`, `History`, `Settings`, `Secrets`, `Lint`, `Events`).
+  - DTO Structs: Toàn bộ struct/field phải có doc comment `///`, derive `ToSchema`, và cấm dùng `serde_json::Value` trần (phải có `#[schema(value_type = ...)]`).
+- **Typed SDK Single Source of Truth**: Toàn bộ client (`automa-vsce`, webview, tests) **BẮT BUỘC** gọi qua Generated SDK (`@automa/types/api`). Cấm tự viết `fetch()` thô hoặc hardcode URL strings.
+- **Sync Command**: Sau khi sửa API Backend, chạy `pnpm run sync:api` tại root để tự động cập nhật OpenAPI spec, SDK client, và Bruno collections.
 
-# Vault Credentials Cryptography & Zero-Leak Invariant
+# 4-Tier Testing Strategy
 
-- **Variables vs. Credentials**:
-  - `Variables` (`/api/v1/storage/variables`): Lưu cấu hình công khai không mã hóa (Plaintext), hiển thị dạng `name = value`.
-  - `Credentials` (`/api/v1/storage/credentials`): Lưu mật khẩu/token được mã hóa chuẩn `HMAC-SHA256 (64 hex) + AES-256-CBC Base64 (Salted__)`.
-- **Master Passphrase Invariant**: Hệ thống dùng chung 1 Master Passphrase. Lưu trữ tự động trong `vscode.SecretStorage` (VS Code Keychain) hoặc nạp qua `AUTOMA_PASSPHRASE` (Headless / CI-CD).
-- **Zero-Leak Decryption**: Workflow Engine chỉ giải mã Secrets trong RAM khi thực thi cú pháp `{{secrets.key}}` hoặc `{{$secrets.key}}`, tự động giải phóng RAM sau khi inject và **TUYỆT ĐỐI KHÔNG** ghi mật khẩu giải mã vào file log.
+- **Tier 1: Submodule Unit Tests**:
+  - `automa-vsce/src/test/`: Test Providers, Commands, Webview IPC qua Vitest (`pnpm test`). Mock đầy đủ `vscode.MarkdownString` và `vscode.ViewColumn` trong `setup.ts`.
+  - `automa-core/src/`: Unit & integration tests của Rust core (`cargo test`).
+- **Tier 2: Monorepo Cross-Service E2E Suite (`tests/e2e/`)**: Toàn bộ API E2E tests viết bằng TypeScript (Vitest) tại `tests/e2e/`, khởi chạy test daemon cô lập trên port `8766` và tiêu thụ Typed SDK. Tuyệt đối không viết API tests bằng Rust `#[tokio::test]`.
+- **Tier 3: Strict Schema & Spec Linter**: `node scripts/enforce-strict-schema.mjs` kiểm tra 100% tính hợp lệ của OpenAPI spec.
+- **Tier 4: Unified Test Command**: Chạy `pnpm run test` (`node scripts/test-all.mjs`) để tự động kiểm thử cả 4 tầng trước khi bàn giao.
 
-# Clean Scalar Documentation Theming
-
-- **Pure Static Theming**: Tài liệu API Scalar (`scripts/serve-docs.mjs`) sử dụng cấu hình tĩnh sạch sẽ (`data-configuration`) với theme chất lượng cao (`deepSpace` OLED Dark, Google Fonts `Inter` + `JetBrains Mono`). **TUYỆT ĐỐI KHÔNG** chèn các widget nổi (floating widgets) can thiệp vào layout gốc của Scalar.
-
-# Submodule Pointer Sync Protocol
-
-- **Root & Submodule Pointer Alignment**: Trong mô hình Hybrid Monorepo, mỗi khi có commit mới bên trong bất kỳ submodule nào (`automa-core`, `automa-webe`, `automa-vault`, `automa-vsce`), con trỏ commit tại Root Monorepo **BẮT BUỘC** được cập nhật tương ứng.
-- **Pre-commit Guard**: Husky pre-commit hook (`.husky/pre-commit`) tự động chạy `node scripts/check-submodules.mjs` để phát hiện lệch con trỏ.
-- **Auto-Sync Command**: Khi phát hiện lệch pointer, **BẮT BUỘC** sử dụng lệnh `pnpm run sync:submodules` để tự động stage (`git add`) toàn bộ con trỏ submodule hợp lệ trước khi commit ở root.
-
-# Unified Multi-Service Dev Orchestration
-
-- **Single Dev Command**: Khi chạy môi trường phát triển đầy đủ (Rust Core + Studio + VS Code), **ƯU TIÊN DÙNG** lệnh `pnpm run dev:all` (`scripts/dev-orchestrator.mjs`).
-- **Zombie Process Prevention**: Script Orchestrator tích hợp bắt tín hiệu `SIGINT` (Ctrl+C) / `SIGTERM` và diệt toàn bộ cây tiến trình con (`taskkill /t /f` trên Windows) để ngăn chặn rò rỉ tiến trình treo ngầm chiếm dụng port `8765`.
-
-# Vue i18n & Webpack 5 Dynamic Imports Rule
-
-- **JSON Dynamic Imports**: Khi tải động các tệp JSON (ví dụ: thông điệp locale cho vue-i18n) thông qua `await import(...)`, **BẮT BUỘC** xử lý an toàn việc giải quyết (resolution) export mặc định. Quá trình giải quyết JSON module của Webpack 5 có sự khác biệt giữa các bản build dev và production.
-- **Implementation**: **PHẢI DÙNG** một hằng số dự phòng (fallback) `const content = messages.default || messages;` trước khi tiêm nó vào state (ví dụ: `i18n.global.mergeLocaleMessage(locale, content)`). **TUYỆT ĐỐI KHÔNG** chỉ dựa hoàn toàn vào `messages.default`.
-
-# Vue & ESLint Code Quality Invariants (automa-ext & Studio)
-
-- **Function Ordering in `<script setup>`**: Trong các Vue 3 Single File Components sử dụng `<script setup>` và `@babel/eslint-parser`, toàn bộ các hàm helper hoặc event handlers (như `syncWorkflowFromCanvas`, `fetchLogs`, `selectLog`) **BẮT BUỘC** được khai báo *trước* khi được gọi ở các hàm phía sau nhằm ngăn ngừa lỗi `no-use-before-define`.
-- **Catch Block Invariant**: Tất cả các khối `catch (e) {}` được thiết kế để bỏ qua lỗi (swallow errors) **BẮT BUỘC** chứa một dòng comment tường minh (ví dụ: `// Ignored` hoặc `/* ignore */`) để tuân thủ quy tắc `no-empty`.
-- **Webpack DefinePlugin Globals**: Bất kỳ hằng số build-time nào được tiêm qua Webpack `DefinePlugin` (ví dụ: `__IS_RUNNER__`, `BROWSER_TYPE`) **BẮT BUỘC** được khai báo trong từ điển `globals` của tệp `.eslintrc.js`.
-
-# VS Code Webview Build & Asset Loading Workflow
-
-- **Silent Runner Mode (CLI Target)**: Lệnh `pnpm run build` tiêu chuẩn sẽ xây dựng native browser extension chuẩn.
-  - **Rule**: Bất cứ khi nào thực hiện các thay đổi dành cho CLI Daemon hoặc VS Code Extension, **BẮT BUỘC** chạy lệnh `pnpm run build:runner` để sử dụng cấu hình `webpack.runner.config.js`. Việc này tạo ra một bản headless build (không có UI) dành riêng cho CLI execution engine, xuất ra `dist/cli-runner`.
-  - **Rule**: **TUYỆT ĐỐI KHÔNG** xuất (output) các UI bundles trực tiếp vào `automa-vscode` nữa. VS Code extension hiện tại chỉ đóng vai trò là một IPC client thuần túy.
-
-# Versioning & Changelogs (Changesets)
-
-- **Per-Submodule Versioning**: Hệ sinh thái sử dụng Kiến trúc Phân tách (Decoupled Architecture) cho việc đánh phiên bản (versioning). `@changesets/cli` được cài đặt ĐỘC LẬP bên trong mỗi submodule (`automa-cli`, `automa-ext`, `automa-vscode`).
-- **Git Submodules Boundary**: Do mỗi package là một Git Submodule với lịch sử `.git` riêng, **TUYỆT ĐỐI KHÔNG** chạy changesets tại thư mục gốc của monorepo. Làm như vậy sẽ gây ra lỗi staging/cleanup.
-- **Rule**: Bất cứ khi nào cần tạo một changeset hoặc chạy một phiên bản phát hành (`pnpm changeset version`), **BẮT BUỘC** thực hiện `cd` vào thư mục submodule cụ thể trước tiên. **TUYỆT ĐỐI KHÔNG** chạy nó tại thư mục root. **TUYỆT ĐỐI KHÔNG** viết lịch sử kiểu Changelog vào trong tệp `README.md`; **PHẢI DÙNG** changesets thay thế.
-- **Native Debugger UI Reuse**: Ứng dụng Vue đã có sẵn một Debugger và Variables Inspector mạnh mẽ (`EditorDebugging.vue`). Khi làm việc với các tính năng Debugger cho VS Code, **TUYỆT ĐỐI KHÔNG** phát minh lại UI bên trong extension. Extension **BẮT BUỘC** chỉ thị cho Daemon khởi chạy Web Studio gốc để thực hiện debugging.
-
-# Branching & Release Workflow (Dev vs Main)
-
-- **The `dev` Branch (Integration)**: Toàn bộ quá trình phát triển tính năng, vá lỗi (bug fixes), và các lệnh `pnpm changeset` **BẮT BUỘC** nhắm mục tiêu vào nhánh `dev`. Nhánh `dev` tích lũy các tệp `.changeset/*.md`.
-- **The `main` Branch (Production)**: Nhánh `main` **CHỈ ĐƯỢC DÙNG DÀNH RIÊNG** cho các bản phát hành sản xuất (production releases). **TUYỆT ĐỐI KHÔNG** commit hoặc push code trực tiếp lên nhánh `main`. Nhánh này chỉ chấp nhận merges từ `dev` hoặc các nhánh hotfix.
-- **Release Execution Rule**: Khi được yêu cầu thực hiện phát hành (release), **BẮT BUỘC**:
-  1. Chuyển sang nhánh `dev`.
-  2. Chuyển (cd) vào (các) submodule mục tiêu và chạy `pnpm changeset version` để tiêu thụ các tệp `.md` và tăng phiên bản (bump versions).
-  3. Commit các thay đổi vào nhánh `dev`.
-  4. Merge `dev` vào `main` (hoặc chỉ dẫn USER thực hiện thông qua PR).
-- **Hotfix Rule**: Hotfixes được phân nhánh (branch off) từ `main`, yêu cầu một changeset riêng, được tăng phiên bản (bumped), và **BẮT BUỘC** được merge ngược lại vào CẢ nhánh `main` và nhánh `dev`.
-
-# CI/CD & Supply Chain Security Rules
-
-- **Private Submodules Checkout**: Khi định cấu hình GitHub Actions (`actions/checkout`), nếu hệ sinh thái chứa các Git submodules ở chế độ riêng tư (private), **BẮT BUỘC** cung cấp một Personal Access Token một cách tường minh (`token: ${{ secrets.GH_PAT }}`) vì `GITHUB_TOKEN` mặc định không thể vượt qua ranh giới kho lưu trữ.
-- **VS Code Extension `engines`**: Bất kỳ tệp `package.json` nào của VS Code extension **BẮT BUỘC** khai báo tường minh phiên bản VS Code hỗ trợ tối thiểu trong trường `engines.vscode` (ví dụ: `"engines": { "vscode": "^1.85.0" }`). Thiếu thông tin này, lệnh `vsce publish` sẽ thất bại vĩnh viễn.
-- **VSCE CI Publishing**: **TUYỆT ĐỐI KHÔNG** sử dụng các actions của bên thứ ba đã lỗi thời (như `lannonbr/vsce-action`) để phát hành. **LUÔN LUÔN PHẢI DÙNG** lệnh CLI chính thức `npx @vscode/vsce publish -p ${{ secrets.VSCE_PAT }} --no-dependencies` trực tiếp (natively) bên trong bước `run`.
-- **PNPM v9+ Built Dependencies (ERR_PNPM_IGNORED_BUILDS)**: Trong pnpm v9 trở lên (ví dụ: v11), trường `pnpm.onlyBuiltDependencies` trong `package.json` bị đánh dấu là lỗi thời và bị bỏ qua. Để ngăn chặn lỗi `ERR_PNPM_IGNORED_BUILDS` trong quá trình CI/CD, toàn bộ các packages yêu cầu scripts build sau khi cài đặt (ví dụ: `puppeteer`, `better-sqlite3`, `core-js`, `vue-demi`) **BẮT BUỘC** được phê duyệt tường minh dưới từ điển `allowBuilds` trong tệp gốc `pnpm-workspace.yaml`.
-
-# Code Review & AI Refactoring Swarm
-
-- **Trigger**: Bất cứ khi nào người dùng yêu cầu "review", "refactor", hoặc "improve code".
-- **Behavior**: **TUYỆT ĐỐI KHÔNG** tự mình review một cách tuần tự và chậm chạp. ĐỒNG THỜI, để tránh xung đột mã nguồn (Race Conditions), các Agent cấp dưới KHÔNG ĐƯỢC PHÉP trực tiếp sửa code.
-- **Action**: **BẮT BUỘC** sử dụng công cụ `invoke_subagent` để spawn (tạo ra) cùng lúc 5 AI Subagents (Mô hình: `pro`) chạy ngầm song song ở chế độ **Read-only**. Mỗi Subagent sẽ phụ trách thanh tra một khía cạnh riêng biệt của Clean Code:
-  1. **SOLID & SoC Agent**: Quét tìm các God Objects, vi phạm Dependency Inversion và Separation of Concerns.
-  2. **KISS & YAGNI Agent**: Tìm kiếm các thuật toán over-engineered, các file abstract thừa thãi cần rút gọn.
-  3. **Demeter & Loose Coupling Agent**: Rà soát các chuỗi gọi hàm dài (train wrecks), Feature Envy.
-  4. **Complexity & Flow Agent**: Tìm kiếm các khối Deep Nesting, Spaghetti Code và Cyclomatic Complexity cao.
-  5. **Safety & Defensive Agent**: Báo cáo các lỗ hổng thiếu Fail Fast, Try/Catch, Sanitize Input, Null checks.
-- **Reporting**: Agent chính **BẮT BUỘC** chờ cả 5 Subagents hoàn thành (thông qua `schedule` timer hoặc chờ tin nhắn), sau đó tổng hợp thành một báo cáo duy nhất (Executive Summary / Code Audit) cho USER. Agent chính sẽ là người DUY NHẤT trực tiếp sửa code sau khi USER chốt phương án.
-
-# Quality Control (QC) & QA Swarm
-
-- **Trigger**: Bất cứ khi nào người dùng yêu cầu "QC", "kiểm thử", "đảm bảo chất lượng", hoặc nhắc từ khóa "QC".
-- **Behavior**: **TUYỆT ĐỐI KHÔNG** tự mình QC một cách phiến diện. ĐỒNG THỜI, các Agent cấp dưới KHÔNG ĐƯỢC PHÉP trực tiếp sửa code trong quá trình QC để tránh xung đột (Read-only mode).
-- **Action**: **BẮT BUỘC** sử dụng công cụ `invoke_subagent` để spawn (tạo ra) cùng lúc 3 AI Subagents (Mô hình: `pro`) chạy ngầm song song. Mỗi Subagent sẽ phụ trách thanh tra một khía cạnh riêng biệt của Quality Control:
-  1. **Functional QA & Edge Cases Agent**: Quét tìm các lỗi logic, điều kiện biên (boundary conditions), các trường hợp ngoại lệ chưa được xử lý (unhandled edge cases), và tính đúng đắn của tính năng.
-  2. **Performance & Resource Leak QC Agent**: Soi xét các nút thắt hiệu năng (performance bottlenecks), các thao tác đồng bộ nặng nề gây block UI/Node, memory leaks, và zombie processes (tiến trình treo).
-  3. **Security & Vulnerability QC Agent**: Rà soát các lỗ hổng bảo mật (XSS, Injection, CSP bypass), cách lưu trữ dữ liệu nhạy cảm (auth tokens/secrets) và kiểm soát truy cập phân quyền.
-- **Reporting**: Agent chính **BẮT BUỘC** chờ cả 3 Subagents hoàn thành (thông qua `schedule` timer hoặc chờ tin nhắn), sau đó tổng hợp thành một báo cáo QC duy nhất (QC Audit Report) cho USER. Agent chính sẽ là người DUY NHẤT trực tiếp tiến hành vá lỗi (bug fix) sau khi USER chốt phương án.
-
-# Automa Rust Core (automa-core) Architecture Rules
-
-- **KISS & Pragmatic Architecture**: TUYỆT ĐỐI KHÔNG over-engineer bằng cách lạm dụng các Trait Interfaces (ví dụ: `JobRepository`, `BrowserRepository`) nếu dự án chỉ dùng một cơ sở dữ liệu duy nhất (SQLite). Hãy tuân thủ YAGNI bằng cách gọi trực tiếp các Concrete Structs (như `AutomaDb`, `SqliteJobRepository`) để loại bỏ boilerplate code. Chỉ sử dụng Trait/Dependency Inversion khi thực sự cần hoán đổi (swap) logic đa nền tảng hoặc mock test phức tạp.
-- **Concurrency & Async Runtime**: **PHẢI DÙNG** `tokio` làm nền tảng xử lý bất đồng bộ. Đối với các tác vụ nặng về CPU (như mã hóa AES, parse JSON dung lượng khổng lồ), **BẮT BUỘC** chạy trên `tokio::task::spawn_blocking` để không block async runtime thread pool.
-- **Robust Error Handling**: **TUYỆT ĐỐI KHÔNG** dùng `.unwrap()` hay `.expect()` trong code production để tránh crash daemon. **PHẢI DÙNG** thư viện `thiserror` để định nghĩa các kiểu lỗi (Error Types) cấp độ Domain và xử lý chúng gọn gàng bằng toán tử `?`.
-- **State Management & Locks**: Khi lưu trữ State dùng chung (Shared State) trong Axum, **BẮT BUỘC** phải chia sẻ thông qua `Arc<T>`. Đối với dữ liệu cần thay đổi, **PHẢI DÙNG** `tokio::sync::RwLock` hoặc `tokio::sync::Mutex` (không dùng bản std::sync) để tránh lỗi Deadlocks trong môi trường bất đồng bộ.
-- **Pre-Reporting Validation**:  Bất cứ khi nào Agent thực hiện chỉnh sửa mã nguồn bên trong `automa-core`, **BẮT BUỘC** phải chạy lệnh `cargo check` (hoặc đảm bảo `cargo watch` không báo lỗi) và xác nhận không có lỗi Borrow Checker hay Compile Errors trước khi báo cáo kết quả hoàn thành cho USER.
-- **RESTful API Standards (Senior Level)**: Hệ thống BẮT BUỘC tuân thủ khắt khe thiết kế RESTful. **TUYỆT ĐỐI KHÔNG** nhúng các động từ hành động vào URL Path (ví dụ: dùng `POST /api/jobs` thay vì `POST /api/jobs/submit`, hay `DELETE /api/browsers/{id}/session` thay vì `POST /api/browsers/{id}/stop`). Khi phát hiện sự không đồng nhất, AI BẮT BUỘC phải sửa lại đường dẫn trong OpenAPI spec và Axum router cho chuẩn RESTful.
-
-
-# API Sync & Docs Generation Rule
-
-- **Trigger**: Bất cứ khi nào người dùng yêu cầu "sync api", "update bruno", "generate docs", hoặc đồng bộ tài liệu OpenAPI.
-- **Behavior**: 
-  1. **Pre-flight Check**: AI Agent **BẮT BUỘC** phải kiểm tra xem Rust Daemon (`automa-core`) có đang chạy ở cổng `8765` hay không (ví dụ: dùng lệnh `curl http://127.0.0.1:8765/api/health` hoặc kiểm tra process).
-  2. **Daemon Wakeup**: Nếu Daemon chưa chạy, Agent **BẮT BUỘC** phải báo cho người dùng hoặc tự động khởi động nó ở chế độ background (sử dụng `cargo run --bin automa-core -- serve` tại thư mục `automa-core` và chờ vài giây).
-  3. **Execution**: Sau khi chắc chắn Daemon đã sống, Agent **BẮT BUỘC** chuyển hướng ra thư mục gốc (root monorepo) và thực thi lệnh duy nhất: `pnpm run sync:api`. Lệnh này sẽ tự động lo liệu cả hai việc: import vào Bruno collection và sinh Markdown cho Obsidian.
-  4. **Strict Schema Reminder**: Nếu người dùng nhờ viết thêm API, Agent **TUYỆT ĐỐI KHÔNG** được dùng `serde_json::Value` trực tiếp (mà không có `#[schema(value_type = ...)]`) để tránh làm vỡ linter khắt khe của hệ thống.
-
-
-# API Endpoint Gap & Anti-Mocking Rule (Senior Mindset)
-
-- **Trigger**: Bất cứ khi nào phát hiện sự thiếu hụt hàm API (Gap Endpoints), lỗi TypeScript khi gọi SDK, hoặc cần thêm tính năng giao tiếp giữa Frontend (`automa-vscode`) và Backend (`automa-core`).
-- **Behavior (Tuyệt đối cấm)**: **TUYỆT ĐỐI KHÔNG** được "mock" (giả lập) API ở Frontend, không được hardcode trả về lỗi `Not implemented yet`, và cấm dùng `any` để bypass lỗi TypeScript compiler của Auto-generated SDK. Đây là tư duy của "Fresher".
-- **Action (Quy trình chuẩn của Chuyên gia)**:
-  1. **Backend First**: Bắt buộc phải implement endpoint bị thiếu trực tiếp bằng Rust bên trong `automa-core` (Axum routes).
-  2. **Schema Export**: Khai báo OpenAPI Schema (`utoipa::path` và `ToSchema`). Đảm bảo tuân thủ `Strict Schema Reminder` (bổ sung `value_type` cho `serde_json::Value`).
-  3. **Auto-Generate SDK**: Boot Daemon và chạy `pnpm run sync:api` tại thư mục gốc. Sau đó, chạy `pnpm run generate:api` bên trong `automa-vscode` nếu cần thiết để đè lại toàn bộ SDK Client.
-  4. **Wrapper Integration**: Khôi phục các wrapper classes nếu chúng bị OpenAPI xóa nhầm (đặt chúng vào thư mục `wrappers/` thay vì `client/`) và trỏ các hàm gọi vào client vừa được tự động sinh ra.
-
-# Unified Test Suite (E2E & Schema Validation)
-
-- **Trigger**: Sau khi thực hiện các thay đổi lớn về tính năng, refactor, hoặc sửa lỗi (bug fixes) ảnh hưởng tới nhiều service.
-- **Action**: Thay vì chạy test lẻ tẻ, **BẮT BUỘC** chuyển ra thư mục gốc (`root`) và chạy lệnh `node scripts/test-all.mjs`. Báo cáo kết quả của toàn bộ Unified Test Suite (Rust Cargo, Vitest E2E, Schema Linter) cho người dùng trước khi kết thúc công việc.
-
-# VS Code Extension 3-Panel, Flat List & Visual Form Invariants
+# VS Code UI/UX & Webview Standards
 
 - **3-Panel Sidebar Structure (GitHub Actions Standard)**:
-  - Sidebar của VS Code Extension **BẮT BUỘC** chỉ gồm đúng 3 Panel: `AUTOMATIONS` (`automa.workspace`), `BROWSERS` (`automa.browsers`), `STORAGE` (`automa.storage`).
-  - **Gỡ bỏ hoàn toàn**: Panel `DASHBOARD` khỏi Activity Bar để tránh phân mảnh chiều cao sidebar và trùng lặp kịch bản.
-  - **Xóa bỏ từ khóa Vault**: Toàn bộ nhãn, view ID và tài liệu trong VS Code Extension **BẮT BUỘC** dùng `Storage` thay cho `Vault`.
+  - Sidebar của `automa-vsce` **BẮT BUỘC** chỉ gồm đúng 3 Panel: `AUTOMATIONS` (`automa.workspace`), `BROWSERS` (`automa.browsers`), `STORAGE` (`automa.storage`).
+  - **Gỡ bỏ hoàn toàn**: Panel `DASHBOARD` khỏi Activity Bar để tránh phân mảnh chiều cao.
+  - **Xóa bỏ từ khóa Vault**: Dùng `Storage` thay cho `Vault` trên toàn bộ giao diện VS Code.
 - **Flat List Namespace Tagging (Zero Nested Folders)**:
-  - Trong `AutomaFilesProvider`, **TUYỆT ĐỐI KHÔNG** tạo cây thư mục lồng nhau sâu tạo ra các cấp chevron rỗng (`automa-vault > google.com > fleets > file`).
+  - Trong `AutomaFilesProvider`, **TUYỆT ĐỐI KHÔNG** tạo cây thư mục lồng nhau sâu 4 cấp chevron rỗng (`automa-vault > google.com > fleets > file`).
   - **BẮT BUỘC** hiển thị danh sách phẳng trực quan kèm namespace badge `[parent/namespace]` (ví dụ: `[google.com/fleets] • v1.28.0 • 8 blocks`).
-- **Concise Terms Invariant**:
-  - **TUYỆT ĐỐI KHÔNG** dùng thuật ngữ dài dòng. **BẮT BUỘC** dùng các nhãn ngắn gọn, súc tích: `Workflows (N)`, `Campaigns (N)`, `Packages (N)`, `Secrets`, `Variables`, `Tables`.
-- **Visual Form vs Raw JSON Invariant**:
-  - Người dùng cuối không bắt buộc phải biết cú pháp JSON để nhập dữ liệu bảng hoặc cấu hình. Các Webview dialog (như `TableView.vue`) **BẮT BUỘC** cung cấp giao diện **Visual Form** với các ô input tự động nhận diện từ cột và nút `+ Add Column` động. Khung soạn thảo `JSON` chỉ đóng vai trò là Tab phụ (Advanced Mode) cho power users.
-- **Webview Testing & `data-testid`**:
-  - Toàn bộ các phần tử tương tác (inputs, selects, buttons, table rows/cells, modal tabs) trong Webviews **BẮT BUỘC** có thuộc tính `data-testid` rõ ràng để phục vụ kiểm thử tự động Vitest & Playwright.
+- **Concise Terms Invariant**: Nhãn súc tích: `Workflows (N)`, `Campaigns (N)`, `Packages (N)`, `Secrets`, `Variables`, `Tables`.
+- **Visual Form Mode (Zero Raw JSON Burden)**: Các modal/view nhập liệu (như `TableView.vue`) **BẮT BUỘC** cung cấp giao diện Form trực quan với các input tự động nhận diện cột và builder `+ Add Column` động. Khung soạn thảo `JSON` chỉ là Tab phụ (Advanced Mode) cho power users.
+- **Webview Testing & `data-testid`**: Mọi phần tử tương tác (inputs, selects, buttons, table rows/cells, modal tabs) **BẮT BUỘC** có thuộc tính `data-testid` rõ ràng để phục vụ kiểm thử tự động.
+- **Webview Security & CSS Tokens**:
+  - Cấm nội suy biến HTML trực tiếp; dùng `escapeHtml()` chống XSS, CSP với random nonce (32 chars).
+  - Dùng đúng Semantic CSS tokens: Card border (`--vscode-panel-border`), Header divider (`--vscode-sideBarSectionHeader-border`), Table divider (`--vscode-panel-border, 0.12`). Cấm dùng `var(--vscode-widget-border)`.
+- **Zero Dummy UI & Zero Silent Execution**: Toàn bộ nút bấm/hành động trên UI bắt buộc có handler 100%. Khi chạy workflow, tự động focus output channel và bridge luồng log qua IPC.
 
-# VS Code Webview Security & UI Rendering (Automa UI)
+# Domain Terminology & Vault Cryptography
 
-- **Trigger**: Bất cứ khi nào tạo mới hoặc chỉnh sửa giao diện UI (Webview Providers) bên trong `automa-vscode`.
-- **Behavior (Bắt buộc tuân thủ 3 lớp bảo mật)**:
-  1. **Strict Sanitization**: **TUYỆT ĐỐI KHÔNG** nội suy biến trực tiếp vào chuỗi HTML (ví dụ: `${data.name}`). Toàn bộ dữ liệu động **BẮT BUỘC** phải được bọc qua hàm `escapeHtml(unsafe: string)` trước khi render để chống XSS.
-  2. **Content-Security-Policy (CSP)**: Giao diện UI **BẮT BUỘC** phải có thẻ `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' var(--vscode-editor-background); script-src 'nonce-${nonce}';">` ở phần `<head>`.
-  3. **Nonce Injection**: Phải tạo một chuỗi `nonce` ngẫu nhiên (32 ký tự alphanumeric) mỗi khi render, và nhúng vào CSP cũng như mọi thẻ `<script nonce="${nonce}">`. Tuyệt đối không dùng `unsafe-inline` cho script.
-
-# API E2E Testing Strategy (Vitest over Cargo)
-
-- **Trigger**: Bất cứ khi nào người dùng yêu cầu "viết test cho API", "test automa-core", hoặc bổ sung bài kiểm tra tích hợp (Integration Tests) cho hệ thống.
-- **Behavior (Tuyệt đối cấm)**: **TUYỆT ĐỐI KHÔNG** viết các bài test API bằng Rust (e.g. `#[tokio::test]`) bên trong thư mục `automa-core/tests`. Tư duy này không mô phỏng được hành vi gọi API từ một external client.
-- **Action (Quy trình chuẩn)**:
-  1. **Vitest Blackbox**: Toàn bộ API E2E Tests **BẮT BUỘC** phải được viết bằng TypeScript (Vitest) và đặt tại thư mục gốc `tests/e2e/`.
-  2. **Daemon Spawning**: Bài test phải sử dụng `child_process.spawn('cargo', ['run', '--bin', 'automa-core', '--', 'serve', ...])` trong `beforeAll` để khởi động Rust Daemon trên một port động (hoặc port test), và kill process này trong `afterAll`.
-  3. **Fetch API**: Sử dụng `fetch` API tiêu chuẩn của Node.js để kiểm thử các RESTful endpoints như một client độc lập.
-
-# Frontend-Backend State Sync Rule (Event-Driven vs Polling)
-
-- **Trigger**: Bất cứ khi nào cần theo dõi trạng thái, tiến trình chạy (jobs), hoặc đồng bộ dữ liệu theo thời gian thực giữa Frontend (`automa-vscode`) và Backend (`automa-core`).
-- **Behavior (Tuyệt đối cấm)**: **TUYỆT ĐỐI KHÔNG** sử dụng vòng lặp Polling (ví dụ: `while(!done) await sleep(500)`) hoặc gửi HTTP request dư thừa định kỳ (như `getJobStatus()`) ở Frontend. Tư duy này làm chết CPU và nghẽn Network (Anti-pattern).
-- **Action (Quy trình Hướng Sự Kiện)**:
-  1. **SSE First**: Frontend **BẮT BUỘC** phải lắng nghe Server-Sent Events (SSE) qua `GlobalSseListener.ts` (kết nối tới `/api/events` hoặc endpoint tương đương) để nhận trạng thái mới nhất từ Rust Daemon.
-  2. **Promise Resolution**: Bọc các tác vụ cần chờ đợi vào một `Promise` và chỉ resolve khi nhận được sự kiện SSE tương ứng (ví dụ: `workflow_finished`).
-  3. **Rust Channel Capacity**: Đảm bảo Backend (Rust `tokio::sync::broadcast`) có đủ capacity (ví dụ: `10000`) để không gây hoảng loạn (panic) lỗi `Lagged` khi có chớp nhoáng quá nhiều sự kiện.
-  4. **Leak Prevention**: Luôn dọn dẹp các SSE Listeners (e.g., `stopGlobalSseListener()`) khi ngắt kết nối để tránh Event/Socket Leaks.
-
-# Automa Unified Business Domain & Terminology Rule
-
-- **Hierarchy & Entity Relationship**:
-  - `Campaign` -> `Browsers` -> `Tasks` -> `Workflows` -> (Runtime) `Jobs`
-- **Standard Domain Vocabulary (Tuyệt đối tuân thủ)**:
-  1. **`Browser`**: Thực thể trình duyệt ảo độc lập (Anti-Detect Browser). **TUYỆT ĐỐI KHÔNG** dùng các từ rác/lỗi thời như `Profile`, `Browser Profile`, `Browser Browser`, hay `Member`. File: `*.browser.json`, Table: `browsers`, Router: `/api/browsers`.
-  2. **`Campaign`**: Tập hợp các Browsers và Lịch trình tự động hóa. File: `*.campaign.json` (fallback `*.campaigns.json`). Trong Campaign, danh sách thực thi là `browsers` (chứa các `tasks` được giao cho browser đó).
-  3. **`Task`**: Tác vụ được lập lịch trên Browser trong Campaign (`schedule`: `on-start`, `cron`, `delay`, `once`) chỉ định `workflow_id`.
-  4. **`Workflow`**: Kịch bản luồng Automa (`*.workflow.json`).
-  5. **`Job`**: Phiên thực thi động tại Runtime (`automa-core`), quản lý qua `/api/jobs` và SSE `/api/events`.
-
-# VS Code Webview Semantic CSS Tokens & UX Rules
-
-- **Border & Divider Semantic Tokens**:
-  - **TUYỆT ĐỐI KHÔNG** sử dụng `var(--vscode-widget-border)` cho các đường viền nội bộ (Card borders, list row dividers, section header borders). `widget.border` là token dành riêng cho Floating Overlay Widgets (như Ctrl+F Find Widget, IntelliSense popup) và sẽ hiển thị màu trắng gắt/chói mắt trên panel.
-  - **BẮT BUỘC DÙNG** các Semantic Tokens chuẩn sau:
-    - **Card / Container Border**: `var(--vscode-panel-border, rgba(128, 128, 128, 0.18))` hoặc `var(--vscode-editorGroup-border)`.
-    - **Section Header Divider**: `var(--vscode-sideBarSectionHeader-border, var(--vscode-panel-border, rgba(128, 128, 128, 0.18)))`.
-    - **List Row / Table Divider**: `var(--vscode-panel-border, rgba(128, 128, 128, 0.12))` hoặc `.vscode-divider`.
-- **Webview Accessibility (a11y) Invariant**:
-  - Bất kỳ phần tử tương tác nào không phải thẻ `<button>` hoặc `<a>` (ví dụ: `<span @click="...">`) **BẮT BUỘC** khai báo đầy đủ: `role="button"`, `tabindex="0"`, và lắng nghe sự kiện phím (`@keydown.enter.prevent`, `@keydown.space.prevent`).
-- **Actionable Empty States Invariant**:
-  - Toàn bộ các TreeItem và Webview Empty States **BẮT BUỘC** nêu rõ 2 vế: (1) Trạng thái hiện tại và (2) Hướng dẫn hành động tiếp theo (ví dụ: `(Right click or run Automa: Add Variable to create)`).
-
-# Runner Transparency & Output Feedback Invariant
-
-- **Zero Silent Execution**: **TUYỆT ĐỐI KHÔNG** để các lệnh thực thi tác vụ (`runWorkflow`, `runCampaign`, `install-browser`) diễn ra trong im lặng mà không có phản hồi trực quan về tiến trình cho người dùng.
-- **Explicit Output Channel Focus**: Khi kích hoạt chạy workflow hoặc campaign từ VS Code Extension, **BẮT BUỘC** gọi `outputChannel.show(false)` (thay vì `show(true)`) để kéo panel Output của VS Code lên hiển thị nổi bật trên màn hình.
-- **Webview Live Console Stream**: Bất kỳ Custom Webview Editor nào hỗ trợ chạy trực tiếp (như `WorkflowEditorView.vue`) **BẮT BUỘC** tích hợp Tab `Output & Logs` dạng Terminal, tự động switch tab khi bắt đầu chạy, hiển thị Pulsating Status Dot (🟢 Running / ✅ Completed / 🔴 Failed), Execution Timer (`⏱ 00:0X.Xs`), và bắt buộc bridge luồng log qua IPC (`task:log`, `task:error`).
-
-# Rust Daemon OpenAPI v3 Documentation & Strict Typing Standards
-
-- **Trigger**: Khi định nghĩa hoặc chỉnh sửa bất kỳ Axum Route Handler nào trong `automa-core/src/api/handlers/` hoặc các DTO structs.
-- **Behavior (Tuyệt đối cấm)**:
-  - **TUYỆT ĐỐI KHÔNG** sử dụng `Json<serde_json::Value>` trong chữ ký hàm hoặc kiểu trả về (tránh vi phạm `scripts/enforce-strict-schema.mjs`).
-  - **TUYỆT ĐỐI KHÔNG** bỏ trống hoặc đặt tên `operation_id` ngẫu hứng/camelCase trong `utoipa::path`.
-  - **TUYỆT ĐỐI KHÔNG** bỏ sót doc comments (`///`) trên các trường của DTO structs.
-- **Action (Quy chuẩn OpenAPI v3 bắt buộc)**:
-  1. **Endpoint Annotations (`#[utoipa::path(...)]`)**:
-     - `operation_id`: **BẮT BUỘC** khai báo tường minh dạng `snake_case` (ví dụ: `submit_job`, `get_job_history`, `get_app_settings`, `install_browser_binary`, `start_browser_session`). `@hey-api/openapi-ts` sẽ chuyển đổi chính xác thành tên hàm TypeScript SDK tương ứng (`submitJob()`, `getJobHistory()`, `installBrowserBinary()`).
-     - `summary`: Câu mô tả hành động ngắn gọn, súc tích (< 60 ký tự).
-     - `description`: Đoạn văn bản định dạng Markdown giải thích rõ luồng xử lý và tác động của endpoint.
-     - `tag`: Thuộc 1 trong 10 domain tags chuẩn (`Jobs`, `Storage`, `Browsers`, `Campaigns`, `System`, `History`, `Settings`, `Secrets`, `Lint`, `Events`).
-     - `responses`: Khai báo đầy đủ status code thành công lẫn lỗi (400, 404, 500), body lỗi sử dụng `crate::core::error::ApiErrorResponse`.
-  2. **DTO & Schema Documentation**:
-     - Mọi struct Request/Response **BẮT BUỘC** derive `#[derive(Serialize, Deserialize, ToSchema)]`.
-     - Toàn bộ struct và từng trường dữ liệu **BẮT BUỘC** có doc comment `///` mô tả ý nghĩa.
-     - Sử dụng `#[schema(example = json!(...))]` trên struct hoặc `#[schema(example = "...")]` trên field để cung cấp ví dụ thực tế cho Swagger UI và client devs.
-     - Mọi trường sử dụng `serde_json::Value` bắt buộc có annotation `#[schema(value_type = Object)]` hoặc `#[schema(value_type = Option<Vec<Object>>)]`.
-  3. **Raw File / JSON Content Handlers**: Đối với các endpoint đọc tệp JSON thô từ đĩa (như `/api/vault/workflow`), hàm **BẮT BUỘC** trả về `Result<axum::response::Response, AutomaError>` với header `content-type: application/json` và `Body::from(content)` sau khi đã parse kiểm tra tính hợp lệ bằng `serde_json::from_str`.
-  4. **Error Handling**: Sử dụng `AutomaError` (implement `IntoResponse`) để trả về lỗi tự động map sang status code và `ApiErrorResponse`.
-  5. **Offline OpenAPI Spec Export & SDK Generation**:
-     - `automa-core` **BẮT BUỘC** duy trì cờ CLI `--export-openapi [path]` cho phép xuất tĩnh `openapi.json` mà không cần khởi động live HTTP server.
-     - Bổ sung/duy trì unit test `test_openapi_spec_validity` trong `automa-core/src/api/routes.rs` để phát hiện lỗi schema ngay khi biên dịch `cargo test`.
-     - `packages/automa-types/openapi-ts.config.ts` đọc tĩnh từ `./openapi.json`.
-     - **Canonical SDK Methods Invariant**: Toàn bộ submodules (`automa-vscode`, `automa-ext`, tests) **BẮT BUỘC** sử dụng trực tiếp các phương thức SDK chuẩn được sinh từ `@hey-api/openapi-ts` (`addStorageVariable`, `getStorageCredentials`, `getHealth`, `installBrowserBinary`, `startBrowserSession`, `killAllBrowsers`, v.v.). **TUYỆT ĐỐI KHÔNG** tạo các export alias thủ công trong `@automa/types/api` hay `automa-vscode` để đảm bảo tệp sinh mã là nguồn chân lý duy nhất (Single Source of Truth) và hoàn toàn tự động hóa không có xung đột khi chạy `pnpm run sync:api`.
-
-# Automa Studio Standalone Build & ServeDir Pipeline
-
-- **Repository Target**: `automa-ext` chứa target build standalone độc lập cho Studio:
-  - **Lệnh build**: `pnpm run build:studio` (hoặc `pnpm run dev:source:studio` cho chế độ watch/HMR).
-  - **Cấu hình**: `webpack.studio.config.js`, xuất bundle ra `automa-ext/dist/studio/`.
-  - **Browser Mocking**: Sử dụng `src/studio/standalone-browser-mock.js` để chạy thuần túy trên web mà không cần chrome extension APIs.
-- **Daemon Hosting**: `automa-core` **BẮT BUỘC** mount thư mục `dist/studio/` tại endpoint static `/studio` thông qua `tower_http::services::ServeDir`.
-- **Client Execution**: Khi người dùng kích hoạt "Open in Automa Studio" từ VS Code hoặc CLI, **BẮT BUỘC** mở URL `http://127.0.0.1:8765/studio/` trên trình duyệt mặc định thông qua `vscode.env.openExternal`. **TUYỆT ĐỐI KHÔNG** nhúng toàn bộ Studio vào VS Code Webview hay spawn process thủ công.
-
-# Automa Storage vs Storage Workspace Terminology Invariant
-
-- **Ngữ Cảnh Người Dùng (User Experience)**: Người dùng Automa gốc chỉ biết đến khái niệm **`Storage`** (Global Storage gồm Tables, Variables, Credentials).
-- **Quy Chuẩn Định Danh**:
-  1. **Global Storage**: Áp dụng duy nhất cho cơ sở dữ liệu nghiệp vụ của Automa (`Tables`, `Variables`, `Credentials`) lưu trữ trong SQLite/Dexie qua `/api/storage/*`. Trên giao diện UI (VS Code Sidebar, Webviews, Studio) **BẮT BUỘC** ghi là **`Global Storage`**, **TUYỆT ĐỐI KHÔNG** gọi là *"Global Vault"*.
-  2. **Storage Workspace**: Áp dụng cho cấu trúc thư mục chứa các tệp kịch bản (`.workflow.json`), chiến dịch (`.campaigns.json`), và trình duyệt (`.browser.json`) trên đĩa (tương ứng với submodule `automa-vault`).
-
-# Ecosystem Test Architecture & Directory Standard
-
-- **Quy Chuẩn Thư Mục Test Nhất Quán (Directory Structure)**:
-  1. **Submodule Unit Tests (`src/test/` hoặc `tests/`)**:
-     - `automa-vscode/src/test/`: Chứa toàn bộ Unit tests (Extension Commands, Providers, Webview IPC Harness) sử dụng Vitest và Puppeteer/JSDOM.
-     - `automa-core/src/` & `automa-core/src/e2e_tests.rs`: Chứa Unit & Integration tests nội bộ của Rust core chạy qua `cargo test`.
-  2. **Monorepo Cross-Service E2E Suite (`tests/e2e/`)**:
-     - Thư mục `tests/e2e/` tại Monorepo Root là nơi tập trung DUY NHẤT cho các bài kiểm thử tự động xuyên suốt các dịch vụ (Cross-Service E2E API Tests).
-     - **Helpers**: `tests/e2e/helpers/globalSetup.ts` quản lý vòng đời Test Daemon (tự động khởi chạy trên port cô lập `8766`, dọn dẹp port và tiến trình treo trước/sau khi test).
-     - **Test Suites**:
-       * `tests/e2e/system.e2e.test.ts`: Health check, System CPU/Memory metrics, Grid matrix settings, Workflow AST Linter.
-       * `tests/e2e/browsers.e2e.test.ts`: Browser Profile CRUD, Session Cookies import/export, Extensions sideload.
-       * `tests/e2e/storage.e2e.test.ts`: Global Storage Variables, AES-encrypted Credentials, Dynamic SQLite Tables & Rows.
-       * `tests/e2e/jobs.e2e.test.ts`: Inline workflow execution jobs, SSE logs, Job status, History query/cleanup.
-- **Contract-First Testing Invariant**: Toàn bộ các test E2E tại Monorepo Root **BẮT BUỘC** tiêu thụ API thông qua Generated SDK Client từ `@automa/types/api` (`getHealth()`, `submitJob()`, `createBrowser()`, `addStorageVariable()`, v.v.). **TUYỆT ĐỐI KHÔNG** dùng `fetch()` thủ công với hardcoded URL strings trong tests nhằm đảm bảo 100% Type Safety và phát hiện breaking changes ngay khi compile test.
-- **Unified Test Command**: Lệnh `pnpm run test` (`node scripts/test-all.mjs`) **BẮT BUỘC** chạy và kiểm tra cả 4 tầng kiểm thử:
-  1. Rust Core Engine & API Tests (`cargo test`)
-  2. VS Code Extension & Webview Tests (`pnpm -F vscode-automa test`)
-  3. Cross-Service E2E API Tests (`vitest run --config vitest.config.ts`)
-  4. Strict OpenAPI & JSON Schema Linter (`node scripts/enforce-strict-schema.mjs`)
-
-
-
+- **Domain Entity Hierarchy**: `Campaign` $\rightarrow$ `Browsers` $\rightarrow$ `Tasks` $\rightarrow$ `Workflows` $\rightarrow$ (Runtime) `Jobs`.
+  - `Browser`: Thực thể trình duyệt ảo (`*.browser.json`). Tuyệt đối không dùng `Profile` hay `Member`.
+  - `Campaign`: Chiến dịch chứa `browsers` và các `tasks` được lập lịch (`*.campaign.json`).
+  - `Job`: Phiên thực thi động tại Runtime (`automa-core`).
+- **Global Storage vs Storage Workspace**:
+  - `Global Storage`: Cơ sở dữ liệu nghiệp vụ của Automa (`Tables`, `Variables`, `Credentials`) trong SQLite.
+  - `Storage Workspace`: Cấu trúc thư mục chứa các tệp kịch bản trên đĩa (`automa-vault`).
+- **Vault Zero-Leak Cryptography**:
+  - `Variables` (`/api/v1/storage/variables`): Lưu cấu hình công khai không mã hóa (Plaintext).
+  - `Credentials` (`/api/v1/storage/credentials`): Lưu mật khẩu/token được mã hóa chuẩn `HMAC-SHA256 (64 hex) + AES-256-CBC Base64 (Salted__)`.
+  - Master Passphrase lưu trữ trong `vscode.SecretStorage` hoặc nạp qua `AUTOMA_PASSPHRASE`. Engine chỉ giải mã Secrets trong RAM khi thực thi cú pháp `{{secrets.key}}` và tự động giải phóng RAM, cấm ghi vào log.
