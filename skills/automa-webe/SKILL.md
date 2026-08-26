@@ -1,119 +1,75 @@
 ---
 name: automa-webe
-description: Kiến trúc và các tính năng đã hoàn thiện của Automa Web Extension (automa-webe / automa-ext / automa-ex). Kích hoạt khi làm việc với UI, Auth, Sync, hoặc Teamwork của automa-webe.
+description: Architecture, Standalone Web Studio Canvas (dist/studio), Headless Execution Engine (dist/cli-runner), MV3 Offscreen worker, and browser DOM automation blocks for Automa Web Extension (automa-webe). Activate when modifying workflow canvas, VueFlow graph layout, block handlers, or extension runtime adapters.
 ---
 
-# Automa Web Extension (`automa-webe`) - System Requirements Specification (SRS) & Feature List
+# Automa Web Extension & Studio (`automa-webe`)
 
-> **Repository**: [`tuquet/automa-webe`](https://github.com/tuquet/automa-webe) (forked from `AutomaApp/automa`)
-> **Browser API**: Native `chrome.*` / `browser.*` thông qua `src/lib/browser-compat.js` (không sử dụng `webextension-polyfill`)
-> **Manifest**: MV3 (Chrome), MV2 (Firefox)
-
-**BẮT BUỘC** tham khảo tài liệu này khi làm việc với `automa-webe` (`automa-ext` / `automa-ex`) để tận dụng hệ thống có sẵn, **TUYỆT ĐỐI KHÔNG** triển khai trùng lặp.
-
-## Sub-Skills thuộc `automa-webe`:
-- 💉 **[Automa Extension Injection](./automa-extension-injection/SKILL.md)**: Kiến trúc Vòng đời Chromium Extension & Các nguyên tắc tương tác an toàn qua Puppeteer.
-
+Architecture and implementation guide for the `automa-webe` submodule.
 
 ---
 
-## 1. Authentication System (Cơ chế Đăng nhập & Định danh)
-- **Cơ chế:** Silent Authentication Extraction
-- **File xử lý cốt lõi:** `src/content/services/webService.js`
-- **Luồng hoạt động:** 
-  - **BẮT BUỘC** xác thực người dùng tập trung qua Web Dashboard bên ngoài.
-  - Content script `webService.js` **BẮT BUỘC** lắng nghe sự kiện `app-mounted` trên Web Dashboard.
-  - **BẮT BUỘC** trích xuất `supabase.auth.token` từ `localStorage` của Web ngay khi phát hiện.
-  - **BẮT BUỘC** lưu trữ Token trong `browser.storage.local` dưới dạng đối tượng `session`.
-  - **BẮT BUỘC** sử dụng session này cho tất cả các yêu cầu Supabase API tiếp theo từ Extension.
-- **Tình trạng:** Hoàn thiện 100%. **TUYỆT ĐỐI KHÔNG** thiết kế UI form đăng nhập bên trong Extension.
+## 1. 🎯 Scope & Dual Build Targets
 
-## 2. Teamwork & User Interface (Giao diện Nhóm làm việc)
-- **Cơ chế:** Vue Pinia Stores & Reactive UI
-- **File xử lý cốt lõi:** `src/newtab/App.vue`, `src/components/newtab/app/AppSidebar.vue`, `src/stores/user.js`, `src/stores/teamWorkflow.js`
-- **Luồng hoạt động:**
-  - `userStore` **BẮT BUỘC** tải User Browser và hiển thị Avatar trên AppSidebar nếu Auth Session tồn tại.
-  - Dashboard UI (`newtab`) **BẮT BUỘC** phân loại, lọc và render workflows theo `teamId` thông qua `teamWorkflowStore`.
-- **Tình trạng:** Hoàn thiện 100%. UI **BẮT BUỘC** duy trì tính tương thích hoàn toàn với luồng Teamwork.
+`automa-webe` provides the core browser automation engine and visual workflow studio.
 
+### 2 Reusable Build Artifacts:
+1. **Headless Execution Engine (`dist/cli-runner`)**:
+   - Build command: `pnpm run build:runner` (`webpack.runner.config.js`).
+   - Sideloaded into headless/headful Chromium instances by `automa-core` to execute DOM automation blocks.
+2. **Standalone Web Studio Canvas (`dist/studio`)**:
+   - Build command: `pnpm run build:studio` (`webpack.studio.config.js`).
+   - Served by `automa-core` at `http://127.0.0.1:8765/studio/` and embedded into `automa-vsce` custom editors via `iframe` with two-way `postMessage` synchronization.
 
+---
 
-## 3. Workflow Execution Engine (Trình thực thi quy trình)
-- **Cơ chế:** Direct Background Messaging (Pump Mode)
-- **Luồng hoạt động tự động hóa (CLI):**
-  - CLI bên ngoài **TUYỆT ĐỐI KHÔNG** fetch Workflow từ Cloud.
-  - CLI **BẮT BUỘC** đọc tệp JSON cục bộ và mở Extension ẩn (headless Chrome).
-  - CLI **BẮT BUỘC** push trực tiếp Workflow JSON Payload thông qua `chrome.runtime.sendMessage('background--workflow:execute', data)`.
-  - Extension **BẮT BUỘC** nhận lệnh và thực thi tuần tự các workflow nodes được tiêm.
-- **Tình trạng:** Hoàn thiện 100%. Các trigger nội bộ và từ xa đã ổn định.
+## 2. 🛡️ Architectural Invariants
 
-## 4. Extension Entry Points (Kiến trúc các file HTML)
-**BẮT BUỘC** sử dụng 6 HTML Entry Points biệt lập sau đây đúng mục đích:
-- **`newtab/index.html` (Main Dashboard):** **BẮT BUỘC** sử dụng để thiết kế workflow, quản lý log, packages.
-- **`popup/index.html` (Quick Popup):** **BẮT BUỘC** sử dụng cho popup biểu tượng extension trên toolbar để chạy nhanh workflows.
-- **`execute/index.html` (Shortcut Trigger):** **BẮT BUỘC** sử dụng cho URL triggers không có UI. **BẮT BUỘC** trích xuất tham số, gọi background worker, và tự huỷ.
-- **`sandbox/index.html` (Isolated Sandbox):** **BẮT BUỘC** sử dụng làm iframe vô hình trong `newtab` để thực thi Javascript, Conditions do người dùng định nghĩa, dùng `window.postMessage` giao tiếp.
-- **`params/index.html` (Parameters Dialog):** **BẮT BUỘC** sử dụng làm Vue dialog để yêu cầu Variables còn thiếu.
-- **`offscreen/index.html` (DOM/Audio Proxy):** **BẮT BUỘC** sử dụng làm DOM processing proxy chạy nền cho Manifest V3.
+- **Zero Code Duplication**: Other submodules (`automa-core`, `automa-vsce`, `automa-desk`) MUST consume `dist/cli-runner` and `dist/studio`. Duplicating canvas/runner source code is FORBIDDEN.
+- **Native Browser APIs**: Uses native `chrome.*` / `browser.*` through `src/lib/browser-compat.js` (aliased via Webpack; never use `webextension-polyfill` directly).
+- **MV3 Offscreen Resilience**:
+  - Workflow execution in Chrome MV3 runs inside an Offscreen Document (`offscreen.html`).
+  - Message dispatchers MUST implement retry-with-backoff (min 5 attempts, 300ms interval) to handle browser startup races on `about:blank`.
+- **Idempotent Background Worker**:
+  - Guard SSE connection loops with singleton flags (`isWorkerDaemonInitialized`) to prevent duplicate task execution.
+- **Static Imports in Hot Paths**: Dynamic `await import(...)` in service worker entry points is FORBIDDEN to prevent Webpack chunk loading latency.
 
-## 5. CDP Debugger Flow (Worker Node Level)
-- **Cơ chế:** Chrome DevTools Protocol (CDP) thông qua Background SW
-- **Luồng hoạt động:**
-  - **Chế độ `debugMode`**: Các khối tương tác **BẮT BUỘC** hỗ trợ tham số `debugMode`.
-  - **Attach Debugger**: **BẮT BUỘC** gọi `attachDebugger(tabId)` khi tương tác với Target Tab, đính kèm `chrome.debugger` (protocol `1.3`).
-  - **Message Delegation**: Nếu `block.debugMode === true`, Content Script **TUYỆT ĐỐI KHÔNG** sử dụng native JS (`element.click()`). **BẮT BUỘC** gửi `sendMessage('debugger:send-command', payload, 'background')`.
-  - **Background Execution**: Service Worker **BẮT BUỘC** thực thi `chrome.debugger.sendCommand` để giả lập tương tác phần cứng.
-- **Tác dụng**: **BẮT BUỘC** sử dụng để vượt qua CSP hoặc Trusted Events nghiêm ngặt.
+---
 
-## 6. Offscreen Workflow Execution & Headless Runner
-- **Cơ chế:** MV3 Offscreen Document Proxy
-- **Luồng khởi chạy:**
-  - Background Service Worker nhận lệnh `workflow:execute` qua SSE từ Rust Core Daemon (`http://127.0.0.1:8765/api/internal/worker/events`).
-  - Background đảm bảo Offscreen Document tồn tại qua `BackgroundOffscreen.instance.#ensureDocument()`.
-  - Background gửi message `offscreen--workflow:execute` tới Offscreen Document kèm cơ chế Retry tự động (5 lần, cách nhau 300ms) để triệt tiêu lỗi Race Condition khi trình duyệt vừa khởi tạo ở `about:blank`.
-  - Offscreen Document khởi tạo `WorkflowManager.instance.execute(workflow, options)` và báo cáo step logs ngược về Background qua `daemon:log` -> `POST /api/jobs/{id}/logs`.
-- **Quy tắc an toàn & Idempotency:**
-  - Không mở bất kỳ UI tab nào (`newtab.html#/welcome`) khi biến môi trường `__IS_RUNNER__ === true`.
-  - Luôn đảm bảo `offscreen.html` và `sandbox.html` có mặt trong bản build `dist/cli-runner`.
-  - Sử dụng Static Imports ở `business/dev/index.js` để tránh trễ module khi chạy headless.
-  - **BẮT BUỘC** kích hoạt cờ Singleton Guard `isWorkerDaemonInitialized` để ngăn chặn lỗi nhân đôi tiến trình khi nhận Job Payload.
+## 3. 💻 Canvas Host Bridge & Two-Way IPC Protocol
 
-## 7. Code Quality & ESLint Compliance
-- **Khai báo hàm:** Trong các SFC Vue 3 (`StudioApp.vue`, `WorkflowEditor.vue`), sắp xếp các hàm theo thứ tự phụ thuộc (top-down) để tránh lỗi `no-use-before-define`.
-- **Prettier & Arrow Functions:** Không sử dụng arrow function trả về biểu thức gán (như `(n) => (n.selected = false)`), thay bằng khối `{ n.selected = false; }` để tương thích với quy tắc `no-return-assign`.
-- **Cấu hình `.eslintrc.js`:** Luôn cập nhật `ignorePatterns` và `globals` khi thêm các script standalone hoặc mock adapter mới.
+### Host Bridge (`src/studio/adapters/host-bridge.js`)
+```javascript
+export function initHostBridge(store) {
+  // Listen for workflow injections from VS Code or Tauri Host
+  window.addEventListener('message', (event) => {
+    const { type, data } = event.data || {};
+    if (type === 'automa:set-workflow' || type === 'setWorkflow') {
+      store.loadWorkflow(data);
+    }
+  });
 
-## 8. Automa Visual Studio Architecture & Component Specification (SRS)
+  // Notify host when user edits nodes or connections
+  store.onWorkflowChange((updatedWorkflow) => {
+    if (window.acquireVsCodeApi) {
+      window.acquireVsCodeApi().postMessage({
+        type: 'automa:workflow-changed',
+        data: updatedWorkflow
+      });
+    } else {
+      window.parent.postMessage({
+        type: 'automa:workflow-changed',
+        data: updatedWorkflow
+      }, '*');
+    }
+  });
+}
+```
 
-### 8.1. Bố cục Giao diện & Phân quyền Thành phần (UI Layout & Component Responsibility)
-- **Top Header Bar (`studio-header` / `StudioApp.vue`)**:
-  - **Mục đích**: Điều hướng vĩ mô và quản lý file.
-  - **Thành phần**: Nút Toggle Sidebar, File Picker (`Open File`), Tạo mới (`New`), Modals triggers (`Table Data`, `Global Data`, `Settings`, `Logs`), `Export JSON` và `Run Workflow`.
-  - **Quy chuẩn Metadata**: Toàn bộ việc hiển thị và chỉnh sửa Title, Icon, Version của Workflow được tập trung duy nhất tại `studio-sidebar` (`WorkflowDetailsCard.vue`).
-- **Canvas Bottom Controls Bar (`editor-controls-bar` / `WorkflowEditor.vue`)**:
-  - **Mục đích**: Điều hướng Canvas và thao tác trực quan đồ thị workflow.
-  - **Thành phần `#controls-prepend` (Góc trái)**: Khối `[Undo | Redo]` + Nút chiếc đũa thần `Auto Align` (`riMagicLine`) kích hoạt Dagre graph layout animation.
-  - **Thành phần `#controls-append` (Góc phải)**: `Fit View` (`riFullscreenLine`) + `Zoom Out` (`riSubtractLine`) + `Zoom In` (`riAddLine`).
-- **Studio Sidebar (`studio-sidebar`)**:
-  - **Chế độ Default**: Hiển thị `WorkflowDetailsCard.vue` (Metadata workflow & Block Palette).
-  - **Chế độ Editing**: Hiển thị `WorkflowEditBlock.vue` (Form cấu hình chi tiết của Node được chọn).
+---
 
-### 8.2. Đặc Tả Tương Tác Node & Luồng Dữ Liệu Hai Chiều (Node Interaction & Data Flow)
-- **Kích hoạt chỉnh sửa Node**:
-  1. *Double-Click*: Nhấp đúp chuột vào thân Node (`BlockBase.vue` -> `@dblclick.stop="$emit('edit')"`).
-  2. *Hover Action Bar*: Rê chuột lên đỉnh Node -> Bấm icon Cây bút ✏️ (`riPencilLine`).
-- **Luồng xử lý dữ liệu (Data Pipeline)**:
-  - `WorkflowEditor.vue` emit sự kiện `@edit` kèm thông tin `{ id: label, blockId: id, data }`.
-  - `StudioApp.vue` hòa trộn dữ liệu hiện tại với default block parameters qua `defu(data, blockDef.data)`.
-  - Gán `editState.editing = true` để chuyển đổi Sidebar sang `WorkflowEditBlock.vue`.
-  - `WorkflowEditBlock.vue` tự động nạp động dynamic component `Edit<BlockName>.vue` tương ứng.
-  - Mọi thay đổi trên form form sẽ phản hồi tức thì về `workflow.drawflow.nodes[i].data` theo cơ chế Two-way Binding.
+## 4. 🔧 Verification & Builds
 
-### 8.3. Đặc Tả Phục Vụ Live & Cơ Chế Smart Live Reload (Live Server & Reload Protocol)
-- **Axum Static ServeDir**: Rust Daemon (`automa-core`) phân phối thư mục `automa-ext/dist/studio/` tại endpoint `http://127.0.0.1:8765/studio/` thông qua `tower_http::services::ServeDir`.
-- **Client-side Bundle Poller**: Entry script `src/studio/studio-entry.js` thăm dò định kỳ header `Last-Modified`/`ETag` của `studio.bundle.js`. Khi Webpack watch hoàn thành build mới, trình duyệt tự động gọi `window.location.reload()`.
-- **Anti-Cache Guard**: File `src/studio/index.html` tích hợp thẻ `<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />` nhằm triệt tiêu hoàn toàn rủi ro lưu cache tĩnh trong môi trường dev.
-
-### 8.4. Điều Phối Tác Vụ VS Code (Task Orchestration)
-- **Task `Serve: Live Studio`**: Chạy đồng thời `Watch: Rust` (HTTP daemon trên cổng 8765) và `Watch: Studio` (Webpack re-compiler) ở chế độ song song (`parallel`).
-- **Task `Open: Live Studio (Browser)`**: Mở nhanh tab trình duyệt trỏ đến `http://127.0.0.1:8765/studio/`.
+- **Build Runner**: `pnpm run build:runner`
+- **Build Studio**: `pnpm run build:studio`
+- **Build Extension**: `pnpm run build`

@@ -1,45 +1,78 @@
 ---
 name: automa-core
-description: Kiến trúc và nguyên lý hoạt động của Automa Core Engine (automa-core / @automa/core). Kích hoạt khi làm việc với WorkflowEngine, Block Execution, Backward Compatibility Facade, hoặc các Browser Adapters.
+description: Architecture, Axum REST/SSE/WS endpoints, OpenAPI utoipa annotations, SQLite state, and execution coordinator for the Automa Core Rust Daemon (automa-core). Activate when implementing backend routes, DTO structs, browser process managers, storage APIs, or job lifecycle events.
 ---
 
-# Kiến Trúc Automa Core Engine (`automa-core`)
+# Automa Core Rust Daemon (`automa-core`)
 
+Architecture, API standards, and system coordination guide for the `automa-core` submodule.
 
-## 1. Mục Đích & Vị Trí Trong Hệ Sinh Thái
-`@automa/core` (`packages/core`) BẮT BUỘC HOẠT ĐỘNG như Execution Engine cốt lõi của hệ sinh thái Automa. BẮT BUỘC DUY TRÌ dưới dạng một thư viện TypeScript độc lập, không phụ thuộc vào môi trường (Environment-Agnostic).
-- **Mục Tiêu:** BẮT BUỘC CHẠY trên Node.js (như một Daemon service riêng biệt) theo kiến trúc Thin Client & Daemon hiện đại. TUYỆT ĐỐI KHÔNG chạy Engine trực tiếp bên trong UI (như VS Code Webview hay Webpack client) để đảm bảo hiệu suất và bảo mật. Các Client BẮT BUỘC GỌI API tới Daemon thay vì chạy logic thực thi.
-- **Nhiệm Vụ Chính:** BẮT BUỘC QUẢN LÝ toàn bộ Workflow State Machine, Variables, Loops, Conditions, và Table Data.
+---
 
-## 2. Chiến Lược Chống Phát Hiện Bot (Browser Fingerprinting)
-BẮT BUỘC THỰC THI nghiêm ngặt chiến lược chống bot sau:
-- **Nguyên Tắc KHÔNG Thao Tác DOM Trực Tiếp:** TUYỆT ĐỐI KHÔNG THAO TÁC DOM trực tiếp từ Core Engine. TUYỆT ĐỐI KHÔNG KHỞI TẠO Puppeteer, Playwright hoặc giao thức CDP thô cho các tương tác DOM (`click`, `forms`, `new-tab`) bên trong Core Engine nhằm tránh làm hỏng native browser fingerprinting.
-- **Giải Pháp Adapter Pattern:** BẮT BUỘC ĐÓNG GÓI tất cả các lệnh tương tác DOM thông qua `IBrowserAdapter`.
-- BẮT BUỘC GỬI các lệnh (thông qua WebSockets / SSE / Native Messaging) tới **Trình duyệt / Extension**. Các content scripts của Extension BẮT BUỘC THỰC THI các lệnh đó để bảo toàn trọn vẹn fingerprint thực của người dùng.
+## 1. 🎯 Scope & Responsibilities
 
-## 3. Backward Compatibility Facade (Thích Ứng Ngược)
-BẮT BUỘC DUY TRÌ tính tương thích với hơn 60 Legacy JS Blocks (ví dụ: `handlerConditions.js`) trong `packages/workflow-runner` và `automa-ext` mà TUYỆT ĐỐI KHÔNG phải viết lại chúng bằng TypeScript.
-- **BlockExecutionContextFacade:** PHẢI DÙNG Context Facade Pattern để bọc Core Engine State và Adapter. BẮT BUỘC MOCK đối tượng `this` được kỳ vọng bởi các legacy blocks.
-- BẮT BUỘC GIẢ LẬP các thuộc tính và hàm legacy: `this.activeTab`, `this.engine`, `this.getBlockConnections`, `this._sendMessageToTab`, `this.addDataToColumn`, `this.setVariable`, v.v.
-- BẮT BUỘC IMPORT và CHẠY các legacy handlers từ `automa-ext` trực tiếp và TUYỆT ĐỐI KHÔNG SỬA ĐỔI mã nguồn gốc của chúng.
+`automa-core` is the central high-performance Rust Daemon listening on port `8765`.
 
-## 4. Cấu Trúc Của IBrowserAdapter
-BẮT BUỘC TRIỂN KHAI `IBrowserAdapter` khi khởi tạo `WorkflowEngine`:
-```typescript
-export interface IBrowserAdapter {
-  getActiveTab(): Promise<TabInfo | null>;
-  sendMessageToTab(tabId: number, message: TabMessagePayload, options?: TabMessageOptions): Promise<any>;
-  createTab(options: { url: string; active?: boolean; [key: string]: any }): Promise<TabInfo>;
-  updateTab(tabId: number, options: Record<string, any>): Promise<TabInfo>;
-  removeTab(tabId: number): Promise<void>;
-  injectContentScript?(tabId: number, frameId?: number): Promise<boolean>;
+### Key Responsibilities:
+1. **REST & Streaming API**: Axum-based HTTP REST, Server-Sent Events (`/api/events`), and low-latency WebSocket (`/api/v1/ws`).
+2. **OpenAPI v3 Contract (`utoipa`)**: Source of truth for client SDK generation (`@automa/types/api`).
+3. **Storage Engine**: SQLite embedded database (`AutomaDb`) for Tables, Variables, and AES-256 encrypted Credentials.
+4. **Anti-Detect Browser Manager**: Spawns isolated Chromium instances with customized user-agents, proxies, extensions, and fingerprints.
+5. **Job Lifecycle Coordinator**: Coordinates workflow/campaign executions, dispatches payloads to the Headless Runner (`dist/cli-runner`), and aggregates telemetry logs.
+
+---
+
+## 2. 🛡️ Architectural Invariants
+
+- **Separation of Concerns**: Rust Core NEVER manipulates browser DOM directly. All DOM actions (`click`, `input`, `scroll`) are executed inside the browser context by `automa-webe/dist/cli-runner` to preserve native anti-bot fingerprinting.
+- **RESTful Strictness**: Resource-oriented routes only. Action verbs in URLs are FORBIDDEN (use `POST /api/jobs` instead of `POST /api/jobs/submit`).
+- **OpenAPI v3 `utoipa` Rules**:
+  - `operation_id`: Explicit `snake_case` (e.g. `submit_job`, `get_health`, `get_storage_tables`).
+  - `tag`: Exactly 1 of 10 standard tags (`Jobs`, `Storage`, `Browsers`, `Campaigns`, `System`, `History`, `Settings`, `Secrets`, `Lint`, `Events`).
+  - DTOs: Derive `#[derive(Serialize, Deserialize, ToSchema)]`, write doc comments `///` for every struct and field, annotate `serde_json::Value` with `#[schema(value_type = ...)]`.
+- **Async Runtime & Error Safety**:
+  - Tokio async runtime; heavy CPU tasks (AES crypto, massive JSON parsing) run via `tokio::task::spawn_blocking`.
+  - `.unwrap()` and `.expect()` are FORBIDDEN in production paths. Use `thiserror` and `?` operators with `AutomaError`.
+  - Shared state shared via `Arc<RwLock<T>>` or `Arc<Mutex<T>>` (using `tokio::sync`).
+
+---
+
+## 3. 💻 Code Templates & Handlers
+
+### Axum Route Handler with `utoipa` Annotations
+```rust
+use axum::{extract::State, Json};
+use utoipa;
+use crate::core::error::{ApiErrorResponse, AutomaResult};
+use crate::models::job::{SubmitJobRequest, SubmitJobResponse};
+use crate::state::AppState;
+
+/// Submit and queue a workflow execution job
+#[utoipa::path(
+    post,
+    path = "/api/v1/jobs",
+    request_body = SubmitJobRequest,
+    responses(
+        (status = 200, description = "Job queued successfully", body = SubmitJobResponse),
+        (status = 400, description = "Validation error", body = ApiErrorResponse),
+        (status = 500, description = "Internal server error", body = ApiErrorResponse)
+    ),
+    tag = "Jobs",
+    operation_id = "submit_job"
+)]
+pub async fn submit_job(
+    State(state): State<AppState>,
+    Json(payload): Json<SubmitJobRequest>,
+) -> AutomaResult<Json<SubmitJobResponse>> {
+    let job = state.job_coordinator.enqueue(payload).await?;
+    Ok(Json(job.into()))
 }
 ```
 
-## 5. Pattern Hướng Dẫn Phát Triển (TDD & Mocks)
-- **Mocks:** PHẢI DÙNG `MockBrowserAdapter` để xác minh logic trong Node.js mà không cần sự hiện diện của trình duyệt.
-- **PuppeteerBrowserAdapter:** CHỈ ĐƯỢC PHÉP SỬ DỤNG cho việc E2E Integration Testing (ví dụ: `tests/test_google_search.ts`). TUYỆT ĐỐI KHÔNG DÙNG `PuppeteerBrowserAdapter` trong Production (CLI hoặc Daemon).
+---
 
-## 6. Phân Định Trách Nhiệm (Separation of Concerns)
-- **Extension / CLI Runner (`automa-ext`)**: Đảm nhiệm TOÀN BỘ việc thực thi các block thao tác DOM và tương tác trình duyệt (click, input, scroll, cookie browser, CDP, screenshot, evaluation) bên trong context của trình duyệt nhằm bảo toàn tính tự nhiên và chống phát hiện bot.
-- **Rust Core Daemon (`automa-core`)**: Đóng vai trò là máy chủ điều phối hệ thống (Process Manager, SQLite DB, Anti-detect Profile Manager, REST/SSE API, Storage Tables, Job Scheduler). **TUYỆT ĐỐI KHÔNG** nhúng logic thao tác DOM trình duyệt vào Rust Backend.
+## 4. 🔧 Verification & SDK Sync
+
+1. **Rust Check & Tests**: Run `cargo check` and `cargo test` in `automa-core/`.
+2. **Export OpenAPI Spec**: `cargo run --bin automa-core -- --export-openapi openapi.json`.
+3. **Synchronize Monorepo API SDK**: Run `pnpm run sync:api` at monorepo root.
