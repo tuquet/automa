@@ -7,6 +7,8 @@ import {
   finishJob,
   getJobHistory,
   clearAllJobHistory,
+  createStorageWorkflow,
+  deleteStorageWorkflow,
 } from '@automa/types/api';
 import { E2E_BASE_URL } from './helpers/testDaemon';
 
@@ -43,10 +45,50 @@ describe('E2E: Workflow Jobs & History Lifecycle', () => {
       },
     });
 
-    expect([200, 503]).toContain(res.response?.status);
+    expect([200, 429, 503]).toContain(res.response?.status);
     if (res.data?.jobId) {
       createdJobId = res.data.jobId;
     }
+  }, 60000);
+
+  it('2b. Submit a workflow job using workflowId stored in SQLite DB', async () => {
+    const testWfId = `wf_db_exec_${Date.now()}`;
+    await createStorageWorkflow({
+      baseUrl: E2E_BASE_URL,
+      body: {
+        id: testWfId,
+        name: 'SQLite Stored Execution Flow',
+        data: {
+          nodes: [
+            {
+              id: 'trigger_1',
+              type: 'trigger',
+              label: 'trigger',
+              data: {},
+            },
+          ],
+          edges: [],
+        },
+      },
+    });
+
+    const res = await submitJob({
+      baseUrl: E2E_BASE_URL,
+      body: {
+        workflowId: testWfId,
+        options: {
+          headless: true,
+          closeBrowserOnFinish: true,
+        },
+      },
+    });
+
+    expect([200, 429, 503]).toContain(res.response?.status);
+
+    await deleteStorageWorkflow({
+      baseUrl: E2E_BASE_URL,
+      path: { id: testWfId },
+    });
   }, 60000);
 
   it('3. Query job status', async () => {

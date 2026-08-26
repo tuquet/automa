@@ -19,6 +19,10 @@ Vui lòng truy cập các liên kết dưới đây để đọc tài liệu:
    - Cấu trúc lưu trữ Local Vault, Campaigns, và Browsers.
 6. [🌐 Ma Trận Kiểm Thử Toàn Hệ Sinh Thái (Ecosystem Test Matrix)](./TEST_MATRIX.md)
    - Báo cáo và kim tự tháp kiểm thử đa tầng (Rust Backend 21 tests, VS Code 107 tests, Webview E2E, Root E2E).
+7. [⚡ Đặc Tả SRS Button Business Logic & Event-Driven Schema](./SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md)
+   - Đặc tả máy trạng thái FSM, Zero-Dummy UI và ánh xạ 100% nút bấm với Automa Core OpenAPI / WebSocket / SSE.
+8. [📘 Hướng Dẫn Tích Hợp & Triển Khai OpenAPI (Developer Guide)](./OPENAPI_INTEGRATION_GUIDE.md)
+   - Cẩm nang thực hành chuẩn công nghiệp (REST, SSE, WebSocket, Code Recipes, Error Handling, Vue 3 Pinia Composable).
 
 ---
 *Ghi chú: Thư mục `docs/` chỉ đóng vai trò là một Hub điều hướng phẳng. Vui lòng cập nhật tài liệu chi tiết vào `README.md` hoặc thư mục `docs/` của các submodule.*

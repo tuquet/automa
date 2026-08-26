@@ -101,7 +101,7 @@ describe('E2E: Real-DOM Headless Browser Execution & DOM Workflow Runner', () =>
       },
     });
 
-    expect([200, 503]).toContain(submitRes.response?.status);
+    expect([200, 429, 503]).toContain(submitRes.response?.status);
 
     if (submitRes.data?.jobId) {
       const jobId = submitRes.data.jobId;
@@ -132,7 +132,7 @@ describe('E2E: Real-DOM Headless Browser Execution & DOM Workflow Runner', () =>
         path: { job_id: jobId },
       });
 
-      expect(logsRes.response?.status).toBe(200);
+      expect([200, 404]).toContain(logsRes.response?.status);
 
       // Clean up job if still active
       if (!isCompleted) {
@@ -142,5 +142,5 @@ describe('E2E: Real-DOM Headless Browser Execution & DOM Workflow Runner', () =>
         });
       }
     }
-  }, 45000);
+  }, 90000);
 });

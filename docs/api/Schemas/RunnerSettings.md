@@ -9,6 +9,6 @@ tags: [api/schema]
 
 | Name | Type | Description |
 |---|---|---|
-| `autoCleanHistoryDays` *(req)* | integer |  |
-| `maxConcurrentJobs` *(req)* | integer |  |
-| `timeoutMs` *(req)* | integer |  |
+| `auto_clean_history_days` *(req)* | integer |  |
+| `max_concurrent_jobs` *(req)* | integer |  |
+| `timeout_ms` *(req)* | integer |  |

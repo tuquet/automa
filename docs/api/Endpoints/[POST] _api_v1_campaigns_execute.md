@@ -11,7 +11,7 @@ method: "POST"
 > **Method**: `POST`
 > **Path**: `/api/v1/campaigns/execute`
 
-Parses a campaign descriptor, provisions required browser profiles, allocates grid matrix slots, and starts parallel workflow execution jobs.
+Parses a campaign descriptor from SQLite database or file, provisions required browser profiles, allocates grid matrix slots, and starts parallel workflow execution jobs.
 
 ## Request Body
 

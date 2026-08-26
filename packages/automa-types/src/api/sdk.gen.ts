@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, ServerSentEventsResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AbortCampaignData, AbortCampaignErrors, AbortCampaignResponses, AddStorageCredentialData, AddStorageCredentialErrors, AddStorageCredentialResponses, AddStorageTableData, AddStorageTableErrors, AddStorageTableResponses, AddStorageTableRowData, AddStorageTableRowErrors, AddStorageTableRowResponses, AddStorageVariableData, AddStorageVariableErrors, AddStorageVariableResponses, AppendJobLogData, AppendJobLogErrors, AppendJobLogResponses, ClearAllJobHistoryData, ClearAllJobHistoryErrors, ClearAllJobHistoryResponses, CreateBrowserData, CreateBrowserErrors, CreateBrowserResponses, DeleteBrowserData, DeleteBrowserErrors, DeleteBrowserResponses, DeleteJobHistoryItemData, DeleteJobHistoryItemErrors, DeleteJobHistoryItemResponses, DeleteStorageCredentialData, DeleteStorageCredentialErrors, DeleteStorageCredentialResponses, DeleteStorageTableData, DeleteStorageTableErrors, DeleteStorageTableResponses, DeleteStorageVariableData, DeleteStorageVariableErrors, DeleteStorageVariableResponses, EncryptSecretData, EncryptSecretErrors, EncryptSecretResponses, ExecuteCampaignData, ExecuteCampaignErrors, ExecuteCampaignResponses, FinishJobData, FinishJobErrors, FinishJobResponses, GetActiveJobsData, GetActiveJobsResponses, GetAppSettingsData, GetAppSettingsErrors, GetAppSettingsResponses, GetBrowserCookiesData, GetBrowserCookiesErrors, GetBrowserCookiesResponses, GetBrowserDetailData, GetBrowserDetailErrors, GetBrowserDetailResponses, GetBrowsersData, GetBrowsersErrors, GetBrowsersResponses, GetCampaignMatrixStatusData, GetCampaignMatrixStatusErrors, GetCampaignMatrixStatusResponses, GetHealthData, GetHealthResponses, GetJobExecutionLogsData, GetJobExecutionLogsErrors, GetJobExecutionLogsResponses, GetJobHistoryData, GetJobHistoryErrors, GetJobHistoryResponses, GetJobStatusData, GetJobStatusErrors, GetJobStatusResponses, GetStorageCredentialsData, GetStorageCredentialsErrors, GetStorageCredentialsResponses, GetStorageTableRowsData, GetStorageTableRowsErrors, GetStorageTableRowsResponses, GetStorageTablesData, GetStorageTablesErrors, GetStorageTablesResponses, GetStorageVariablesData, GetStorageVariablesErrors, GetStorageVariablesResponses, GetSystemMetricsData, GetSystemMetricsResponses, GetWorkflowData, GetWorkflowErrors, GetWorkflowResponses, ImportBrowserCookiesData, ImportBrowserCookiesErrors, ImportBrowserCookiesResponses, ImportBrowsersCsvData, ImportBrowsersCsvErrors, ImportBrowsersCsvResponses, InstallBrowserBinaryData, InstallBrowserBinaryErrors, InstallBrowserBinaryResponses, KillAllBrowsersData, KillAllBrowsersResponses, KillJobData, KillJobErrors, KillJobResponses, LintWorkflowData, LintWorkflowResponses, ListStorageFilesData, ListStorageFilesErrors, ListStorageFilesResponses, OpenWebStudioData, OpenWebStudioResponses, PatchAppSettingsData, PatchAppSettingsErrors, PatchAppSettingsResponses, SaveWorkflowData, SaveWorkflowErrors, SaveWorkflowResponses, SideloadBrowserExtensionData, SideloadBrowserExtensionErrors, SideloadBrowserExtensionResponses, StartBrowserSessionData, StartBrowserSessionErrors, StartBrowserSessionResponses, StopBrowserSessionData, StopBrowserSessionResponses, SubmitJobData, SubmitJobErrors, SubmitJobResponses, SubscribeEventsSseData, SubscribeEventsSseResponses, UpdateAppSettingsData, UpdateAppSettingsErrors, UpdateAppSettingsResponses, UpdateBrowserData, UpdateBrowserErrors, UpdateBrowserResponses, WorkerSseData, WorkerSseResponses, WsHandlerData } from './types.gen';
+import type { AbortCampaignData, AbortCampaignErrors, AbortCampaignResponses, AddStorageCredentialData, AddStorageCredentialErrors, AddStorageCredentialResponses, AddStorageTableData, AddStorageTableErrors, AddStorageTableResponses, AddStorageTableRowData, AddStorageTableRowErrors, AddStorageTableRowResponses, AddStorageVariableData, AddStorageVariableErrors, AddStorageVariableResponses, AppendJobLogData, AppendJobLogErrors, AppendJobLogResponses, AutoDetectBrowsersData, AutoDetectBrowsersErrors, AutoDetectBrowsersResponses, ClearAllJobHistoryData, ClearAllJobHistoryErrors, ClearAllJobHistoryResponses, CreateBrowserData, CreateBrowserErrors, CreateBrowserResponses, CreateStorageCampaignData, CreateStorageCampaignErrors, CreateStorageCampaignResponses, CreateStorageWorkflowData, CreateStorageWorkflowErrors, CreateStorageWorkflowResponses, DeleteBrowserData, DeleteBrowserErrors, DeleteBrowserResponses, DeleteJobHistoryItemData, DeleteJobHistoryItemErrors, DeleteJobHistoryItemResponses, DeleteStorageCampaignData, DeleteStorageCampaignErrors, DeleteStorageCampaignResponses, DeleteStorageCredentialData, DeleteStorageCredentialErrors, DeleteStorageCredentialResponses, DeleteStorageTableData, DeleteStorageTableErrors, DeleteStorageTableResponses, DeleteStorageVariableData, DeleteStorageVariableErrors, DeleteStorageVariableResponses, DeleteStorageWorkflowData, DeleteStorageWorkflowErrors, DeleteStorageWorkflowResponses, EncryptSecretData, EncryptSecretErrors, EncryptSecretResponses, ExecuteCampaignData, ExecuteCampaignErrors, ExecuteCampaignResponses, FinishJobData, FinishJobErrors, FinishJobResponses, GetActiveJobsData, GetActiveJobsResponses, GetAppSettingsData, GetAppSettingsErrors, GetAppSettingsResponses, GetBrowserCookiesData, GetBrowserCookiesErrors, GetBrowserCookiesResponses, GetBrowserDetailData, GetBrowserDetailErrors, GetBrowserDetailResponses, GetBrowsersData, GetBrowsersErrors, GetBrowsersResponses, GetCampaignMatrixStatusData, GetCampaignMatrixStatusErrors, GetCampaignMatrixStatusResponses, GetHealthData, GetHealthResponses, GetJobExecutionLogsData, GetJobExecutionLogsErrors, GetJobExecutionLogsResponses, GetJobHistoryData, GetJobHistoryErrors, GetJobHistoryResponses, GetJobStatusData, GetJobStatusErrors, GetJobStatusResponses, GetStorageCampaignData, GetStorageCampaignErrors, GetStorageCampaignResponses, GetStorageCampaignsData, GetStorageCampaignsErrors, GetStorageCampaignsResponses, GetStorageCredentialsData, GetStorageCredentialsErrors, GetStorageCredentialsResponses, GetStorageTableRowsData, GetStorageTableRowsErrors, GetStorageTableRowsResponses, GetStorageTablesData, GetStorageTablesErrors, GetStorageTablesResponses, GetStorageVariablesData, GetStorageVariablesErrors, GetStorageVariablesResponses, GetStorageWorkflowData, GetStorageWorkflowErrors, GetStorageWorkflowResponses, GetStorageWorkflowsData, GetStorageWorkflowsErrors, GetStorageWorkflowsResponses, GetSystemMetricsData, GetSystemMetricsResponses, GetWorkflowData, GetWorkflowErrors, GetWorkflowResponses, ImportBrowserCookiesData, ImportBrowserCookiesErrors, ImportBrowserCookiesResponses, ImportBrowsersCsvData, ImportBrowsersCsvErrors, ImportBrowsersCsvResponses, ImportStorageCampaignData, ImportStorageCampaignErrors, ImportStorageCampaignResponses, ImportStorageWorkflowData, ImportStorageWorkflowErrors, ImportStorageWorkflowResponses, InstallBrowserBinaryData, InstallBrowserBinaryErrors, InstallBrowserBinaryResponses, KillAllBrowsersData, KillAllBrowsersResponses, KillJobData, KillJobErrors, KillJobResponses, LintWorkflowData, LintWorkflowResponses, ListStorageFilesData, ListStorageFilesErrors, ListStorageFilesResponses, OpenWebStudioData, OpenWebStudioResponses, PatchAppSettingsData, PatchAppSettingsErrors, PatchAppSettingsResponses, SaveWorkflowData, SaveWorkflowErrors, SaveWorkflowResponses, SideloadBrowserExtensionData, SideloadBrowserExtensionErrors, SideloadBrowserExtensionResponses, StartBrowserSessionData, StartBrowserSessionErrors, StartBrowserSessionResponses, StopBrowserSessionData, StopBrowserSessionResponses, SubmitJobData, SubmitJobErrors, SubmitJobResponses, SubscribeEventsSseData, SubscribeEventsSseResponses, UpdateAppSettingsData, UpdateAppSettingsErrors, UpdateAppSettingsResponses, UpdateBrowserData, UpdateBrowserErrors, UpdateBrowserResponses, UpdateStorageCampaignData, UpdateStorageCampaignErrors, UpdateStorageCampaignResponses, UpdateStorageWorkflowData, UpdateStorageWorkflowErrors, UpdateStorageWorkflowResponses, WorkerSseData, WorkerSseResponses, WsHandlerData } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -38,6 +38,13 @@ export const createBrowser = <ThrowOnError extends boolean = false>(options: Opt
         ...options.headers
     }
 });
+
+/**
+ * Auto-detect and register host browser profiles
+ *
+ * Scans host system for installed Chromium browsers (Chrome, Edge, Brave), creates profiles in SQLite if not existing, and configures default browser.
+ */
+export const autoDetectBrowsers = <ThrowOnError extends boolean = false>(options?: Options<AutoDetectBrowsersData, ThrowOnError>): RequestResult<AutoDetectBrowsersResponses, AutoDetectBrowsersErrors, ThrowOnError> => (options?.client ?? client).post<AutoDetectBrowsersResponses, AutoDetectBrowsersErrors, ThrowOnError>({ url: '/api/v1/browsers/auto-detect', ...options });
 
 /**
  * Batch import browser profiles from CSV
@@ -140,7 +147,7 @@ export const startBrowserSession = <ThrowOnError extends boolean = false>(option
 /**
  * Execute a multi-instance automation campaign
  *
- * Parses a campaign descriptor, provisions required browser profiles, allocates grid matrix slots, and starts parallel workflow execution jobs.
+ * Parses a campaign descriptor from SQLite database or file, provisions required browser profiles, allocates grid matrix slots, and starts parallel workflow execution jobs.
  */
 export const executeCampaign = <ThrowOnError extends boolean = false>(options: Options<ExecuteCampaignData, ThrowOnError>): RequestResult<ExecuteCampaignResponses, ExecuteCampaignErrors, ThrowOnError> => (options.client ?? client).post<ExecuteCampaignResponses, ExecuteCampaignErrors, ThrowOnError>({
     url: '/api/v1/campaigns/execute',
@@ -224,7 +231,7 @@ export const getActiveJobs = <ThrowOnError extends boolean = false>(options?: Op
 /**
  * Submit a workflow execution job
  *
- * Submits a new automation workflow job to be executed by a browser worker instance. Supports either a filesystem `workflowPath` or raw inline `workflowData`. Automatically ensures the required browser instance is launched and connected.
+ * Submits a new automation workflow job to be executed by a browser worker instance. Supports workflowId, inline workflowData, or filesystem workflowPath. Automatically ensures the required browser instance is launched and connected.
  */
 export const submitJob = <ThrowOnError extends boolean = false>(options: Options<SubmitJobData, ThrowOnError>): RequestResult<SubmitJobResponses, SubmitJobErrors, ThrowOnError> => (options.client ?? client).post<SubmitJobResponses, SubmitJobErrors, ThrowOnError>({
     url: '/api/v1/jobs',
@@ -271,9 +278,9 @@ export const getJobStatus = <ThrowOnError extends boolean = false>(options: Opti
 export const finishJob = <ThrowOnError extends boolean = false>(options: Options<FinishJobData, ThrowOnError>): RequestResult<FinishJobResponses, FinishJobErrors, ThrowOnError> => (options.client ?? client).patch<FinishJobResponses, FinishJobErrors, ThrowOnError>({ url: '/api/v1/jobs/{job_id}/status', ...options });
 
 /**
- * Validate and lint workflow AST graph
+ * Validate and lint Automa assets (Workflows, Campaigns, Browsers, Packages)
  *
- * Performs static analysis on workflow nodes, edge connections, parameter schemas, and detects structural defects.
+ * Performs static analysis on AST graph nodes, edge connections, parameter schemas, campaign schedules, and browser configs.
  */
 export const lintWorkflow = <ThrowOnError extends boolean = false>(options: Options<LintWorkflowData, ThrowOnError>): RequestResult<LintWorkflowResponses, unknown, ThrowOnError> => (options.client ?? client).post<LintWorkflowResponses, unknown, ThrowOnError>({
     url: '/api/v1/lint',
@@ -291,6 +298,69 @@ export const lintWorkflow = <ThrowOnError extends boolean = false>(options: Opti
  */
 export const encryptSecret = <ThrowOnError extends boolean = false>(options: Options<EncryptSecretData, ThrowOnError>): RequestResult<EncryptSecretResponses, EncryptSecretErrors, ThrowOnError> => (options.client ?? client).post<EncryptSecretResponses, EncryptSecretErrors, ThrowOnError>({
     url: '/api/v1/secrets/encrypt',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * List all campaigns from storage database
+ *
+ * Retrieves all campaigns persisted in the central SQLite database.
+ */
+export const getStorageCampaigns = <ThrowOnError extends boolean = false>(options?: Options<GetStorageCampaignsData, ThrowOnError>): RequestResult<GetStorageCampaignsResponses, GetStorageCampaignsErrors, ThrowOnError> => (options?.client ?? client).get<GetStorageCampaignsResponses, GetStorageCampaignsErrors, ThrowOnError>({ url: '/api/v1/storage/campaigns', ...options });
+
+/**
+ * Create or persist a campaign in database
+ *
+ * Creates a new campaign record or updates an existing record in SQLite database.
+ */
+export const createStorageCampaign = <ThrowOnError extends boolean = false>(options: Options<CreateStorageCampaignData, ThrowOnError>): RequestResult<CreateStorageCampaignResponses, CreateStorageCampaignErrors, ThrowOnError> => (options.client ?? client).post<CreateStorageCampaignResponses, CreateStorageCampaignErrors, ThrowOnError>({
+    url: '/api/v1/storage/campaigns',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Import a campaign JSON into storage database
+ *
+ * Parses and imports a campaign JSON object into SQLite database.
+ */
+export const importStorageCampaign = <ThrowOnError extends boolean = false>(options: Options<ImportStorageCampaignData, ThrowOnError>): RequestResult<ImportStorageCampaignResponses, ImportStorageCampaignErrors, ThrowOnError> => (options.client ?? client).post<ImportStorageCampaignResponses, ImportStorageCampaignErrors, ThrowOnError>({
+    url: '/api/v1/storage/campaigns/import',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Delete a campaign from storage database
+ *
+ * Removes a campaign record from SQLite database by ID.
+ */
+export const deleteStorageCampaign = <ThrowOnError extends boolean = false>(options: Options<DeleteStorageCampaignData, ThrowOnError>): RequestResult<DeleteStorageCampaignResponses, DeleteStorageCampaignErrors, ThrowOnError> => (options.client ?? client).delete<DeleteStorageCampaignResponses, DeleteStorageCampaignErrors, ThrowOnError>({ url: '/api/v1/storage/campaigns/{id}', ...options });
+
+/**
+ * Get a campaign by ID from storage database
+ *
+ * Retrieves the full configuration and metadata of a campaign from SQLite database.
+ */
+export const getStorageCampaign = <ThrowOnError extends boolean = false>(options: Options<GetStorageCampaignData, ThrowOnError>): RequestResult<GetStorageCampaignResponses, GetStorageCampaignErrors, ThrowOnError> => (options.client ?? client).get<GetStorageCampaignResponses, GetStorageCampaignErrors, ThrowOnError>({ url: '/api/v1/storage/campaigns/{id}', ...options });
+
+/**
+ * Update a campaign in storage database
+ *
+ * Modifies an existing campaign record in SQLite database.
+ */
+export const updateStorageCampaign = <ThrowOnError extends boolean = false>(options: Options<UpdateStorageCampaignData, ThrowOnError>): RequestResult<UpdateStorageCampaignResponses, UpdateStorageCampaignErrors, ThrowOnError> => (options.client ?? client).put<UpdateStorageCampaignResponses, UpdateStorageCampaignErrors, ThrowOnError>({
+    url: '/api/v1/storage/campaigns/{id}',
     ...options,
     headers: {
         'Content-Type': 'application/json',
@@ -413,17 +483,80 @@ export const deleteStorageVariable = <ThrowOnError extends boolean = false>(opti
 /**
  * Read workflow JSON file from filesystem
  *
- * Reads and parses an automation workflow file (.workflow.json) from the given filesystem path.
+ * Reads and parses an automation workflow file (.workflow.json) securely from the given filesystem path.
  */
 export const getWorkflow = <ThrowOnError extends boolean = false>(options: Options<GetWorkflowData, ThrowOnError>): RequestResult<GetWorkflowResponses, GetWorkflowErrors, ThrowOnError> => (options.client ?? client).get<GetWorkflowResponses, GetWorkflowErrors, ThrowOnError>({ url: '/api/v1/storage/workflow', ...options });
 
 /**
  * Save or update workflow JSON file
  *
- * Serializes and writes the workflow content to the specified path on disk, creating parent directories automatically if needed.
+ * Serializes and writes the workflow content securely to the specified path on disk, creating parent directories automatically if needed.
  */
 export const saveWorkflow = <ThrowOnError extends boolean = false>(options: Options<SaveWorkflowData, ThrowOnError>): RequestResult<SaveWorkflowResponses, SaveWorkflowErrors, ThrowOnError> => (options.client ?? client).put<SaveWorkflowResponses, SaveWorkflowErrors, ThrowOnError>({
     url: '/api/v1/storage/workflow',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * List all workflows from storage database
+ *
+ * Retrieves all workflow items persisted in the central SQLite database.
+ */
+export const getStorageWorkflows = <ThrowOnError extends boolean = false>(options?: Options<GetStorageWorkflowsData, ThrowOnError>): RequestResult<GetStorageWorkflowsResponses, GetStorageWorkflowsErrors, ThrowOnError> => (options?.client ?? client).get<GetStorageWorkflowsResponses, GetStorageWorkflowsErrors, ThrowOnError>({ url: '/api/v1/storage/workflows', ...options });
+
+/**
+ * Create or persist a workflow in database
+ *
+ * Creates a new workflow record or updates an existing record in the SQLite database.
+ */
+export const createStorageWorkflow = <ThrowOnError extends boolean = false>(options: Options<CreateStorageWorkflowData, ThrowOnError>): RequestResult<CreateStorageWorkflowResponses, CreateStorageWorkflowErrors, ThrowOnError> => (options.client ?? client).post<CreateStorageWorkflowResponses, CreateStorageWorkflowErrors, ThrowOnError>({
+    url: '/api/v1/storage/workflows',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Import a workflow JSON into storage database
+ *
+ * Parses and imports a workflow JSON object (from file or client) into SQLite database.
+ */
+export const importStorageWorkflow = <ThrowOnError extends boolean = false>(options: Options<ImportStorageWorkflowData, ThrowOnError>): RequestResult<ImportStorageWorkflowResponses, ImportStorageWorkflowErrors, ThrowOnError> => (options.client ?? client).post<ImportStorageWorkflowResponses, ImportStorageWorkflowErrors, ThrowOnError>({
+    url: '/api/v1/storage/workflows/import',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Delete a workflow from storage database
+ *
+ * Removes a workflow record from the central SQLite database by ID.
+ */
+export const deleteStorageWorkflow = <ThrowOnError extends boolean = false>(options: Options<DeleteStorageWorkflowData, ThrowOnError>): RequestResult<DeleteStorageWorkflowResponses, DeleteStorageWorkflowErrors, ThrowOnError> => (options.client ?? client).delete<DeleteStorageWorkflowResponses, DeleteStorageWorkflowErrors, ThrowOnError>({ url: '/api/v1/storage/workflows/{id}', ...options });
+
+/**
+ * Get a workflow by ID from storage database
+ *
+ * Retrieves the full AST and metadata of a workflow by its unique ID from SQLite database.
+ */
+export const getStorageWorkflow = <ThrowOnError extends boolean = false>(options: Options<GetStorageWorkflowData, ThrowOnError>): RequestResult<GetStorageWorkflowResponses, GetStorageWorkflowErrors, ThrowOnError> => (options.client ?? client).get<GetStorageWorkflowResponses, GetStorageWorkflowErrors, ThrowOnError>({ url: '/api/v1/storage/workflows/{id}', ...options });
+
+/**
+ * Update a workflow in storage database
+ *
+ * Modifies the metadata or graph AST of an existing workflow in SQLite database.
+ */
+export const updateStorageWorkflow = <ThrowOnError extends boolean = false>(options: Options<UpdateStorageWorkflowData, ThrowOnError>): RequestResult<UpdateStorageWorkflowResponses, UpdateStorageWorkflowErrors, ThrowOnError> => (options.client ?? client).put<UpdateStorageWorkflowResponses, UpdateStorageWorkflowErrors, ThrowOnError>({
+    url: '/api/v1/storage/workflows/{id}',
     ...options,
     headers: {
         'Content-Type': 'application/json',

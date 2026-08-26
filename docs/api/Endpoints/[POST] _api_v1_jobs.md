@@ -11,7 +11,7 @@ method: "POST"
 > **Method**: `POST`
 > **Path**: `/api/v1/jobs`
 
-Submits a new automation workflow job to be executed by a browser worker instance. Supports either a filesystem `workflowPath` or raw inline `workflowData`. Automatically ensures the required browser instance is launched and connected.
+Submits a new automation workflow job to be executed by a browser worker instance. Supports workflowId, inline workflowData, or filesystem workflowPath. Automatically ensures the required browser instance is launched and connected.
 
 ## Request Body
 

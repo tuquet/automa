@@ -38,7 +38,7 @@ description: Quy tắc bắt buộc cho AI khi sinh mã (generate) JSON workflow
 
 ## 8. Modularization (Module hóa workflow)
 - **BẮT BUỘC THIẾT KẾ** Micro-Workflows để tránh Token Limit: **PHẢI SINH** nhiều file `.workflow.json` nhỏ, mỗi file có ID Nanoid.
-- Main Workflow **CHỈ ĐƯỢC PHÉP CHỨA** các block `execute-workflow` (chỉ định `executeId` bằng ID các file con). `WorkflowLinter` **BẮT BUỘC SẼ** tự động quét đệ quy Vault để Cross-Reference nối chúng lại.
+- Main Workflow **CHỈ ĐƯỢC PHÉP CHỨA** các block `execute-workflow` (chỉ định `executeId` bằng ID workflow con). Các sub-workflows được liên kết và quản lý tập trung qua Storage API (`/api/v1/storage/workflows`) hoặc nhúng trực tiếp.
 
 ## 9. Auth/Cookies Bypass & Anti-Detection
 - **Browsers**: **BẮT BUỘC ƯU TIÊN SỬ DỤNG** `--browser <ID>` khi chạy CLI thay vì block giải captcha. Trình duyệt **CHẮC CHẮN SẼ** nạp thư mục `User Data Dir` chứa Cookies cũ, bypass Login.

@@ -90,10 +90,51 @@ export type BrowserResponse = {
 };
 
 export type BrowserSettings = {
+    default_profile_id?: string | null;
     default_type: string;
     default_user_agent?: string | null;
     executable_path?: string | null;
     headless: boolean;
+};
+
+/**
+ * Campaign descriptor stored in central SQLite database
+ */
+export type CampaignStorageItem = {
+    /**
+     * Creation timestamp (ISO 8601)
+     */
+    createdAt: string;
+    /**
+     * Optional cron schedule expression
+     */
+    cron?: string | null;
+    /**
+     * Campaign data (members, tasks, matrix, concurrency settings)
+     */
+    data: {
+        [key: string]: unknown;
+    };
+    /**
+     * Optional campaign description
+     */
+    description?: string | null;
+    /**
+     * Unique campaign identifier
+     */
+    id: string;
+    /**
+     * Campaign display name
+     */
+    name: string;
+    /**
+     * Last modification timestamp (ISO 8601)
+     */
+    updatedAt: string;
+    /**
+     * Semantic version
+     */
+    version: string;
 };
 
 export type Cookie = {
@@ -131,6 +172,98 @@ export type CreateBrowserRequest = {
      * Custom User-Agent header
      */
     userAgent?: string | null;
+};
+
+/**
+ * Request payload for creating a new campaign in SQLite database
+ */
+export type CreateCampaignStorageRequest = {
+    /**
+     * Optional cron expression
+     */
+    cron?: string | null;
+    /**
+     * Campaign data (members, tasks, matrix)
+     */
+    data: {
+        [key: string]: unknown;
+    };
+    /**
+     * Optional campaign description
+     */
+    description?: string | null;
+    /**
+     * Optional custom identifier
+     */
+    id?: string | null;
+    /**
+     * Campaign display name
+     */
+    name: string;
+    /**
+     * Optional version (defaults to 1.0.0)
+     */
+    version?: string | null;
+};
+
+/**
+ * Request payload for creating a new workflow in SQLite database
+ */
+export type CreateWorkflowStorageRequest = {
+    /**
+     * Workflow graph AST (nodes, edges, settings)
+     */
+    data: {
+        [key: string]: unknown;
+    };
+    /**
+     * Optional workflow description
+     */
+    description?: string | null;
+    /**
+     * Optional UI icon name
+     */
+    icon?: string | null;
+    /**
+     * Optional custom identifier (auto-generated if omitted)
+     */
+    id?: string | null;
+    /**
+     * Workflow display name
+     */
+    name: string;
+    /**
+     * Optional version (defaults to 1.0.0)
+     */
+    version?: string | null;
+};
+
+/**
+ * Response returned after successfully deleting a campaign
+ */
+export type DeleteCampaignResponse = {
+    /**
+     * Confirmation message
+     */
+    message: string;
+    /**
+     * True if deletion succeeded
+     */
+    success: boolean;
+};
+
+/**
+ * Response returned after successfully deleting a workflow
+ */
+export type DeleteWorkflowResponse = {
+    /**
+     * Confirmation message
+     */
+    message: string;
+    /**
+     * True if deletion succeeded
+     */
+    success: boolean;
 };
 
 export type DisplaySettings = {
@@ -265,6 +398,22 @@ export type HistoryActionResponse = {
 };
 
 /**
+ * Request payload for importing a campaign into SQLite database
+ */
+export type ImportCampaignStorageRequest = {
+    /**
+     * Raw campaign JSON content
+     */
+    campaign: {
+        [key: string]: unknown;
+    };
+    /**
+     * Optional custom ID
+     */
+    id?: string | null;
+};
+
+/**
  * Request payload containing raw CSV formatted browser profiles
  */
 export type ImportCsvPayload = {
@@ -279,6 +428,10 @@ export type ImportCsvPayload = {
  */
 export type ImportCsvResponse = {
     /**
+     * Number of profiles successfully imported
+     */
+    imported: number;
+    /**
      * Result description message
      */
     message: string;
@@ -286,6 +439,22 @@ export type ImportCsvResponse = {
      * Status code indicator
      */
     status: string;
+};
+
+/**
+ * Request payload for importing a workflow into SQLite database
+ */
+export type ImportWorkflowStorageRequest = {
+    /**
+     * Optional custom ID to assign
+     */
+    id?: string | null;
+    /**
+     * Raw workflow JSON content
+     */
+    workflow: {
+        [key: string]: unknown;
+    };
 };
 
 export type JobDetails = {
@@ -344,54 +513,99 @@ export type JobStatusResponse = {
 };
 
 /**
- * Diagnostic issue report detected by the workflow linter
+ * Diagnostic issue report detected by the linter
  */
 export type LintIssue = {
+    /**
+     * Machine-readable rule code for IDE filtering and categorization
+     */
+    code?: string | null;
     /**
      * Detailed diagnostic explanation
      */
     message: string;
     /**
+     * Node ID associated with this diagnostic issue, if applicable
+     */
+    nodeId?: string | null;
+    /**
      * JSONPath location of the affected element
      */
     path?: string | null;
     /**
-     * Severity level ("warning", "error")
+     * Severity level ("warning", "error", "info")
      */
-    severity: string;
+    severity: LintSeverity;
 };
 
 /**
- * Request payload to lint workflow AST nodes and edges
+ * Execution context mode for the linter
+ */
+export type LintMode = 'editor' | 'runner';
+
+/**
+ * Request payload to lint workflows, campaigns, browsers, or packages
  */
 export type LintRequest = {
+    /**
+     * Optional raw JSON content or document for auto-detection
+     */
+    content?: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * Optional entire workflow payload containing nested drawflow
+     */
+    drawflow?: {
+        [key: string]: unknown;
+    } | null;
     /**
      * Array of workflow edge connection descriptors
      */
     edges?: Array<{
         [key: string]: unknown;
     }> | null;
+    mode?: null | LintMode;
     /**
      * Array of workflow block node definitions
      */
     nodes?: Array<{
         [key: string]: unknown;
     }> | null;
+    targetType?: null | LintTargetType;
 };
 
 /**
- * Result of workflow AST validation and lint checks
+ * Result of static AST and schema validation
  */
 export type LintResponse = {
     /**
-     * List of detected validation warnings and errors
+     * List of detected validation warnings, errors, and info diagnostics
      */
     issues: Array<LintIssue>;
     /**
-     * Whether the workflow passed validation without errors
+     * Mode used during evaluation
+     */
+    mode: LintMode;
+    /**
+     * Detected asset target type
+     */
+    targetType: LintTargetType;
+    /**
+     * Whether the asset passed validation without errors
      */
     valid: boolean;
 };
+
+/**
+ * Severity level of detected lint diagnostic
+ */
+export type LintSeverity = 'error' | 'warning' | 'info';
+
+/**
+ * Target asset type being validated
+ */
+export type LintTargetType = 'workflow' | 'campaign' | 'browser' | 'package' | 'auto';
 
 export type LogItem = {
     createdAt: string;
@@ -519,6 +733,10 @@ export type SideloadExtensionResponse = {
      * Status code indicator
      */
     status: string;
+    /**
+     * Whether sideload succeeded
+     */
+    success: boolean;
 };
 
 /**
@@ -667,13 +885,17 @@ export type SubmitJobOptions = {
 export type SubmitJobPayload = {
     options?: null | SubmitJobOptions;
     /**
-     * Raw inline workflow JSON payload (alternative to workflowPath)
+     * Raw inline workflow JSON payload (alternative to workflowPath or workflowId)
      */
     workflowData?: {
         [key: string]: unknown;
     } | null;
     /**
-     * Absolute or relative filesystem path to the `.workflow.json` file
+     * Unique identifier of the workflow to execute
+     */
+    workflowId?: string | null;
+    /**
+     * Absolute or relative filesystem path to the `.workflow.json` file (deprecated, prefer workflowId)
      */
     workflowPath?: string | null;
 };
@@ -777,10 +999,39 @@ export type UpdateBrowserRequest = {
 };
 
 export type UpdateBrowserSettingsRequest = {
+    default_profile_id?: string | null;
     default_type?: string | null;
     default_user_agent?: string | null;
     executable_path?: string | null;
     headless?: boolean | null;
+};
+
+/**
+ * Request payload for updating an existing campaign in SQLite database
+ */
+export type UpdateCampaignStorageRequest = {
+    /**
+     * Optional updated cron expression
+     */
+    cron?: string | null;
+    /**
+     * Optional updated campaign data
+     */
+    data?: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * Optional updated description
+     */
+    description?: string | null;
+    /**
+     * Optional updated name
+     */
+    name?: string | null;
+    /**
+     * Optional updated version
+     */
+    version?: string | null;
 };
 
 export type UpdateDisplaySettingsRequest = {
@@ -814,6 +1065,74 @@ export type UpdateRunnerSettingsRequest = {
     auto_clean_history_days?: number | null;
     max_concurrent_jobs?: number | null;
     timeout_ms?: number | null;
+};
+
+/**
+ * Request payload for updating an existing workflow in SQLite database
+ */
+export type UpdateWorkflowStorageRequest = {
+    /**
+     * Optional updated workflow graph AST
+     */
+    data?: {
+        [key: string]: unknown;
+    } | null;
+    /**
+     * Optional updated description
+     */
+    description?: string | null;
+    /**
+     * Optional updated icon
+     */
+    icon?: string | null;
+    /**
+     * Optional updated name
+     */
+    name?: string | null;
+    /**
+     * Optional updated version
+     */
+    version?: string | null;
+};
+
+/**
+ * Workflow descriptor stored in central SQLite database
+ */
+export type WorkflowStorageItem = {
+    /**
+     * Creation timestamp (ISO 8601)
+     */
+    createdAt: string;
+    /**
+     * Workflow graph AST (nodes, edges, settings)
+     */
+    data: {
+        [key: string]: unknown;
+    };
+    /**
+     * Optional workflow description
+     */
+    description?: string | null;
+    /**
+     * Optional UI icon identifier
+     */
+    icon?: string | null;
+    /**
+     * Unique workflow identifier
+     */
+    id: string;
+    /**
+     * Workflow display name
+     */
+    name: string;
+    /**
+     * Last modification timestamp (ISO 8601)
+     */
+    updatedAt: string;
+    /**
+     * Semantic version of the workflow
+     */
+    version: string;
 };
 
 export type GetBrowsersData = {
@@ -867,6 +1186,31 @@ export type CreateBrowserResponses = {
      */
     200: unknown;
 };
+
+export type AutoDetectBrowsersData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/browsers/auto-detect';
+};
+
+export type AutoDetectBrowsersErrors = {
+    /**
+     * Database error during auto-detection
+     */
+    500: ApiErrorResponse;
+};
+
+export type AutoDetectBrowsersError = AutoDetectBrowsersErrors[keyof AutoDetectBrowsersErrors];
+
+export type AutoDetectBrowsersResponses = {
+    /**
+     * List of all registered browser profiles after detection
+     */
+    200: Array<BrowserResponse>;
+};
+
+export type AutoDetectBrowsersResponse = AutoDetectBrowsersResponses[keyof AutoDetectBrowsersResponses];
 
 export type ImportBrowsersCsvData = {
     body: ImportCsvPayload;
@@ -1633,6 +1977,195 @@ export type EncryptSecretResponses = {
 
 export type EncryptSecretResponse2 = EncryptSecretResponses[keyof EncryptSecretResponses];
 
+export type GetStorageCampaignsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/storage/campaigns';
+};
+
+export type GetStorageCampaignsErrors = {
+    /**
+     * Database read error
+     */
+    500: ApiErrorResponse;
+};
+
+export type GetStorageCampaignsError = GetStorageCampaignsErrors[keyof GetStorageCampaignsErrors];
+
+export type GetStorageCampaignsResponses = {
+    /**
+     * List of campaigns
+     */
+    200: Array<CampaignStorageItem>;
+};
+
+export type GetStorageCampaignsResponse = GetStorageCampaignsResponses[keyof GetStorageCampaignsResponses];
+
+export type CreateStorageCampaignData = {
+    body: CreateCampaignStorageRequest;
+    path?: never;
+    query?: never;
+    url: '/api/v1/storage/campaigns';
+};
+
+export type CreateStorageCampaignErrors = {
+    /**
+     * Invalid campaign payload
+     */
+    400: ApiErrorResponse;
+    /**
+     * Database write error
+     */
+    500: ApiErrorResponse;
+};
+
+export type CreateStorageCampaignError = CreateStorageCampaignErrors[keyof CreateStorageCampaignErrors];
+
+export type CreateStorageCampaignResponses = {
+    /**
+     * Campaign created successfully
+     */
+    200: CampaignStorageItem;
+};
+
+export type CreateStorageCampaignResponse = CreateStorageCampaignResponses[keyof CreateStorageCampaignResponses];
+
+export type ImportStorageCampaignData = {
+    body: ImportCampaignStorageRequest;
+    path?: never;
+    query?: never;
+    url: '/api/v1/storage/campaigns/import';
+};
+
+export type ImportStorageCampaignErrors = {
+    /**
+     * Invalid campaign JSON
+     */
+    400: ApiErrorResponse;
+    /**
+     * Database write error
+     */
+    500: ApiErrorResponse;
+};
+
+export type ImportStorageCampaignError = ImportStorageCampaignErrors[keyof ImportStorageCampaignErrors];
+
+export type ImportStorageCampaignResponses = {
+    /**
+     * Campaign imported successfully
+     */
+    200: CampaignStorageItem;
+};
+
+export type ImportStorageCampaignResponse = ImportStorageCampaignResponses[keyof ImportStorageCampaignResponses];
+
+export type DeleteStorageCampaignData = {
+    body?: never;
+    path: {
+        /**
+         * Unique campaign identifier
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/storage/campaigns/{id}';
+};
+
+export type DeleteStorageCampaignErrors = {
+    /**
+     * Campaign not found
+     */
+    404: ApiErrorResponse;
+    /**
+     * Database deletion error
+     */
+    500: ApiErrorResponse;
+};
+
+export type DeleteStorageCampaignError = DeleteStorageCampaignErrors[keyof DeleteStorageCampaignErrors];
+
+export type DeleteStorageCampaignResponses = {
+    /**
+     * Campaign deleted successfully
+     */
+    200: DeleteCampaignResponse;
+};
+
+export type DeleteStorageCampaignResponse = DeleteStorageCampaignResponses[keyof DeleteStorageCampaignResponses];
+
+export type GetStorageCampaignData = {
+    body?: never;
+    path: {
+        /**
+         * Unique campaign identifier
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/storage/campaigns/{id}';
+};
+
+export type GetStorageCampaignErrors = {
+    /**
+     * Campaign not found
+     */
+    404: ApiErrorResponse;
+    /**
+     * Database read error
+     */
+    500: ApiErrorResponse;
+};
+
+export type GetStorageCampaignError = GetStorageCampaignErrors[keyof GetStorageCampaignErrors];
+
+export type GetStorageCampaignResponses = {
+    /**
+     * Campaign details
+     */
+    200: CampaignStorageItem;
+};
+
+export type GetStorageCampaignResponse = GetStorageCampaignResponses[keyof GetStorageCampaignResponses];
+
+export type UpdateStorageCampaignData = {
+    body: UpdateCampaignStorageRequest;
+    path: {
+        /**
+         * Unique campaign identifier
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/storage/campaigns/{id}';
+};
+
+export type UpdateStorageCampaignErrors = {
+    /**
+     * Invalid update payload
+     */
+    400: ApiErrorResponse;
+    /**
+     * Campaign not found
+     */
+    404: ApiErrorResponse;
+    /**
+     * Database write error
+     */
+    500: ApiErrorResponse;
+};
+
+export type UpdateStorageCampaignError = UpdateStorageCampaignErrors[keyof UpdateStorageCampaignErrors];
+
+export type UpdateStorageCampaignResponses = {
+    /**
+     * Campaign updated successfully
+     */
+    200: CampaignStorageItem;
+};
+
+export type UpdateStorageCampaignResponse = UpdateStorageCampaignResponses[keyof UpdateStorageCampaignResponses];
+
 export type GetStorageCredentialsData = {
     body?: never;
     path?: never;
@@ -1728,7 +2261,7 @@ export type ListStorageFilesData = {
 
 export type ListStorageFilesErrors = {
     /**
-     * Failed to scan storage files
+     * Failed to list storage files
      */
     500: ApiErrorResponse;
 };
@@ -2002,7 +2535,7 @@ export type GetWorkflowData = {
     path?: never;
     query: {
         /**
-         * Full filesystem path to the target .workflow.json file
+         * Full filesystem path or relative workspace path to the target .workflow.json file
          */
         path: string;
     };
@@ -2053,6 +2586,195 @@ export type SaveWorkflowResponses = {
 };
 
 export type SaveWorkflowResponse2 = SaveWorkflowResponses[keyof SaveWorkflowResponses];
+
+export type GetStorageWorkflowsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/storage/workflows';
+};
+
+export type GetStorageWorkflowsErrors = {
+    /**
+     * Database read error
+     */
+    500: ApiErrorResponse;
+};
+
+export type GetStorageWorkflowsError = GetStorageWorkflowsErrors[keyof GetStorageWorkflowsErrors];
+
+export type GetStorageWorkflowsResponses = {
+    /**
+     * List of workflows
+     */
+    200: Array<WorkflowStorageItem>;
+};
+
+export type GetStorageWorkflowsResponse = GetStorageWorkflowsResponses[keyof GetStorageWorkflowsResponses];
+
+export type CreateStorageWorkflowData = {
+    body: CreateWorkflowStorageRequest;
+    path?: never;
+    query?: never;
+    url: '/api/v1/storage/workflows';
+};
+
+export type CreateStorageWorkflowErrors = {
+    /**
+     * Invalid workflow payload
+     */
+    400: ApiErrorResponse;
+    /**
+     * Database write error
+     */
+    500: ApiErrorResponse;
+};
+
+export type CreateStorageWorkflowError = CreateStorageWorkflowErrors[keyof CreateStorageWorkflowErrors];
+
+export type CreateStorageWorkflowResponses = {
+    /**
+     * Workflow created successfully
+     */
+    200: WorkflowStorageItem;
+};
+
+export type CreateStorageWorkflowResponse = CreateStorageWorkflowResponses[keyof CreateStorageWorkflowResponses];
+
+export type ImportStorageWorkflowData = {
+    body: ImportWorkflowStorageRequest;
+    path?: never;
+    query?: never;
+    url: '/api/v1/storage/workflows/import';
+};
+
+export type ImportStorageWorkflowErrors = {
+    /**
+     * Invalid workflow JSON
+     */
+    400: ApiErrorResponse;
+    /**
+     * Database write error
+     */
+    500: ApiErrorResponse;
+};
+
+export type ImportStorageWorkflowError = ImportStorageWorkflowErrors[keyof ImportStorageWorkflowErrors];
+
+export type ImportStorageWorkflowResponses = {
+    /**
+     * Workflow imported successfully
+     */
+    200: WorkflowStorageItem;
+};
+
+export type ImportStorageWorkflowResponse = ImportStorageWorkflowResponses[keyof ImportStorageWorkflowResponses];
+
+export type DeleteStorageWorkflowData = {
+    body?: never;
+    path: {
+        /**
+         * Unique workflow identifier
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/storage/workflows/{id}';
+};
+
+export type DeleteStorageWorkflowErrors = {
+    /**
+     * Workflow not found
+     */
+    404: ApiErrorResponse;
+    /**
+     * Database deletion error
+     */
+    500: ApiErrorResponse;
+};
+
+export type DeleteStorageWorkflowError = DeleteStorageWorkflowErrors[keyof DeleteStorageWorkflowErrors];
+
+export type DeleteStorageWorkflowResponses = {
+    /**
+     * Workflow deleted successfully
+     */
+    200: DeleteWorkflowResponse;
+};
+
+export type DeleteStorageWorkflowResponse = DeleteStorageWorkflowResponses[keyof DeleteStorageWorkflowResponses];
+
+export type GetStorageWorkflowData = {
+    body?: never;
+    path: {
+        /**
+         * Unique workflow identifier
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/storage/workflows/{id}';
+};
+
+export type GetStorageWorkflowErrors = {
+    /**
+     * Workflow not found
+     */
+    404: ApiErrorResponse;
+    /**
+     * Database read error
+     */
+    500: ApiErrorResponse;
+};
+
+export type GetStorageWorkflowError = GetStorageWorkflowErrors[keyof GetStorageWorkflowErrors];
+
+export type GetStorageWorkflowResponses = {
+    /**
+     * Workflow details
+     */
+    200: WorkflowStorageItem;
+};
+
+export type GetStorageWorkflowResponse = GetStorageWorkflowResponses[keyof GetStorageWorkflowResponses];
+
+export type UpdateStorageWorkflowData = {
+    body: UpdateWorkflowStorageRequest;
+    path: {
+        /**
+         * Unique workflow identifier
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/storage/workflows/{id}';
+};
+
+export type UpdateStorageWorkflowErrors = {
+    /**
+     * Invalid update payload
+     */
+    400: ApiErrorResponse;
+    /**
+     * Workflow not found
+     */
+    404: ApiErrorResponse;
+    /**
+     * Database write error
+     */
+    500: ApiErrorResponse;
+};
+
+export type UpdateStorageWorkflowError = UpdateStorageWorkflowErrors[keyof UpdateStorageWorkflowErrors];
+
+export type UpdateStorageWorkflowResponses = {
+    /**
+     * Workflow updated successfully
+     */
+    200: WorkflowStorageItem;
+};
+
+export type UpdateStorageWorkflowResponse = UpdateStorageWorkflowResponses[keyof UpdateStorageWorkflowResponses];
 
 export type InstallBrowserBinaryData = {
     body?: never;

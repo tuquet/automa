@@ -5,13 +5,13 @@ tags:
 path: "/api/v1/lint"
 method: "POST"
 ---
-# Validate and lint workflow AST graph
+# Validate and lint Automa assets (Workflows, Campaigns, Browsers, Packages)
 
 > [!info] 
 > **Method**: `POST`
 > **Path**: `/api/v1/lint`
 
-Performs static analysis on workflow nodes, edge connections, parameter schemas, and detects structural defects.
+Performs static analysis on AST graph nodes, edge connections, parameter schemas, campaign schedules, and browser configs.
 
 ## Request Body
 

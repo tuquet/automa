@@ -36,11 +36,12 @@ graph TD
 
 | Phân Hệ (Submodule) | Công Nghệ Kiểm Thử | Số Tests / Suites | Trạng Thái | Tài Liệu Chi Tiết | Lệnh Thực Thi |
 | :--- | :--- | :---: | :---: | :--- | :--- |
-| **`automa-vscode`** | Vitest v4 + Playwright | **107 tests / 23 suites** | ✅ **Passed** | [📄 automa-vscode Test Matrix](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-vscode/docs/TEST_MATRIX.md) | `pnpm -F vscode-automa test` |
-| **`automa-core`** | Cargo Test (Rust) | **21 tests** | ✅ **Passed** | [📄 automa-core README](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-core/README.md) | `cargo test --manifest-path automa-core/Cargo.toml` |
-| **`automa-ext`** | Webpack 5 + ESLint | **Build & Lint Pipeline** | ✅ **Passed** | [📄 automa-ext README](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-ext/README.md) | `pnpm -F automa build:studio` |
-| **`automa-types`** | TypeScript Compiler (`tsc`) | **Wire Contract & SDK** | ✅ **Passed** | [📄 automa-types README](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/packages/automa-types/README.md) | `pnpm -F @automa/types build` |
-| **Root E2E Suite** | Vitest E2E + Live Daemon | **4 Kịch bản Tích hợp** | ✅ **Passed** | [📄 tests/e2e Directory](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/tests/e2e) | `pnpm test` / `node scripts/test-all.mjs` |
+| **`automa-vsce`** | Vitest v4 + Biome | **120 tests / 27 suites** | ✅ **Passed** | [📄 automa-vsce Test Matrix](../automa-vsce/docs/TEST_MATRIX.md) | `pnpm -F vscode-automa test` |
+| **`automa-core`** | Cargo Test (In-Memory SQLite) | **55 tests** | ✅ **Passed** | [📄 automa-core README](../automa-core/README.md) | `cargo test --manifest-path automa-core/Cargo.toml --lib` |
+| **`automa-desk`** | Vitest v4 + Istanbul | **122 tests / 19 suites** | ✅ **Passed** | [📄 automa-desk README](../automa-desk/README.md) | `pnpm -F @automa/desk test:unit` |
+| **`automa-webe`** | Webpack 5 + ESLint | **Studio & Silent Runner** | ✅ **Passed** | [📄 automa-webe README](../automa-webe/README.md) | `pnpm -F automa build:studio` |
+| **`automa-types`** | TypeScript Compiler (`tsc`) | **OpenAPI Typed SDK** | ✅ **Passed** | [📄 automa-types README](../packages/automa-types/README.md) | `pnpm -F @automa/types build` |
+| **Root E2E Suite** | Vitest E2E + Typed SDK (Port 8766) | **96 tests / 19 suites** | ✅ **Passed** | [📄 tests/e2e Directory](../tests/e2e) | `pnpm test` / `node scripts/test-all.mjs` |
 
 ---
 
@@ -48,20 +49,20 @@ graph TD
 
 ### 1. Kiểm tra toàn bộ hệ sinh thái (All Packages)
 ```bash
-# Chạy script điều phối kiểm thử tất cả các gói
+# Chạy script điều phối kiểm thử 4 tầng của toàn bộ monorepo
 pnpm test
 # hoặc
 node scripts/test-all.mjs
 ```
 
 ### 2. Kiểm thử riêng lẻ từng phân hệ
-- **VS Code Extension (107 tests)**:
+- **VS Code Extension (118 tests / 26 suites)**:
   ```bash
   pnpm -F vscode-automa test
   ```
-- **Rust Daemon Core (21 tests)**:
+- **Rust Daemon Core (55 tests)**:
   ```bash
-  cargo test --manifest-path automa-core/Cargo.toml
+  cargo test --manifest-path automa-core/Cargo.toml --lib
   ```
 - **Kiểm tra tự động sinh mã OpenAPI SDK (Zero-conflict)**:
   ```bash
@@ -76,6 +77,6 @@ node scripts/test-all.mjs
 
 ## 🔗 4. Liên Kết Điều Hướng
 
-- [🏠 Documentation Hub](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/docs/Home.md)
-- [💻 Chi Tiết Ma Trận Kiểm Thử automa-vscode (107 tests)](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-vscode/docs/TEST_MATRIX.md)
-- [📚 Danh Mục Hướng Dẫn Kỹ Thuật automa-vscode](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/automa-vscode/docs/README.md)
+- [🏠 Documentation Hub](Home.md)
+- [💻 Chi Tiết Ma Trận Kiểm Thử automa-vsce (119 tests)](../automa-vsce/docs/TEST_MATRIX.md)
+- [📚 Danh Mục Hướng Dẫn Kỹ Thuật automa-vsce](../automa-vsce/docs/README.md)

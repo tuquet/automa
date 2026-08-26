@@ -76,3 +76,10 @@ pub async fn submit_job(
 1. **Rust Check & Tests**: Run `cargo check` and `cargo test` in `automa-core/`.
 2. **Export OpenAPI Spec**: `cargo run --bin automa-core -- --export-openapi openapi.json`.
 3. **Synchronize Monorepo API SDK**: Run `pnpm run sync:api` at monorepo root.
+
+---
+
+## 5. 📚 Canonical Specifications & Anti-Hallucination Guardrails
+
+- [**SRS Button Business Logic & Event-Driven Schema**](../../docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md): Master specification for button actions, FSM state machines, and SSE/WS real-time event mapping.
+- [**OpenAPI Integration Guide**](../../docs/OPENAPI_INTEGRATION_GUIDE.md): Master manual for OpenAPI routes, DTO structures, and SDK generation.

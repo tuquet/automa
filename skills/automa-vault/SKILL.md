@@ -11,8 +11,8 @@ File layout conventions, Campaign matrix scheduling, and browser profile specifi
 
 ## 1. 🎯 Scope: Global Storage vs Storage Workspace
 
-- **Global Storage**: SQLite database managed by `automa-core` (`Tables`, `Variables`, `Credentials`).
-- **Storage Workspace (`automa-vault`)**: Disk directory tree containing scenario files (`*.workflow.json`), multi-browser campaigns (`*.campaign.json`), and browser profiles (`*.browser.json`).
+- **Global Storage (Runtime Truth)**: SQLite database managed by `automa-core` (`Tables`, `Variables`, `Credentials`, `Browsers`, `Jobs`). All UI panels and runtimes consume state directly via `/api/v1/...` REST APIs.
+- **Storage Workspace (`automa-vault`)**: Disk directory tree used for Git version control and explicit export/import. **Zero Folder Scanning Invariant**: Runtimes and extensions MUST NOT use automatic folder scanning/globbing commands to discover state; all entities are managed through the SQLite database.
 
 ---
 

@@ -19,6 +19,12 @@ export default defineConfig({
 		testTimeout: 60000,
 		hookTimeout: 60000,
 		fileParallelism: false,
+		maxConcurrency: 1,
+		maxWorkers: 1,
+		pool: "forks",
+		sequence: {
+			concurrent: false,
+		},
 		include: ["tests/**/*.test.ts"],
 		exclude: [
 			"automa-vsce/**",

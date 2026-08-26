@@ -22,7 +22,7 @@ List all workflow and campaign files in storage
 - **Schema**: Array<[[StorageFileInfo]]>
 
 ### 500
-Failed to scan storage files
+Failed to list storage files
 
 - **Content-Type**: `application/json`
 - **Schema**: [[ApiErrorResponse]]

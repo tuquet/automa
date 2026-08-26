@@ -12,6 +12,16 @@
       }
     },
     {
+      "label": "🚀 Dev: Automa Ecosystem (Auto-Open Studio)",
+      "type": "shell",
+      "command": "pnpm run dev -- --open",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
       "label": "📦 Build: All Packages (Turborepo)",
       "type": "shell",
       "command": "pnpm run build",

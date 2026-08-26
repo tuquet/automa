@@ -23,24 +23,36 @@
 
 - **Zero Linter Bypass**: `// biome-ignore` or `// @ts-ignore` is FORBIDDEN. Every commit MUST achieve 0 errors, 0 warnings on `pnpm run lint` / `biome check`.
 - **Canonical Schemas & Strict Typing**: All Command Handlers, IPC Payloads, Providers, and Services MUST consume types from `@automa/types` & `@automa/types/api`. Loose signatures (`Record<string, unknown>`, `as any`) are FORBIDDEN.
-- **SOLID & Clean Code**:
-  - TDD Red-Green-Refactor (write behavior tests before production code).
-  - 5 SOLID principles, Object Calisthenics (max 1 indent level, methods < 10 lines, classes < 50 lines, early returns, Law of Demeter).
-  - Eliminate Accidental Complexity via **YAGNI**, **KISS**, and **Rule of Three**.
+- **Strict SOLID & TDD Enforcement (`/solid` Skill)**:
+  - **Mandatory Trigger**: When writing new code, refactoring, planning module architecture, writing tests, or debugging, Agent **MUST** activate and adhere to [`skills/solid/SKILL.md`](skills/solid/SKILL.md) and `skills/solid/references/`.
+  - **TDD Red-Green-Refactor**: Write behavior tests before production code; perform architectural design during the Refactoring phase only.
+  - **Primitive Obsession Elimination**: Wrap raw primitives in Domain Value Objects / Typed IDs (e.g. `WorkflowId`, `BrowserId`, `JobId`, `Email`).
+  - **Object Calisthenics**: Max 1 indent level per method, early returns (avoid `else`), Law of Demeter (1 dot per line), methods < 10 lines, classes < 50 lines, max 2 instance variables.
+  - **Complexity Management**: Eliminate Accidental Complexity via **YAGNI** (build only what is needed now), **KISS** (simplest working solution), and **Rule of Three** (abstract only on the 3rd repetition).
+
+# Agent Orchestration, Subagents & Token Context Guard
+
+- **Context Token Budgeting**: For large tasks spanning multiple submodules (Rust + Vue + VS Code), avoid polluting the primary conversation context. Decompose work into specialized subagent workflows via `invoke_subagent`.
+- **Specialized Subagent Roles**:
+  - `Backend Engineer`: Implements Axum routes, DTOs, and unit tests in `automa-core`.
+  - `SDK Sync Coordinator`: Executes `pnpm run sync:api` and validates OpenAPI / SDK contracts.
+  - `Frontend / VSCE Specialist`: Consumes `@automa/types/api` in Webviews and Custom Editors.
+  - `QA & Test Validator`: Executes 4-tier test runner and headless Playwright tests.
 - **Code Review & QA Swarm Protocols**:
-  - *Review / Refactor*: Use `invoke_subagent` to spawn 5 read-only subagents (SOLID, KISS/YAGNI, Demeter, Flow/Complexity, Safety).
-  - *QC / Test*: Use `invoke_subagent` to spawn 3 read-only subagents (Functional QA, Performance/Leak, Security).
+  - *Review / Refactor Swarm*: Use `invoke_subagent` to spawn 5 read-only subagents (SOLID, KISS/YAGNI, Demeter, Flow/Complexity, Safety).
+  - *QC / Test Swarm*: Use `invoke_subagent` to spawn 3 read-only subagents (Functional QA, Performance/Leak, Security).
   - Primary agent consolidates reports and applies code edits only after user confirmation.
 
 # Backend API, OpenAPI & SDK Synchronization
 
-- **Backend-First & Zero-Mock**: NEVER mock APIs or return dummy errors in Frontend. Implement missing endpoints in Rust (`automa-core` Axum routes) first.
+- **Contract-First & Zero-Mock Protocol**:
+  - **Phase 1 (Contract Definition)**: Define Rust DTO structs and endpoints in `automa-core` first with `utoipa` annotations (`ToSchema`, `/// doc comments`, `snake_case` `operation_id`). NEVER mock APIs or return dummy errors in Frontend.
+  - **Phase 2 (Sync & CodeGen)**: Run `pnpm run sync:api` at root to regenerate OpenAPI spec (`openapi.json`), Bruno collections, and TypeScript SDK client (`@automa/types/api`).
+  - **Phase 3 (Frontend Consumption)**: Implement UI/Webview/Extension features by consuming the generated typed SDK methods directly. Raw `fetch()` or hardcoded URLs are strictly FORBIDDEN.
 - **Strict OpenAPI v3 (`utoipa`)**:
   - `operation_id`: MUST be `snake_case` (e.g. `submit_job`, `get_job_history`) for `@hey-api/openapi-ts` SDK generation (`submitJob()`, `getJobHistory()`).
   - `tag`: Exactly 1 of 10 standard tags (`Jobs`, `Storage`, `Browsers`, `Campaigns`, `System`, `History`, `Settings`, `Secrets`, `Lint`, `Events`).
   - DTO Structs: MUST have doc comments `///`, derive `ToSchema`, and annotate JSON values with `#[schema(value_type = ...)]`. Raw `serde_json::Value` without schema annotation is FORBIDDEN.
-- **Typed SDK Contract**: All clients (`automa-vsce`, webviews, tests) MUST consume Generated SDK (`@automa/types/api`). Raw `fetch()` or hardcoded URLs are FORBIDDEN.
-- **Sync Command**: After modifying backend routes, run `pnpm run sync:api` at root to regenerate OpenAPI spec, SDK client, and Bruno collections.
 
 # 4-Tier Testing Strategy
 
@@ -81,3 +93,28 @@
   - `Variables` (`/api/v1/storage/variables`): Plaintext public configuration.
   - `Credentials` (`/api/v1/storage/credentials`): Encrypted secrets via `HMAC-SHA256 (64 hex) + AES-256-CBC Base64 (Salted__)`.
   - Master Passphrase stored in `vscode.SecretStorage` or `AUTOMA_PASSPHRASE`. Engine decrypts secrets in RAM only during `{{secrets.key}}` execution and immediately clears memory. Logging decrypted secrets is FORBIDDEN.
+
+# Zero Folder JSON Scanning & SQLite Database-First Invariant
+
+- **Zero Folder Scanning**: Scanning folders/directories on disk for JSON scenario files (e.g. searching for `*.workflow.json`, `*.browser.json`, `*.campaign.json` via glob/recursive file scans) is strictly FORBIDDEN.
+- **Database-First State Management**: All entities, browsers, storage variables, credentials, tables, and execution jobs are managed, created, queried, and updated directly via **Automa Core REST API (`/api/v1/...`)** backed by SQLite database.
+- **Explicit File Interactions Only**: Files on disk are only opened when the user explicitly triggers an editor for a specific file or performs an explicit export. No background folder-scanning or automatic file-tree globbing commands are permitted.
+
+# Strict SRS Compliance & Zero Spec Hallucination Invariant
+
+- **Canonical Specification References**:
+  - [**SRS Button Business Logic & Event-Driven Schema**](docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md): Master specification for all button actions, FSM states (`IDLE`, `VALIDATING`, `DISPATCHING`, `EXECUTING`, `COMPLETED`, `FAILED`, `TERMINATING`), button IDs (`btn.*`), and real-time SSE/WS reactions.
+  - [**OpenAPI Integration Guide**](docs/OPENAPI_INTEGRATION_GUIDE.md): Master developer manual for consuming REST endpoints, SSE streams (`/api/v1/events`), and WebSocket channels (`/api/v1/ws`).
+  - [**Button Schema Contracts**](packages/automa-types/src/button-schema.ts): Canonical TypeScript types exported from `@automa/types`.
+- **Zero Hallucination Rule**:
+  - Agents **MUST NOT** invent fake endpoints, unverified payload parameters, non-existent UI buttons, or arbitrary FSM state transitions.
+  - Every UI button across `automa-desk`, `automa-vsce`, and `automa-webe` **MUST** map 1-to-1 with a documented Button ID and follow its defined FSM sequence and SSE/WS reaction rules.
+  - All API calls **MUST** consume typed SDK functions from `@automa/types/api`. Raw `fetch()` or improvised URLs are strictly FORBIDDEN.
+- **Protocol for New Features**:
+  - If a requested feature or button is missing from the SRS or OpenAPI spec, the Agent **MUST NOT** hallucinate an ad-hoc frontend solution.
+  - Follow the 4-step Contract-First workflow:
+    1. Define Rust DTO structs and endpoints in `automa-core` with `utoipa` OpenAPI annotations.
+    2. Run `pnpm run sync:api` at monorepo root to regenerate the OpenAPI spec and TypeScript SDK.
+    3. Update `docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md` and `docs/OPENAPI_INTEGRATION_GUIDE.md` with the new button/endpoint contracts.
+    4. Implement the frontend / extension UI consuming the newly generated SDK methods.
+

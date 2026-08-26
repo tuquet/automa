@@ -96,6 +96,41 @@
         }
       }
     },
+    "/api/v1/browsers/auto-detect": {
+      "post": {
+        "tags": [
+          "Browsers"
+        ],
+        "summary": "Auto-detect and register host browser profiles",
+        "description": "Scans host system for installed Chromium browsers (Chrome, Edge, Brave), creates profiles in SQLite if not existing, and configures default browser.",
+        "operationId": "auto_detect_browsers",
+        "responses": {
+          "200": {
+            "description": "List of all registered browser profiles after detection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BrowserResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database error during auto-detection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/browsers/import-csv": {
       "post": {
         "tags": [
@@ -616,7 +651,7 @@
           "Campaigns"
         ],
         "summary": "Execute a multi-instance automation campaign",
-        "description": "Parses a campaign descriptor, provisions required browser profiles, allocates grid matrix slots, and starts parallel workflow execution jobs.",
+        "description": "Parses a campaign descriptor from SQLite database or file, provisions required browser profiles, allocates grid matrix slots, and starts parallel workflow execution jobs.",
         "operationId": "execute_campaign",
         "requestBody": {
           "content": {
@@ -1016,7 +1051,7 @@
           "Jobs"
         ],
         "summary": "Submit a workflow execution job",
-        "description": "Submits a new automation workflow job to be executed by a browser worker instance. Supports either a filesystem `workflowPath` or raw inline `workflowData`. Automatically ensures the required browser instance is launched and connected.",
+        "description": "Submits a new automation workflow job to be executed by a browser worker instance. Supports workflowId, inline workflowData, or filesystem workflowPath. Automatically ensures the required browser instance is launched and connected.",
         "operationId": "submit_job",
         "requestBody": {
           "content": {
@@ -1236,8 +1271,8 @@
         "tags": [
           "Lint"
         ],
-        "summary": "Validate and lint workflow AST graph",
-        "description": "Performs static analysis on workflow nodes, edge connections, parameter schemas, and detects structural defects.",
+        "summary": "Validate and lint Automa assets (Workflows, Campaigns, Browsers, Packages)",
+        "description": "Performs static analysis on AST graph nodes, edge connections, parameter schemas, campaign schedules, and browser configs.",
         "operationId": "lint_workflow",
         "requestBody": {
           "content": {
@@ -1304,6 +1339,318 @@
           },
           "500": {
             "description": "Internal encryption failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/storage/campaigns": {
+      "get": {
+        "tags": [
+          "Storage"
+        ],
+        "summary": "List all campaigns from storage database",
+        "description": "Retrieves all campaigns persisted in the central SQLite database.",
+        "operationId": "get_storage_campaigns",
+        "responses": {
+          "200": {
+            "description": "List of campaigns",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CampaignStorageItem"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database read error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Storage"
+        ],
+        "summary": "Create or persist a campaign in database",
+        "description": "Creates a new campaign record or updates an existing record in SQLite database.",
+        "operationId": "create_storage_campaign",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCampaignStorageRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Campaign created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignStorageItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid campaign payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database write error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/storage/campaigns/import": {
+      "post": {
+        "tags": [
+          "Storage"
+        ],
+        "summary": "Import a campaign JSON into storage database",
+        "description": "Parses and imports a campaign JSON object into SQLite database.",
+        "operationId": "import_storage_campaign",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportCampaignStorageRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Campaign imported successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignStorageItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid campaign JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database write error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/storage/campaigns/{id}": {
+      "get": {
+        "tags": [
+          "Storage"
+        ],
+        "summary": "Get a campaign by ID from storage database",
+        "description": "Retrieves the full configuration and metadata of a campaign from SQLite database.",
+        "operationId": "get_storage_campaign",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique campaign identifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Campaign details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignStorageItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Campaign not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database read error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Storage"
+        ],
+        "summary": "Update a campaign in storage database",
+        "description": "Modifies an existing campaign record in SQLite database.",
+        "operationId": "update_storage_campaign",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique campaign identifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCampaignStorageRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Campaign updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CampaignStorageItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid update payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Campaign not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database write error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Storage"
+        ],
+        "summary": "Delete a campaign from storage database",
+        "description": "Removes a campaign record from SQLite database by ID.",
+        "operationId": "delete_storage_campaign",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique campaign identifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Campaign deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteCampaignResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Campaign not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database deletion error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1469,7 +1816,7 @@
             }
           },
           "500": {
-            "description": "Failed to scan storage files",
+            "description": "Failed to list storage files",
             "content": {
               "application/json": {
                 "schema": {
@@ -1979,6 +2326,318 @@
         }
       }
     },
+    "/api/v1/storage/workflows": {
+      "get": {
+        "tags": [
+          "Storage"
+        ],
+        "summary": "List all workflows from storage database",
+        "description": "Retrieves all workflow items persisted in the central SQLite database.",
+        "operationId": "get_storage_workflows",
+        "responses": {
+          "200": {
+            "description": "List of workflows",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WorkflowStorageItem"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database read error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Storage"
+        ],
+        "summary": "Create or persist a workflow in database",
+        "description": "Creates a new workflow record or updates an existing record in the SQLite database.",
+        "operationId": "create_storage_workflow",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkflowStorageRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Workflow created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowStorageItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workflow payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database write error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/storage/workflows/import": {
+      "post": {
+        "tags": [
+          "Storage"
+        ],
+        "summary": "Import a workflow JSON into storage database",
+        "description": "Parses and imports a workflow JSON object (from file or client) into SQLite database.",
+        "operationId": "import_storage_workflow",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportWorkflowStorageRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Workflow imported successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowStorageItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workflow JSON",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database write error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/storage/workflows/{id}": {
+      "get": {
+        "tags": [
+          "Storage"
+        ],
+        "summary": "Get a workflow by ID from storage database",
+        "description": "Retrieves the full AST and metadata of a workflow by its unique ID from SQLite database.",
+        "operationId": "get_storage_workflow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique workflow identifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Workflow details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowStorageItem"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Workflow not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database read error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Storage"
+        ],
+        "summary": "Update a workflow in storage database",
+        "description": "Modifies the metadata or graph AST of an existing workflow in SQLite database.",
+        "operationId": "update_storage_workflow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique workflow identifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateWorkflowStorageRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Workflow updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowStorageItem"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid update payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Workflow not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database write error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Storage"
+        ],
+        "summary": "Delete a workflow from storage database",
+        "description": "Removes a workflow record from the central SQLite database by ID.",
+        "operationId": "delete_storage_workflow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Unique workflow identifier",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Workflow deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteWorkflowResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Workflow not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Database deletion error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/system/browser-binaries": {
       "post": {
         "tags": [
@@ -2417,20 +3076,26 @@
       "BrowserSettings": {
         "type": "object",
         "required": [
-          "defaultType",
+          "default_type",
           "headless"
         ],
         "properties": {
-          "defaultType": {
-            "type": "string"
-          },
-          "defaultUserAgent": {
+          "default_profile_id": {
             "type": [
               "string",
               "null"
             ]
           },
-          "executablePath": {
+          "default_type": {
+            "type": "string"
+          },
+          "default_user_agent": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "executable_path": {
             "type": [
               "string",
               "null"
@@ -2439,6 +3104,78 @@
           "headless": {
             "type": "boolean"
           }
+        }
+      },
+      "CampaignStorageItem": {
+        "type": "object",
+        "description": "Campaign descriptor stored in central SQLite database",
+        "required": [
+          "id",
+          "name",
+          "data",
+          "version",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp (ISO 8601)"
+          },
+          "cron": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional cron schedule expression"
+          },
+          "data": {
+            "type": "object",
+            "description": "Campaign data (members, tasks, matrix, concurrency settings)"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional campaign description"
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique campaign identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Campaign display name"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last modification timestamp (ISO 8601)"
+          },
+          "version": {
+            "type": "string",
+            "description": "Semantic version"
+          }
+        },
+        "example": {
+          "createdAt": "2026-08-26T00:00:00Z",
+          "cron": "0 8 * * *",
+          "data": {
+            "members": [
+              {
+                "browserId": "b1",
+                "workflowId": "w1"
+              }
+            ],
+            "settings": {
+              "concurrency_mode": "parallel"
+            }
+          },
+          "description": "Syncs marketing profiles",
+          "id": "cp_daily_sync",
+          "name": "Daily Sync Campaign",
+          "updatedAt": "2026-08-26T00:00:00Z",
+          "version": "1.0.0"
         }
       },
       "Cookie": {
@@ -2554,15 +3291,183 @@
           "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
         }
       },
+      "CreateCampaignStorageRequest": {
+        "type": "object",
+        "description": "Request payload for creating a new campaign in SQLite database",
+        "required": [
+          "name",
+          "data"
+        ],
+        "properties": {
+          "cron": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional cron expression"
+          },
+          "data": {
+            "type": "object",
+            "description": "Campaign data (members, tasks, matrix)"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional campaign description"
+          },
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional custom identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Campaign display name"
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional version (defaults to 1.0.0)"
+          }
+        },
+        "example": {
+          "cron": "0 8 * * *",
+          "data": {
+            "members": [
+              {
+                "browserId": "b1",
+                "workflowId": "w1"
+              }
+            ]
+          },
+          "description": "Syncs marketing profiles",
+          "id": "cp_daily_sync",
+          "name": "Daily Sync Campaign",
+          "version": "1.0.0"
+        }
+      },
+      "CreateWorkflowStorageRequest": {
+        "type": "object",
+        "description": "Request payload for creating a new workflow in SQLite database",
+        "required": [
+          "name",
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "object",
+            "description": "Workflow graph AST (nodes, edges, settings)"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional workflow description"
+          },
+          "icon": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional UI icon name"
+          },
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional custom identifier (auto-generated if omitted)"
+          },
+          "name": {
+            "type": "string",
+            "description": "Workflow display name"
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional version (defaults to 1.0.0)"
+          }
+        },
+        "example": {
+          "data": {
+            "edges": [],
+            "nodes": [
+              {
+                "id": "node_1",
+                "label": "trigger",
+                "type": "trigger"
+              }
+            ]
+          },
+          "description": "Searches Bing and extracts results",
+          "icon": "search",
+          "id": "wf_bing_search",
+          "name": "Bing Search Automation",
+          "version": "1.0.0"
+        }
+      },
+      "DeleteCampaignResponse": {
+        "type": "object",
+        "description": "Response returned after successfully deleting a campaign",
+        "required": [
+          "success",
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Confirmation message"
+          },
+          "success": {
+            "type": "boolean",
+            "description": "True if deletion succeeded"
+          }
+        },
+        "example": {
+          "message": "Campaign 'cp_1' deleted",
+          "success": true
+        }
+      },
+      "DeleteWorkflowResponse": {
+        "type": "object",
+        "description": "Response returned after successfully deleting a workflow",
+        "required": [
+          "success",
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Confirmation message"
+          },
+          "success": {
+            "type": "boolean",
+            "description": "True if deletion succeeded"
+          }
+        },
+        "example": {
+          "message": "Workflow 'wf_1' deleted",
+          "success": true
+        }
+      },
       "DisplaySettings": {
         "type": "object",
         "required": [
-          "screenWidth",
-          "screenHeight",
-          "offsetX",
-          "offsetY",
+          "screen_width",
+          "screen_height",
+          "offset_x",
+          "offset_y",
           "margin",
-          "monitorIndex"
+          "monitor_index"
         ],
         "properties": {
           "margin": {
@@ -2570,25 +3475,25 @@
             "format": "int32",
             "minimum": 0
           },
-          "monitorIndex": {
+          "monitor_index": {
             "type": "integer",
             "format": "int32",
             "minimum": 0
           },
-          "offsetX": {
+          "offset_x": {
             "type": "integer",
             "format": "int32"
           },
-          "offsetY": {
+          "offset_y": {
             "type": "integer",
             "format": "int32"
           },
-          "screenHeight": {
+          "screen_height": {
             "type": "integer",
             "format": "int32",
             "minimum": 0
           },
-          "screenWidth": {
+          "screen_width": {
             "type": "integer",
             "format": "int32",
             "minimum": 0
@@ -2730,18 +3635,18 @@
       "GridBehavior": {
         "type": "object",
         "required": [
-          "autoRecycleSlots",
-          "enforceCdpBounds",
-          "scaleFactor"
+          "auto_recycle_slots",
+          "enforce_cdp_bounds",
+          "scale_factor"
         ],
         "properties": {
-          "autoRecycleSlots": {
+          "auto_recycle_slots": {
             "type": "boolean"
           },
-          "enforceCdpBounds": {
+          "enforce_cdp_bounds": {
             "type": "boolean"
           },
-          "scaleFactor": {
+          "scale_factor": {
             "type": "number",
             "format": "double"
           }
@@ -2839,20 +3744,46 @@
           "success": true
         }
       },
+      "ImportCampaignStorageRequest": {
+        "type": "object",
+        "description": "Request payload for importing a campaign into SQLite database",
+        "required": [
+          "campaign"
+        ],
+        "properties": {
+          "campaign": {
+            "type": "object",
+            "description": "Raw campaign JSON content"
+          },
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional custom ID"
+          }
+        },
+        "example": {
+          "campaign": {
+            "members": [],
+            "name": "Imported Fleet Campaign"
+          }
+        }
+      },
       "ImportCsvPayload": {
         "type": "object",
         "description": "Request payload containing raw CSV formatted browser profiles",
         "required": [
-          "csvString"
+          "csv_string"
         ],
         "properties": {
-          "csvString": {
+          "csv_string": {
             "type": "string",
             "description": "Raw CSV string containing profile headers and rows"
           }
         },
         "example": {
-          "csvString": "id,name,userAgent,timezone\nprofile1,Main Profile,,UTC"
+          "csv_string": "id,name,userAgent,timezone\nprofile1,Main Profile,,UTC"
         }
       },
       "ImportCsvResponse": {
@@ -2882,6 +3813,33 @@
           "imported": 3,
           "message": "Imported 3 profiles",
           "status": "success"
+        }
+      },
+      "ImportWorkflowStorageRequest": {
+        "type": "object",
+        "description": "Request payload for importing a workflow into SQLite database",
+        "required": [
+          "workflow"
+        ],
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional custom ID to assign"
+          },
+          "workflow": {
+            "type": "object",
+            "description": "Raw workflow JSON content"
+          }
+        },
+        "example": {
+          "workflow": {
+            "edges": [],
+            "name": "Imported Google Search",
+            "nodes": []
+          }
         }
       },
       "JobDetails": {
@@ -3039,15 +3997,29 @@
       },
       "LintIssue": {
         "type": "object",
-        "description": "Diagnostic issue report detected by the workflow linter",
+        "description": "Diagnostic issue report detected by the linter",
         "required": [
           "severity",
           "message"
         ],
         "properties": {
+          "code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Machine-readable rule code for IDE filtering and categorization"
+          },
           "message": {
             "type": "string",
             "description": "Detailed diagnostic explanation"
+          },
+          "nodeId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Node ID associated with this diagnostic issue, if applicable"
           },
           "path": {
             "type": [
@@ -3057,20 +4029,44 @@
             "description": "JSONPath location of the affected element"
           },
           "severity": {
-            "type": "string",
-            "description": "Severity level (\"warning\", \"error\")"
+            "$ref": "#/components/schemas/LintSeverity",
+            "description": "Severity level (\"warning\", \"error\", \"info\")"
           }
         },
         "example": {
+          "code": "MISSING_NODE_TYPE",
           "message": "Node is missing property 'type'",
+          "nodeId": "trigger_1",
           "path": "nodes[0]",
           "severity": "warning"
         }
       },
+      "LintMode": {
+        "type": "string",
+        "description": "Execution context mode for the linter",
+        "enum": [
+          "editor",
+          "runner"
+        ]
+      },
       "LintRequest": {
         "type": "object",
-        "description": "Request payload to lint workflow AST nodes and edges",
+        "description": "Request payload to lint workflows, campaigns, browsers, or packages",
         "properties": {
+          "content": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Optional raw JSON content or document for auto-detection"
+          },
+          "drawflow": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Optional entire workflow payload containing nested drawflow"
+          },
           "edges": {
             "type": [
               "array",
@@ -3081,6 +4077,17 @@
             },
             "description": "Array of workflow edge connection descriptors"
           },
+          "mode": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LintMode",
+                "description": "Lint evaluation mode (default: \"editor\")"
+              }
+            ]
+          },
           "nodes": {
             "type": [
               "array",
@@ -3090,13 +4097,27 @@
               "type": "object"
             },
             "description": "Array of workflow block node definitions"
+          },
+          "targetType": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/LintTargetType",
+                "description": "Explicit target type or \"auto\" to detect from payload"
+              }
+            ]
           }
         },
         "example": {
           "edges": [],
+          "mode": "editor",
           "nodes": [
             {
-              "id": "n1",
+              "data": {},
+              "id": "trigger_1",
+              "label": "trigger",
               "type": "BlockBasic"
             }
           ]
@@ -3104,9 +4125,11 @@
       },
       "LintResponse": {
         "type": "object",
-        "description": "Result of workflow AST validation and lint checks",
+        "description": "Result of static AST and schema validation",
         "required": [
           "valid",
+          "targetType",
+          "mode",
           "issues"
         ],
         "properties": {
@@ -3115,23 +4138,55 @@
             "items": {
               "$ref": "#/components/schemas/LintIssue"
             },
-            "description": "List of detected validation warnings and errors"
+            "description": "List of detected validation warnings, errors, and info diagnostics"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/LintMode",
+            "description": "Mode used during evaluation"
+          },
+          "targetType": {
+            "$ref": "#/components/schemas/LintTargetType",
+            "description": "Detected asset target type"
           },
           "valid": {
             "type": "boolean",
-            "description": "Whether the workflow passed validation without errors"
+            "description": "Whether the asset passed validation without errors"
           }
         },
         "example": {
           "issues": [
             {
-              "message": "Missing timeout",
-              "path": "nodes[0]",
+              "code": "NO_TRIGGER_NODE",
+              "message": "Workflow contains no trigger block to start execution.",
+              "nodeId": null,
+              "path": "nodes",
               "severity": "warning"
             }
           ],
+          "mode": "editor",
+          "targetType": "workflow",
           "valid": true
         }
+      },
+      "LintSeverity": {
+        "type": "string",
+        "description": "Severity level of detected lint diagnostic",
+        "enum": [
+          "error",
+          "warning",
+          "info"
+        ]
+      },
+      "LintTargetType": {
+        "type": "string",
+        "description": "Target asset type being validated",
+        "enum": [
+          "workflow",
+          "campaign",
+          "browser",
+          "package",
+          "auto"
+        ]
       },
       "LogItem": {
         "type": "object",
@@ -3273,22 +4328,22 @@
       "RunnerSettings": {
         "type": "object",
         "required": [
-          "maxConcurrentJobs",
-          "timeoutMs",
-          "autoCleanHistoryDays"
+          "max_concurrent_jobs",
+          "timeout_ms",
+          "auto_clean_history_days"
         ],
         "properties": {
-          "autoCleanHistoryDays": {
+          "auto_clean_history_days": {
             "type": "integer",
             "format": "int32",
             "minimum": 0
           },
-          "maxConcurrentJobs": {
+          "max_concurrent_jobs": {
             "type": "integer",
             "format": "int32",
             "minimum": 0
           },
-          "timeoutMs": {
+          "timeout_ms": {
             "type": "integer",
             "format": "int64",
             "minimum": 0
@@ -3348,16 +4403,16 @@
         "type": "object",
         "description": "Payload containing filesystem path to an unpacked browser extension",
         "required": [
-          "extensionPath"
+          "extension_path"
         ],
         "properties": {
-          "extensionPath": {
+          "extension_path": {
             "type": "string",
             "description": "Full filesystem path to the unpacked extension directory (containing manifest.json)"
           }
         },
         "example": {
-          "extensionPath": "C:/extensions/my-custom-plugin"
+          "extension_path": "C:/extensions/my-custom-plugin"
         }
       },
       "SideloadExtensionResponse": {
@@ -3638,14 +4693,21 @@
               "object",
               "null"
             ],
-            "description": "Raw inline workflow JSON payload (alternative to workflowPath)"
+            "description": "Raw inline workflow JSON payload (alternative to workflowPath or workflowId)"
+          },
+          "workflowId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Unique identifier of the workflow to execute"
           },
           "workflowPath": {
             "type": [
               "string",
               "null"
             ],
-            "description": "Absolute or relative filesystem path to the `.workflow.json` file"
+            "description": "Absolute or relative filesystem path to the `.workflow.json` file (deprecated, prefer workflowId)"
           }
         },
         "example": {
@@ -3658,7 +4720,7 @@
               "keyword": "automa automation"
             }
           },
-          "workflowPath": "C:/Users/name/workflows/search.workflow.json"
+          "workflowId": "google_search"
         }
       },
       "SubmitJobResponse": {
@@ -3853,19 +4915,25 @@
       "UpdateBrowserSettingsRequest": {
         "type": "object",
         "properties": {
-          "defaultType": {
+          "default_profile_id": {
             "type": [
               "string",
               "null"
             ]
           },
-          "defaultUserAgent": {
+          "default_type": {
             "type": [
               "string",
               "null"
             ]
           },
-          "executablePath": {
+          "default_user_agent": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "executable_path": {
             "type": [
               "string",
               "null"
@@ -3879,6 +4947,51 @@
           }
         }
       },
+      "UpdateCampaignStorageRequest": {
+        "type": "object",
+        "description": "Request payload for updating an existing campaign in SQLite database",
+        "properties": {
+          "cron": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional updated cron expression"
+          },
+          "data": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Optional updated campaign data"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional updated description"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional updated name"
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional updated version"
+          }
+        },
+        "example": {
+          "cron": "0 9 * * *",
+          "name": "Updated Daily Sync"
+        }
+      },
       "UpdateDisplaySettingsRequest": {
         "type": "object",
         "properties": {
@@ -3890,7 +5003,7 @@
             "format": "int32",
             "minimum": 0
           },
-          "monitorIndex": {
+          "monitor_index": {
             "type": [
               "integer",
               "null"
@@ -3898,21 +5011,21 @@
             "format": "int32",
             "minimum": 0
           },
-          "offsetX": {
+          "offset_x": {
             "type": [
               "integer",
               "null"
             ],
             "format": "int32"
           },
-          "offsetY": {
+          "offset_y": {
             "type": [
               "integer",
               "null"
             ],
             "format": "int32"
           },
-          "screenHeight": {
+          "screen_height": {
             "type": [
               "integer",
               "null"
@@ -3920,7 +5033,7 @@
             "format": "int32",
             "minimum": 0
           },
-          "screenWidth": {
+          "screen_width": {
             "type": [
               "integer",
               "null"
@@ -3933,19 +5046,19 @@
       "UpdateGridBehaviorRequest": {
         "type": "object",
         "properties": {
-          "autoRecycleSlots": {
+          "auto_recycle_slots": {
             "type": [
               "boolean",
               "null"
             ]
           },
-          "enforceCdpBounds": {
+          "enforce_cdp_bounds": {
             "type": [
               "boolean",
               "null"
             ]
           },
-          "scaleFactor": {
+          "scale_factor": {
             "type": [
               "number",
               "null"
@@ -4019,7 +5132,7 @@
       "UpdateRunnerSettingsRequest": {
         "type": "object",
         "properties": {
-          "autoCleanHistoryDays": {
+          "auto_clean_history_days": {
             "type": [
               "integer",
               "null"
@@ -4027,7 +5140,7 @@
             "format": "int32",
             "minimum": 0
           },
-          "maxConcurrentJobs": {
+          "max_concurrent_jobs": {
             "type": [
               "integer",
               "null"
@@ -4035,7 +5148,7 @@
             "format": "int32",
             "minimum": 0
           },
-          "timeoutMs": {
+          "timeout_ms": {
             "type": [
               "integer",
               "null"
@@ -4043,6 +5156,134 @@
             "format": "int64",
             "minimum": 0
           }
+        }
+      },
+      "UpdateWorkflowStorageRequest": {
+        "type": "object",
+        "description": "Request payload for updating an existing workflow in SQLite database",
+        "properties": {
+          "data": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Optional updated workflow graph AST"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional updated description"
+          },
+          "icon": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional updated icon"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional updated name"
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional updated version"
+          }
+        },
+        "example": {
+          "data": {
+            "edges": [],
+            "nodes": [
+              {
+                "id": "node_1",
+                "label": "trigger",
+                "type": "trigger"
+              }
+            ]
+          },
+          "description": "Updated description",
+          "icon": "search",
+          "name": "Updated Bing Search Automation",
+          "version": "1.1.0"
+        }
+      },
+      "WorkflowStorageItem": {
+        "type": "object",
+        "description": "Workflow descriptor stored in central SQLite database",
+        "required": [
+          "id",
+          "name",
+          "data",
+          "version",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "createdAt": {
+            "type": "string",
+            "description": "Creation timestamp (ISO 8601)"
+          },
+          "data": {
+            "type": "object",
+            "description": "Workflow graph AST (nodes, edges, settings)"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional workflow description"
+          },
+          "icon": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional UI icon identifier"
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique workflow identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Workflow display name"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "Last modification timestamp (ISO 8601)"
+          },
+          "version": {
+            "type": "string",
+            "description": "Semantic version of the workflow"
+          }
+        },
+        "example": {
+          "createdAt": "2026-08-26T00:00:00Z",
+          "data": {
+            "edges": [],
+            "nodes": [
+              {
+                "id": "node_1",
+                "label": "trigger",
+                "type": "trigger"
+              }
+            ]
+          },
+          "description": "Searches Bing and extracts results",
+          "icon": "search",
+          "id": "wf_bing_search",
+          "name": "Bing Search Automation",
+          "updatedAt": "2026-08-26T00:00:00Z",
+          "version": "1.0.0"
         }
       }
     }

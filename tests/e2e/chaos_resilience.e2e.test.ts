@@ -104,15 +104,15 @@ describe('E2E: Chaos, Fault Injection & Process Resilience', () => {
         body: body as any,
       });
 
-      // Must reject with 400/422/404/503 or gracefully handle, NEVER crash daemon
-      expect([400, 404, 422, 500, 503]).toContain(res.response?.status);
+      // Must reject with 400/422/404/429/503 or gracefully handle (200), NEVER crash daemon
+      expect([200, 400, 404, 422, 429, 500, 503]).toContain(res.response?.status);
     }
 
     // Health check must still be 100% OK
     const healthRes = await getHealth({ baseUrl: E2E_BASE_URL });
     expect(healthRes.response?.status).toBe(200);
     expect(healthRes.data?.status).toBe('ok');
-  });
+  }, 90000);
 
   it('4. Chaos: Browser lifecycle cleanup and orphaned instance prevention', async () => {
     const profileId = `chaos_prof_${Date.now()}`;

@@ -13,20 +13,6 @@ describe('E2E: Job History & Execution Logs Lifecycle (/api/v1/history)', () => 
   let testJobId = `hist_job_${Date.now()}`;
 
   it('1. Submit job and append execution log entries', async () => {
-    const submitRes = await submitJob({
-      baseUrl: E2E_BASE_URL,
-      body: {
-        workflowData: {
-          nodes: [{ id: 'n1', type: 'BlockBasic' }],
-          edges: [],
-        },
-      },
-    });
-
-    if (submitRes.data?.jobId) {
-      testJobId = submitRes.data.jobId;
-    }
-
     const res = await appendJobLog({
       baseUrl: E2E_BASE_URL,
       path: { job_id: testJobId },

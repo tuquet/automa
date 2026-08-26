@@ -11,9 +11,16 @@ import {
   addStorageTableRow,
   getStorageTableRows,
   deleteStorageTable,
+  createStorageWorkflow,
+  getStorageWorkflows,
+  getStorageWorkflow,
+  updateStorageWorkflow,
+  deleteStorageWorkflow,
+  importStorageWorkflow,
   type StorageVariable,
   type StorageCredential,
   type StorageTable,
+  type WorkflowStorageItem,
 } from '@automa/types/api';
 import { E2E_BASE_URL } from './helpers/testDaemon';
 
@@ -156,6 +163,104 @@ describe('E2E: Vault Storage (Variables, AES Credentials & SQLite Tables)', () =
       });
 
       expect(res.response?.status).toBe(200);
+    });
+  });
+
+  describe('Workflows Management (SQLite Database-First)', () => {
+    const testWfId = `wf_e2e_${Date.now()}`;
+    const testImportedWfId = `wf_imported_${Date.now()}`;
+
+    it('1. Create workflow in SQLite DB', async () => {
+      const res = await createStorageWorkflow({
+        baseUrl: E2E_BASE_URL,
+        body: {
+          id: testWfId,
+          name: 'E2E Test Workflow',
+          description: 'Automated workflow test',
+          data: {
+            nodes: [
+              { id: 'node_1', type: 'trigger', label: 'trigger' },
+              { id: 'node_2', type: 'new-tab', label: 'new-tab', data: { url: 'https://example.com' } },
+            ],
+            edges: [],
+          },
+          version: '1.0.0',
+          icon: 'play',
+        },
+      });
+
+      expect(res.response?.status).toBe(200);
+      expect(res.data?.id).toBe(testWfId);
+      expect(res.data?.name).toBe('E2E Test Workflow');
+    });
+
+    it('2. List workflows from SQLite DB', async () => {
+      const res = await getStorageWorkflows({
+        baseUrl: E2E_BASE_URL,
+      });
+
+      expect(res.response?.status).toBe(200);
+      expect(Array.isArray(res.data)).toBe(true);
+      const found = res.data?.some((w: WorkflowStorageItem) => w.id === testWfId);
+      expect(found).toBe(true);
+    });
+
+    it('3. Get workflow by ID from SQLite DB', async () => {
+      const res = await getStorageWorkflow({
+        baseUrl: E2E_BASE_URL,
+        path: { id: testWfId },
+      });
+
+      expect(res.response?.status).toBe(200);
+      expect(res.data?.id).toBe(testWfId);
+      expect(res.data?.name).toBe('E2E Test Workflow');
+    });
+
+    it('4. Update workflow in SQLite DB', async () => {
+      const res = await updateStorageWorkflow({
+        baseUrl: E2E_BASE_URL,
+        path: { id: testWfId },
+        body: {
+          name: 'Updated E2E Workflow',
+          version: '1.1.0',
+        },
+      });
+
+      expect(res.response?.status).toBe(200);
+      expect(res.data?.name).toBe('Updated E2E Workflow');
+      expect(res.data?.version).toBe('1.1.0');
+    });
+
+    it('5. Import workflow into SQLite DB', async () => {
+      const res = await importStorageWorkflow({
+        baseUrl: E2E_BASE_URL,
+        body: {
+          id: testImportedWfId,
+          workflow: {
+            name: 'Imported Workflow Test',
+            nodes: [{ id: 'n1', type: 'trigger', label: 'trigger' }],
+          },
+        },
+      });
+
+      expect(res.response?.status).toBe(200);
+      expect(res.data?.id).toBe(testImportedWfId);
+      expect(res.data?.name).toBe('Imported Workflow Test');
+    });
+
+    it('6. Delete workflow from SQLite DB', async () => {
+      const res = await deleteStorageWorkflow({
+        baseUrl: E2E_BASE_URL,
+        path: { id: testWfId },
+      });
+
+      expect(res.response?.status).toBe(200);
+
+      const delImported = await deleteStorageWorkflow({
+        baseUrl: E2E_BASE_URL,
+        path: { id: testImportedWfId },
+      });
+      expect(delImported.response?.status).toBe(200);
     });
   });
 });

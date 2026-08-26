@@ -8,8 +8,8 @@ describe('E2E: Workflow AST Static Linter', () => {
       baseUrl: E2E_BASE_URL,
       body: {
         nodes: [
-          { id: 'node_start', type: 'BlockBasic' },
-          { id: 'node_click', type: 'BlockEventClick' },
+          { id: 'node_start', type: 'BlockBasic', label: 'trigger', data: {} },
+          { id: 'node_click', type: 'BlockEventClick', label: 'click-element', data: { selector: '#btn-submit' } },
         ],
         edges: [
           { source: 'node_start', target: 'node_click' },

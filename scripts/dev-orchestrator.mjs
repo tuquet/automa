@@ -190,13 +190,13 @@ const TASKS = [
     id: 'studio',
     name: 'STUDIO',
     label: '🎨 Automa Studio',
-    hint: 'Vue Flow Standalone Canvas Editor (port :5173)',
+    hint: 'Vue Flow Standalone Canvas Editor (:8765/studio)',
     color: pc.magenta,
     cmd: process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
     args: ['-F', 'automa', 'run', 'dev:studio'],
     cwd: rootDir,
     description: 'Automa Studio Standalone Canvas',
-    url: 'http://localhost:5173',
+    url: 'http://127.0.0.1:8765/studio/',
   },
   {
     id: 'desk',
@@ -271,6 +271,7 @@ const isDesk = args.includes('--desk');
 const isVsce = args.includes('--vsce');
 const isStudio = args.includes('--studio');
 const isRunner = args.includes('--runner');
+const isOpen = args.includes('--open') || args.includes('-o');
 
 async function resolveSelectedTasks() {
   // Direct CLI Flags bypass interactive prompt
@@ -320,8 +321,21 @@ let isShuttingDown = false;
 
 function openBrowser(url) {
   if (!url) return;
-  const startCmd = process.platform === 'win32' ? 'start' : process.platform === 'darwin' ? 'open' : 'xdg-open';
-  spawn(startCmd, [url], { shell: true, stdio: 'ignore' });
+  try {
+    if (process.platform === 'win32') {
+      spawn('rundll32.exe', ['url.dll,FileProtocolHandler', url], { stdio: 'ignore', detached: true }).unref();
+    } else if (process.platform === 'darwin') {
+      spawn('open', [url], { stdio: 'ignore', detached: true }).unref();
+    } else {
+      spawn('xdg-open', [url], { stdio: 'ignore', detached: true }).unref();
+    }
+  } catch (_) {
+    try {
+      if (process.platform === 'win32') {
+        spawn('cmd.exe', ['/c', 'start', '""', url], { stdio: 'ignore', detached: true }).unref();
+      }
+    } catch (_) {}
+  }
 }
 
 function pipeOutput(proc, name, color) {
@@ -374,7 +388,7 @@ function startTasks(taskList) {
     const proc = spawn(task.cmd, task.args, {
       cwd: task.cwd,
       shell: true,
-      stdio: ['inherit', 'pipe', 'pipe'],
+      stdio: ['ignore', 'pipe', 'pipe'],
       env: { ...process.env, FORCE_COLOR: '1' },
     });
 
@@ -455,53 +469,57 @@ function showHotkeysBar() {
   ];
   console.log(`\n${pc.dim('────────────────────────────────────────────────────────────────────────────')}`);
   console.log(`  ${pc.cyan('Hotkeys:')} ${hotkeys.join(pc.dim('  │  '))}`);
-  console.log(`${pc.dim('────────────────────────────────────────────────────────────────────────────')}\n`);
+  console.log(`${pc.dim('────────────────────────────────────────────────────────────────────────────')}`);
+
+  const activeUrls = activeTasks.filter((t) => t.url);
+  if (activeUrls.length > 0) {
+    console.log(pc.bold(pc.green('  🌐 URL Trực tiếp (Ctrl + Click để mở):')));
+    activeUrls.forEach((t) => {
+      console.log(`    • ${pc.bold(t.label.padEnd(20))}: ${pc.cyan(pc.underline(t.url))}`);
+    });
+    console.log(`${pc.dim('────────────────────────────────────────────────────────────────────────────')}\n`);
+  } else {
+    console.log('');
+  }
 }
 
 function setupHotkeys() {
-  if (process.stdin.isTTY) {
-    readline.emitKeypressEvents(process.stdin);
+  try {
+    process.stdin.resume();
     if (process.stdin.isTTY) {
       process.stdin.setRawMode(true);
     }
+    process.stdin.setEncoding('utf8');
+  } catch (_) {}
 
-    process.stdin.on('keypress', (str, key) => {
-      if (key.ctrl && key.name === 'c') {
-        cleanup();
-        return;
-      }
-      if (key.name === 'q') {
-        cleanup();
-        return;
-      }
-      if (key.name === 'r') {
-        restartAll();
-        return;
-      }
-      if (key.name === 'c') {
-        console.clear();
-        showHotkeysBar();
-        return;
-      }
-      if (key.name === 'e') {
-        showRecentErrors();
-        return;
-      }
-      if (key.name === 'l') {
-        showLogPaths();
-        return;
-      }
-      if (key.name === 'o') {
-        console.log(`\n${pc.cyan('🌐 Đang mở các dashboard trên trình duyệt...')}${pc.reset('')}`);
-        activeTasks.forEach((t) => {
-          if (t.url) {
-            console.log(`  → ${t.label}: ${t.url}`);
-            openBrowser(t.url);
-          }
-        });
-      }
-    });
-  }
+  const handleKey = (rawStr) => {
+    const key = (rawStr || '').trim().toLowerCase();
+    if (key === 'q' || rawStr === '\u0003') {
+      cleanup();
+    } else if (key === 'r') {
+      restartAll();
+    } else if (key === 'c') {
+      console.clear();
+      showHotkeysBar();
+    } else if (key === 'e') {
+      showRecentErrors();
+    } else if (key === 'l') {
+      showLogPaths();
+    } else if (key === 'o') {
+      console.log(`\n${pc.cyan('🌐 Đang mở các dashboard trên trình duyệt...')}${pc.reset('')}`);
+      activeTasks.forEach((t) => {
+        if (t.url) {
+          console.log(`  → ${t.label}: ${t.url}`);
+          openBrowser(t.url);
+        }
+      });
+    }
+  };
+
+  process.stdin.on('data', (chunk) => {
+    const str = typeof chunk === 'string' ? chunk : chunk.toString();
+    handleKey(str);
+  });
 }
 
 // --- Main Bootstrap ---
@@ -533,6 +551,16 @@ async function main() {
 
   setupHotkeys();
   startTasks(activeTasks);
+
+  if (isOpen) {
+    setTimeout(() => {
+      activeTasks.forEach((t) => {
+        if (t.url) {
+          openBrowser(t.url);
+        }
+      });
+    }, 2500);
+  }
 }
 
 main().catch((err) => {

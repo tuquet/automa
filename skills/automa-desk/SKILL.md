@@ -73,5 +73,15 @@ pub async fn get_daemon_status(
 
 ## 4. 🔧 Verification
 
-- **Dev Mode**: `pnpm -F automa-desk run tauri dev`
-- **Build Desktop Binary**: `pnpm -F automa-desk run tauri build`
+- **Dev Mode**: `pnpm -F @automa/desk run dev`
+- **Unit Tests (Vitest)**: `pnpm -F @automa/desk run test:unit`
+- **Typecheck**: `pnpm -F @automa/desk run typecheck`
+- **Linter**: `pnpm -F @automa/desk run lint`
+- **Build Desktop Binary**: `cargo tauri build`
+
+---
+
+## 5. 📚 Canonical Specifications & Anti-Hallucination Guardrails
+
+- [**SRS Button Business Logic & Event-Driven Schema**](../../docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md): 100% of UI buttons MUST follow the documented FSM states (`IDLE`, `VALIDATING`, `DISPATCHING`, `EXECUTING`, `COMPLETED`, `FAILED`, `TERMINATING`) and use defined `btn.*` IDs.
+- [**OpenAPI Integration Guide**](../../docs/OPENAPI_INTEGRATION_GUIDE.md): 100% of backend interactions MUST consume typed methods from `@automa/types/api`. Raw `fetch()` or hallucinated endpoints are strictly FORBIDDEN.
