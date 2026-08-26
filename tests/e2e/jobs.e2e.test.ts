@@ -18,7 +18,7 @@ describe('E2E: Workflow Jobs & History Lifecycle', () => {
       baseUrl: E2E_BASE_URL,
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
     expect(Array.isArray(res.data)).toBe(true);
   });
 
@@ -26,17 +26,15 @@ describe('E2E: Workflow Jobs & History Lifecycle', () => {
     const res = await submitJob({
       baseUrl: E2E_BASE_URL,
       body: {
-        workflow: {
+        workflowData: {
           name: 'E2E Inline Workflow',
-          drawflow: {
-            nodes: [
-              {
-                id: 'trigger_1',
-                type: 'trigger',
-                data: {},
-              },
-            ],
-          },
+          nodes: [
+            {
+              id: 'trigger_1',
+              type: 'trigger',
+              data: {},
+            },
+          ],
         },
         options: {
           headless: true,
@@ -45,7 +43,7 @@ describe('E2E: Workflow Jobs & History Lifecycle', () => {
       },
     });
 
-    expect([200, 503]).toContain(res.response.status);
+    expect([200, 503]).toContain(res.response?.status);
     if (res.data?.jobId) {
       createdJobId = res.data.jobId;
     }
@@ -56,10 +54,10 @@ describe('E2E: Workflow Jobs & History Lifecycle', () => {
 
     const res = await getJobStatus({
       baseUrl: E2E_BASE_URL,
-      path: { id: createdJobId },
+      path: { job_id: createdJobId },
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
     expect(res.data?.status).toBeDefined();
   });
 
@@ -68,18 +66,14 @@ describe('E2E: Workflow Jobs & History Lifecycle', () => {
 
     const res = await appendJobLog({
       baseUrl: E2E_BASE_URL,
-      path: { id: createdJobId },
+      path: { job_id: createdJobId },
       body: {
-        log: {
-          step: 1,
-          blockId: 'trigger_1',
-          type: 'trigger',
-          message: 'E2E test log message',
-        },
+        type: 'info',
+        message: 'E2E test log message',
       },
     });
 
-    expect([200, 404]).toContain(res.response.status);
+    expect([200, 404]).toContain(res.response?.status);
   });
 
   it('5. Finish job execution', async () => {
@@ -87,10 +81,10 @@ describe('E2E: Workflow Jobs & History Lifecycle', () => {
 
     const res = await finishJob({
       baseUrl: E2E_BASE_URL,
-      path: { id: createdJobId },
+      path: { job_id: createdJobId },
     });
 
-    expect([200, 404]).toContain(res.response.status);
+    expect([200, 404]).toContain(res.response?.status);
   });
 
   it('6. Query job history', async () => {
@@ -98,7 +92,7 @@ describe('E2E: Workflow Jobs & History Lifecycle', () => {
       baseUrl: E2E_BASE_URL,
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
     expect(Array.isArray(res.data)).toBe(true);
   });
 
@@ -107,7 +101,7 @@ describe('E2E: Workflow Jobs & History Lifecycle', () => {
       baseUrl: E2E_BASE_URL,
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
     expect(res.data?.success).toBe(true);
   });
 });

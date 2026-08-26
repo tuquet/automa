@@ -9,7 +9,7 @@ tags: [api/schema]
 
 | Name | Type | Description |
 |---|---|---|
-| `default_type` *(req)* | string |  |
-| `default_user_agent` | string,null |  |
-| `executable_path` | string,null |  |
+| `defaultType` *(req)* | string |  |
+| `defaultUserAgent` | string,null |  |
+| `executablePath` | string,null |  |
 | `headless` *(req)* | boolean |  |

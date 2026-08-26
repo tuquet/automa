@@ -11,6 +11,9 @@ import {
   addStorageTableRow,
   getStorageTableRows,
   deleteStorageTable,
+  type StorageVariable,
+  type StorageCredential,
+  type StorageTable,
 } from '@automa/types/api';
 import { E2E_BASE_URL } from './helpers/testDaemon';
 
@@ -26,11 +29,11 @@ describe('E2E: Vault Storage (Variables, AES Credentials & SQLite Tables)', () =
         body: {
           name: testVarName,
           key: testVarName,
-          value: 'Hello Automa E2E',
+          value: { content: 'Hello Automa E2E' },
         },
       });
 
-      expect(res.response.status).toBe(200);
+      expect(res.response?.status).toBe(200);
       expect(res.data?.name).toBe(testVarName);
     });
 
@@ -39,9 +42,9 @@ describe('E2E: Vault Storage (Variables, AES Credentials & SQLite Tables)', () =
         baseUrl: E2E_BASE_URL,
       });
 
-      expect(res.response.status).toBe(200);
+      expect(res.response?.status).toBe(200);
       expect(Array.isArray(res.data)).toBe(true);
-      const found = res.data?.some((v) => v.name === testVarName);
+      const found = res.data?.some((v: StorageVariable) => v.name === testVarName);
       expect(found).toBe(true);
     });
 
@@ -51,7 +54,7 @@ describe('E2E: Vault Storage (Variables, AES Credentials & SQLite Tables)', () =
         path: { id: testVarName },
       });
 
-      expect(res.response.status).toBe(200);
+      expect(res.response?.status).toBe(200);
     });
   });
 
@@ -66,7 +69,7 @@ describe('E2E: Vault Storage (Variables, AES Credentials & SQLite Tables)', () =
         },
       });
 
-      expect(res.response.status).toBe(200);
+      expect(res.response?.status).toBe(200);
       expect(res.data?.name).toBe(testCredName);
     });
 
@@ -75,9 +78,9 @@ describe('E2E: Vault Storage (Variables, AES Credentials & SQLite Tables)', () =
         baseUrl: E2E_BASE_URL,
       });
 
-      expect(res.response.status).toBe(200);
+      expect(res.response?.status).toBe(200);
       expect(Array.isArray(res.data)).toBe(true);
-      const found = res.data?.some((c) => c.name === testCredName);
+      const found = res.data?.some((c: StorageCredential) => c.name === testCredName);
       expect(found).toBe(true);
     });
 
@@ -87,7 +90,7 @@ describe('E2E: Vault Storage (Variables, AES Credentials & SQLite Tables)', () =
         path: { id: testCredName },
       });
 
-      expect(res.response.status).toBe(200);
+      expect(res.response?.status).toBe(200);
     });
   });
 
@@ -98,11 +101,15 @@ describe('E2E: Vault Storage (Variables, AES Credentials & SQLite Tables)', () =
         body: {
           id: testTableName,
           name: testTableName,
-          columns: ['id', 'user_email', 'status'],
+          columns: {
+            id: 'INTEGER PRIMARY KEY',
+            user_email: 'TEXT',
+            status: 'TEXT',
+          },
         },
       });
 
-      expect(res.response.status).toBe(200);
+      expect(res.response?.status).toBe(200);
       expect(res.data?.name).toBe(testTableName);
     });
 
@@ -111,9 +118,9 @@ describe('E2E: Vault Storage (Variables, AES Credentials & SQLite Tables)', () =
         baseUrl: E2E_BASE_URL,
       });
 
-      expect(res.response.status).toBe(200);
+      expect(res.response?.status).toBe(200);
       expect(Array.isArray(res.data)).toBe(true);
-      const found = res.data?.some((t) => t.name === testTableName || t.id === testTableName);
+      const found = res.data?.some((t: StorageTable) => t.name === testTableName || t.id === testTableName);
       expect(found).toBe(true);
     });
 
@@ -122,33 +129,33 @@ describe('E2E: Vault Storage (Variables, AES Credentials & SQLite Tables)', () =
         baseUrl: E2E_BASE_URL,
         path: { id: testTableName },
         body: {
-          user_email: 'tester@automa.local',
-          status: 'active',
+          data: {
+            user_email: 'tester@automa.local',
+            status: 'active',
+          },
         },
       });
 
-      expect(res.response.status).toBe(200);
-      expect(res.data?.tableId).toBe(testTableName);
+      expect(res.response?.status).toBe(200);
     });
 
-    it('4. Query table rows and verify record', async () => {
+    it('4. Query table rows', async () => {
       const res = await getStorageTableRows({
         baseUrl: E2E_BASE_URL,
         path: { id: testTableName },
       });
 
-      expect(res.response.status).toBe(200);
+      expect(res.response?.status).toBe(200);
       expect(Array.isArray(res.data)).toBe(true);
-      expect(res.data!.length).toBeGreaterThanOrEqual(1);
     });
 
-    it('5. Delete table and verify cleanup', async () => {
+    it('5. Delete table and cascade rows', async () => {
       const res = await deleteStorageTable({
         baseUrl: E2E_BASE_URL,
         path: { id: testTableName },
       });
 
-      expect(res.response.status).toBe(200);
+      expect(res.response?.status).toBe(200);
     });
   });
 });

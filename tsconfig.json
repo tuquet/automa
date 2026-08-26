@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "paths": {
+      "@automa/types": ["./packages/automa-types/src/index.ts"],
+      "@automa/types/*": ["./packages/automa-types/src/*"]
+    }
+  },
+  "include": [
+    "tests/**/*.ts"
+  ]
+}

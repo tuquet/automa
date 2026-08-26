@@ -12,7 +12,7 @@ describe('E2E: Secrets & Passphrase Encryption', () => {
       },
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
     expect(res.data?.encryptedSecret).toBeDefined();
     expect(typeof res.data?.encryptedSecret).toBe('string');
     expect(res.data?.encryptedSecret.length).toBeGreaterThan(10);

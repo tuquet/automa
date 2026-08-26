@@ -11,4 +11,4 @@ Payload containing filesystem path to an unpacked browser extension
 
 | Name | Type | Description |
 |---|---|---|
-| `extension_path` *(req)* | string | Full filesystem path to the unpacked extension directory (containing manifest.json) |
+| `extensionPath` *(req)* | string | Full filesystem path to the unpacked extension directory (containing manifest.json) |

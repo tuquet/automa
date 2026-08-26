@@ -11,13 +11,13 @@ method: "GET"
 > **Method**: `GET`
 > **Path**: `/api/v1/storage/workflow`
 
-Reads and parses an automation workflow file (.workflow.json) from the given filesystem path.
+Reads and parses an automation workflow file (.workflow.json) securely from the given filesystem path.
 
 ## Parameters
 
 | Name | In | Required | Type | Description |
 |---|---|---|---|---|
-| `path` | query | ✅ | string | Full filesystem path to the target .workflow.json file |
+| `path` | query | ✅ | string | Full filesystem path or relative workspace path to the target .workflow.json file |
 
 ## Responses
 

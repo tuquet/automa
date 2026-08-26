@@ -13,3 +13,4 @@ Response after sideloading an extension into a browser profile
 |---|---|---|
 | `message` *(req)* | string | Detailed result message |
 | `status` *(req)* | string | Status code indicator |
+| `success` *(req)* | boolean | Whether sideload succeeded |

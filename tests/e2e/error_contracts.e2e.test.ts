@@ -16,7 +16,7 @@ describe('E2E: Error Contracts & Boundary Handling', () => {
       path: { id: 'non_existent_browser_profile_99999' },
     });
 
-    expect(res.response.status).toBe(404);
+    expect(res.response?.status).toBe(404);
   });
 
   it('2. Create browser with invalid ID characters returns 400 BadRequest', async () => {
@@ -28,7 +28,7 @@ describe('E2E: Error Contracts & Boundary Handling', () => {
       },
     });
 
-    expect(res.response.status).toBe(400);
+    expect(res.response?.status).toBe(400);
   });
 
   it('3. Delete non-existent table returns 404 or gracefully succeeds', async () => {
@@ -37,18 +37,17 @@ describe('E2E: Error Contracts & Boundary Handling', () => {
       path: { id: 'non_existent_table_xyz' },
     });
 
-    expect([200, 404]).toContain(res.response.status);
+    expect([200, 404]).toContain(res.response?.status);
   });
 
   it('4. Query rows of empty or non-existent table returns empty list or 404', async () => {
     const res = await getStorageTableRows({
       baseUrl: E2E_BASE_URL,
       path: { id: 'empty_table_123' },
-      query: { limit: 10, offset: 0 },
     });
 
-    expect([200, 404]).toContain(res.response.status);
-    if (res.response.status === 200) {
+    expect([200, 404]).toContain(res.response?.status);
+    if (res.response?.status === 200) {
       expect(Array.isArray(res.data)).toBe(true);
       expect(res.data?.length).toBe(0);
     }
@@ -63,6 +62,6 @@ describe('E2E: Error Contracts & Boundary Handling', () => {
       },
     });
 
-    expect([400, 500]).toContain(res.response.status);
+    expect([400, 500]).toContain(res.response?.status);
   });
 });

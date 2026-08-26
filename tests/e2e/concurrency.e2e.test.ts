@@ -12,10 +12,10 @@ describe('E2E: Concurrency, Load & Thread Safety', () => {
     const promises = Array.from({ length: 25 }, async (_, i) => {
       if (i % 2 === 0) {
         const res = await getHealth({ baseUrl: E2E_BASE_URL });
-        expect(res.response.status).toBe(200);
+        expect(res.response?.status).toBe(200);
       } else {
         const res = await getSystemMetrics({ baseUrl: E2E_BASE_URL });
-        expect(res.response.status).toBe(200);
+        expect(res.response?.status).toBe(200);
       }
     });
 
@@ -35,11 +35,11 @@ describe('E2E: Concurrency, Load & Thread Safety', () => {
         body: {
           name: varKey,
           key: varKey,
-          value: `Concurrent value ${i}`,
+          value: { index: i, text: `Concurrent value ${i}` },
         },
       });
 
-      expect(res.response.status).toBe(200);
+      expect(res.response?.status).toBe(200);
     });
 
     await Promise.all(createPromises);
@@ -50,7 +50,7 @@ describe('E2E: Concurrency, Load & Thread Safety', () => {
         baseUrl: E2E_BASE_URL,
         path: { id },
       });
-      expect(res.response.status).toBe(200);
+      expect(res.response?.status).toBe(200);
     });
 
     await Promise.all(deletePromises);

@@ -9,6 +9,6 @@ tags: [api/schema]
 
 | Name | Type | Description |
 |---|---|---|
-| `auto_recycle_slots` *(req)* | boolean |  |
-| `enforce_cdp_bounds` *(req)* | boolean |  |
-| `scale_factor` *(req)* | number |  |
+| `autoRecycleSlots` *(req)* | boolean |  |
+| `enforceCdpBounds` *(req)* | boolean |  |
+| `scaleFactor` *(req)* | number |  |

@@ -19,7 +19,7 @@ describe('E2E: Matrix Campaign Execution & Orchestration', () => {
       },
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
     expect(res.data?.campaignId).toBe(testCampaignId);
     expect(res.data?.status).toBe('running');
     expect(res.data?.allocatedSlots.length).toBeGreaterThan(0);
@@ -32,7 +32,7 @@ describe('E2E: Matrix Campaign Execution & Orchestration', () => {
       path: { id: testCampaignId },
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
     expect(res.data?.campaignId).toBe(testCampaignId);
     expect(res.data?.status).toBe('active');
     expect(Array.isArray(res.data?.activeSlots)).toBe(true);
@@ -44,6 +44,6 @@ describe('E2E: Matrix Campaign Execution & Orchestration', () => {
       path: { id: testCampaignId },
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
   });
 });

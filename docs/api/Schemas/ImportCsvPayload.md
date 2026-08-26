@@ -11,4 +11,4 @@ Request payload containing raw CSV formatted browser profiles
 
 | Name | Type | Description |
 |---|---|---|
-| `csv_string` *(req)* | string | Raw CSV string containing profile headers and rows |
+| `csvString` *(req)* | string | Raw CSV string containing profile headers and rows |

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { lintWorkflow } from '@automa/types/api';
+import { lintWorkflow, type LintIssue } from '@automa/types/api';
 import { E2E_BASE_URL } from './helpers/testDaemon';
 
 describe('E2E: Workflow AST Static Linter', () => {
@@ -17,7 +17,7 @@ describe('E2E: Workflow AST Static Linter', () => {
       },
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
     expect(res.data?.valid).toBe(true);
     expect(res.data?.issues.length).toBe(0);
   });
@@ -33,9 +33,9 @@ describe('E2E: Workflow AST Static Linter', () => {
       },
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
     expect(res.data?.valid).toBe(false);
-    const errorIssue = res.data?.issues.find((i) => i.severity === 'error');
+    const errorIssue = res.data?.issues.find((i: LintIssue) => i.severity === 'error');
     expect(errorIssue).toBeDefined();
     expect(errorIssue?.message).toContain('missing required property \'id\'');
   });

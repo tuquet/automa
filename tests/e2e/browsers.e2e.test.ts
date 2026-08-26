@@ -7,6 +7,7 @@ import {
   importBrowserCookies,
   getBrowserCookies,
   deleteBrowser,
+  type BrowserResponse,
 } from '@automa/types/api';
 import { E2E_BASE_URL } from './helpers/testDaemon';
 
@@ -19,12 +20,11 @@ describe('E2E: Browser Profiles & Cookies Management', () => {
       body: {
         id: testBrowserId,
         name: 'E2E Automated Profile',
-        browserType: 'chrome',
         timezone: 'Asia/Ho_Chi_Minh',
       },
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
     expect(res.data).toBeDefined();
   });
 
@@ -33,9 +33,9 @@ describe('E2E: Browser Profiles & Cookies Management', () => {
       baseUrl: E2E_BASE_URL,
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
     expect(Array.isArray(res.data)).toBe(true);
-    const found = res.data?.some((b) => b.id === testBrowserId);
+    const found = res.data?.some((b: BrowserResponse) => b.id === testBrowserId);
     expect(found).toBe(true);
   });
 
@@ -45,7 +45,7 @@ describe('E2E: Browser Profiles & Cookies Management', () => {
       path: { id: testBrowserId },
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
     expect(res.data?.id).toBe(testBrowserId);
     expect(res.data?.name).toBe('E2E Automated Profile');
   });
@@ -60,7 +60,7 @@ describe('E2E: Browser Profiles & Cookies Management', () => {
       },
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
   });
 
   it('5. Import and export browser session cookies', async () => {
@@ -77,14 +77,14 @@ describe('E2E: Browser Profiles & Cookies Management', () => {
         },
       ],
     });
-    expect(importRes.response.status).toBe(200);
+    expect(importRes.response?.status).toBe(200);
 
     // Export cookies
     const exportRes = await getBrowserCookies({
       baseUrl: E2E_BASE_URL,
       path: { id: testBrowserId },
     });
-    expect(exportRes.response.status).toBe(200);
+    expect(exportRes.response?.status).toBe(200);
     expect(Array.isArray(exportRes.data)).toBe(true);
   });
 
@@ -93,12 +93,12 @@ describe('E2E: Browser Profiles & Cookies Management', () => {
       baseUrl: E2E_BASE_URL,
       path: { id: testBrowserId },
     });
-    expect(deleteRes.response.status).toBe(200);
+    expect(deleteRes.response?.status).toBe(200);
 
     const getRes = await getBrowserDetail({
       baseUrl: E2E_BASE_URL,
       path: { id: testBrowserId },
     });
-    expect(getRes.response.status).toBe(404);
+    expect(getRes.response?.status).toBe(404);
   });
 });

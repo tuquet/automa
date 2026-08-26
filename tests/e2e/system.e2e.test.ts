@@ -14,7 +14,7 @@ describe('E2E: System Telemetry, Settings & Linter API', () => {
       baseUrl: E2E_BASE_URL,
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
     expect(res.data?.status).toBe('ok');
   });
 
@@ -23,7 +23,7 @@ describe('E2E: System Telemetry, Settings & Linter API', () => {
       baseUrl: E2E_BASE_URL,
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
     expect(res.data).toBeDefined();
     expect(typeof res.data?.cpuUsage).toBe('number');
     expect(typeof res.data?.memoryFree).toBe('number');
@@ -36,7 +36,7 @@ describe('E2E: System Telemetry, Settings & Linter API', () => {
       baseUrl: E2E_BASE_URL,
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
     expect(res.data?.grid).toBeDefined();
     expect(res.data?.grid.matrix).toBeDefined();
   });
@@ -54,7 +54,7 @@ describe('E2E: System Telemetry, Settings & Linter API', () => {
       },
     });
 
-    expect(res.response.status).toBe(200);
+    expect(res.response?.status).toBe(200);
     expect(res.data?.grid.matrix.columns).toBe(4);
     expect(res.data?.grid.matrix.rows).toBe(2);
   });
@@ -63,23 +63,19 @@ describe('E2E: System Telemetry, Settings & Linter API', () => {
     const res = await lintWorkflow({
       baseUrl: E2E_BASE_URL,
       body: {
-        workflow: {
-          name: 'Test Workflow',
-          drawflow: {
-            nodes: [
-              {
-                id: 'trigger_1',
-                type: 'trigger',
-                data: {},
-              },
-            ],
+        nodes: [
+          {
+            id: 'trigger_1',
+            type: 'trigger',
+            data: {},
           },
-        },
+        ],
+        edges: [],
       },
     });
 
-    expect(res.response.status).toBe(200);
-    expect(res.data?.valid).toBeDefined();
+    expect(res.response?.status).toBe(200);
+    expect(res.data?.valid).toBe(true);
     expect(Array.isArray(res.data?.issues)).toBe(true);
   });
 });

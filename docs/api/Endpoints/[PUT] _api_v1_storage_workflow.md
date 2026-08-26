@@ -11,7 +11,7 @@ method: "PUT"
 > **Method**: `PUT`
 > **Path**: `/api/v1/storage/workflow`
 
-Serializes and writes the workflow content to the specified path on disk, creating parent directories automatically if needed.
+Serializes and writes the workflow content securely to the specified path on disk, creating parent directories automatically if needed.
 
 ## Request Body
 
