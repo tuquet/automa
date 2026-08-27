@@ -42,22 +42,179 @@
 .dark,
 [data-theme="dark"],
 .vscode-dark {
-  --automa-bg: var(--vscode-sideBar-background, #09090b);
-  --automa-bg-subtle: var(--vscode-editor-background, #18181b);
-  --automa-bg-hover: var(--vscode-list-hoverBackground, rgba(255, 255, 255, 0.06));
-  --automa-bg-active: var(--vscode-list-activeSelectionBackground, rgba(59, 130, 246, 0.2));
+  --automa-bg: var(--vscode-sideBar-background, #18181b);
+  --automa-bg-subtle: var(--vscode-editor-background, #09090b);
+  --automa-bg-hover: var(--vscode-list-hoverBackground, rgba(255, 255, 255, 0.08));
+  --automa-bg-active: var(--vscode-list-activeSelectionBackground, rgba(99, 102, 241, 0.15));
 
   --automa-border: var(--vscode-panel-border, #27272a);
   --automa-border-subtle: var(--vscode-sideBarSectionHeader-border, #1e1e24);
-  --automa-border-focus: var(--vscode-focusBorder, #60a5fa);
+  --automa-border-focus: var(--vscode-focusBorder, #6366f1);
 
-  --automa-text-primary: var(--vscode-foreground, #f8fafc);
+  --automa-text-primary: var(--vscode-foreground, #f4f4f5);
   --automa-text-muted: var(--vscode-descriptionForeground, #a1a1aa);
   --automa-text-disabled: var(--vscode-disabledForeground, #71717a);
 
-  --automa-accent: var(--vscode-button-background, #3b82f6);
-  --automa-accent-hover: var(--vscode-button-hoverBackground, #2563eb);
+  --automa-accent: var(--vscode-button-background, #6366f1);
+  --automa-accent-hover: var(--vscode-button-hoverBackground, #4f46e5);
   --automa-accent-foreground: var(--vscode-button-foreground, #ffffff);
 
   --automa-shadow-dropdown: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+}
+
+/* ==========================================================================
+   Automa Select Component Scoped Tokens & Geometry
+   ========================================================================== */
+
+.automa-select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.automa-select-trigger {
+  display: flex;
+  height: 32px;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 6px;
+  border: 1px solid var(--automa-border);
+  background-color: var(--automa-bg-subtle);
+  padding: 0 10px;
+  color: var(--automa-text-primary);
+  font-size: 12px;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.automa-select-trigger:hover:not(:disabled) {
+  background-color: var(--automa-bg-hover);
+  border-color: var(--automa-border-focus);
+}
+
+.automa-select-trigger:focus:not(:disabled) {
+  border-color: var(--automa-border-focus);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.automa-select-trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.automa-select-popover {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 4px);
+  z-index: 9999;
+  width: 100%;
+  min-width: 220px;
+  border-radius: 8px;
+  border: 1px solid var(--automa-border);
+  background-color: var(--automa-bg);
+  box-shadow: var(--automa-shadow-dropdown);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  animation: automaDropdownFade 0.15s ease-out;
+  box-sizing: border-box;
+}
+
+@keyframes automaDropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.automa-select-search {
+  padding: 6px;
+  border-bottom: 1px solid var(--automa-border-subtle);
+  background-color: var(--automa-bg-subtle);
+  box-sizing: border-box;
+}
+
+.automa-select-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.automa-select-search-icon {
+  position: absolute;
+  left: 8px;
+  width: 13px;
+  height: 13px;
+  color: var(--automa-text-muted);
+  pointer-events: none;
+}
+
+.automa-select-search-input {
+  height: 28px;
+  width: 100%;
+  border-radius: 5px;
+  border: 1px solid var(--automa-border);
+  background-color: var(--automa-bg);
+  padding-left: 28px;
+  padding-right: 24px;
+  font-size: 11px;
+  color: var(--automa-text-primary);
+  outline: none;
+  transition: border-color 0.15s ease;
+  box-sizing: border-box;
+}
+
+.automa-select-search-input:focus {
+  border-color: var(--automa-border-focus);
+}
+
+.automa-select-clear-btn {
+  position: absolute;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--automa-text-muted);
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 2px;
+}
+
+.automa-select-clear-btn:hover {
+  color: var(--automa-text-primary);
+}
+
+.automa-select-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  margin: 2px 4px;
+  border-radius: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.automa-select-item:hover {
+  background-color: var(--automa-bg-hover);
+}
+
+.automa-select-item.is-selected {
+  background-color: var(--automa-bg-active);
+  color: var(--automa-accent);
+  font-weight: 500;
 }

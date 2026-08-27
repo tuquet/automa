@@ -173,56 +173,59 @@ watch(isOpen, (open) => {
 
 <template>
   <div
-    class="automa-select-wrapper relative inline-block w-full font-sans text-sm"
+    class="automa-select-wrapper"
     :data-testid="schema?.presentation?.dataTestId || props.id"
     @keydown="handleKeydown"
   >
     <!-- Select Trigger Button -->
     <button
       type="button"
-      class="automa-select-trigger flex h-9 w-full items-center justify-between rounded-lg border border-[var(--automa-border)] bg-[var(--automa-bg)] px-3 text-[var(--automa-text-primary)] transition-all hover:bg-[var(--automa-bg-hover)] focus:border-[var(--automa-border-focus)] focus:outline-none focus:ring-1 focus:ring-[var(--automa-border-focus)] disabled:cursor-not-allowed disabled:opacity-50"
+      class="automa-select-trigger"
       :aria-expanded="isOpen"
       :disabled="props.disabled"
       @click="toggleDropdown"
     >
-      <span class="truncate">
+      <span class="truncate flex items-center gap-1.5 flex-1 text-left">
         <template v-if="selectedOption">
-          <span class="font-medium">{{ selectedOption.label }}</span>
-          <span v-if="selectedOption.badge" class="ml-2 inline-flex items-center rounded px-1.5 py-0.5 text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+          <span class="font-medium truncate">{{ selectedOption.label }}</span>
+          <span
+            v-if="selectedOption.badge"
+            class="inline-flex items-center rounded px-1.5 py-0.2 text-[10px] font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shrink-0"
+          >
             {{ selectedOption.badge.text }}
           </span>
         </template>
         <template v-else>
-          <span class="text-[var(--automa-text-muted)]">{{ props.placeholder }}</span>
+          <span class="text-[var(--automa-text-muted)] truncate">{{ props.placeholder }}</span>
         </template>
       </span>
 
-      <span class="ml-2 flex items-center">
-        <Loader2 v-if="isLoading" class="h-4 w-4 animate-spin text-[var(--automa-text-muted)]" />
-        <ChevronDown v-else class="h-4 w-4 text-[var(--automa-text-muted)] transition-transform duration-200" :class="{ 'rotate-180': isOpen }" />
+      <span class="ml-2 flex items-center shrink-0">
+        <Loader2 v-if="isLoading" class="h-3.5 w-3.5 animate-spin text-[var(--automa-text-muted)]" />
+        <ChevronDown v-else class="h-3.5 w-3.5 text-[var(--automa-text-muted)] transition-transform duration-200" :class="{ 'rotate-180': isOpen }" />
       </span>
     </button>
 
     <!-- Dropdown Popover -->
     <div
       v-if="isOpen"
-      class="automa-select-popover absolute left-0 top-full z-50 mt-1.5 w-full min-w-[200px] overflow-hidden rounded-xl border border-[var(--automa-border)] bg-[var(--automa-bg)] shadow-[var(--automa-shadow-dropdown)] backdrop-blur-md"
+      class="automa-select-popover"
     >
       <!-- Search Box -->
-      <div v-if="schema?.search?.searchable !== false" class="border-b border-[var(--automa-border-subtle)] p-2">
-        <div class="relative flex items-center">
-          <Search class="absolute left-2.5 h-3.5 w-3.5 text-[var(--automa-text-muted)]" />
+      <div v-if="schema?.search?.searchable !== false" class="automa-select-search">
+        <div class="automa-select-search-box">
+          <Search class="automa-select-search-icon" />
           <input
             ref="searchInputRef"
             v-model="searchQuery"
             type="text"
-            class="h-8 w-full rounded-md border border-[var(--automa-border)] bg-[var(--automa-bg-subtle)] pl-8 pr-7 text-xs text-[var(--automa-text-primary)] placeholder-[var(--automa-text-muted)] focus:border-[var(--automa-border-focus)] focus:outline-none"
+            class="automa-select-search-input"
             :placeholder="schema?.search?.placeholder || 'Search options...'"
           />
           <button
             v-if="searchQuery"
             type="button"
-            class="absolute right-2 text-[var(--automa-text-muted)] hover:text-[var(--automa-text-primary)]"
+            class="automa-select-clear-btn"
             @click="searchQuery = ''"
           >
             <X class="h-3 w-3" />
@@ -231,8 +234,8 @@ watch(isOpen, (open) => {
       </div>
 
       <!-- State Renderers -->
-      <div v-if="fsmState === 'LOADING'" class="flex items-center justify-center py-6 text-[var(--automa-text-muted)]">
-        <Loader2 class="mr-2 h-4 w-4 animate-spin" />
+      <div v-if="fsmState === 'LOADING'" class="flex items-center justify-center py-6 text-[var(--automa-text-muted)] gap-2">
+        <Loader2 class="h-4 w-4 animate-spin text-[var(--automa-accent)]" />
         <span class="text-xs">Loading items...</span>
       </div>
 
@@ -244,7 +247,7 @@ watch(isOpen, (open) => {
       <div
         v-else
         ref="parentRef"
-        class="max-h-60 overflow-y-auto p-1"
+        class="max-h-60 overflow-y-auto py-1"
       >
         <div
           :style="{
@@ -265,11 +268,9 @@ watch(isOpen, (open) => {
               width: '100%',
               transform: `translateY(${virtualRow.start}px)`,
             }"
-            class="flex cursor-pointer select-none items-center justify-between rounded-md px-2.5 py-2 text-xs transition-colors"
+            class="automa-select-item"
             :class="[
-              (filteredOptions[virtualRow.index]?.value as unknown) === props.modelValue
-                ? 'bg-[var(--automa-bg-active)] text-[var(--automa-accent)] font-medium'
-                : 'text-[var(--automa-text-primary)] hover:bg-[var(--automa-bg-hover)]',
+              (filteredOptions[virtualRow.index]?.value as unknown) === props.modelValue ? 'is-selected' : '',
               focusedIndex === virtualRow.index ? 'bg-[var(--automa-bg-hover)] ring-1 ring-[var(--automa-border-focus)]' : '',
             ]"
             @click="selectItem(filteredOptions[virtualRow.index]!)"
@@ -284,7 +285,7 @@ watch(isOpen, (open) => {
             <div class="ml-2 flex flex-shrink-0 items-center gap-1.5">
               <span
                 v-if="filteredOptions[virtualRow.index]?.badge"
-                class="rounded px-1 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                class="rounded px-1.5 py-0.2 text-[10px] font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
               >
                 {{ filteredOptions[virtualRow.index]?.badge?.text }}
               </span>
