@@ -53,6 +53,9 @@ importers:
       '@automa/types':
         specifier: workspace:*
         version: link:../packages/automa-types
+      '@automa/ui':
+        specifier: workspace:*
+        version: link:../packages/automa-ui
       '@tauri-apps/api':
         specifier: ^2.11.1
         version: 2.11.1
@@ -259,6 +262,9 @@ importers:
       '@automa/types':
         specifier: workspace:*
         version: link:../packages/automa-types
+      '@automa/ui':
+        specifier: workspace:*
+        version: link:../packages/automa-ui
       '@codemirror/autocomplete':
         specifier: ^6.9.0
         version: 6.20.3

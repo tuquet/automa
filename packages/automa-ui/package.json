@@ -33,7 +33,8 @@
       "import": "./dist/plugin/index.js",
       "default": "./dist/plugin/index.js"
     },
-    "./styles": "./dist/tokens.css"
+    "./dist/ui.css": "./dist/ui.css",
+    "./styles": "./dist/ui.css"
   },
   "files": [
     "dist"
