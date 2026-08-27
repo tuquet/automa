@@ -28,7 +28,7 @@ automa-ecosystem/
 ├── automa-vsce/        # [VS Code Extensions]    - Thin-Client IDE Extension (Webview Canvas, TreeViews) [Tên cũ: automa-vscode]
 ├── automa-desk/        # [Desktop Native App]    - Ứng dụng Desktop độc lập (Tauri v2 + Vue 3 Frontend)
 ├── automa-vault/       # [Storage & Security]    - Kho lưu trữ Campaign, Profiles & Workflows
-└── packages/           # [Shared Workspaces]     - Shared Types, SDKs & WebExtension Polyfills
+└── packages/           # [Shared Workspaces]     - Shared UI SDK (@automa/ui), Types & Contracts (@automa/types)
 ```
 
 > [!NOTE]

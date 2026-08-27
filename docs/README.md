@@ -51,4 +51,5 @@ Hệ thống tài liệu được chuẩn hóa và quản trị theo mô hình *
 3. 🌐 [**Automa Web Extension & Studio**](../automa-webe/README.md) - Standalone Web Studio (`dist/studio`) và Headless Runner (`dist/cli-runner`).
 4. 🖥️ [**Automa Desktop App (Tauri v2)**](../automa-desk/README.md) - Ứng dụng Desktop độc lập Native OS tích hợp Pinia Domain Stores và Browser Waterfall.
 5. 📂 [**Automa Vault**](../automa-vault/README.md) - Cấu trúc lưu trữ Local Vault, Campaigns, và Browsers.
-6. 🧪 [**Ma Trận Kiểm Thử Toàn Hệ Sinh Thái (Ecosystem Test Matrix)**](./TEST_MATRIX.md) - Báo cáo kim tự tháp kiểm thử 4 tầng toàn diện.
+6. 🎨 [**Automa UI SDK (`@automa/ui`)**](../packages/automa-ui/README.md) - Gói thư viện giao diện & trạng thái dùng chung (Shared Components, TanStack Query & Virtual, 6 Pinia Stores, SSE Invalidation).
+7. 🧪 [**Ma Trận Kiểm Thử Toàn Hệ Sinh Thái (Ecosystem Test Matrix)**](./TEST_MATRIX.md) - Báo cáo kim tự tháp kiểm thử 4 tầng toàn diện.
