@@ -28,6 +28,16 @@
       "import": "./dist/components/index.js",
       "default": "./dist/components/index.js"
     },
+    "./ui": {
+      "types": "./dist/components/ui/index.d.ts",
+      "import": "./dist/components/ui/index.js",
+      "default": "./dist/components/ui/index.js"
+    },
+    "./utils": {
+      "types": "./dist/lib/utils.d.ts",
+      "import": "./dist/lib/utils.js",
+      "default": "./dist/lib/utils.js"
+    },
     "./plugin": {
       "types": "./dist/plugin/index.d.ts",
       "import": "./dist/plugin/index.js",
@@ -51,16 +61,22 @@
   "dependencies": {
     "@automa/types": "workspace:*",
     "@tanstack/vue-query": "^5.67.2",
+    "@tanstack/vue-table": "^8.21.2",
     "@tanstack/vue-virtual": "^3.13.2",
     "@vueuse/core": "^14.4.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "lucide-vue-next": "^0.475.0",
     "pinia": "^4.0.3",
+    "radix-vue": "^1.9.17",
+    "tailwind-merge": "^3.6.0",
     "vue": "^3.5.41"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.8",
     "@types/node": "^26.2.0",
     "@vitejs/plugin-vue": "^5.2.1",
+    "@vue/test-utils": "^2.4.6",
     "happy-dom": "^17.1.8",
     "typescript": "^5.7.3",
     "vite": "^6.0.11",

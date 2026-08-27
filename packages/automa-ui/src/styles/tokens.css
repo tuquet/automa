@@ -36,6 +36,28 @@
   --automa-radius-lg: 12px;
   --automa-radius-full: 9999px;
   --automa-shadow-dropdown: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+
+  /* Shadcn UI Standard Token Aliases */
+  --background: var(--automa-bg);
+  --foreground: var(--automa-text-primary);
+  --card: var(--automa-bg);
+  --card-foreground: var(--automa-text-primary);
+  --popover: var(--automa-bg);
+  --popover-foreground: var(--automa-text-primary);
+  --primary: var(--automa-accent);
+  --primary-foreground: var(--automa-accent-foreground);
+  --secondary: var(--automa-bg-hover);
+  --secondary-foreground: var(--automa-text-primary);
+  --muted: var(--automa-bg-subtle);
+  --muted-foreground: var(--automa-text-muted);
+  --accent: var(--automa-bg-hover);
+  --accent-foreground: var(--automa-text-primary);
+  --destructive: var(--automa-error);
+  --destructive-foreground: #ffffff;
+  --border: var(--automa-border);
+  --input: var(--automa-border);
+  --ring: var(--automa-border-focus);
+  --radius: 0.5rem;
 }
 
 /* Dark Mode Tokens */
@@ -60,6 +82,27 @@
   --automa-accent-foreground: var(--vscode-button-foreground, #ffffff);
 
   --automa-shadow-dropdown: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+
+  /* Shadcn UI Standard Token Aliases (Dark) */
+  --background: var(--automa-bg);
+  --foreground: var(--automa-text-primary);
+  --card: var(--automa-bg);
+  --card-foreground: var(--automa-text-primary);
+  --popover: var(--automa-bg);
+  --popover-foreground: var(--automa-text-primary);
+  --primary: var(--automa-accent);
+  --primary-foreground: var(--automa-accent-foreground);
+  --secondary: var(--automa-bg-hover);
+  --secondary-foreground: var(--automa-text-primary);
+  --muted: var(--automa-bg-subtle);
+  --muted-foreground: var(--automa-text-muted);
+  --accent: var(--automa-bg-hover);
+  --accent-foreground: var(--automa-text-primary);
+  --destructive: var(--automa-error);
+  --destructive-foreground: #ffffff;
+  --border: var(--automa-border);
+  --input: var(--automa-border);
+  --ring: var(--automa-border-focus);
 }
 
 /* ==========================================================================
@@ -694,4 +737,54 @@
   justify-content: flex-end;
   gap: 10px;
   padding-top: 8px;
+}
+
+/* ==========================================================================
+   5. Radix Dialog & Command Palette Overlay Styles
+   ========================================================================== */
+
+[data-radix-dialog-overlay] {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  animation: automaOverlayFadeIn 0.15s ease-out;
+}
+
+[data-radix-dialog-content] {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 50;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 32rem;
+  background-color: var(--background, var(--automa-bg));
+  color: var(--foreground, var(--automa-text-primary));
+  border: 1px solid var(--border, var(--automa-border));
+  border-radius: 0.75rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: automaDialogZoomIn 0.15s ease-out;
+  box-sizing: border-box;
+}
+
+@keyframes automaOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes automaDialogZoomIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }

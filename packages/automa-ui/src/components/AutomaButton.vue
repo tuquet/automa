@@ -24,14 +24,20 @@ import {
   ZapOff,
 } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
+import { cn } from '../lib/utils'
 import ConfirmationModal from './ConfirmationModal.vue'
+import { Button, type ButtonVariants } from './ui/button'
+
+defineOptions({
+  inheritAttrs: false,
+})
 
 const props = withDefaults(
   defineProps<{
     id: string
     label?: string
-    variant?: 'default' | 'primary' | 'destructive' | 'outline' | 'ghost' | 'secondary'
-    size?: 'xs' | 'sm' | 'md' | 'lg'
+    variant?: ButtonVariants['variant']
+    size?: ButtonVariants['size']
     disabled?: boolean
     loading?: boolean
     fsmState?: ButtonExecutionState
@@ -45,6 +51,10 @@ const props = withDefaults(
     disabled: false,
     loading: false,
     iconOnly: false,
+    label: undefined,
+    fsmState: undefined,
+    tooltip: undefined,
+    contextPayload: undefined,
   },
 )
 
@@ -127,19 +137,19 @@ function handleConfirmAction() {
 </script>
 
 <template>
-  <button
-    type="button"
+  <Button
+    v-bind="$attrs"
+    :variant="variant"
+    :size="iconOnly ? (size === 'xs' ? 'icon-xs' : size === 'sm' ? 'icon-sm' : 'icon') : size"
     :disabled="disabled || isBusy"
     :title="effectiveTooltip"
     :data-testid="schema?.presentation.dataTestId || props.id.replace(/\./g, '-')"
-    class="automa-btn"
-    :class="[
-      `automa-btn-${size}`,
-      `automa-btn-${variant}`,
-      iconOnly ? 'automa-btn-icon-only' : '',
-      internalFsmState === 'COMPLETED' ? '!bg-emerald-600 !text-white !border-emerald-600' : '',
-      internalFsmState === 'FAILED' ? '!bg-rose-600 !text-white !border-rose-600' : '',
-    ]"
+    :class="
+      cn(
+        internalFsmState === 'COMPLETED' ? '!bg-emerald-600 !text-white !border-emerald-600' : '',
+        internalFsmState === 'FAILED' ? '!bg-rose-600 !text-white !border-rose-600' : '',
+      )
+    "
     @click="handleClick"
   >
     <!-- Spinner while loading/dispatching/executing -->
@@ -186,7 +196,7 @@ function handleConfirmAction() {
         {{ effectiveLabel }}
       </span>
     </slot>
-  </button>
+  </Button>
 
   <!-- Auto Confirmation Modal for Destructive/Warning Buttons -->
   <ConfirmationModal

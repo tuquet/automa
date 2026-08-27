@@ -30,6 +30,7 @@ export default defineConfig({
         '@automa/types',
         '@automa/types/api',
         '@tanstack/vue-query',
+        '@tanstack/vue-table',
         '@tanstack/vue-virtual',
         '@vueuse/core',
         'lucide-vue-next',

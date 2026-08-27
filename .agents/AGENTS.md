@@ -108,6 +108,7 @@
   - [**SRS Horizontal Buttons & FSM Engine**](docs/srs/SRS_HORIZONTAL_BUTTONS.md): Master specification for all button actions, FSM states (`IDLE`, `VALIDATING`, `DISPATCHING`, `EXECUTING`, `COMPLETED`, `FAILED`, `TERMINATING`), button IDs (`btn.*`), and real-time SSE/WS reactions.
   - [**SRS Horizontal Selects & Virtualization**](docs/srs/SRS_HORIZONTAL_SELECTS.md): Master specification for remote-driven, virtualized, debounced fuzzy-search dropdowns (`select.*`), FSM states, and SSE cache invalidation.
   - [**SRS Horizontal Feature Stores & Reactive Hub**](docs/srs/SRS_HORIZONTAL_FEATURE_STORES.md): Master specification for 6 Pinia domain stores, SSE to store dispatching, and cross-store reactivity.
+  - [**SRS Horizontal UI Components & Shadcn Design System**](docs/srs/SRS_HORIZONTAL_UI_COMPONENTS.md): Master specification for 19 Shadcn-Vue atomic primitives, Theme Variable Inversion, and CLI synchronization (`sync:ui`, `add:ui`, `audit:ui`).
   - [**Vertical Menu SRS Collection**](docs/srs/):
     * [🎨 Menu 1: Studio Canvas & Workflow Editor](docs/srs/SRS_MENU_STUDIO.md)
     * [🌐 Menu 2: Browsers Fleet Management](docs/srs/SRS_MENU_BROWSERS.md)
