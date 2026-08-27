@@ -51,8 +51,10 @@ describe('@automa/ui - Unified Button Engine & Modals', () => {
     for (const id of canonicalIds) {
       const schema = BUTTON_PROTOTYPE_REGISTRY[id]
       expect(schema, `Missing schema for ${id}`).toBeDefined()
-      expect(schema.id).toBe(id)
-      expect(schema.presentation.dataTestId).toBeDefined()
+      if (schema) {
+        expect(schema.id).toBe(id)
+        expect(schema.presentation.dataTestId).toBeDefined()
+      }
     }
   })
 
@@ -69,10 +71,10 @@ describe('@automa/ui - Unified Button Engine & Modals', () => {
     for (const id of destructiveIds) {
       const schema = BUTTON_PROTOTYPE_REGISTRY[id]
       expect(
-        schema.preConditions.confirmationModal,
+        schema?.preConditions.confirmationModal,
         `Expected confirmation for ${id}`,
       ).toBeDefined()
-      expect(schema.preConditions.confirmationModal?.variant).toBe('destructive')
+      expect(schema?.preConditions.confirmationModal?.variant).toBe('destructive')
     }
   })
 })

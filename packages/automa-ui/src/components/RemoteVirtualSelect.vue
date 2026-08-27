@@ -1,7 +1,18 @@
 <script setup lang="ts" generic="T = string">
 import { getSelectSchema, type SelectFsmState, type SelectOption } from '@automa/types'
 import { useVirtualizer } from '@tanstack/vue-virtual'
-import { Check, ChevronDown, Loader2, Search, X } from 'lucide-vue-next'
+import {
+  Check,
+  ChevronDown,
+  Globe,
+  Inbox,
+  Loader2,
+  Plus,
+  Search,
+  SearchX,
+  Workflow,
+  X,
+} from 'lucide-vue-next'
 import { computed, nextTick, ref, watch } from 'vue'
 import { useBrowsersQuery } from '../hooks/useBrowsersQuery'
 import { useStorageTablesQuery, useStorageVariablesQuery } from '../hooks/useStorageQuery'
@@ -26,6 +37,7 @@ const props = withDefaults(
 const emit = defineEmits<{
   (e: 'update:modelValue', value: T): void
   (e: 'change', option: SelectOption<T>): void
+  (e: 'create', selectId: string): void
 }>()
 
 const schema = computed(() => getSelectSchema(props.id))
@@ -163,6 +175,11 @@ function handleKeydown(e: KeyboardEvent) {
   }
 }
 
+function handleCreateAction() {
+  emit('create', props.id)
+  isOpen.value = false
+}
+
 watch(isOpen, (open) => {
   if (!open) {
     searchQuery.value = ''
@@ -239,8 +256,81 @@ watch(isOpen, (open) => {
         <span class="text-xs">Loading items...</span>
       </div>
 
-      <div v-else-if="fsmState === 'EMPTY'" class="py-6 text-center text-xs text-[var(--automa-text-muted)]">
-        No matching options found
+      <div v-else-if="fsmState === 'EMPTY'" class="automa-select-empty-container">
+        <!-- Search Query Empty State -->
+        <template v-if="searchQuery.trim()">
+          <SearchX class="h-6 w-6 text-[var(--automa-text-muted)] opacity-60" />
+          <div class="text-center px-3">
+            <p class="text-xs font-semibold text-[var(--automa-text-primary)]">No matching results</p>
+            <p class="text-[11px] text-[var(--automa-text-muted)] mt-0.5 break-all">
+              No results found for "<span class="font-mono text-[var(--automa-text-primary)]">{{ searchQuery }}</span>"
+            </p>
+          </div>
+          <button
+            type="button"
+            class="automa-select-clear-link"
+            @click="searchQuery = ''"
+          >
+            Clear search
+          </button>
+        </template>
+
+        <!-- Domain Empty State: Browser Profiles -->
+        <template v-else-if="props.id === 'select.browser.profile'">
+          <div class="automa-select-empty-icon-wrap">
+            <Globe class="h-5 w-5 text-[var(--automa-text-muted)]" />
+          </div>
+          <div class="text-center px-4">
+            <p class="text-xs font-semibold text-[var(--automa-text-primary)]">No Browser Profiles</p>
+            <p class="text-[11px] text-[var(--automa-text-muted)] mt-0.5">
+              Create an anti-detect profile to run automation workflows.
+            </p>
+          </div>
+          <button
+            type="button"
+            class="automa-btn automa-btn-primary automa-btn-sm mt-1"
+            data-testid="btn.browser.create"
+            @click="handleCreateAction"
+          >
+            <Plus class="h-3.5 w-3.5 mr-1" />
+            <span>Create Profile</span>
+          </button>
+        </template>
+
+        <!-- Domain Empty State: Workflows -->
+        <template v-else-if="props.id === 'select.storage.workflow'">
+          <div class="automa-select-empty-icon-wrap">
+            <Workflow class="h-5 w-5 text-[var(--automa-text-muted)]" />
+          </div>
+          <div class="text-center px-4">
+            <p class="text-xs font-semibold text-[var(--automa-text-primary)]">No Workflows Found</p>
+            <p class="text-[11px] text-[var(--automa-text-muted)] mt-0.5">
+              Create or import an automation workflow to get started.
+            </p>
+          </div>
+          <button
+            type="button"
+            class="automa-btn automa-btn-primary automa-btn-sm mt-1"
+            data-testid="btn.workflow.create"
+            @click="handleCreateAction"
+          >
+            <Plus class="h-3.5 w-3.5 mr-1" />
+            <span>Create Workflow</span>
+          </button>
+        </template>
+
+        <!-- Fallback Generic Empty State -->
+        <template v-else>
+          <div class="automa-select-empty-icon-wrap">
+            <Inbox class="h-5 w-5 text-[var(--automa-text-muted)]" />
+          </div>
+          <div class="text-center px-4">
+            <p class="text-xs font-semibold text-[var(--automa-text-primary)]">No Options Available</p>
+            <p class="text-[11px] text-[var(--automa-text-muted)] mt-0.5">
+              There are currently no items in this list.
+            </p>
+          </div>
+        </template>
       </div>
 
       <!-- TanStack Virtual Scroll Container -->

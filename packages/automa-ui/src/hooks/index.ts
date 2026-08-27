@@ -1,4 +1,5 @@
 export * from './useAppSettingsQuery'
+export * from './useBindStoreSse'
 export * from './useBrowsersQuery'
 export * from './useJobHistoryQuery'
 export * from './useStorageQuery'
