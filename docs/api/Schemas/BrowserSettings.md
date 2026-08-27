@@ -9,6 +9,7 @@ tags: [api/schema]
 
 | Name | Type | Description |
 |---|---|---|
+| `default_profile_id` | string,null |  |
 | `default_type` *(req)* | string |  |
 | `default_user_agent` | string,null |  |
 | `executable_path` | string,null |  |

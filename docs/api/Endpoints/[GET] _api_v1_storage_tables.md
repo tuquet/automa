@@ -13,6 +13,14 @@ method: "GET"
 
 Retrieves schemas for all user data tables stored in SQLite.
 
+## Parameters
+
+| Name | In | Required | Type | Description |
+|---|---|---|---|---|
+| `limit` | query |  | integer,null | Maximum number of tables to return |
+| `offset` | query |  | integer,null | Number of items to skip for pagination (default 0) |
+| `search` | query |  | string,null | Optional search query to filter tables by name or ID |
+
 ## Responses
 
 ### 200

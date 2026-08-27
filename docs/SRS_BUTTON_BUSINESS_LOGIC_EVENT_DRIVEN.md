@@ -439,5 +439,49 @@ export function useWorkflowRunButton(workflowId: string, workflowPath: string) {
 ## 8. 📌 Tích Hợp Vào Monorepo & Quy Trình Phát Triển
 
 1. **Vị trí tài liệu**: `docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md`.
-2. **Cập nhật Types**: File `packages/automa-types/src/button-schema.ts` kế thừa toàn bộ types từ tài liệu này.
+2. **Cập nhật Types**: File `packages/automa-types/src/button.ts` kế thừa toàn bộ types từ tài liệu này.
 3. **Kiểm thử tự động**: Thêm các test case trong Vitest (`automa-vsce`, `automa-desk`) kiểm tra xem 100% `data-testid` của nút bấm có tồn tại và phản hồi chính xác theo event-driven FSM.
+
+---
+
+## ⚡ 9. MA TRẬN SIDE EFFECT THÀNH CÔNG & PHẢN XẠ REACTIVE LIÊN THÀNH PHẦN (CROSS-COMPONENT REFLECTION GRAPH)
+
+Khi một nút bấm (`btn.*`) thực thi thành công, hành động này **bắt buộc tạo ra các Reactive Side Effects** phản xạ trạng thái tức thì đến các thành phần UI, Pinia Stores và Select Dropdowns đang phụ thuộc:
+
+```mermaid
+flowchart TD
+    ButtonSuccess["Nút Bấm Thành Công (btn.*: COMPLETED)"] --> SideEffects["Phát Tín Hiệu Reactive Broadcast"]
+    SideEffects --> StoreMutation["1. Mutate Pinia / Global Store"]
+    SideEffects --> CacheInvalidation["2. Invalidate Select & Dropdown Cache"]
+    SideEffects --> ViewFocus["3. Focus View & Highlight Active Nodes"]
+    SideEffects --> SseBroadcast["4. SSE / WS Event Stream Broadcast"]
+```
+
+### 📋 Ma Trận Phản Xạ Chéo (Cross-Component Reactive Matrix)
+
+| Nút Bấm (`btn.*`) | Sự Kiện Broadcast (SSE / WS / IPC) | Thành Phần / Select Phụ Thuộc | Phản Xạ Reactive Bắt Buộc |
+|---|---|---|---|
+| `btn.workflow.run` | SSE: `job_status: running` | `ExecutionConsole.vue`, Canvas Nodes, `btn.workflow.pause`, `btn.workflow.stop` | Focus màn hình log console, bật viền sáng pulse trên Node đang chạy, enable nút Pause/Stop. |
+| `btn.workflow.pause` | WS: `PAUSE_JOB` | `btn.workflow.resume`, Canvas debugger bar | Đổi trạng thái nút sang Resume, dừng bước thực thi tại breakpoint hiện tại. |
+| `btn.workflow.resume` | WS: `RESUME_JOB` | `btn.workflow.pause`, Canvas execution highlighter | Đổi trạng thái nút sang Pause, tiếp tục chạy bước kế tiếp. |
+| `btn.workflow.stop` | REST: `kill_job` $\rightarrow$ SSE: `job_status: stopped` | `btn.workflow.run`, `ExecutionConsole.vue`, Matrix grid slots | Enable lại nút Run, in log cảnh báo Terminated, giải phóng slot grid. |
+| `btn.workflow.save` | REST / IPC: `workflow_saved` | `select.storage.workflow`, `AutomaFilesProvider`, Store `isDirty` | Reset `isDirty = false`, nạp lại ngầm `select.storage.workflow`, cập nhật tree view. |
+| `btn.browser.create` | REST: `create_browser` $\rightarrow$ SSE: `browser_created` | `select.browser.profile`, `BrowsersPanel`, Badge `browsers` | Nạp lại ngầm `select.browser.profile`, tăng badge đếm browser, thêm card mới vào UI. |
+| `btn.browser.delete` | REST: `delete_browser` $\rightarrow$ SSE: `browser_deleted` | `select.browser.profile`, `BrowsersPanel`, `useBrowserWaterfall` | Xóa option khỏi `select.browser.profile`, xóa card khỏi UI, giảm badge đếm. |
+| `btn.browser.launch` | REST: `launch_browser` $\rightarrow$ SSE: `browser_online` | `select.browser.profile`, Browser Card Status Badge | Đổi badge trạng thái của profile sang `Online / Green`, kích hoạt nút CDP Inspect. |
+| `btn.browser.kill` | REST: `kill_browser` $\rightarrow$ SSE: `browser_offline` | `select.browser.profile`, Browser Card Status Badge | Đổi badge trạng thái về `Offline / Gray`, disable nút CDP. |
+| `btn.campaign.matrix.run` | REST: `execute_campaign` $\rightarrow$ SSE: `campaign_started` | `MatrixGrid.vue`, `select.history.job_filter`, `HistoryView.vue` | Khởi động allocation matrix grid, tự động filter history sang `running`, stream logs các slots. |
+| `btn.campaign.abort` | REST: `abort_campaign` $\rightarrow$ SSE: `campaign_aborted` | `MatrixGrid.vue`, Slot badges | Chuyển tất cả active slots sang màu đỏ/hủy, giải phóng tài nguyên. |
+| `btn.storage.table.create` | REST: `create_storage_table` $\rightarrow$ SSE: `storage_table_changed` | `select.storage.table`, `StorageTreeDataProvider`, `TableView.vue` | Invalidate cache `select.storage.table`, thêm table vào cây storage sidebar. |
+| `btn.storage.variable.create` | REST: `add_storage_variable` $\rightarrow$ SSE: `storage_variable_changed` | `select.storage.variable`, Variable Autocomplete Helper | Invalidate `select.storage.variable`, cập nhật danh sách gợi ý `{{variables.KEY}}`. |
+| `btn.storage.credential.create` | REST: `add_storage_credential` $\rightarrow$ SSE: `storage_credential_changed` | `select.storage.credential`, Secret Autocomplete Helper | Invalidate `select.storage.credential`, cập nhật danh sách gợi ý `{{secrets.KEY}}`. |
+| `btn.storage.database.sync` | REST: `sync_database` $\rightarrow$ SSE: `storage_database_synced` | Toàn bộ 4 Selects Storage (`workflow`, `table`, `variable`, `credential`) | Kích hoạt nạp lại đồng thời toàn bộ dữ liệu storage mà không reload trang. |
+
+---
+
+## 🔍 10. GIAO THỨC KIỂM TRA CHÉO DÀNH CHO AGENT (AGENT CROSS-CHECKING PROTOCOL)
+
+Khi một AI Agent phát triển hoặc chỉnh sửa bất kỳ nút bấm UI nào, Agent **BẮT BUỘC** thực hiện quy trình kiểm tra chéo 3 bước:
+1. **Source Inspection**: Xác định `btn.*` phát ra sự kiện nào khi thành công (`onSuccess`).
+2. **Reactive Cascade Check**: Tra cứu bảng **Ma Trận Phản Xạ Chéo (Mục 9)** để xác định tất cả các Select Dropdown, Pinia Stores, và Views phụ thuộc.
+3. **Refetch / Invalidation Verification**: Đảm bảo các component phụ thuộc có gắn listener SSE/WS để tự động cập nhật mà không yêu cầu người dùng phải bấm F5 / Reload thủ công.

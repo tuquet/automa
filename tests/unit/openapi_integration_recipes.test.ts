@@ -137,13 +137,12 @@ describe('Automa Core OpenAPI — Integration & Developer Guide Recipes (docs/OP
     it('structures error responses according to canonical schema', () => {
       const sampleError: ApiErrorResponse = {
         error: 'Validation failed: Workflow node "click_submit" is disconnected',
-        code: 'VALIDATION_ERROR',
-        details: 'Workflow graph requires all executable nodes to have incoming trigger edge',
+        status: 400,
       };
 
-      expect(sampleError.code).toBe('VALIDATION_ERROR');
+      expect(sampleError.status).toBe(400);
       expect(sampleError.error.length).toBeGreaterThan(0);
-      expect(sampleError.details).toBeDefined();
+      expect(sampleError.error).toContain('Validation failed');
     });
   });
 });

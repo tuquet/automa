@@ -13,6 +13,14 @@ method: "GET"
 
 Returns an array of identifiers for all workflow execution jobs currently running in the daemon.
 
+## Parameters
+
+| Name | In | Required | Type | Description |
+|---|---|---|---|---|
+| `limit` | query |  | integer,null | Maximum number of active jobs to return |
+| `offset` | query |  | integer,null | Number of items to skip for pagination (default 0) |
+| `search` | query |  | string,null | Optional search query to filter active jobs by job ID |
+
 ## Responses
 
 ### 200

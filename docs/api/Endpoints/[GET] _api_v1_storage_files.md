@@ -13,6 +13,14 @@ method: "GET"
 
 Recursively traverses the `automa-vault` storage directory and returns metadata for all `.workflow.json` and `.campaign.json` files.
 
+## Parameters
+
+| Name | In | Required | Type | Description |
+|---|---|---|---|---|
+| `limit` | query |  | integer,null | Maximum number of files to return |
+| `offset` | query |  | integer,null | Number of items to skip for pagination (default 0) |
+| `search` | query |  | string,null | Optional search query to filter files by name or relative path |
+
 ## Responses
 
 ### 200

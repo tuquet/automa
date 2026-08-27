@@ -1138,7 +1138,20 @@ export type WorkflowStorageItem = {
 export type GetBrowsersData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Maximum number of browser profiles to return
+         */
+        limit?: number | null;
+        /**
+         * Number of items to skip for pagination (default 0)
+         */
+        offset?: number | null;
+        /**
+         * Optional search query to filter browsers by name or ID
+         */
+        search?: string | null;
+    };
     url: '/api/v1/browsers';
 };
 
@@ -1482,7 +1495,7 @@ export type StopBrowserSessionResponses = {
     200: unknown;
 };
 
-export type StartBrowserSessionData = {
+export type StartBrowserData = {
     body?: never;
     path: {
         /**
@@ -1494,22 +1507,22 @@ export type StartBrowserSessionData = {
     url: '/api/v1/browsers/{id}/session';
 };
 
-export type StartBrowserSessionErrors = {
+export type StartBrowserErrors = {
     /**
-     * Invalid browser ID
+     * Invalid browser ID or configuration error
      */
     400: ApiErrorResponse;
     /**
-     * Failed to spawn browser process
+     * Process spawn failure
      */
     500: ApiErrorResponse;
 };
 
-export type StartBrowserSessionError = StartBrowserSessionErrors[keyof StartBrowserSessionErrors];
+export type StartBrowserError = StartBrowserErrors[keyof StartBrowserErrors];
 
-export type StartBrowserSessionResponses = {
+export type StartBrowserResponses = {
     /**
-     * Browser process launched and active
+     * Browser session started
      */
     200: unknown;
 };
@@ -1660,6 +1673,18 @@ export type GetJobHistoryData = {
          * Maximum number of history entries to return (default 50)
          */
         limit?: number | null;
+        /**
+         * Number of items to skip for pagination (default 0)
+         */
+        offset?: number | null;
+        /**
+         * Optional search query to filter history by workflow name or job ID
+         */
+        search?: string | null;
+        /**
+         * Optional status filter (e.g. "completed", "failed", "running")
+         */
+        status?: string | null;
     };
     url: '/api/v1/history';
 };
@@ -1772,7 +1797,20 @@ export type WorkerSseResponses = {
 export type GetActiveJobsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Maximum number of active jobs to return
+         */
+        limit?: number | null;
+        /**
+         * Number of items to skip for pagination (default 0)
+         */
+        offset?: number | null;
+        /**
+         * Optional search query to filter active jobs by job ID
+         */
+        search?: string | null;
+    };
     url: '/api/v1/jobs';
 };
 
@@ -1980,7 +2018,20 @@ export type EncryptSecretResponse2 = EncryptSecretResponses[keyof EncryptSecretR
 export type GetStorageCampaignsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Maximum number of campaigns to return
+         */
+        limit?: number | null;
+        /**
+         * Number of items to skip for pagination (default 0)
+         */
+        offset?: number | null;
+        /**
+         * Optional search query to filter campaigns by name, ID or description
+         */
+        search?: string | null;
+    };
     url: '/api/v1/storage/campaigns';
 };
 
@@ -2169,7 +2220,20 @@ export type UpdateStorageCampaignResponse = UpdateStorageCampaignResponses[keyof
 export type GetStorageCredentialsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Maximum number of credentials to return
+         */
+        limit?: number | null;
+        /**
+         * Number of items to skip for pagination (default 0)
+         */
+        offset?: number | null;
+        /**
+         * Optional search query to filter credentials by name, key or ID
+         */
+        search?: string | null;
+    };
     url: '/api/v1/storage/credentials';
 };
 
@@ -2255,7 +2319,20 @@ export type DeleteStorageCredentialResponses = {
 export type ListStorageFilesData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Maximum number of files to return
+         */
+        limit?: number | null;
+        /**
+         * Number of items to skip for pagination (default 0)
+         */
+        offset?: number | null;
+        /**
+         * Optional search query to filter files by name or relative path
+         */
+        search?: string | null;
+    };
     url: '/api/v1/storage/files';
 };
 
@@ -2280,7 +2357,20 @@ export type ListStorageFilesResponse = ListStorageFilesResponses[keyof ListStora
 export type GetStorageTablesData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Maximum number of tables to return
+         */
+        limit?: number | null;
+        /**
+         * Number of items to skip for pagination (default 0)
+         */
+        offset?: number | null;
+        /**
+         * Optional search query to filter tables by name or ID
+         */
+        search?: string | null;
+    };
     url: '/api/v1/storage/tables';
 };
 
@@ -2375,11 +2465,15 @@ export type GetStorageTableRowsData = {
         /**
          * Maximum number of rows to return (default 50)
          */
-        limit?: number;
+        limit?: number | null;
         /**
-         * Pagination offset index (default 0)
+         * Number of items to skip for pagination (default 0)
          */
-        offset?: number;
+        offset?: number | null;
+        /**
+         * Optional search query to filter rows by data content
+         */
+        search?: string | null;
     };
     url: '/api/v1/storage/tables/{id}/rows';
 };
@@ -2447,7 +2541,20 @@ export type AddStorageTableRowResponse = AddStorageTableRowResponses[keyof AddSt
 export type GetStorageVariablesData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Maximum number of variables to return
+         */
+        limit?: number | null;
+        /**
+         * Number of items to skip for pagination (default 0)
+         */
+        offset?: number | null;
+        /**
+         * Optional search query to filter variables by name, key or ID
+         */
+        search?: string | null;
+    };
     url: '/api/v1/storage/variables';
 };
 
@@ -2590,7 +2697,20 @@ export type SaveWorkflowResponse2 = SaveWorkflowResponses[keyof SaveWorkflowResp
 export type GetStorageWorkflowsData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Maximum number of workflows to return
+         */
+        limit?: number | null;
+        /**
+         * Number of items to skip for pagination (default 0)
+         */
+        offset?: number | null;
+        /**
+         * Optional search query to filter workflows by name, ID or description
+         */
+        search?: string | null;
+    };
     url: '/api/v1/storage/workflows';
 };
 

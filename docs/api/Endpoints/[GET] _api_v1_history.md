@@ -18,6 +18,9 @@ Queries previous workflow execution runs and audit logs persisted in the SQLite 
 | Name | In | Required | Type | Description |
 |---|---|---|---|---|
 | `limit` | query |  | integer,null | Maximum number of history entries to return (default 50) |
+| `offset` | query |  | integer,null | Number of items to skip for pagination (default 0) |
+| `search` | query |  | string,null | Optional search query to filter history by workflow name or job ID |
+| `status` | query |  | string,null | Optional status filter (e.g. "completed", "failed", "running") |
 
 ## Responses
 

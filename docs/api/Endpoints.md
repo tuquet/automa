@@ -2,6 +2,7 @@
 
 - [[[GET] _api_v1_browsers]]
 - [[[POST] _api_v1_browsers]]
+- [[[POST] _api_v1_browsers_auto-detect]]
 - [[[POST] _api_v1_browsers_import-csv]]
 - [[[DELETE] _api_v1_browsers_sessions]]
 - [[[GET] _api_v1_browsers_id]]

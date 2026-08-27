@@ -13,6 +13,14 @@ method: "GET"
 
 Retrieves all campaigns persisted in the central SQLite database.
 
+## Parameters
+
+| Name | In | Required | Type | Description |
+|---|---|---|---|---|
+| `limit` | query |  | integer,null | Maximum number of campaigns to return |
+| `offset` | query |  | integer,null | Number of items to skip for pagination (default 0) |
+| `search` | query |  | string,null | Optional search query to filter campaigns by name, ID or description |
+
 ## Responses
 
 ### 200

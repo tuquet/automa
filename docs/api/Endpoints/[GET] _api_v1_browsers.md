@@ -13,6 +13,14 @@ method: "GET"
 
 Retrieves an array of all persisted browser profiles, including their active online/offline connection state.
 
+## Parameters
+
+| Name | In | Required | Type | Description |
+|---|---|---|---|---|
+| `limit` | query |  | integer,null | Maximum number of browser profiles to return |
+| `offset` | query |  | integer,null | Number of items to skip for pagination (default 0) |
+| `search` | query |  | string,null | Optional search query to filter browsers by name or ID |
+
 ## Responses
 
 ### 200

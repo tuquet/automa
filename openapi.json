@@ -21,6 +21,48 @@
         "summary": "List all browser profiles",
         "description": "Retrieves an array of all persisted browser profiles, including their active online/offline connection state.",
         "operationId": "get_browsers",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of browser profiles to return",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 50
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of items to skip for pagination (default 0)",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Optional search query to filter browsers by name or ID",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "List of all browser profiles",
@@ -572,9 +614,9 @@
         "tags": [
           "Browsers"
         ],
-        "summary": "Launch an active browser session",
-        "description": "Launches an actual browser process (Chromium/Chrome) assigned to the specified profile, loads the Automa extension runner, and positions the window according to the active grid matrix.",
-        "operationId": "start_browser_session",
+        "summary": "Launch isolated browser profile instance",
+        "description": "Spawns a new Chromium browser process attached to the specific profile directory with anti-detect flags and extensions loaded.",
+        "operationId": "start_browser",
         "parameters": [
           {
             "name": "id",
@@ -588,7 +630,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Browser process launched and active",
+            "description": "Browser session started",
             "content": {
               "application/json": {
                 "schema": {}
@@ -596,7 +638,7 @@
             }
           },
           "400": {
-            "description": "Invalid browser ID",
+            "description": "Invalid browser ID or configuration error",
             "content": {
               "application/json": {
                 "schema": {
@@ -606,7 +648,7 @@
             }
           },
           "500": {
-            "description": "Failed to spawn browser process",
+            "description": "Process spawn failure",
             "content": {
               "application/json": {
                 "schema": {
@@ -825,9 +867,47 @@
                 "integer",
                 "null"
               ],
-              "format": "int64"
+              "minimum": 0
             },
             "example": 50
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of items to skip for pagination (default 0)",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Optional search query to filter history by workflow name or job ID",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Optional status filter (e.g. \"completed\", \"failed\", \"running\")",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
           }
         ],
         "responses": {
@@ -1030,6 +1110,48 @@
         "summary": "List all active running jobs",
         "description": "Returns an array of identifiers for all workflow execution jobs currently running in the daemon.",
         "operationId": "get_active_jobs",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of active jobs to return",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 50
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of items to skip for pagination (default 0)",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Optional search query to filter active jobs by job ID",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "List of active running jobs",
@@ -1358,6 +1480,48 @@
         "summary": "List all campaigns from storage database",
         "description": "Retrieves all campaigns persisted in the central SQLite database.",
         "operationId": "get_storage_campaigns",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of campaigns to return",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 50
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of items to skip for pagination (default 0)",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Optional search query to filter campaigns by name, ID or description",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "List of campaigns",
@@ -1670,6 +1834,48 @@
         "summary": "List all stored credentials",
         "description": "Retrieves all saved authentication credentials from storage.",
         "operationId": "get_storage_credentials",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of credentials to return",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 50
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of items to skip for pagination (default 0)",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Optional search query to filter credentials by name, key or ID",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "List of credentials",
@@ -1801,6 +2007,48 @@
         "summary": "List all workflow and campaign files in storage workspace",
         "description": "Recursively traverses the `automa-vault` storage directory and returns metadata for all `.workflow.json` and `.campaign.json` files.",
         "operationId": "list_storage_files",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of files to return",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 50
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of items to skip for pagination (default 0)",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Optional search query to filter files by name or relative path",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "List all workflow and campaign files in storage",
@@ -1836,6 +2084,48 @@
         "summary": "List all storage tables",
         "description": "Retrieves schemas for all user data tables stored in SQLite.",
         "operationId": "get_storage_tables",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of tables to return",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 50
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of items to skip for pagination (default 0)",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Optional search query to filter tables by name or ID",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "List of data tables",
@@ -1983,20 +2273,38 @@
             "description": "Maximum number of rows to return (default 50)",
             "required": false,
             "schema": {
-              "type": "integer",
-              "format": "int32",
+              "type": [
+                "integer",
+                "null"
+              ],
               "minimum": 0
-            }
+            },
+            "example": 50
           },
           {
             "name": "offset",
             "in": "query",
-            "description": "Pagination offset index (default 0)",
+            "description": "Number of items to skip for pagination (default 0)",
             "required": false,
             "schema": {
-              "type": "integer",
-              "format": "int32",
+              "type": [
+                "integer",
+                "null"
+              ],
               "minimum": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Optional search query to filter rows by data content",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
             }
           }
         ],
@@ -2116,6 +2424,48 @@
         "summary": "List all storage variables",
         "description": "Retrieves all global and local variables persisted in Automa SQLite storage.",
         "operationId": "get_storage_variables",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of variables to return",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 50
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of items to skip for pagination (default 0)",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Optional search query to filter variables by name, key or ID",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "List of variables",
@@ -2334,6 +2684,48 @@
         "summary": "List all workflows from storage database",
         "description": "Retrieves all workflow items persisted in the central SQLite database.",
         "operationId": "get_storage_workflows",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of workflows to return",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 50
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Number of items to skip for pagination (default 0)",
+            "required": false,
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Optional search query to filter workflows by name, ID or description",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "List of workflows",

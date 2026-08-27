@@ -45,6 +45,7 @@
 
 # Backend API, OpenAPI & SDK Synchronization
 
+- **Mandatory Post-Backend-Edit CodeGen**: Whenever `automa-core` Axum endpoints, routes, DTO structs, or `utoipa` schemas are modified, Agent **MUST ALWAYS** immediately run `pnpm run sync:api` at the monorepo root to regenerate `openapi.json`, Bruno collections, and the TypeScript SDK client (`@automa/types/api`). Modifying backend without regenerating SDK types is strictly FORBIDDEN.
 - **Contract-First & Zero-Mock Protocol**:
   - **Phase 1 (Contract Definition)**: Define Rust DTO structs and endpoints in `automa-core` first with `utoipa` annotations (`ToSchema`, `/// doc comments`, `snake_case` `operation_id`). NEVER mock APIs or return dummy errors in Frontend.
   - **Phase 2 (Sync & CodeGen)**: Run `pnpm run sync:api` at root to regenerate OpenAPI spec (`openapi.json`), Bruno collections, and TypeScript SDK client (`@automa/types/api`).
@@ -104,17 +105,49 @@
 
 - **Canonical Specification References**:
   - [**SRS Button Business Logic & Event-Driven Schema**](docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md): Master specification for all button actions, FSM states (`IDLE`, `VALIDATING`, `DISPATCHING`, `EXECUTING`, `COMPLETED`, `FAILED`, `TERMINATING`), button IDs (`btn.*`), and real-time SSE/WS reactions.
+  - [**SRS Select & Dropdown Business Logic Schema**](docs/SRS_SELECT_BUSINESS_LOGIC_EVENT_DRIVEN.md): Master specification for remote-driven, virtualized, debounced fuzzy-search dropdowns (`select.*`), FSM states, and SSE cache invalidation.
+  - [**SRS Feature Store & Reactive State Topology**](docs/SRS_FEATURE_STORE_REACTIVE_ARCHITECTURE.md): Master specification for 6 Pinia domain stores, SSE to store dispatching, and cross-store reactivity.
   - [**OpenAPI Integration Guide**](docs/OPENAPI_INTEGRATION_GUIDE.md): Master developer manual for consuming REST endpoints, SSE streams (`/api/v1/events`), and WebSocket channels (`/api/v1/ws`).
-  - [**Button Schema Contracts**](packages/automa-types/src/button-schema.ts): Canonical TypeScript types exported from `@automa/types`.
+  - [**Button, Select & Store Contracts**](packages/automa-types/src/index.ts): Canonical TypeScript types (`button.ts`, `select.ts`, `store.ts`) exported from `@automa/types`.
 - **Zero Hallucination Rule**:
-  - Agents **MUST NOT** invent fake endpoints, unverified payload parameters, non-existent UI buttons, or arbitrary FSM state transitions.
-  - Every UI button across `automa-desk`, `automa-vsce`, and `automa-webe` **MUST** map 1-to-1 with a documented Button ID and follow its defined FSM sequence and SSE/WS reaction rules.
+  - Agents **MUST NOT** invent fake endpoints, unverified payload parameters, non-existent UI buttons, arbitrary select dropdowns, or arbitrary FSM state transitions.
+  - Every UI button across `automa-desk`, `automa-vsce`, and `automa-webe` **MUST** map 1-to-1 with a documented Button ID (`btn.*`) and follow its defined FSM sequence and SSE/WS reaction rules.
+  - Every UI select / dropdown **MUST** map 1-to-1 with a documented Select ID (`select.*`), be 100% remote-driven, support virtualization, and handle real-time SSE invalidation.
   - All API calls **MUST** consume typed SDK functions from `@automa/types/api`. Raw `fetch()` or improvised URLs are strictly FORBIDDEN.
 - **Protocol for New Features**:
-  - If a requested feature or button is missing from the SRS or OpenAPI spec, the Agent **MUST NOT** hallucinate an ad-hoc frontend solution.
+  - If a requested feature, button, or select is missing from the SRS or OpenAPI spec, the Agent **MUST NOT** hallucinate an ad-hoc frontend solution.
   - Follow the 4-step Contract-First workflow:
     1. Define Rust DTO structs and endpoints in `automa-core` with `utoipa` OpenAPI annotations.
     2. Run `pnpm run sync:api` at monorepo root to regenerate the OpenAPI spec and TypeScript SDK.
-    3. Update `docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md` and `docs/OPENAPI_INTEGRATION_GUIDE.md` with the new button/endpoint contracts.
+    3. Update `docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md`, `docs/SRS_SELECT_BUSINESS_LOGIC_EVENT_DRIVEN.md`, `docs/SRS_FEATURE_STORE_REACTIVE_ARCHITECTURE.md`, and `docs/OPENAPI_INTEGRATION_GUIDE.md` with the new contracts.
     4. Implement the frontend / extension UI consuming the newly generated SDK methods.
+
+# 15-Minute Periodic Health & 6-Layer Coverage Audit SOP (SOP Rà Soát Định Kỳ Góc Độ Phủ Toàn Diện)
+
+When running the recurring 15-minute cron wakeups or evaluating overall system readiness, Agent **MUST** execute a systematic **6-Layer Coverage Audit**:
+
+- **Layer 1 (Contract & Type-Check Coverage)**:
+  - Run `pnpm exec tsc --noEmit` at monorepo root and `pnpm run typecheck` across all 6 packages.
+  - Must achieve **0 errors**, with strict null checks and exact optional properties.
+- **Layer 2 (UI Button `btn.*` & Select `select.*` Coverage)**:
+  - 100% of interactive UI buttons across `automa-desk`, `automa-vsce`, and `automa-webe` MUST map to 37 canonical `btn.*` IDs with valid `data-testid` and FSM states.
+  - 100% of dropdowns MUST map to 11 canonical `select.*` IDs with Remote API binding, Virtualization slice calculations, and Debounce search.
+  - Zero-Dummy UI: 100% of buttons have working dispatch handlers.
+- **Layer 3 (Pinia Feature Store & SSE Reactive Reflection Coverage)**:
+  - 6 Domain Stores (`useWorkflowStore`, `useBrowserStore`, `useCampaignStore`, `useStorageStore`, `useExecutionStore`, `useSettingsStore`) MUST adhere to the 4-layer pattern.
+  - `useBindStoreSse.ts` MUST actively hook into `/api/v1/events` to reactively mutate state slices on real-time events.
+  - Cross-Component Reactive Reflection Matrix compliance verified across all dependent components.
+- **Layer 4 (Backend REST / SQLite / OpenAPI Coverage)**:
+  - 10 collection GET endpoints MUST support pagination (`limit`, `offset`, `search`) on SQLite.
+  - `automa-core` MUST compile cleanly (`cargo check` = 0 errors, 0 warnings).
+  - `openapi.json`, Bruno collections, and `@automa/types/api` MUST be 100% synchronized (`pnpm run sync:api`).
+- **Layer 5 (Clean Code & Linter Coverage)**:
+  - Run `pnpm run lint` (`biome check` and `eslint`) across all packages.
+  - Must achieve **0 errors, 0 warnings**. Zero linter bypass (`// biome-ignore` or `// @ts-ignore` is strictly forbidden).
+- **Layer 6 (Submodule Pointer Synchronization Coverage)**:
+  - Verify all 5 submodule pointers via `node scripts/check-submodules.mjs`.
+  - Staged pointers in root git index MUST match the HEAD of each submodule.
+  - **Zero Git Push Rule**: Only commit/stage locally.
+- **Strict No-Test Invariant**:
+  - In periodic health audits, **DO NOT run test runners** (`vitest`, `cargo test`, `test-all.mjs`) to conserve system resources (2GB RAM limit) unless explicitly instructed by the user.
 

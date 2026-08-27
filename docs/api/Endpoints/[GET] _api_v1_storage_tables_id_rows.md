@@ -18,8 +18,9 @@ Queries paginated row documents belonging to the specified data table.
 | Name | In | Required | Type | Description |
 |---|---|---|---|---|
 | `id` | path | ✅ | string | Unique table identifier |
-| `limit` | query |  | integer | Maximum number of rows to return (default 50) |
-| `offset` | query |  | integer | Pagination offset index (default 0) |
+| `limit` | query |  | integer,null | Maximum number of rows to return (default 50) |
+| `offset` | query |  | integer,null | Number of items to skip for pagination (default 0) |
+| `search` | query |  | string,null | Optional search query to filter rows by data content |
 
 ## Responses
 

@@ -5,13 +5,13 @@ tags:
 path: "/api/v1/browsers/{id}/session"
 method: "POST"
 ---
-# Launch an active browser session
+# Launch isolated browser profile instance
 
 > [!info] 
 > **Method**: `POST`
 > **Path**: `/api/v1/browsers/{id}/session`
 
-Launches an actual browser process (Chromium/Chrome) assigned to the specified profile, loads the Automa extension runner, and positions the window according to the active grid matrix.
+Spawns a new Chromium browser process attached to the specific profile directory with anti-detect flags and extensions loaded.
 
 ## Parameters
 
@@ -22,19 +22,19 @@ Launches an actual browser process (Chromium/Chrome) assigned to the specified p
 ## Responses
 
 ### 200
-Browser process launched and active
+Browser session started
 
 - **Content-Type**: `application/json`
 - **Schema**: any
 
 ### 400
-Invalid browser ID
+Invalid browser ID or configuration error
 
 - **Content-Type**: `application/json`
 - **Schema**: [[ApiErrorResponse]]
 
 ### 500
-Failed to spawn browser process
+Process spawn failure
 
 - **Content-Type**: `application/json`
 - **Schema**: [[ApiErrorResponse]]
