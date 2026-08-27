@@ -1,18 +1,18 @@
 # Automa Ecosystem Knowledge Base (Hub)
 
 Chào mừng bạn đến với trung tâm tài liệu (Documentation Hub) của Automa Ecosystem.
-Hệ thống tài liệu được chuẩn hóa theo mô hình **Ma Trận 2 Chiều (2D Matrix Specification Hub)** kết hợp giữa **Tiêu Chuẩn Kỹ Thuật Ngang** và **Đặc Tả Nghiệp Vụ Từng Màn Hình (Vertical Menu SRS)**.
+Hệ thống tài liệu được chuẩn hóa theo mô hình **Ma Trận 2 Chiều (2D Matrix Specification Hub)** kết hợp giữa **Tiêu Chuẩn Kỹ Thuật Ngang (Horizontal Standards)** và **Đặc Tả Nghiệp Vụ Từng Màn Hình (Vertical Menu SRS)**.
 
 ---
 
 ## 🏛️ HỆ THỐNG ĐẶC TẢ SRS MA TRẬN 2 CHIỀU (2D MATRIX SPECIFICATION HUB)
 
-Truy cập trung tâm đặc tả: [**`docs/srs/README.md`**](./srs/README.md)
+Truy cập trung tâm đặc tả chính: [**`docs/srs/README.md`**](./srs/README.md)
 
 ### 🌐 1. Tiêu Chuẩn Kỹ Thuật Dùng Chung (Horizontal Standards)
-- [⚡ Đặc Tả SRS Button Business Logic & Event-Driven Schema](./SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md): Master catalog 37 Button actions (`btn.*`), FSM 7 trạng thái, và ma trận phản xạ reactive liên thành phần.
-- [📜 Đặc Tả SRS Select & Dropdown Business Logic (Remote, Virtualized, Search)](./SRS_SELECT_BUSINESS_LOGIC_EVENT_DRIVEN.md): Master catalog 11 Remote Virtualized Selects (`select.*`), thuật toán cắt lát ảo hóa, và debounce tìm kiếm.
-- [🏛️ Đặc Tả SRS Feature Store & Kiến Trúc Reactive Topology](./SRS_FEATURE_STORE_REACTIVE_ARCHITECTURE.md): Master architecture 6 Pinia Domain Stores và SSE Event Dispatch Hub.
+- [⚡ Đặc Tả SRS Button Business Logic & Event-Driven Schema (`SRS_HORIZONTAL_BUTTONS.md`)](./srs/SRS_HORIZONTAL_BUTTONS.md): Master catalog 37 Button actions (`btn.*`), FSM 7 trạng thái, và ma trận phản xạ reactive liên thành phần.
+- [📜 Đặc Tả SRS Select & Dropdown Business Logic (`SRS_HORIZONTAL_SELECTS.md`)](./srs/SRS_HORIZONTAL_SELECTS.md): Master catalog 11 Remote Virtualized Selects (`select.*`), thuật toán cắt lát ảo hóa, và debounce tìm kiếm.
+- [🏛️ Đặc Tả SRS Feature Store & Kiến Trúc Reactive Topology (`SRS_HORIZONTAL_FEATURE_STORES.md`)](./srs/SRS_HORIZONTAL_FEATURE_STORES.md): Master architecture 6 Pinia Domain Stores và SSE Event Dispatch Hub.
 - [📘 Hướng Dẫn Tích Hợp & Triển Khai OpenAPI (Developer Guide)](./OPENAPI_INTEGRATION_GUIDE.md): Cẩm nang lập trình kết nối Backend Axum Daemon bằng Typed SDK `@automa/types/api`.
 
 ### 📱 2. Đặc Tả Nghiệp Vụ Từng Menu Màn Hình (Vertical Menu SRS)

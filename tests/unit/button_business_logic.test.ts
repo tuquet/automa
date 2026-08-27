@@ -5,7 +5,7 @@ import {
   type ButtonExecutionState,
 } from '@automa/types';
 
-describe('SRS Button Business Logic & Event-Driven Schema (docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md)', () => {
+describe('SRS Button Business Logic & Event-Driven Schema (docs/srs/SRS_HORIZONTAL_BUTTONS.md)', () => {
   describe('1. Button Catalog & Zero-Dummy Compliance (39 Buttons)', () => {
     it('contains all 39 canonical action buttons from specifications', () => {
       expect(BUTTON_CATALOG.length).toBe(39);

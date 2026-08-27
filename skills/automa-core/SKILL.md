@@ -81,5 +81,6 @@ pub async fn submit_job(
 
 ## 5. 📚 Canonical Specifications & Anti-Hallucination Guardrails
 
-- [**SRS Button Business Logic & Event-Driven Schema**](../../docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md): Master specification for button actions, FSM state machines, and SSE/WS real-time event mapping.
+- [**2D Matrix Specification Hub**](../../docs/srs/README.md): Master navigation hub connecting Horizontal Standards and 6 Vertical Menu SRS.
+- [**SRS Horizontal Buttons & FSM Engine**](../../docs/srs/SRS_HORIZONTAL_BUTTONS.md): Master specification for button actions, FSM state machines, and SSE/WS real-time event mapping.
 - [**OpenAPI Integration Guide**](../../docs/OPENAPI_INTEGRATION_GUIDE.md): Master manual for OpenAPI routes, DTO structures, and SDK generation.

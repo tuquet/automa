@@ -151,7 +151,7 @@ export interface ButtonBusinessLogicSchema<TContext = unknown, TResponse = unkno
 
 /**
  * Canonical Catalog of 37 standard UI Action Triggers / Buttons
- * Fully compliant with docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md
+ * Fully compliant with docs/srs/SRS_HORIZONTAL_BUTTONS.md
  */
 export const BUTTON_CATALOG: readonly ButtonBusinessLogicSchema[] = [
   // 4.1 Workflow & Canvas Execution

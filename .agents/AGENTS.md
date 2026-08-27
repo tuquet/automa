@@ -105,9 +105,9 @@
 
 - **Canonical Specification References**:
   - [**2D Matrix Specification Hub**](docs/srs/README.md): Master navigation hub connecting Horizontal Standards and 6 Vertical Menu SRS.
-  - [**SRS Button Business Logic & Event-Driven Schema**](docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md): Master specification for all button actions, FSM states (`IDLE`, `VALIDATING`, `DISPATCHING`, `EXECUTING`, `COMPLETED`, `FAILED`, `TERMINATING`), button IDs (`btn.*`), and real-time SSE/WS reactions.
-  - [**SRS Select & Dropdown Business Logic Schema**](docs/SRS_SELECT_BUSINESS_LOGIC_EVENT_DRIVEN.md): Master specification for remote-driven, virtualized, debounced fuzzy-search dropdowns (`select.*`), FSM states, and SSE cache invalidation.
-  - [**SRS Feature Store & Reactive State Topology**](docs/SRS_FEATURE_STORE_REACTIVE_ARCHITECTURE.md): Master specification for 6 Pinia domain stores, SSE to store dispatching, and cross-store reactivity.
+  - [**SRS Horizontal Buttons & FSM Engine**](docs/srs/SRS_HORIZONTAL_BUTTONS.md): Master specification for all button actions, FSM states (`IDLE`, `VALIDATING`, `DISPATCHING`, `EXECUTING`, `COMPLETED`, `FAILED`, `TERMINATING`), button IDs (`btn.*`), and real-time SSE/WS reactions.
+  - [**SRS Horizontal Selects & Virtualization**](docs/srs/SRS_HORIZONTAL_SELECTS.md): Master specification for remote-driven, virtualized, debounced fuzzy-search dropdowns (`select.*`), FSM states, and SSE cache invalidation.
+  - [**SRS Horizontal Feature Stores & Reactive Hub**](docs/srs/SRS_HORIZONTAL_FEATURE_STORES.md): Master specification for 6 Pinia domain stores, SSE to store dispatching, and cross-store reactivity.
   - [**Vertical Menu SRS Collection**](docs/srs/):
     * [🎨 Menu 1: Studio Canvas & Workflow Editor](docs/srs/SRS_MENU_STUDIO.md)
     * [🌐 Menu 2: Browsers Fleet Management](docs/srs/SRS_MENU_BROWSERS.md)
@@ -127,7 +127,7 @@
   - Follow the 4-step Contract-First workflow:
     1. Define Rust DTO structs and endpoints in `automa-core` with `utoipa` OpenAPI annotations.
     2. Run `pnpm run sync:api` at monorepo root to regenerate the OpenAPI spec and TypeScript SDK.
-    3. Update `docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md`, `docs/SRS_SELECT_BUSINESS_LOGIC_EVENT_DRIVEN.md`, `docs/SRS_FEATURE_STORE_REACTIVE_ARCHITECTURE.md`, and `docs/OPENAPI_INTEGRATION_GUIDE.md` with the new contracts.
+    3. Update `docs/srs/SRS_HORIZONTAL_BUTTONS.md`, `docs/srs/SRS_HORIZONTAL_SELECTS.md`, `docs/srs/SRS_HORIZONTAL_FEATURE_STORES.md`, and `docs/OPENAPI_INTEGRATION_GUIDE.md` with the new contracts.
     4. Implement the frontend / extension UI consuming the newly generated SDK methods.
 
 # 15-Minute Periodic Health & 6-Layer Coverage Audit SOP (SOP Rà Soát Định Kỳ Góc Độ Phủ Toàn Diện)

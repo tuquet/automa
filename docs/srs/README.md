@@ -9,9 +9,9 @@ Hệ thống tài liệu đặc tả của Automa Ecosystem được tổ chức
 ```mermaid
 flowchart TD
     subgraph HorizontalStandards ["1. TIÊU CHUẨN KỸ THUẬT NGANG (HORIZONTAL STANDARDS)"]
-        H1["SRS Button Business Logic & Event-Driven<br/>(docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md)"]
-        H2["SRS Select & Dropdown Business Logic<br/>(docs/SRS_SELECT_BUSINESS_LOGIC_EVENT_DRIVEN.md)"]
-        H3["SRS Feature Store & Reactive State Topology<br/>(docs/SRS_FEATURE_STORE_REACTIVE_ARCHITECTURE.md)"]
+        H1["SRS Button Business Logic & Event-Driven<br/>(docs/srs/SRS_HORIZONTAL_BUTTONS.md)"]
+        H2["SRS Select & Dropdown Business Logic<br/>(docs/srs/SRS_HORIZONTAL_SELECTS.md)"]
+        H3["SRS Feature Store & Reactive State Topology<br/>(docs/srs/SRS_HORIZONTAL_FEATURE_STORES.md)"]
         H4["OpenAPI Integration Guide<br/>(docs/OPENAPI_INTEGRATION_GUIDE.md)"]
     end
 
@@ -32,10 +32,10 @@ flowchart TD
 ## 📑 2. MỤC LỤC TRUY CẬP ĐẶC TẢ CHI TIẾT
 
 ### 🌐 A. Nhóm Tiêu Chuẩn Kỹ Thuật Dùng Chung (Horizontal Standards)
-1. [**SRS Button Business Logic & Event-Driven Schema**](../SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md): Master catalog 37 Button actions (`btn.*`), máy trạng thái FSM 7 bước, và ma trận phản xạ reactive liên thành phần.
-2. [**SRS Select & Dropdown Business Logic Schema**](../SRS_SELECT_BUSINESS_LOGIC_EVENT_DRIVEN.md): Master catalog 11 Remote Virtualized Selects (`select.*`), thuật toán cắt lát ảo hóa (Virtualization Slices), và Debounce tìm kiếm.
-3. [**SRS Feature Store & Reactive State Topology**](../SRS_FEATURE_STORE_REACTIVE_ARCHITECTURE.md): Master architecture 6 Pinia Domain Stores và SSE Event Dispatch Hub.
-4. [**OpenAPI Integration Guide**](../OPENAPI_INTEGRATION_GUIDE.md): Cẩm nang lập trình kết nối Backend Axum Daemon bằng Typed SDK `@automa/types/api`.
+1. [**SRS Button Business Logic & Event-Driven Schema (`SRS_HORIZONTAL_BUTTONS.md`)**](./SRS_HORIZONTAL_BUTTONS.md): Master catalog 37 Button actions (`btn.*`), máy trạng thái FSM 7 bước, và ma trận phản xạ reactive liên thành phần.
+2. [**SRS Select & Dropdown Business Logic Schema (`SRS_HORIZONTAL_SELECTS.md`)**](./SRS_HORIZONTAL_SELECTS.md): Master catalog 11 Remote Virtualized Selects (`select.*`), thuật toán cắt lát ảo hóa (Virtualization Slices), và Debounce tìm kiếm.
+3. [**SRS Feature Store & Reactive State Topology (`SRS_HORIZONTAL_FEATURE_STORES.md`)**](./SRS_HORIZONTAL_FEATURE_STORES.md): Master architecture 6 Pinia Domain Stores và SSE Event Dispatch Hub.
+4. [**OpenAPI Integration Guide (`OPENAPI_INTEGRATION_GUIDE.md`)**](../OPENAPI_INTEGRATION_GUIDE.md): Cẩm nang lập trình kết nối Backend Axum Daemon bằng Typed SDK `@automa/types/api`.
 
 ---
 

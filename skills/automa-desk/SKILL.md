@@ -83,5 +83,7 @@ pub async fn get_daemon_status(
 
 ## 5. 📚 Canonical Specifications & Anti-Hallucination Guardrails
 
-- [**SRS Button Business Logic & Event-Driven Schema**](../../docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md): 100% of UI buttons MUST follow the documented FSM states (`IDLE`, `VALIDATING`, `DISPATCHING`, `EXECUTING`, `COMPLETED`, `FAILED`, `TERMINATING`) and use defined `btn.*` IDs.
+- [**2D Matrix Specification Hub**](../../docs/srs/README.md): Master navigation hub connecting Horizontal Standards and 6 Vertical Menu SRS.
+- [**SRS Horizontal Buttons & FSM Engine**](../../docs/srs/SRS_HORIZONTAL_BUTTONS.md): 100% of UI buttons MUST follow the documented FSM states (`IDLE`, `VALIDATING`, `DISPATCHING`, `EXECUTING`, `COMPLETED`, `FAILED`, `TERMINATING`) and use defined `btn.*` IDs.
+- [**SRS Horizontal Feature Stores & Reactive Hub**](../../docs/srs/SRS_HORIZONTAL_FEATURE_STORES.md): Master architecture 6 Pinia Domain Stores và SSE Event Dispatch Hub.
 - [**OpenAPI Integration Guide**](../../docs/OPENAPI_INTEGRATION_GUIDE.md): 100% of backend interactions MUST consume typed methods from `@automa/types/api`. Raw `fetch()` or hallucinated endpoints are strictly FORBIDDEN.
