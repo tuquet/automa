@@ -104,9 +104,17 @@
 # Strict SRS Compliance & Zero Spec Hallucination Invariant
 
 - **Canonical Specification References**:
+  - [**2D Matrix Specification Hub**](docs/srs/README.md): Master navigation hub connecting Horizontal Standards and 6 Vertical Menu SRS.
   - [**SRS Button Business Logic & Event-Driven Schema**](docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md): Master specification for all button actions, FSM states (`IDLE`, `VALIDATING`, `DISPATCHING`, `EXECUTING`, `COMPLETED`, `FAILED`, `TERMINATING`), button IDs (`btn.*`), and real-time SSE/WS reactions.
   - [**SRS Select & Dropdown Business Logic Schema**](docs/SRS_SELECT_BUSINESS_LOGIC_EVENT_DRIVEN.md): Master specification for remote-driven, virtualized, debounced fuzzy-search dropdowns (`select.*`), FSM states, and SSE cache invalidation.
   - [**SRS Feature Store & Reactive State Topology**](docs/SRS_FEATURE_STORE_REACTIVE_ARCHITECTURE.md): Master specification for 6 Pinia domain stores, SSE to store dispatching, and cross-store reactivity.
+  - [**Vertical Menu SRS Collection**](docs/srs/):
+    * [🎨 Menu 1: Studio Canvas & Workflow Editor](docs/srs/SRS_MENU_STUDIO.md)
+    * [🌐 Menu 2: Browsers Fleet Management](docs/srs/SRS_MENU_BROWSERS.md)
+    * [🚀 Menu 3: Campaign Matrix Scheduler](docs/srs/SRS_MENU_CAMPAIGN.md)
+    * [🗄️ Menu 4: Storage & Vault Cryptography](docs/srs/SRS_MENU_STORAGE.md)
+    * [📜 Menu 5: History & Telemetry Explorer](docs/srs/SRS_MENU_HISTORY.md)
+    * [⚙️ Menu 6: Settings & Core Daemon Configuration](docs/srs/SRS_MENU_SETTINGS.md)
   - [**OpenAPI Integration Guide**](docs/OPENAPI_INTEGRATION_GUIDE.md): Master developer manual for consuming REST endpoints, SSE streams (`/api/v1/events`), and WebSocket channels (`/api/v1/ws`).
   - [**Button, Select & Store Contracts**](packages/automa-types/src/index.ts): Canonical TypeScript types (`button.ts`, `select.ts`, `store.ts`) exported from `@automa/types`.
 - **Zero Hallucination Rule**:
