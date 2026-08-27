@@ -1,0 +1,63 @@
+/**
+ * Automa Ecosystem Semantic Design Tokens
+ * Harmonizes VS Code theme variables, Tailwind CSS classes, and Standalone Web Canvas.
+ */
+
+:root {
+  /* Surface & Backgrounds */
+  --automa-bg: var(--vscode-sideBar-background, #ffffff);
+  --automa-bg-subtle: var(--vscode-editor-background, #f8fafc);
+  --automa-bg-hover: var(--vscode-list-hoverBackground, rgba(0, 0, 0, 0.04));
+  --automa-bg-active: var(--vscode-list-activeSelectionBackground, rgba(59, 130, 246, 0.1));
+
+  /* Borders */
+  --automa-border: var(--vscode-panel-border, #e2e8f0);
+  --automa-border-subtle: var(--vscode-sideBarSectionHeader-border, #f1f5f9);
+  --automa-border-focus: var(--vscode-focusBorder, #3b82f6);
+
+  /* Typography */
+  --automa-text-primary: var(--vscode-foreground, #0f172a);
+  --automa-text-muted: var(--vscode-descriptionForeground, #64748b);
+  --automa-text-disabled: var(--vscode-disabledForeground, #94a3b8);
+
+  /* Accent & Status Colors */
+  --automa-accent: var(--vscode-button-background, #2563eb);
+  --automa-accent-hover: var(--vscode-button-hoverBackground, #1d4ed8);
+  --automa-accent-foreground: var(--vscode-button-foreground, #ffffff);
+
+  --automa-success: #10b981;
+  --automa-warning: #f59e0b;
+  --automa-error: var(--vscode-errorForeground, #ef4444);
+  --automa-info: #3b82f6;
+
+  /* Geometry & Layout */
+  --automa-radius-sm: 4px;
+  --automa-radius-md: 8px;
+  --automa-radius-lg: 12px;
+  --automa-radius-full: 9999px;
+  --automa-shadow-dropdown: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Mode Tokens */
+.dark,
+[data-theme="dark"],
+.vscode-dark {
+  --automa-bg: var(--vscode-sideBar-background, #09090b);
+  --automa-bg-subtle: var(--vscode-editor-background, #18181b);
+  --automa-bg-hover: var(--vscode-list-hoverBackground, rgba(255, 255, 255, 0.06));
+  --automa-bg-active: var(--vscode-list-activeSelectionBackground, rgba(59, 130, 246, 0.2));
+
+  --automa-border: var(--vscode-panel-border, #27272a);
+  --automa-border-subtle: var(--vscode-sideBarSectionHeader-border, #1e1e24);
+  --automa-border-focus: var(--vscode-focusBorder, #60a5fa);
+
+  --automa-text-primary: var(--vscode-foreground, #f8fafc);
+  --automa-text-muted: var(--vscode-descriptionForeground, #a1a1aa);
+  --automa-text-disabled: var(--vscode-disabledForeground, #71717a);
+
+  --automa-accent: var(--vscode-button-background, #3b82f6);
+  --automa-accent-hover: var(--vscode-button-hoverBackground, #2563eb);
+  --automa-accent-foreground: var(--vscode-button-foreground, #ffffff);
+
+  --automa-shadow-dropdown: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+}
