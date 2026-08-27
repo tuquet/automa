@@ -1090,3 +1090,10 @@ export const BUTTON_CATALOG: readonly ButtonBusinessLogicSchema[] = [
   },
 ] as const;
 
+/**
+ * Fast lookup registry mapping Button ID to its ButtonBusinessLogicSchema
+ */
+export const BUTTON_PROTOTYPE_REGISTRY: Record<string, ButtonBusinessLogicSchema> = Object.fromEntries(
+  BUTTON_CATALOG.map((btn) => [btn.id, btn as ButtonBusinessLogicSchema])
+);
+
