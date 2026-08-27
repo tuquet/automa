@@ -40,16 +40,16 @@ function handleCancel() {
   <Teleport to="body">
     <div
       v-if="isOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs font-sans text-sm animate-in fade-in duration-150"
+      class="automa-modal-backdrop"
       data-testid="confirmation-modal-backdrop"
       @click.self="handleCancel"
     >
       <div
-        class="w-full max-w-md bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-2xl overflow-hidden p-6 space-y-4"
+        class="automa-modal-card"
         data-testid="confirmation-modal"
       >
         <!-- Header -->
-        <div class="flex items-start justify-between gap-3">
+        <div class="automa-modal-header">
           <div class="flex items-center gap-2.5">
             <div
               v-if="variant === 'destructive'"
@@ -63,13 +63,13 @@ function handleCancel() {
             >
               <AlertTriangle class="w-4 h-4" />
             </div>
-            <h3 class="text-base font-semibold text-zinc-900 dark:text-zinc-100" data-testid="modal-title">
+            <h3 class="automa-modal-title" data-testid="modal-title">
               {{ title }}
             </h3>
           </div>
           <button
             type="button"
-            class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 p-1 rounded-md transition-colors"
+            class="automa-drawer-icon-btn"
             data-testid="btn-modal-close"
             @click="handleCancel"
           >
@@ -78,15 +78,15 @@ function handleCancel() {
         </div>
 
         <!-- Body Message -->
-        <p class="text-zinc-600 dark:text-zinc-400 leading-relaxed" data-testid="modal-message">
+        <p class="automa-modal-body" data-testid="modal-message">
           {{ message }}
         </p>
 
         <!-- Actions -->
-        <div class="flex items-center justify-end gap-2.5 pt-2">
+        <div class="automa-modal-footer">
           <button
             type="button"
-            class="px-3.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-transparent text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 font-medium transition-colors cursor-pointer"
+            class="automa-btn automa-btn-sm automa-btn-outline"
             data-testid="btn-modal-cancel"
             @click="handleCancel"
           >
@@ -94,13 +94,11 @@ function handleCancel() {
           </button>
           <button
             type="button"
-            class="px-4 py-1.5 rounded-lg font-medium transition-colors shadow-xs cursor-pointer flex items-center gap-1.5"
+            class="automa-btn automa-btn-sm"
             :class="[
               variant === 'destructive'
-                ? 'bg-rose-600 text-white hover:bg-rose-700'
-                : variant === 'warning'
-                ? 'bg-amber-600 text-white hover:bg-amber-700'
-                : 'bg-indigo-600 text-white hover:bg-indigo-700'
+                ? 'automa-btn-destructive'
+                : 'automa-btn-primary'
             ]"
             data-testid="btn-modal-confirm"
             @click="handleConfirm"

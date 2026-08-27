@@ -132,38 +132,13 @@ function handleConfirmAction() {
     :disabled="disabled || isBusy"
     :title="effectiveTooltip"
     :data-testid="schema?.presentation.dataTestId || props.id.replace(/\./g, '-')"
-    class="inline-flex items-center justify-center font-medium rounded-md transition-all select-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500/40 disabled:opacity-50 disabled:cursor-not-allowed"
+    class="automa-btn"
     :class="[
-      // Size variants
-      size === 'xs' ? 'h-6 px-1.5 text-xs gap-1' : '',
-      size === 'sm' ? 'h-7 px-2.5 text-xs gap-1.5' : '',
-      size === 'md' ? 'h-8 px-3 text-sm gap-2' : '',
-      size === 'lg' ? 'h-9 px-4 text-sm gap-2' : '',
-      iconOnly && size === 'xs' ? '!w-6 !p-0' : '',
-      iconOnly && size === 'sm' ? '!w-7 !p-0' : '',
-      iconOnly && size === 'md' ? '!w-8 !p-0' : '',
-      iconOnly && size === 'lg' ? '!w-9 !p-0' : '',
-
-      // Style variants
-      variant === 'default' || variant === 'secondary'
-        ? 'bg-zinc-100 dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200 hover:bg-zinc-200 dark:hover:bg-zinc-700 border border-zinc-200/80 dark:border-zinc-700/80'
-        : '',
-      variant === 'primary'
-        ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-xs'
-        : '',
-      variant === 'destructive'
-        ? 'bg-rose-600 text-white hover:bg-rose-700 shadow-xs'
-        : '',
-      variant === 'outline'
-        ? 'bg-transparent border border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
-        : '',
-      variant === 'ghost'
-        ? 'bg-transparent text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100'
-        : '',
-
-      // FSM state highlights
-      internalFsmState === 'COMPLETED' ? '!bg-emerald-600 !text-white' : '',
-      internalFsmState === 'FAILED' ? '!bg-rose-600 !text-white' : '',
+      `automa-btn-${size}`,
+      `automa-btn-${variant}`,
+      iconOnly ? 'automa-btn-icon-only' : '',
+      internalFsmState === 'COMPLETED' ? '!bg-emerald-600 !text-white !border-emerald-600' : '',
+      internalFsmState === 'FAILED' ? '!bg-rose-600 !text-white !border-rose-600' : '',
     ]"
     @click="handleClick"
   >

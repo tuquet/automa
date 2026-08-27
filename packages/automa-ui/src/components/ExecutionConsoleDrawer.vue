@@ -61,63 +61,52 @@ watch(
   },
 )
 
-function getLevelClass(level: string) {
-  switch (level) {
-    case 'error':
-      return 'text-rose-500 bg-rose-500/10 border-rose-500/20'
-    case 'warn':
-      return 'text-amber-500 bg-amber-500/10 border-amber-500/20'
-    case 'success':
-      return 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20'
-    default:
-      return 'text-sky-500 bg-sky-500/10 border-sky-500/20'
-  }
-}
+
 </script>
 
 <template>
   <div
     v-if="props.open"
-    class="automa-execution-drawer flex h-72 w-full flex-col border-t border-[var(--automa-border)] bg-[var(--automa-bg)] font-mono text-xs shadow-lg transition-all"
+    class="automa-execution-drawer"
     data-testid="execution-console-drawer"
   >
     <!-- Drawer Toolbar Header -->
-    <div class="flex h-9 items-center justify-between border-b border-[var(--automa-border-subtle)] bg-[var(--automa-bg-subtle)] px-3 text-[var(--automa-text-primary)]">
-      <div class="flex items-center gap-2">
+    <div class="automa-drawer-toolbar">
+      <div class="automa-drawer-title">
         <Terminal class="h-4 w-4 text-[var(--automa-accent)]" />
-        <span class="font-semibold">{{ props.title }}</span>
-        <span class="rounded-full bg-[var(--automa-bg-active)] px-2 py-0.5 text-[10px] text-[var(--automa-accent)]">
+        <span>{{ props.title }}</span>
+        <span class="automa-drawer-badge">
           {{ filteredLogs.length }} lines
         </span>
       </div>
 
       <!-- Controls & Filters -->
-      <div class="flex items-center gap-2">
+      <div class="automa-drawer-controls">
         <!-- Search -->
-        <div class="relative flex items-center">
-          <Search class="absolute left-2 h-3 w-3 text-[var(--automa-text-muted)]" />
+        <div class="automa-drawer-search">
+          <Search class="automa-drawer-search-icon" />
           <input
             v-model="searchQuery"
             type="text"
             placeholder="Filter logs..."
-            class="h-6 w-36 rounded border border-[var(--automa-border)] bg-[var(--automa-bg)] pl-6 pr-2 text-[11px] text-[var(--automa-text-primary)] focus:border-[var(--automa-border-focus)] focus:outline-none"
+            class="automa-drawer-search-input"
           />
         </div>
 
         <!-- Level Filters -->
-        <div class="flex rounded border border-[var(--automa-border)] p-0.5">
+        <div class="automa-drawer-filter-group">
           <button
             type="button"
-            class="px-1.5 py-0.5 text-[10px] rounded transition-colors"
-            :class="activeFilter === 'all' ? 'bg-[var(--automa-accent)] text-white' : 'text-[var(--automa-text-muted)] hover:text-[var(--automa-text-primary)]'"
+            class="automa-drawer-filter-btn"
+            :class="{ 'is-active': activeFilter === 'all' }"
             @click="activeFilter = 'all'"
           >
             ALL
           </button>
           <button
             type="button"
-            class="px-1.5 py-0.5 text-[10px] rounded transition-colors"
-            :class="activeFilter === 'error' ? 'bg-rose-600 text-white' : 'text-[var(--automa-text-muted)] hover:text-[var(--automa-text-primary)]'"
+            class="automa-drawer-filter-btn"
+            :class="{ 'is-active-error': activeFilter === 'error' }"
             @click="activeFilter = 'error'"
           >
             ERR
@@ -127,8 +116,8 @@ function getLevelClass(level: string) {
         <!-- Auto-scroll toggle -->
         <button
           type="button"
-          class="flex items-center gap-1 rounded border border-[var(--automa-border)] px-1.5 py-0.5 text-[10px] transition-colors"
-          :class="autoScroll ? 'border-blue-500/50 bg-blue-500/10 text-blue-600 dark:text-blue-400' : 'text-[var(--automa-text-muted)] hover:text-[var(--automa-text-primary)]'"
+          class="automa-drawer-follow-btn"
+          :class="{ 'is-following': autoScroll }"
           @click="autoScroll = !autoScroll"
         >
           <ArrowDownToLine class="h-3 w-3" />
@@ -138,7 +127,7 @@ function getLevelClass(level: string) {
         <!-- Clear Logs -->
         <button
           type="button"
-          class="rounded p-1 text-[var(--automa-text-muted)] hover:bg-[var(--automa-bg-hover)] hover:text-[var(--automa-text-primary)]"
+          class="automa-drawer-icon-btn"
           title="Clear console output"
           @click="executionStore.clearLogs"
         >
@@ -148,7 +137,7 @@ function getLevelClass(level: string) {
         <!-- Close Drawer -->
         <button
           type="button"
-          class="rounded p-1 text-[var(--automa-text-muted)] hover:bg-[var(--automa-bg-hover)] hover:text-[var(--automa-text-primary)]"
+          class="automa-drawer-icon-btn"
           @click="emit('close')"
         >
           <X class="h-3.5 w-3.5" />
@@ -159,7 +148,7 @@ function getLevelClass(level: string) {
     <!-- Virtualized Log Stream Viewport -->
     <div
       ref="parentRef"
-      class="h-full w-full overflow-y-auto bg-[var(--automa-bg)] p-2 select-text"
+      class="automa-drawer-logs-viewport"
     >
       <div v-if="filteredLogs.length === 0" class="flex h-full items-center justify-center text-[var(--automa-text-muted)] text-xs">
         No log entries recorded yet
@@ -185,24 +174,24 @@ function getLevelClass(level: string) {
             width: '100%',
             transform: `translateY(${virtualRow.start}px)`,
           }"
-          class="flex items-start gap-2 py-0.5 text-[11px] leading-relaxed text-[var(--automa-text-primary)]"
+          class="automa-drawer-log-row"
         >
-          <span class="text-[var(--automa-text-muted)] flex-shrink-0 text-[10px]">
+          <span class="automa-log-time">
             {{ filteredLogs[virtualRow.index]?.timestamp }}
           </span>
 
           <span
-            class="inline-flex flex-shrink-0 items-center rounded border px-1 py-0.2 text-[9px] uppercase font-semibold"
-            :class="getLevelClass(filteredLogs[virtualRow.index]?.level || 'info')"
+            class="automa-log-level"
+            :class="`automa-log-level-${filteredLogs[virtualRow.index]?.level || 'info'}`"
           >
             {{ filteredLogs[virtualRow.index]?.level }}
           </span>
 
-          <span v-if="filteredLogs[virtualRow.index]?.blockId" class="text-indigo-500 dark:text-indigo-400 font-medium flex-shrink-0">
+          <span v-if="filteredLogs[virtualRow.index]?.blockId" class="automa-log-block">
             [{{ filteredLogs[virtualRow.index]?.blockId }}]
           </span>
 
-          <span class="break-all whitespace-pre-wrap">
+          <span class="automa-log-msg">
             {{ filteredLogs[virtualRow.index]?.message }}
           </span>
         </div>
