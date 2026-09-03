@@ -37,6 +37,8 @@ export default defineConfig({
       ],
       output: {
         exports: 'named',
+        entryFileNames: '[name].js',
+        chunkFileNames: 'chunks/[name].js',
         assetFileNames: (assetInfo) => {
           if (assetInfo.name === 'style.css') return 'tokens.css'
           return assetInfo.name || ''

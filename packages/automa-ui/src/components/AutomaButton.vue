@@ -133,6 +133,7 @@ function handleClick(event: MouseEvent) {
 function handleConfirmAction() {
   showConfirmation.value = false
   emit('confirmed', props.contextPayload)
+  emit('click', new MouseEvent('click'))
 }
 </script>
 
@@ -174,10 +175,10 @@ function handleConfirmAction() {
       :class="size === 'xs' ? 'w-3 h-3' : 'w-3.5 h-3.5'"
     />
 
-    <!-- Standard Icon -->
+    <!-- Standard Icon (only when no custom default slot is provided) -->
     <component
       :is="iconComponent"
-      v-else-if="iconComponent"
+      v-else-if="iconComponent && !$slots.default"
       class="shrink-0 transition-transform active:scale-95"
       :class="[
         size === 'xs' ? 'w-3 h-3' : 'w-3.5 h-3.5',

@@ -328,14 +328,12 @@ onMounted(() => {
                 <label class="font-medium text-foreground">Default Browser Engine</label>
                 <select
                   v-model="formData.browser.default_type"
-                  class="flex h-8 w-full rounded-md border border-input bg-background px-2.5 py-1 text-xs text-foreground shadow-2xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer"
+                  disabled
+                  class="flex h-8 w-full rounded-md border border-input bg-muted px-2.5 py-1 text-xs text-muted-foreground shadow-2xs cursor-not-allowed"
                 >
                   <option value="chromium">Chromium (Built-in Anti-Detect)</option>
-                  <option value="chrome">Google Chrome</option>
-                  <option value="brave">Brave Browser</option>
-                  <option value="edge">Microsoft Edge</option>
                 </select>
-                <p class="text-[11px] text-muted-foreground">Select the preferred browser binary for dispatching jobs.</p>
+                <p class="text-[11px] text-muted-foreground">The system is locked to Chromium engine for Phase 1 to guarantee anti-detect stability.</p>
               </div>
 
               <div class="space-y-1.5">

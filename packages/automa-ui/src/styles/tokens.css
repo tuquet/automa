@@ -50,8 +50,8 @@
   --secondary-foreground: var(--automa-text-primary);
   --muted: var(--automa-bg-subtle);
   --muted-foreground: var(--automa-text-muted);
-  --accent: var(--automa-bg-hover);
-  --accent-foreground: var(--automa-text-primary);
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
   --destructive: var(--automa-error);
   --destructive-foreground: #ffffff;
   --border: var(--automa-border);
@@ -84,19 +84,19 @@
   --automa-shadow-dropdown: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
 
   /* Shadcn UI Standard Token Aliases (Dark) */
-  --background: var(--automa-bg);
+  --background: var(--automa-bg-subtle);
   --foreground: var(--automa-text-primary);
   --card: var(--automa-bg);
   --card-foreground: var(--automa-text-primary);
   --popover: var(--automa-bg);
   --popover-foreground: var(--automa-text-primary);
-  --primary: var(--automa-accent);
-  --primary-foreground: var(--automa-accent-foreground);
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
   --secondary: var(--automa-bg-hover);
   --secondary-foreground: var(--automa-text-primary);
-  --muted: var(--automa-bg-subtle);
+  --muted: #27272a;
   --muted-foreground: var(--automa-text-muted);
-  --accent: var(--automa-bg-hover);
+  --accent: #27272a;
   --accent-foreground: var(--automa-text-primary);
   --destructive: var(--automa-error);
   --destructive-foreground: #ffffff;
