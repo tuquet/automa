@@ -7,6 +7,7 @@ import {
   importBrowserCookies,
   getBrowserCookies,
   deleteBrowser,
+  stopBrowserSession,
   type BrowserResponse,
 } from '@automa/types/api';
 import { E2E_BASE_URL } from './helpers/testDaemon';
@@ -88,7 +89,31 @@ describe('E2E: Browser Profiles & Cookies Management', () => {
     expect(Array.isArray(exportRes.data)).toBe(true);
   });
 
-  it('6. Delete browser profile and verify 404 cleanup', async () => {
+  it('6. Test browser session termination and offline state', async () => {
+    // Stop an inactive session should succeed gracefully (200 OK)
+    const stopRes = await stopBrowserSession({
+      baseUrl: E2E_BASE_URL,
+      path: { id: testBrowserId },
+    });
+    expect(stopRes.response?.status).toBe(200);
+
+    // Verify browser detail reports offline
+    const detail = await getBrowserDetail({
+      baseUrl: E2E_BASE_URL,
+      path: { id: testBrowserId },
+    });
+    expect(detail.response?.status).toBe(200);
+    expect(detail.data?.isOnline).toBe(false);
+
+    // Verify invalid ID produces 400 Bad Request
+    const invalidRes = await stopBrowserSession({
+      baseUrl: E2E_BASE_URL,
+      path: { id: 'invalid id with spaces' },
+    });
+    expect(invalidRes.response?.status).toBe(400);
+  });
+
+  it('7. Delete browser profile and verify 404 cleanup', async () => {
     const deleteRes = await deleteBrowser({
       baseUrl: E2E_BASE_URL,
       path: { id: testBrowserId },

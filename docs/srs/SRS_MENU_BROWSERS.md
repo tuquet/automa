@@ -5,9 +5,10 @@
 ## 🎯 1. MỤC TIÊU & PHẠM VI (SCOPE & OBJECTIVES)
 
 Menu **Browsers** quản lý toàn bộ hạm đội trình duyệt ảo (Anti-detect Browser Profiles) và các phiên Chromium của Automa Ecosystem:
-- **`automa-desk`**: Cung cấp giao diện quản trị profile độc lập (`BrowsersView.vue`), cấu hình proxy, user-agent, fingerprint, dò tìm tự động browser có sẵn trên máy host (`autoDetectBrowsers`), và điều khiển phiên chạy Chromium độc lập.
+- **`automa-desk`**: Cung cấp giao diện quản trị profile độc lập (`BrowsersView.vue`), cấu hình proxy, user-agent, fingerprint, đảm bảo profile mặc định (`autoDetectBrowsers`), và điều khiển phiên chạy Chromium độc lập.
 - **`automa-vsce`**: Cung cấp sidebar panel `BROWSERS` (`automa.browsers`) và webview quản lý `BrowserManagerView.vue` với khả năng launch/stop nhanh.
 - **`automa-webe:studio`**: Cung cấp modal chọn profile nhanh (`BrowsersQuickModal.vue`) và cơ chế tự phục hồi (Self-Healing Waterfall).
+- **Quy chuẩn Phase 1 (Zero-Host Invariant)**: Toàn bộ hệ sinh thái chỉ dùng duy nhất **1 Executable là Chromium tải về độc lập** (mô hình Playwright). Nghiêm cấm quét file cài đặt máy Host để tránh xung đột phiên bản và lộ danh tính.
 
 ---
 
@@ -18,14 +19,14 @@ BrowsersView.vue (hoặc BrowserManagerView.vue trong VS Code)
 ├── Header Bar
 │   ├── Search Input (Debounced 150ms)
 │   ├── Filter Dropdown (select.browser.status: All / Online / Offline)
-│   ├── btn.browser.autodetect (Dò tìm browser cài trên máy)
+│   ├── btn.browser.autodetect (Đảm bảo profile Chromium mặc định)
 │   ├── btn.browser.download (Tải Chromium portable)
 │   ├── btn.browser.create (Tạo profile ảo mới)
 │   └── btn.browser.killall (Dừng khẩn cấp toàn bộ hạm đội)
 ├── Browser Profiles Grid / List
 │   └── Browser Card (Từng profile)
 │       ├── Status Indicator Badge (Green: Online / Gray: Offline)
-│       ├── Profile Name & Browser Type (Chrome, Brave, Edge, Chromium)
+│       ├── Profile Name & Browser Type (Khóa cứng: Chromium)
 │       ├── Proxy Tag & Fingerprint Summary
 │       ├── Default Star Toggle (btn.browser.setdefault)
 │       ├── btn.browser.launch / btn.browser.stop (Khởi động / Tắt phiên)
@@ -48,7 +49,7 @@ BrowsersView.vue (hoặc BrowserManagerView.vue trong VS Code)
 | `btn.browser.create` | New Profile | `Plus` | `IDLE` | Mở modal tạo profile mới `createBrowser()` | `btn-create-browser` |
 | `btn.browser.edit` | Edit Profile | `Edit` | `IDLE` | Mở form sửa `updateBrowser()` | `btn-edit-browser` |
 | `btn.browser.delete` | Delete Profile | `Trash2` | `IDLE` | Xóa profile `deleteBrowser()` khỏi SQLite | `btn-delete-browser` |
-| `btn.browser.autodetect` | Auto Detect | `Search` | `IDLE`, `VALIDATING` | Gọi `autoDetectBrowsers()` quét máy Host | `btn-autodetect-browsers` |
+| `btn.browser.autodetect` | Ensure Default | `Search` | `IDLE`, `VALIDATING` | Gọi `autoDetectBrowsers()` đảm bảo Default Chromium | `btn-autodetect-browsers` |
 | `btn.browser.download` | Download Binary | `Download` | `IDLE`, `DISPATCHING` | Gọi `installBrowserBinary()` tải Chromium | `btn-download-browser-binary` |
 | `btn.browser.setdefault`| Set Default | `Star` | `IDLE` | Gán profile mặc định cho toàn hệ thống | `btn-set-default-browser` |
 

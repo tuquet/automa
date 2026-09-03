@@ -81,7 +81,7 @@ stateDiagram-v2
 | **4** | `select.storage.table` | `StorageExplorer`, `ModalDialog` | `/api/v1/storage/tables` | **Có** (38px) | Client Fuzzy | 150ms | `storage_table_changed` |
 | **5** | `select.storage.variable` | `StorageExplorer`, `WorkflowCanvas` | `/api/v1/storage/variables` | **Có** (38px) | Client Fuzzy | 150ms | `storage_variable_changed` |
 | **6** | `select.storage.credential` | `StorageExplorer`, `WorkflowCanvas` | `/api/v1/storage/credentials` | **Có** (38px) | Client Fuzzy | 150ms | `storage_credential_changed` |
-| **7** | `select.browser.type` | `SettingsPanel` | `/api/v1/system/settings` | Không (4 items) | Client Static | 0ms | `settings_updated` |
+| **7** | `select.browser.type` | `SettingsPanel` | `/api/v1/system/settings` | Không (Khóa cứng: `chromium`) | Client Static | 0ms | `settings_updated` |
 | **8** | `select.grid.matrix.columns` | `SettingsPanel`, `CampaignMatrix` | `/api/v1/system/settings` | Không (9 items) | Client Static | 0ms | `settings_updated` |
 | **9** | `select.grid.matrix.rows` | `SettingsPanel`, `CampaignMatrix` | `/api/v1/system/settings` | Không (6 items) | Client Static | 0ms | `settings_updated` |
 | **10** | `select.history.job_filter` | `HistoryLogs` | `/api/v1/history` | Không (4 items) | Client Static | 0ms | `job_finished`, `job_status` |
@@ -260,7 +260,7 @@ flowchart TD
 | `select.storage.table` | Chọn Table ID mới | `TableView.vue`, Table Column Inspector, dynamic pagination bar | Gọi GET `/api/v1/storage/tables/{id}/rows` nạp 10 dòng đầu tiên, hiển thị danh sách cột và số dòng. |
 | `select.storage.variable` | Chọn Variable Key | Variable Expression Preview (`{{variables.KEY}}`), JSON Editor | Chèn key vào vị trí con trỏ chuột trong block editor, hiển thị giá trị hiện tại của biến. |
 | `select.storage.credential` | Chọn Secret Key | Credential Expression Preview (`{{secrets.KEY}}`), Block Config | Chèn key mã hóa vào block, khóa hiển thị giá trị thật (Zero-Leak Cryptography). |
-| `select.browser.type` | Đổi Executable (`chromium`/`chrome`/`edge`) | `useBrowserWaterfall.ts`, Settings Form, Waterfall Resolver Modal | Gọi PATCH `/api/v1/system/settings`, cập nhật waterfall resolution fallback path. |
+| `select.browser.type` | Khóa cứng Executable (Phase 1: `chromium`) | `useBrowserWaterfall.ts`, Settings Form, Waterfall Resolver Modal | Khóa cứng giá trị 'chromium', loại bỏ hoàn toàn việc quét máy Host (Zero-Host Invariant). |
 | `select.grid.matrix.columns` | Đổi số cột matrix (1..12) | `MatrixGrid.vue`, Desktop Slot Tile Layout CSS Grid | Tính toán lại `slot_w` và `slot_h`, cập nhật CSS grid template columns realtime. |
 | `select.grid.matrix.rows` | Đổi số dòng matrix (1..8) | `MatrixGrid.vue`, Desktop Slot Tile Layout CSS Grid | Tính toán lại `slot_h`, cập nhật CSS grid template rows realtime. |
 | `select.history.job_filter` | Đổi Filter (`all`/`running`/`completed`/`failed`) | `HistoryView.vue`, `LogsTreeDataProvider.ts` | Lọc danh sách job hiển thị tức thì theo status, cập nhật phân trang history. |

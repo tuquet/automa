@@ -1,4 +1,4 @@
-export type BrowserType = 'chrome' | 'firefox' | 'chromium' | 'edge';
+export type BrowserType = 'chromium';
 
 export interface BrowserProfile {
   id: string;

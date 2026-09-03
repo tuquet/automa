@@ -48,6 +48,10 @@ Comprehensive architecture, UI/UX, and implementation guide for the `automa-vsce
 
 ## 3. 🛡️ Architectural Invariants
 
+- **Dual Reusable Build Targets & Studio Canvas Invariant**: `automa-vsce:preview` (`WorkflowEditorProvider` for `*.workflow.json`) **MUST DIRECTLY REUSE** the Standalone Web Studio Canvas built from `automa-webe` (`pnpm run build:studio` $\rightarrow$ `dist/studio` served via Automa Core Daemon at `http://127.0.0.1:8765/studio`). Re-implementing a duplicate VueFlow canvas inside `automa-vsce` is STRICTLY FORBIDDEN.
+- **2-Way Host Bridge Synchronization**:
+  - *Iframe $\rightarrow$ TextDocument*: User graph edits in embedded Studio emit `postMessage({ type: 'automa:workflow-changed', data })` $\rightarrow$ Webview forwards to extension host $\rightarrow$ `WorkflowSaveService` applies `vscode.WorkspaceEdit` to `vscode.TextDocument` (maintaining native Undo/Redo `Ctrl+Z` and Dirty indicator `●`).
+  - *TextDocument $\rightarrow$ Iframe*: External edits in JSON Source tab or `TextDocument` changes send `postMessage({ type: 'automa:set-workflow', data })` to Iframe to update VueFlow nodes reactively without viewport reset.
 - **SQLite Database-First & Zero Folder Scanning**: All Browsers, Storage Variables, Credentials, Tables, and Execution Jobs are loaded and managed 100% via **Automa Core REST API (`/api/v1/...`)** backed by SQLite. Scanning workspace directories on disk for `.json` files via glob/find commands is FORBIDDEN.
 - **Zero-Mock Backend-First**: NEVER mock API responses in extension code. Consume generated SDK client (`@automa/types/api`).
 - **No Raw CLI Spawning**: NEVER use `child_process.spawn("automa run")`. Always dispatch execution jobs via Typed SDK (`submitJob()`).

@@ -28,10 +28,13 @@ In `automa-vsce`, a **Preview / Custom Editor** is a document-bound visual edito
 
 | File Pattern | Custom Editor `viewType` | Provider Class | Primary Presentation Surface |
 | :--- | :--- | :--- | :--- |
-| `*.workflow.json`, `*.package.json`, `*.automa.json` | `automa.workflowEditor` | `WorkflowEditorProvider` | Embedded Web Studio (VueFlow Graph) + Parameters + Output Logs |
+| `*.workflow.json`, `*.package.json`, `*.automa.json` | `automa.workflowEditor` | `WorkflowEditorProvider` | **Embedded Web Studio (`automa-webe:studio` at `http://127.0.0.1:8765/studio`)** + Parameters + 60fps Virtual Output Logs |
 | `*.campaign.json`, `*.campaigns.json` | `automa.campaignEditor` | `CampaignEditorProvider` | Multi-Browser Fleet Matrix Scheduler + Task Allocator |
 | `*.browser.json` | `automa.browserEditor` | `BrowserEditorProvider` | Anti-Detect Profile Form, Fingerprints & Proxy Config |
 | `*.automa-log.json` | `automa.logEditor` | `LogEditorProvider` | Execution Audit Trail & Step Timing Breakdown |
+
+> [!IMPORTANT]
+> **Zero Canvas Duplication Invariant**: `WorkflowEditorProvider` does NOT maintain a separate VueFlow graph canvas. It reuses the exact same build artifact `automa-webe:studio` served by the Automa Core Rust Daemon at `http://127.0.0.1:8765/studio` via an embedded Iframe and 2-way postMessage Host Bridge.
 
 ---
 

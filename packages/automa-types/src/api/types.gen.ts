@@ -1488,9 +1488,18 @@ export type StopBrowserSessionData = {
     url: '/api/v1/browsers/{id}/session';
 };
 
+export type StopBrowserSessionErrors = {
+    /**
+     * Invalid browser ID
+     */
+    400: ApiErrorResponse;
+};
+
+export type StopBrowserSessionError = StopBrowserSessionErrors[keyof StopBrowserSessionErrors];
+
 export type StopBrowserSessionResponses = {
     /**
-     * Browser teardown progress stream
+     * Browser session terminated successfully
      */
     200: unknown;
 };

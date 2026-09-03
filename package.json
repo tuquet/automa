@@ -41,7 +41,7 @@
         "test:e2e": "vitest run",
         "test:ui": "vitest --ui",
         "test:coverage": "pnpm -F vscode-automa run test:coverage",
-        "sync:api": "node scripts/export-openapi.mjs && pnpm run sync-bruno && pnpm run docs:generate && pnpm -F @automa/types run generate:api && pnpm -F @automa/types run build",
+        "sync:api": "node scripts/export-openapi.mjs && pnpm run sync-bruno && pnpm -F @automa/types run generate:api && pnpm -F @automa/types run build",
         "sync:ui": "node scripts/sync-shadcn-components.mjs",
         "add:ui": "node scripts/sync-shadcn-components.mjs",
         "audit:ui": "node scripts/audit-shadcn-reverse.mjs",

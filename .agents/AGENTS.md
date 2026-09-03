@@ -101,6 +101,12 @@
 - **Database-First State Management**: All entities, browsers, storage variables, credentials, tables, and execution jobs are managed, created, queried, and updated directly via **Automa Core REST API (`/api/v1/...`)** backed by SQLite database.
 - **Explicit File Interactions Only**: Files on disk are only opened when the user explicitly triggers an editor for a specific file or performs an explicit export. No background folder-scanning or automatic file-tree globbing commands are permitted.
 
+# Zero Host Browser Scanning & Dedicated Downloaded Chromium Invariant
+
+- **Zero Host Browser Scanning**: Scanning host OS directories, Program Files, registry keys, or application folders for user-installed browsers (`chrome.exe`, `msedge.exe`, `brave.exe`) is strictly FORBIDDEN in Phase 1.
+- **Dedicated Downloaded Chromium Runtime**: Automa Core relies exclusively on an isolated, standalone Chromium binary downloaded and maintained in `<data_dir>/runtimes/chrome-<platform>/` (the Playwright architecture model).
+- **Zero Version Drift & Isolation**: All automation jobs execute against this single, immutable Chromium runtime, eliminating cross-version breaking changes and preventing accidental identity leaks from personal host browsers.
+
 # Strict SRS Compliance & Zero Spec Hallucination Invariant
 
 - **Canonical Specification References**:
