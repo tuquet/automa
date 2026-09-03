@@ -95,9 +95,7 @@ const displayedWorkflows = computed<WorkflowStorageItem[]>(() => {
 
 // Actions
 async function onDelete(workflow: WorkflowStorageItem) {
-  if (
-    window.confirm(`Delete "${workflow.name || workflow.id}"?`)
-  ) {
+  if (window.confirm(`Delete "${workflow.name || workflow.id}"?`)) {
     emit('delete-workflow', workflow.id)
     await deleteWorkflowMutation.mutateAsync(workflow.id)
   }
@@ -252,7 +250,8 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
             {
               variant: 'ghost',
               size: 'icon-xs',
-              class: 'text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-70 hover:opacity-100 transition-opacity',
+              class:
+                'text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-70 hover:opacity-100 transition-opacity',
               title: 'Delete',
               disabled: isDeleting,
               onClick: () => onDelete(wf),

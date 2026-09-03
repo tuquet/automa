@@ -261,30 +261,20 @@ watch(isOpen, (open) => {
         <template v-if="searchQuery.trim()">
           <SearchX class="h-6 w-6 text-[var(--automa-text-muted)] opacity-60" />
           <div class="text-center px-3">
-            <p class="text-xs font-semibold text-[var(--automa-text-primary)]">No matching results</p>
+            <p class="text-xs font-semibold text-[var(--automa-text-primary)]">No results</p>
             <p class="text-[11px] text-[var(--automa-text-muted)] mt-0.5 break-all">
-              No results found for "<span class="font-mono text-[var(--automa-text-primary)]">{{ searchQuery }}</span>"
+              "<span class="font-mono text-[var(--automa-text-primary)]">{{ searchQuery }}</span>"
             </p>
           </div>
-          <button
-            type="button"
-            class="automa-select-clear-link"
-            @click="searchQuery = ''"
-          >
-            Clear search
-          </button>
         </template>
 
-        <!-- Domain Empty State: Browser Profiles -->
+        <!-- Domain Empty State: Browsers -->
         <template v-else-if="props.id === 'select.browser.profile'">
           <div class="automa-select-empty-icon-wrap">
             <Globe class="h-5 w-5 text-[var(--automa-text-muted)]" />
           </div>
           <div class="text-center px-4">
-            <p class="text-xs font-semibold text-[var(--automa-text-primary)]">No Browser Profiles</p>
-            <p class="text-[11px] text-[var(--automa-text-muted)] mt-0.5">
-              Create an anti-detect profile to run automation workflows.
-            </p>
+            <p class="text-xs font-semibold text-[var(--automa-text-primary)]">No browsers</p>
           </div>
           <button
             type="button"
@@ -293,7 +283,7 @@ watch(isOpen, (open) => {
             @click="handleCreateAction"
           >
             <Plus class="h-3.5 w-3.5 mr-1" />
-            <span>Create Profile</span>
+            <span>New Browser</span>
           </button>
         </template>
 
@@ -303,10 +293,7 @@ watch(isOpen, (open) => {
             <Workflow class="h-5 w-5 text-[var(--automa-text-muted)]" />
           </div>
           <div class="text-center px-4">
-            <p class="text-xs font-semibold text-[var(--automa-text-primary)]">No Workflows Found</p>
-            <p class="text-[11px] text-[var(--automa-text-muted)] mt-0.5">
-              Create or import an automation workflow to get started.
-            </p>
+            <p class="text-xs font-semibold text-[var(--automa-text-primary)]">No workflows</p>
           </div>
           <button
             type="button"
@@ -315,7 +302,7 @@ watch(isOpen, (open) => {
             @click="handleCreateAction"
           >
             <Plus class="h-3.5 w-3.5 mr-1" />
-            <span>Create Workflow</span>
+            <span>New Workflow</span>
           </button>
         </template>
 
@@ -325,10 +312,7 @@ watch(isOpen, (open) => {
             <Inbox class="h-5 w-5 text-[var(--automa-text-muted)]" />
           </div>
           <div class="text-center px-4">
-            <p class="text-xs font-semibold text-[var(--automa-text-primary)]">No Options Available</p>
-            <p class="text-[11px] text-[var(--automa-text-muted)] mt-0.5">
-              There are currently no items in this list.
-            </p>
+            <p class="text-xs font-semibold text-[var(--automa-text-primary)]">No items</p>
           </div>
         </template>
       </div>

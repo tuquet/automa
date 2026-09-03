@@ -99,7 +99,7 @@ describe('@automa/ui - 6 Pinia Domain Stores', () => {
           id: 'var_1',
           key: 'API_URL',
           name: 'API Url',
-          value: 'https://example.com',
+          value: { url: 'https://example.com' },
         },
       ])
       expect(store.variableCount).toBe(1)
@@ -108,7 +108,7 @@ describe('@automa/ui - 6 Pinia Domain Stores', () => {
         id: 'var_2',
         key: 'TIMEOUT',
         name: 'Timeout',
-        value: '5000',
+        value: { timeout: 5000 },
       })
       expect(store.variableCount).toBe(2)
 

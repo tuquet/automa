@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AlertTriangle, Trash2, X } from 'lucide-vue-next'
+import { AlertTriangle, Trash2 } from 'lucide-vue-next'
 
 withDefaults(
   defineProps<{
@@ -11,8 +11,8 @@ withDefaults(
     variant?: 'default' | 'destructive' | 'warning'
   }>(),
   {
-    title: 'Confirm Action',
-    message: 'Are you sure you want to proceed with this action?',
+    title: 'Confirm',
+    message: 'Are you sure?',
     confirmText: 'Confirm',
     cancelText: 'Cancel',
     variant: 'default',
@@ -67,14 +67,6 @@ function handleCancel() {
               {{ title }}
             </h3>
           </div>
-          <button
-            type="button"
-            class="automa-drawer-icon-btn"
-            data-testid="btn-modal-close"
-            @click="handleCancel"
-          >
-            <X class="w-4 h-4" />
-          </button>
         </div>
 
         <!-- Body Message -->
