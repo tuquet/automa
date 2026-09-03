@@ -56,6 +56,9 @@ importers:
       '@automa/ui':
         specifier: workspace:*
         version: link:../packages/automa-ui
+      '@tanstack/vue-table':
+        specifier: ^8.21.2
+        version: 8.21.3(vue@3.5.41(typescript@6.0.3))
       '@tauri-apps/api':
         specifier: ^2.11.1
         version: 2.11.1
@@ -12128,6 +12131,11 @@ snapshots:
     dependencies:
       '@tanstack/table-core': 8.21.3
       vue: 3.5.41(typescript@5.7.3)
+
+  '@tanstack/vue-table@8.21.3(vue@3.5.41(typescript@6.0.3))':
+    dependencies:
+      '@tanstack/table-core': 8.21.3
+      vue: 3.5.41(typescript@6.0.3)
 
   '@tanstack/vue-virtual@3.13.36(vue@3.5.41(typescript@5.7.3))':
     dependencies:

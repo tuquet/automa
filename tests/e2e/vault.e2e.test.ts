@@ -1,17 +1,17 @@
 import { describe, it, expect } from 'vitest';
 import type { Workflow } from '@automa/types';
 import {
-  listStorageFiles,
+  getStorageWorkflows,
   saveWorkflow,
   getWorkflow,
 } from '@automa/types/api';
 import { E2E_BASE_URL } from './helpers/testDaemon';
 
-describe('E2E: Vault Files & Workflows Management (/api/v1/storage/files & workflow)', () => {
+describe('E2E: Storage Workflows Management (/api/v1/storage/workflows & workflow)', () => {
   const testWorkflowPath = `workflows/e2e_vault_${Date.now()}.workflow.json`;
 
-  it('1. List storage files in vault', async () => {
-    const res = await listStorageFiles({
+  it('1. List workflows in storage database', async () => {
+    const res = await getStorageWorkflows({
       baseUrl: E2E_BASE_URL,
     });
 

@@ -4,7 +4,6 @@ import type { CellContext, ColumnDef, HeaderContext } from '@tanstack/vue-table'
 import {
   Download,
   FileCode,
-  FolderOpen,
   Layers,
   Package,
   Plus,
@@ -97,7 +96,7 @@ const displayedWorkflows = computed<WorkflowStorageItem[]>(() => {
 // Actions
 async function onDelete(workflow: WorkflowStorageItem) {
   if (
-    window.confirm(`Are you sure you want to delete workflow "${workflow.name || workflow.id}"?`)
+    window.confirm(`Delete "${workflow.name || workflow.id}"?`)
   ) {
     emit('delete-workflow', workflow.id)
     await deleteWorkflowMutation.mutateAsync(workflow.id)
@@ -234,18 +233,6 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
             onClick: () => emit('run-workflow', wf),
           }),
 
-          // Open in Editor Button
-          h(
-            Button,
-            {
-              variant: 'outline',
-              size: 'xs',
-              title: 'Open in Editor',
-              onClick: () => emit('open-workflow', wf),
-            },
-            () => [h(FolderOpen, { class: 'size-3 mr-1' }), 'Open'],
-          ),
-
           // Export JSON Button
           h(
             Button,
@@ -253,7 +240,7 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
               variant: 'ghost',
               size: 'icon-xs',
               class: 'text-muted-foreground hover:text-foreground',
-              title: 'Export Workflow JSON',
+              title: 'Export JSON',
               onClick: () => emit('export-workflow', wf),
             },
             () => h(Download, { class: 'size-3.5' }),
@@ -265,8 +252,8 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
             {
               variant: 'ghost',
               size: 'icon-xs',
-              class: 'text-muted-foreground hover:text-destructive hover:bg-destructive/10',
-              title: 'Delete Workflow',
+              class: 'text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-70 hover:opacity-100 transition-opacity',
+              title: 'Delete',
               disabled: isDeleting,
               onClick: () => onDelete(wf),
             },
@@ -275,7 +262,7 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
         ],
       )
     },
-    size: 190,
+    size: 110,
     enableSorting: false,
   },
 ]
@@ -283,63 +270,68 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
 
 <template>
   <div class="automa-workflow-data-table flex flex-col w-full h-full" data-testid="workflow-data-table">
-    <!-- Category Tabs (All / Workflows / Packages) -->
-    <div v-if="props.showTypeTabs" class="flex items-center gap-1.5 mb-2.5 pb-2 border-b border-border shrink-0">
-      <button
-        type="button"
-        class="flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-md transition-colors cursor-pointer"
-        :class="activeTab === 'all' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'"
-        data-testid="tab-workflows-all"
-        @click="activeTab = 'all'"
-      >
-        <span>All</span>
-        <span class="text-[10px] px-1 rounded bg-background/20 font-mono">{{ allWorkflows.length }}</span>
-      </button>
-
-      <button
-        type="button"
-        class="flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-md transition-colors cursor-pointer"
-        :class="activeTab === 'workflows' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'"
-        data-testid="tab-workflows-workflows"
-        @click="activeTab = 'workflows'"
-      >
-        <FileCode class="size-3.5" />
-        <span>Workflows</span>
-        <span class="text-[10px] px-1 rounded bg-background/20 font-mono">{{ workflowsCount }}</span>
-      </button>
-
-      <button
-        type="button"
-        class="flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-md transition-colors cursor-pointer"
-        :class="activeTab === 'packages' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'"
-        data-testid="tab-workflows-packages"
-        @click="activeTab = 'packages'"
-      >
-        <Package class="size-3.5" />
-        <span>Packages</span>
-        <span class="text-[10px] px-1 rounded bg-background/20 font-mono">{{ packagesCount }}</span>
-      </button>
-    </div>
-
     <VirtualDataTable
       :data="displayedWorkflows"
       :columns="columns"
       :enable-virtualization="props.enableVirtualization"
       :is-loading="Boolean(isLoading) || deleteWorkflowMutation.isPending.value"
       :initial-page-size="pageSize"
-      search-placeholder="Search workflows..."
-      empty-text="No workflows found"
-      empty-description="Create or import to get started."
+      search-placeholder="Search..."
+      empty-text="No workflows"
+      empty-description=""
       @row-click="emit('open-workflow', $event)"
     >
       <!-- Custom Toolbar Actions -->
       <template #toolbar>
+        <!-- Category Filter Tabs -->
+        <div v-if="props.showTypeTabs" class="flex items-center bg-muted/60 p-0.5 rounded-md border border-border/60 text-xs">
+          <button
+            type="button"
+            class="px-2.5 py-1 rounded font-medium transition-colors cursor-pointer"
+            :class="
+              activeTab === 'all'
+                ? 'bg-background text-foreground shadow-2xs'
+                : 'text-muted-foreground hover:text-foreground'
+            "
+            data-testid="tab-workflows-all"
+            @click="activeTab = 'all'"
+          >
+            All ({{ allWorkflows.length }})
+          </button>
+          <button
+            type="button"
+            class="px-2.5 py-1 rounded font-medium transition-colors flex items-center gap-1 cursor-pointer"
+            :class="
+              activeTab === 'workflows'
+                ? 'bg-background text-foreground shadow-2xs'
+                : 'text-muted-foreground hover:text-foreground'
+            "
+            data-testid="tab-workflows-workflows"
+            @click="activeTab = 'workflows'"
+          >
+            Workflows ({{ workflowsCount }})
+          </button>
+          <button
+            type="button"
+            class="px-2.5 py-1 rounded font-medium transition-colors flex items-center gap-1 cursor-pointer"
+            :class="
+              activeTab === 'packages'
+                ? 'bg-background text-foreground shadow-2xs'
+                : 'text-muted-foreground hover:text-foreground'
+            "
+            data-testid="tab-workflows-packages"
+            @click="activeTab = 'packages'"
+          >
+            Packages ({{ packagesCount }})
+          </button>
+        </div>
+
         <!-- Import JSON Button -->
         <Button
           variant="outline"
           size="sm"
           data-testid="btn-import-workflow"
-          title="Import Workflow from JSON file"
+          title="Import"
           @click="emit('import-workflow')"
         >
           <Upload class="size-3.5 mr-1" />
@@ -350,7 +342,7 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
         <Button
           variant="outline"
           size="icon-sm"
-          title="Refresh Workflows List"
+          title="Refresh"
           data-testid="btn-refresh-workflows"
           :disabled="isLoading"
           @click="refetch()"
@@ -363,11 +355,11 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
           variant="primary"
           size="sm"
           data-testid="btn-create-workflow"
-          title="Create New Workflow"
+          title="Create"
           @click="emit('create-workflow')"
         >
           <Plus class="size-3.5 mr-1" />
-          <span>New Workflow</span>
+          <span>New</span>
         </Button>
       </template>
     </VirtualDataTable>

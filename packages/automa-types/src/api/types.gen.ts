@@ -740,6 +740,20 @@ export type SideloadExtensionResponse = {
 };
 
 /**
+ * Response payload when a browser process is terminated
+ */
+export type StopBrowserResponse = {
+    /**
+     * Detailed message
+     */
+    message: string;
+    /**
+     * Result status
+     */
+    status: string;
+};
+
+/**
  * Stored authentication credential
  */
 export type StorageCredential = {
@@ -759,28 +773,6 @@ export type StorageCredential = {
      * Encrypted or plaintext secret value
      */
     value?: string | null;
-};
-
-/**
- * File descriptor for a workflow or campaign in the storage vault
- */
-export type StorageFileInfo = {
-    /**
-     * Type of file ("workflow" or "campaign")
-     */
-    fileType: string;
-    /**
-     * File base name
-     */
-    name: string;
-    /**
-     * Full absolute path on the filesystem
-     */
-    path: string;
-    /**
-     * Path relative to the storage vault root
-     */
-    relativePath: string;
 };
 
 /**
@@ -1484,7 +1476,12 @@ export type StopBrowserSessionData = {
          */
         id: string;
     };
-    query?: never;
+    query?: {
+        /**
+         * If true, forcefully kills the process immediately without graceful closing or saving cache
+         */
+        force?: boolean | null;
+    };
     url: '/api/v1/browsers/{id}/session';
 };
 
@@ -1501,8 +1498,10 @@ export type StopBrowserSessionResponses = {
     /**
      * Browser session terminated successfully
      */
-    200: unknown;
+    200: StopBrowserResponse;
 };
+
+export type StopBrowserSessionResponse = StopBrowserSessionResponses[keyof StopBrowserSessionResponses];
 
 export type StartBrowserData = {
     body?: never;
@@ -2324,44 +2323,6 @@ export type DeleteStorageCredentialResponses = {
      */
     200: unknown;
 };
-
-export type ListStorageFilesData = {
-    body?: never;
-    path?: never;
-    query?: {
-        /**
-         * Maximum number of files to return
-         */
-        limit?: number | null;
-        /**
-         * Number of items to skip for pagination (default 0)
-         */
-        offset?: number | null;
-        /**
-         * Optional search query to filter files by name or relative path
-         */
-        search?: string | null;
-    };
-    url: '/api/v1/storage/files';
-};
-
-export type ListStorageFilesErrors = {
-    /**
-     * Failed to list storage files
-     */
-    500: ApiErrorResponse;
-};
-
-export type ListStorageFilesError = ListStorageFilesErrors[keyof ListStorageFilesErrors];
-
-export type ListStorageFilesResponses = {
-    /**
-     * List all workflow and campaign files in storage
-     */
-    200: Array<StorageFileInfo>;
-};
-
-export type ListStorageFilesResponse = ListStorageFilesResponses[keyof ListStorageFilesResponses];
 
 export type GetStorageTablesData = {
     body?: never;

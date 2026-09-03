@@ -89,15 +89,17 @@ describe('E2E: Browser Profiles & Cookies Management', () => {
     expect(Array.isArray(exportRes.data)).toBe(true);
   });
 
-  it('6. Test browser session termination and offline state', async () => {
-    // Stop an inactive session should succeed gracefully (200 OK)
+  it('6. Test browser session termination (graceful stop vs force kill) and offline state', async () => {
+    // 6a. Graceful stop with force: false
     const stopRes = await stopBrowserSession({
       baseUrl: E2E_BASE_URL,
       path: { id: testBrowserId },
+      query: { force: false },
     });
     expect(stopRes.response?.status).toBe(200);
+    expect((stopRes.data as any)?.message).toContain('sanitized');
 
-    // Verify browser detail reports offline
+    // 6b. Verify browser detail reports offline
     const detail = await getBrowserDetail({
       baseUrl: E2E_BASE_URL,
       path: { id: testBrowserId },
@@ -105,7 +107,16 @@ describe('E2E: Browser Profiles & Cookies Management', () => {
     expect(detail.response?.status).toBe(200);
     expect(detail.data?.isOnline).toBe(false);
 
-    // Verify invalid ID produces 400 Bad Request
+    // 6c. Force kill with force: true
+    const forceKillRes = await stopBrowserSession({
+      baseUrl: E2E_BASE_URL,
+      path: { id: testBrowserId },
+      query: { force: true },
+    });
+    expect(forceKillRes.response?.status).toBe(200);
+    expect((forceKillRes.data as any)?.message).toContain('forcefully');
+
+    // 6d. Verify invalid ID produces 400 Bad Request
     const invalidRes = await stopBrowserSession({
       baseUrl: E2E_BASE_URL,
       path: { id: 'invalid id with spaces' },

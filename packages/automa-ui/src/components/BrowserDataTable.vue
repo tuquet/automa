@@ -16,12 +16,14 @@ import VirtualDataTable from './VirtualDataTable.vue'
 
 const props = withDefaults(
   defineProps<{
+    items?: BrowserResponse[]
     enableServerSearch?: boolean
     enableVirtualization?: boolean
     pageSize?: number
     selectable?: boolean
   }>(),
   {
+    items: undefined,
     enableServerSearch: false,
     enableVirtualization: true,
     pageSize: 20,
@@ -57,6 +59,9 @@ const {
 
 // Sync remote data into store when available
 const allBrowsers = computed<BrowserResponse[]>(() => {
+  if (props.items !== undefined) {
+    return props.items
+  }
   if (remoteBrowsers.value && remoteBrowsers.value.length > 0) {
     return remoteBrowsers.value
   }
@@ -91,7 +96,7 @@ async function onStop(browserId: string) {
 }
 
 async function onDelete(browserId: string) {
-  if (window.confirm(`Are you sure you want to delete browser profile "${browserId}"?`)) {
+  if (window.confirm(`Are you sure you want to delete browser "${browserId}"?`)) {
     emit('delete-browser', browserId)
     await deleteBrowserMutation.mutateAsync(browserId)
     browserStore.removeBrowser(browserId)
@@ -152,26 +157,36 @@ const columns: ColumnDef<BrowserResponse>[] = [
   },
   {
     id: 'name',
-    header: 'Browser Name / Profile',
+    header: 'Profile',
     accessorKey: 'name',
     cell: ({ row }) => {
       const b = row.original
-      return h('div', { class: 'flex flex-col gap-0.5' }, [
+      const hasDistinctId = b.id && b.id !== b.name
+      return h('div', { class: 'flex items-center gap-1.5' }, [
         h('span', { class: 'font-medium text-xs text-foreground truncate' }, b.name),
-        h('span', { class: 'font-mono text-[10px] text-muted-foreground/80 truncate' }, b.id),
+        hasDistinctId
+          ? h(
+              'span',
+              { class: 'font-mono text-[10px] text-muted-foreground/60 truncate' },
+              `(${b.id})`,
+            )
+          : null,
       ])
     },
   },
   {
-    id: 'browserType',
-    header: 'Engine',
-    accessorKey: 'browserType',
+    id: 'timezone',
+    header: 'Timezone',
+    accessorKey: 'timezone',
     cell: ({ row }) => {
-      const extra = row.original as unknown as Record<string, unknown>
-      const type = (extra.browserType as string) || 'chromium'
-      return h(Badge, { variant: 'outline', class: 'font-mono text-[10px] uppercase' }, () => type)
+      const tz = row.original.timezone
+      return h(
+        'span',
+        { class: 'font-mono text-[11px] text-muted-foreground' },
+        tz || 'UTC (System)',
+      )
     },
-    size: 100,
+    size: 140,
   },
   {
     id: 'proxy',
@@ -231,7 +246,7 @@ const columns: ColumnDef<BrowserResponse>[] = [
                 id: 'btn.browser.launch',
                 size: 'xs',
                 variant: 'primary',
-                title: 'Launch Browser Profile',
+                title: 'Launch',
                 disabled: isPending,
                 onClick: () => onLaunch(b.id),
               }),
@@ -242,8 +257,9 @@ const columns: ColumnDef<BrowserResponse>[] = [
             {
               variant: 'ghost',
               size: 'icon-xs',
-              class: 'text-muted-foreground hover:text-destructive hover:bg-destructive/10',
-              title: 'Delete Browser Profile',
+              class:
+                'text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-70 hover:opacity-100 transition-opacity',
+              title: 'Delete',
               onClick: () => onDelete(b.id),
             },
             () => h(Trash2, { class: 'size-3.5' }),
@@ -265,9 +281,9 @@ const columns: ColumnDef<BrowserResponse>[] = [
       :enable-virtualization="props.enableVirtualization"
       :is-loading="Boolean(isLoading) || startBrowserMutation.isPending.value || stopBrowserMutation.isPending.value"
       :initial-page-size="pageSize"
-      search-placeholder="Filter browsers by name or ID..."
-      empty-text="No browser profiles found"
-      empty-description="Create an anti-detect browser profile to get started."
+      search-placeholder="Search..."
+      empty-text="No browsers"
+      empty-description=""
       @row-click="emit('select-browser', $event)"
     >
       <!-- Custom Toolbar Actions -->
@@ -320,7 +336,7 @@ const columns: ColumnDef<BrowserResponse>[] = [
         <Button
           variant="outline"
           size="icon-sm"
-          title="Refresh Browser List"
+          title="Refresh"
           data-testid="btn-refresh-browsers"
           :disabled="isLoading"
           @click="refetch()"
@@ -333,11 +349,11 @@ const columns: ColumnDef<BrowserResponse>[] = [
           variant="primary"
           size="sm"
           data-testid="btn-create-browser"
-          title="Create New Browser Profile"
+          title="Create Browser"
           @click="emit('create-browser')"
         >
           <Plus class="size-3.5 mr-1" />
-          <span>New Profile</span>
+          <span>New Browser</span>
         </Button>
       </template>
     </VirtualDataTable>

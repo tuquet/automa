@@ -18,12 +18,14 @@ const props = withDefaults(
 
 const parentRef = ref<HTMLElement | null>(null)
 
-const rowVirtualizer = useVirtualizer({
-  count: props.items.length,
-  getScrollElement: () => parentRef.value,
-  estimateSize: () => props.estimateSize,
-  overscan: props.overscan,
-})
+const rowVirtualizer = useVirtualizer(
+  computed(() => ({
+    count: props.items.length,
+    getScrollElement: () => parentRef.value,
+    estimateSize: () => props.estimateSize,
+    overscan: props.overscan,
+  })),
+)
 
 const virtualItems = computed(() => rowVirtualizer.value.getVirtualItems())
 const totalSize = computed(() => rowVirtualizer.value.getTotalSize())

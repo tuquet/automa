@@ -66,8 +66,8 @@ const props = withDefaults(
     initialPageSize: 20,
     serverPagination: undefined,
     isLoading: false,
-    emptyText: 'No records found',
-    emptyDescription: 'No data matching your criteria.',
+    emptyText: 'No records',
+    emptyDescription: '',
     enableRowSelection: false,
   },
 )
@@ -184,12 +184,14 @@ const tableRows = computed(() => table.getRowModel().rows)
 // Virtualizer setup
 const tableContainerRef = ref<HTMLElement | null>(null)
 
-const rowVirtualizer = useVirtualizer({
-  count: computed(() => (props.enableVirtualization ? tableRows.value.length : 0)).value,
-  getScrollElement: () => tableContainerRef.value,
-  estimateSize: () => props.estimateRowHeight,
-  overscan: props.overscan,
-})
+const rowVirtualizer = useVirtualizer(
+  computed(() => ({
+    count: props.enableVirtualization ? tableRows.value.length : 0,
+    getScrollElement: () => tableContainerRef.value,
+    estimateSize: () => props.estimateRowHeight,
+    overscan: props.overscan,
+  })),
+)
 
 const virtualRows = computed(() =>
   props.enableVirtualization ? rowVirtualizer.value.getVirtualItems() : [],
@@ -230,6 +232,14 @@ function onPageSizeChange(newPageSize: number) {
   table.setPageSize(newPageSize)
   if (isServerPaginated.value) {
     emit('update:serverPageSize', newPageSize)
+  }
+}
+
+function measureRowElement(el: unknown) {
+  if (!el) return
+  const node = ((el as { $el?: HTMLElement }).$el ?? el) as HTMLElement
+  if (node && typeof node.getAttribute === 'function') {
+    rowVirtualizer.value.measureElement(node)
   }
 }
 </script>
@@ -366,7 +376,7 @@ function onPageSizeChange(newPageSize: number) {
               :key="tableRows[virtualRow.index]!.id"
               :data-index="virtualRow.index"
               :data-state="tableRows[virtualRow.index]!.getIsSelected() ? 'selected' : undefined"
-              :ref="(el) => rowVirtualizer.measureElement(el as HTMLElement)"
+              :ref="measureRowElement"
               class="h-10 hover:bg-muted/50 cursor-pointer transition-colors border-b border-border/50"
               @click="emit('row-click', tableRows[virtualRow.index]!.original)"
             >
@@ -436,7 +446,7 @@ function onPageSizeChange(newPageSize: number) {
 
     <!-- Bottom Pagination Footer -->
     <TablePagination
-      v-if="enablePagination && (effectiveTotalRows > 0 || isServerPaginated)"
+      v-if="enablePagination && (isServerPaginated || effectivePageCount > 1 || selectedRowsCount > 0)"
       :page-index="pagination.pageIndex"
       :page-size="pagination.pageSize"
       :page-count="effectivePageCount"

@@ -11,7 +11,7 @@ const props = withDefaults(
   }>(),
   {
     open: true,
-    title: 'Execution Logs & Diagnostics',
+    title: 'Execution Logs',
   },
 )
 
@@ -37,12 +37,14 @@ const filteredLogs = computed(() => {
   return list
 })
 
-const rowVirtualizer = useVirtualizer({
-  count: filteredLogs.value.length,
-  getScrollElement: () => parentRef.value,
-  estimateSize: () => 28,
-  overscan: 10,
-})
+const rowVirtualizer = useVirtualizer(
+  computed(() => ({
+    count: filteredLogs.value.length,
+    getScrollElement: () => parentRef.value,
+    estimateSize: () => 28,
+    overscan: 10,
+  })),
+)
 
 const virtualItems = computed(() => rowVirtualizer.value.getVirtualItems())
 const totalSize = computed(() => rowVirtualizer.value.getTotalSize())
@@ -149,7 +151,7 @@ watch(
       class="automa-drawer-logs-viewport"
     >
       <div v-if="filteredLogs.length === 0" class="flex h-full items-center justify-center text-[var(--automa-text-muted)] text-xs">
-        No log entries recorded yet
+        No logs yet
       </div>
 
       <div

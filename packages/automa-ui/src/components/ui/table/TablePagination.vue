@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-vue-next'
 import { Button } from '../../ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../select'
 
 withDefaults(
   defineProps<{
@@ -41,42 +42,48 @@ function onPageSizeChange(value: unknown) {
     <!-- Left: Selected Count / Total Rows -->
     <div class="flex items-center gap-2">
       <span v-if="selectedCount > 0" class="font-medium text-foreground">
-        {{ selectedCount }} of {{ totalRows }} row(s) selected
+        {{ selectedCount }} of {{ totalRows }} selected
       </span>
-      <span v-else>
-        Total <strong class="text-foreground">{{ totalRows }}</strong> items
+      <span v-else class="text-muted-foreground/80">
+        {{ totalRows }} {{ totalRows === 1 ? 'item' : 'items' }}
       </span>
     </div>
 
     <!-- Right: Page Size & Navigation Controls -->
-    <div class="flex items-center gap-4 sm:gap-6">
+    <div class="flex items-center gap-3 sm:gap-5">
       <!-- Rows per page selector -->
-      <div class="flex items-center gap-2">
-        <span class="hidden sm:inline text-muted-foreground">Rows per page</span>
-        <select
-          :value="String(pageSize)"
+      <div class="flex items-center gap-1.5">
+        <span class="hidden sm:inline text-muted-foreground text-[11px]">Rows</span>
+        <Select
+          :model-value="String(pageSize)"
           :disabled="disabled"
-          class="h-7 px-2 text-xs rounded-md border border-input bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-ring cursor-pointer"
-          data-testid="select-page-size"
-          @change="onPageSizeChange(($event.target as HTMLSelectElement).value)"
+          @update:model-value="onPageSizeChange"
         >
-          <option
-            v-for="opt in pageSizeOptions"
-            :key="opt"
-            :value="String(opt)"
+          <SelectTrigger
+            class="h-6.5 w-[64px] text-xs bg-background"
+            data-testid="select-page-size"
           >
-            {{ opt }}
-          </option>
-        </select>
+            <SelectValue :placeholder="String(pageSize)" />
+          </SelectTrigger>
+          <SelectContent side="top" align="end">
+            <SelectItem
+              v-for="opt in pageSizeOptions"
+              :key="opt"
+              :value="String(opt)"
+            >
+              {{ opt }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <!-- Page info indicator -->
-      <div class="flex items-center justify-center font-medium min-w-[75px]">
-        Page {{ pageIndex + 1 }} of {{ Math.max(1, pageCount) }}
+      <div class="flex items-center justify-center font-medium text-[11px] min-w-[65px]">
+        Page {{ pageIndex + 1 }} / {{ Math.max(1, pageCount) }}
       </div>
 
-      <!-- Navigation buttons -->
-      <div class="flex items-center gap-1">
+      <!-- Navigation buttons: shown only when multiple pages exist -->
+      <div v-if="pageCount > 1" class="flex items-center gap-1">
         <Button
           variant="outline"
           size="icon-xs"
@@ -85,7 +92,7 @@ function onPageSizeChange(value: unknown) {
           title="Go to first page"
           @click="emit('update:pageIndex', 0)"
         >
-          <ChevronsLeft class="size-3.5" />
+          <ChevronsLeft class="size-3" />
         </Button>
         <Button
           variant="outline"
@@ -95,7 +102,7 @@ function onPageSizeChange(value: unknown) {
           title="Go to previous page"
           @click="emit('update:pageIndex', pageIndex - 1)"
         >
-          <ChevronLeft class="size-3.5" />
+          <ChevronLeft class="size-3" />
         </Button>
         <Button
           variant="outline"
@@ -105,7 +112,7 @@ function onPageSizeChange(value: unknown) {
           title="Go to next page"
           @click="emit('update:pageIndex', pageIndex + 1)"
         >
-          <ChevronRight class="size-3.5" />
+          <ChevronRight class="size-3" />
         </Button>
         <Button
           variant="outline"
@@ -115,7 +122,7 @@ function onPageSizeChange(value: unknown) {
           title="Go to last page"
           @click="emit('update:pageIndex', Math.max(0, pageCount - 1))"
         >
-          <ChevronsRight class="size-3.5" />
+          <ChevronsRight class="size-3" />
         </Button>
       </div>
     </div>

@@ -56,7 +56,7 @@ StorageView.vue (hoặc TableView.vue trong VS Code)
 | Select ID | Tên Dropdown | Nguồn Dữ Liệu Remote | Virtualization & Debounce | Side-effect Phản Xạ Khi Chọn | `data-testid` |
 |---|---|---|---|---|---|
 | `select.storage.table` | Select Table To View | `GET /api/v1/storage/tables` | Virtualized 500+, Debounce 150ms | Nạp dữ liệu các dòng của bảng `activeTableRows` | `select-storage-table` |
-| `select.storage.file` | Select File In Workspace | `GET /api/v1/storage/files` | Virtualized 1000+, Debounce 150ms | Mở file kịch bản tương ứng lên Editor | `select-storage-file` |
+| `select.storage.workflow` | Select Workflow In Database | `GET /api/v1/storage/workflows` | Virtualized 1000+, Debounce 250ms | Nạp kịch bản tương ứng lên Canvas Editor | `select-storage-workflow` |
 
 ---
 
@@ -90,7 +90,8 @@ Chuẩn mã hóa cốt lõi được bảo đảm 100% trong `automa-core/src/co
 | **REST** | `/api/v1/storage/tables/{id}/rows` | `GET` / `POST` | `getStorageTableRows()` / `addStorageTableRow()` | Lấy hoặc thêm dòng dữ liệu vào bảng |
 | **REST** | `/api/v1/storage/variables` | `GET` / `POST` | `getStorageVariables()` / `createStorageVariable()` | Lấy danh sách hoặc tạo biến public |
 | **REST** | `/api/v1/storage/credentials` | `GET` / `POST` | `getStorageCredentials()` / `createStorageCredential()` | Lấy danh sách hoặc lưu bí mật mã hóa |
-| **REST** | `/api/v1/storage/files` | `GET` | `listStorageFiles()` | Duyệt cây file kịch bản không qua glob scan |
+| **REST** | `/api/v1/storage/workflows` | `GET` / `POST` | `getStorageWorkflows()` / `createStorageWorkflow()` | Quản lý danh sách và nạp kịch bản từ SQLite Database |
+| **REST** | `/api/v1/storage/campaigns` | `GET` / `POST` | `getStorageCampaigns()` / `createStorageCampaign()` | Quản lý danh sách chiến dịch từ SQLite Database |
 | **SSE** | `/api/v1/events` | Stream | `globalSseClient` | Nhận sự kiện `storage_table_changed`, `storage_variable_changed` |
 
 ---

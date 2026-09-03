@@ -1,6 +1,7 @@
 // Styles
 import './styles/tokens.css'
 
+export type { ColumnDef } from '@tanstack/vue-table'
 // Headless & Virtualized Vue Components (Domain + Atomic Shadcn)
 export * from './components'
 // UI, Query Keys & Registry Constants
