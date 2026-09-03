@@ -44,6 +44,10 @@ export const useStorageStore = defineStore('storage', () => {
     variables.value = variables.value.filter((v) => v.key !== key)
   }
 
+  function removeCredential(keyOrId: string) {
+    credentials.value = credentials.value.filter((c) => c.id !== keyOrId && c.key !== keyOrId)
+  }
+
   return {
     tables,
     activeTableId,
@@ -60,5 +64,6 @@ export const useStorageStore = defineStore('storage', () => {
     setCredentials,
     addVariable,
     removeVariable,
+    removeCredential,
   }
 })

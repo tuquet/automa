@@ -5,7 +5,7 @@
  */
 
 import type { Workflow } from './workflow.js';
-import type { BrowserResponse, JobInfo, AppSettings } from './api/types.gen.js';
+import type { BrowserResponse, JobInfo, AppSettings, StorageTable, StorageVariable, StorageCredential } from './api/types.gen.js';
 import type { ButtonExecutionState } from './button.js';
 import type { SelectOption } from './select.js';
 
@@ -105,15 +105,15 @@ export interface CampaignStoreActions {
 // ==========================================
 export interface StorageStoreState {
   /** List of database storage tables */
-  tables: Array<{ id: string; name: string; rowCount?: number }>;
+  tables: StorageTable[];
   /** Active table ID being viewed in TableView */
   activeTableId: string | null;
   /** Current page rows of active table */
-  activeTableRows: Array<{ id: string; [key: string]: unknown }>;
+  activeTableRows: Array<{ id?: string | null; [key: string]: unknown }>;
   /** List of global variables */
-  variables: Array<{ id: string; key: string; name: string; value: unknown }>;
+  variables: StorageVariable[];
   /** List of encrypted credential keys */
-  credentials: Array<{ id: string; key: string; name: string }>;
+  credentials: StorageCredential[];
   /** Loading indicator */
   isLoading: boolean;
 }
@@ -125,6 +125,7 @@ export interface StorageStoreActions {
   setCredentials(credentials: StorageStoreState['credentials']): void;
   addVariable(variable: StorageStoreState['variables'][0]): void;
   removeVariable(key: string): void;
+  removeCredential(keyOrId: string): void;
 }
 
 // ==========================================

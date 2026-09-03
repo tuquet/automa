@@ -88,7 +88,7 @@ watch(
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Filter logs..."
+            placeholder="Search..."
             class="automa-drawer-search-input"
           />
         </div>
@@ -128,7 +128,7 @@ watch(
         <button
           type="button"
           class="automa-drawer-icon-btn"
-          title="Clear console output"
+          title="Clear"
           @click="executionStore.clearLogs"
         >
           <Trash2 class="h-3.5 w-3.5" />
@@ -151,7 +151,7 @@ watch(
       class="automa-drawer-logs-viewport"
     >
       <div v-if="filteredLogs.length === 0" class="flex h-full items-center justify-center text-[var(--automa-text-muted)] text-xs">
-        No logs yet
+        No logs
       </div>
 
       <div
