@@ -6,6 +6,7 @@ import {
   FileCode,
   FolderOpen,
   Layers,
+  Package,
   Plus,
   RefreshCw,
   Trash2,
@@ -19,16 +20,22 @@ import VirtualDataTable from './VirtualDataTable.vue'
 
 const props = withDefaults(
   defineProps<{
+    items?: WorkflowStorageItem[]
     enableServerSearch?: boolean
     enableVirtualization?: boolean
     pageSize?: number
     selectable?: boolean
+    filterMode?: 'all' | 'workflows' | 'packages'
+    showTypeTabs?: boolean
   }>(),
   {
+    items: undefined,
     enableServerSearch: false,
     enableVirtualization: true,
     pageSize: 20,
     selectable: true,
+    filterMode: 'all',
+    showTypeTabs: true,
   },
 )
 
@@ -54,8 +61,37 @@ const {
   search: computed(() => (props.enableServerSearch ? searchQuery.value : undefined)),
 })
 
-const workflows = computed<WorkflowStorageItem[]>(() => {
+function isPackageItem(item: WorkflowStorageItem): boolean {
+  const data = (item.data || {}) as Record<string, unknown>
+  const settings = (data.settings || {}) as Record<string, unknown>
+  return Boolean(
+    settings.asBlock === true ||
+      item.name?.toLowerCase().includes('.package') ||
+      Array.isArray(data.inputs) ||
+      Array.isArray(data.outputs),
+  )
+}
+
+const activeTab = ref<'all' | 'workflows' | 'packages'>(props.filterMode)
+
+const allWorkflows = computed<WorkflowStorageItem[]>(() => {
+  if (props.items !== undefined) {
+    return props.items
+  }
   return remoteWorkflows.value ?? []
+})
+
+const workflowsCount = computed(() => allWorkflows.value.filter((w) => !isPackageItem(w)).length)
+const packagesCount = computed(() => allWorkflows.value.filter((w) => isPackageItem(w)).length)
+
+const displayedWorkflows = computed<WorkflowStorageItem[]>(() => {
+  if (activeTab.value === 'workflows') {
+    return allWorkflows.value.filter((w) => !isPackageItem(w))
+  }
+  if (activeTab.value === 'packages') {
+    return allWorkflows.value.filter((w) => isPackageItem(w))
+  }
+  return allWorkflows.value
 })
 
 // Actions
@@ -101,14 +137,29 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
     accessorKey: 'name',
     cell: ({ row }) => {
       const wf = row.original
+      const isPkg = isPackageItem(wf)
       return h('div', { class: 'flex items-center gap-2' }, [
-        h(FileCode, { class: 'size-4 text-primary shrink-0' }),
+        h(isPkg ? Package : FileCode, {
+          class: isPkg ? 'size-4 text-amber-500 shrink-0' : 'size-4 text-primary shrink-0',
+        }),
         h('div', { class: 'flex flex-col gap-0.5 truncate' }, [
-          h(
-            'span',
-            { class: 'font-medium text-xs text-foreground truncate' },
-            wf.name || 'Untitled Workflow',
-          ),
+          h('div', { class: 'flex items-center gap-1.5' }, [
+            h(
+              'span',
+              { class: 'font-medium text-xs text-foreground truncate' },
+              wf.name || 'Untitled Workflow',
+            ),
+            isPkg
+              ? h(
+                  Badge,
+                  {
+                    variant: 'secondary',
+                    class: 'text-[9px] px-1 py-0 text-amber-600 dark:text-amber-400',
+                  },
+                  () => 'Package',
+                )
+              : null,
+          ]),
           h(
             'span',
             { class: 'font-mono text-[10px] text-muted-foreground/80 truncate' },
@@ -232,15 +283,53 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
 
 <template>
   <div class="automa-workflow-data-table flex flex-col w-full h-full" data-testid="workflow-data-table">
+    <!-- Category Tabs (All / Workflows / Packages) -->
+    <div v-if="props.showTypeTabs" class="flex items-center gap-1.5 mb-2.5 pb-2 border-b border-border shrink-0">
+      <button
+        type="button"
+        class="flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-md transition-colors cursor-pointer"
+        :class="activeTab === 'all' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'"
+        data-testid="tab-workflows-all"
+        @click="activeTab = 'all'"
+      >
+        <span>All</span>
+        <span class="text-[10px] px-1 rounded bg-background/20 font-mono">{{ allWorkflows.length }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-md transition-colors cursor-pointer"
+        :class="activeTab === 'workflows' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'"
+        data-testid="tab-workflows-workflows"
+        @click="activeTab = 'workflows'"
+      >
+        <FileCode class="size-3.5" />
+        <span>Workflows</span>
+        <span class="text-[10px] px-1 rounded bg-background/20 font-mono">{{ workflowsCount }}</span>
+      </button>
+
+      <button
+        type="button"
+        class="flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-md transition-colors cursor-pointer"
+        :class="activeTab === 'packages' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'"
+        data-testid="tab-workflows-packages"
+        @click="activeTab = 'packages'"
+      >
+        <Package class="size-3.5" />
+        <span>Packages</span>
+        <span class="text-[10px] px-1 rounded bg-background/20 font-mono">{{ packagesCount }}</span>
+      </button>
+    </div>
+
     <VirtualDataTable
-      :data="workflows"
+      :data="displayedWorkflows"
       :columns="columns"
       :enable-virtualization="props.enableVirtualization"
       :is-loading="Boolean(isLoading) || deleteWorkflowMutation.isPending.value"
       :initial-page-size="pageSize"
-      search-placeholder="Filter workflows by name or file path..."
-      empty-text="No workflows found in Storage"
-      empty-description="Create a new workflow or import from JSON."
+      search-placeholder="Search workflows..."
+      empty-text="No workflows found"
+      empty-description="Create or import to get started."
       @row-click="emit('open-workflow', $event)"
     >
       <!-- Custom Toolbar Actions -->
