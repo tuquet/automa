@@ -114,12 +114,12 @@
   display: inline-block;
   width: 100%;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .automa-select-trigger {
   display: flex;
-  height: 32px;
+  height: 34px;
   width: 100%;
   align-items: center;
   justify-content: space-between;
@@ -128,7 +128,7 @@
   background-color: var(--automa-bg-subtle);
   padding: 0 10px;
   color: var(--automa-text-primary);
-  font-size: 12px;
+  font-size: 13px;
   transition: all 0.15s ease-in-out;
   cursor: pointer;
   outline: none;
@@ -203,14 +203,14 @@
 }
 
 .automa-select-search-input {
-  height: 28px;
+  height: 30px;
   width: 100%;
   border-radius: 5px;
   border: 1px solid var(--automa-border);
   background-color: var(--automa-bg);
   padding-left: 28px;
   padding-right: 24px;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--automa-text-primary);
   outline: none;
   transition: border-color 0.15s ease;
@@ -263,10 +263,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 10px;
+  padding: 7px 10px;
   margin: 2px 0;
   border-radius: 5px;
-  font-size: 12px;
+  font-size: 13px;
   cursor: pointer;
   transition: all 0.1s ease;
   user-select: none;
