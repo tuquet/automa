@@ -3,6 +3,10 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-v
 import { Button } from '../../ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../select'
 
+defineOptions({
+  name: 'TablePagination',
+})
+
 withDefaults(
   defineProps<{
     pageIndex: number

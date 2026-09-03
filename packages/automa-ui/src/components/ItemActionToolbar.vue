@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import AutomaButton from './AutomaButton.vue'
 
+defineOptions({
+  name: 'ItemActionToolbar',
+})
+
 withDefaults(
   defineProps<{
     item?: unknown

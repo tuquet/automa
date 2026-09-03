@@ -14,9 +14,17 @@ import {
   X,
 } from 'lucide-vue-next'
 import { computed, nextTick, ref, watch } from 'vue'
-import { useBrowsersQuery } from '../hooks/useBrowsersQuery'
-import { useStorageTablesQuery, useStorageVariablesQuery } from '../hooks/useStorageQuery'
-import { useWorkflowsQuery } from '../hooks/useWorkflowsQuery'
+import {
+  useBrowsersQuery,
+  useStorageTablesQuery,
+  useStorageVariablesQuery,
+  useWorkflowsQuery,
+} from '../hooks'
+import { useBrowserStore, useStorageStore } from '../stores'
+
+defineOptions({
+  name: 'RemoteVirtualSelect',
+})
 
 const props = withDefaults(
   defineProps<{
@@ -47,9 +55,17 @@ const parentRef = ref<HTMLElement | null>(null)
 const searchInputRef = ref<HTMLInputElement | null>(null)
 const focusedIndex = ref<number>(-1)
 
+// Domain stores for cross-layer reactive reflection
+const browserStore = useBrowserStore()
+const storageStore = useStorageStore()
+
 // Automatic Query Dispatching based on Select Schema ID
-const browsersQuery = useBrowsersQuery()
-const workflowsQuery = useWorkflowsQuery()
+const browsersQuery = useBrowsersQuery({
+  enabled: computed(() => props.id === 'select.browser.profile'),
+})
+const workflowsQuery = useWorkflowsQuery({
+  enabled: computed(() => props.id === 'select.storage.workflow'),
+})
 const tablesQuery = useStorageTablesQuery()
 const variablesQuery = useStorageVariablesQuery()
 
@@ -57,11 +73,16 @@ const rawOptions = computed<SelectOption<T>[]>(() => {
   if (props.customOptions) return props.customOptions
 
   if (props.id === 'select.browser.profile') {
-    return (browsersQuery.data.value || []).map((b) => ({
+    const list =
+      browsersQuery.data.value && browsersQuery.data.value.length > 0
+        ? browsersQuery.data.value
+        : (browserStore.browsers as any[])
+
+    return list.map((b) => ({
       value: (b.id || '') as unknown as string | number,
       label: b.name || b.id || '',
-      description: b.userAgent || undefined,
-      badge: b.isOnline ? { text: 'Online', variant: 'success' } : undefined,
+      description: b.userAgent || b.user_agent || undefined,
+      badge: (b.isOnline ?? b.is_online) ? { text: 'Online', variant: 'success' } : undefined,
     })) as SelectOption<T>[]
   }
 
@@ -74,7 +95,12 @@ const rawOptions = computed<SelectOption<T>[]>(() => {
   }
 
   if (props.id === 'select.storage.table') {
-    return (tablesQuery.data.value || []).map((t) => ({
+    const list =
+      tablesQuery.data.value && tablesQuery.data.value.length > 0
+        ? tablesQuery.data.value
+        : (storageStore.tables as any[])
+
+    return list.map((t) => ({
       value: (t.id || '') as unknown as string | number,
       label: t.name || t.id || '',
       description: `${t.columns?.length || 0} columns`,
@@ -82,7 +108,12 @@ const rawOptions = computed<SelectOption<T>[]>(() => {
   }
 
   if (props.id === 'select.storage.variable') {
-    return (variablesQuery.data.value || []).map((v) => ({
+    const list =
+      variablesQuery.data.value && variablesQuery.data.value.length > 0
+        ? variablesQuery.data.value
+        : (storageStore.variables as any[])
+
+    return list.map((v) => ({
       value: (v.key || v.id || '') as unknown as string | number,
       label: v.name || v.key || v.id || '',
       description: typeof v.value === 'string' ? v.value : JSON.stringify(v.value),
@@ -93,10 +124,18 @@ const rawOptions = computed<SelectOption<T>[]>(() => {
 })
 
 const isLoading = computed(() => {
-  if (props.id === 'select.browser.profile') return browsersQuery.isLoading.value
-  if (props.id === 'select.storage.workflow') return workflowsQuery.isLoading.value
-  if (props.id === 'select.storage.table') return tablesQuery.isLoading.value
-  if (props.id === 'select.storage.variable') return variablesQuery.isLoading.value
+  if (props.id === 'select.browser.profile') {
+    return browsersQuery.isLoading.value && browserStore.browsers.length === 0
+  }
+  if (props.id === 'select.storage.workflow') {
+    return workflowsQuery.isLoading.value
+  }
+  if (props.id === 'select.storage.table') {
+    return tablesQuery.isLoading.value && storageStore.tables.length === 0
+  }
+  if (props.id === 'select.storage.variable') {
+    return variablesQuery.isLoading.value && storageStore.variables.length === 0
+  }
   return false
 })
 
@@ -118,21 +157,51 @@ const fsmState = computed<SelectFsmState>(() => {
   return 'READY'
 })
 
-// TanStack Virtual Engine
-const rowVirtualizer = useVirtualizer({
-  count: filteredOptions.value.length,
-  getScrollElement: () => parentRef.value,
-  estimateSize: () => schema.value?.virtualization?.itemHeightPx || 40,
-  overscan: 5,
-})
+const itemHeight = computed(() => schema.value?.virtualization?.itemHeightPx || 40)
+
+// TanStack Virtual Engine - wrapped in computed for reactive count and container measurement
+const rowVirtualizer = useVirtualizer(
+  computed(() => ({
+    count: filteredOptions.value.length,
+    getScrollElement: () => parentRef.value,
+    estimateSize: () => itemHeight.value,
+    overscan: 5,
+    initialRect: { width: 0, height: 240 },
+  })),
+)
 
 const virtualItems = computed(() => rowVirtualizer.value.getVirtualItems())
-const totalSize = computed(() => rowVirtualizer.value.getTotalSize())
+const totalSize = computed(() => {
+  const size = rowVirtualizer.value.getTotalSize()
+  return size > 0 ? size : filteredOptions.value.length * itemHeight.value
+})
+
+const displayItems = computed(() => {
+  const items = virtualItems.value
+  if (items.length > 0) return items
+  return filteredOptions.value.map((_, index) => ({
+    index,
+    key: index,
+    start: index * itemHeight.value,
+    size: itemHeight.value,
+  }))
+})
 
 function toggleDropdown() {
   if (props.disabled) return
   isOpen.value = !isOpen.value
   if (isOpen.value) {
+    if (
+      props.id === 'select.browser.profile' &&
+      (!browsersQuery.data.value || browsersQuery.data.value.length === 0)
+    ) {
+      browsersQuery.refetch()
+    } else if (
+      props.id === 'select.storage.workflow' &&
+      (!workflowsQuery.data.value || workflowsQuery.data.value.length === 0)
+    ) {
+      workflowsQuery.refetch()
+    }
     nextTick(() => {
       searchInputRef.value?.focus()
     })
@@ -191,13 +260,14 @@ watch(isOpen, (open) => {
 <template>
   <div
     class="automa-select-wrapper"
-    :data-testid="schema?.presentation?.dataTestId || props.id"
+    :data-testid="schema?.presentation?.dataTestId || props.id.replace(/\./g, '-')"
     @keydown="handleKeydown"
   >
     <!-- Select Trigger Button -->
     <button
       type="button"
       class="automa-select-trigger"
+      :data-testid="`${schema?.presentation?.dataTestId || props.id.replace(/\./g, '-')}-trigger`"
       :aria-expanded="isOpen"
       :disabled="props.disabled"
       @click="toggleDropdown"
@@ -237,12 +307,14 @@ watch(isOpen, (open) => {
             v-model="searchQuery"
             type="text"
             class="automa-select-search-input"
+            :data-testid="`${schema?.presentation?.dataTestId || props.id.replace(/\./g, '-')}-search`"
             :placeholder="schema?.search?.placeholder || 'Search options...'"
           />
           <button
             v-if="searchQuery"
             type="button"
             class="automa-select-clear-btn"
+            :data-testid="`${schema?.presentation?.dataTestId || props.id.replace(/\./g, '-')}-clear`"
             @click="searchQuery = ''"
           >
             <X class="h-3 w-3" />
@@ -279,7 +351,7 @@ watch(isOpen, (open) => {
           <button
             type="button"
             class="automa-btn automa-btn-primary automa-btn-sm mt-1"
-            data-testid="btn.browser.create"
+            data-testid="btn-create-browser"
             @click="handleCreateAction"
           >
             <Plus class="h-3.5 w-3.5 mr-1" />
@@ -298,7 +370,7 @@ watch(isOpen, (open) => {
           <button
             type="button"
             class="automa-btn automa-btn-primary automa-btn-sm mt-1"
-            data-testid="btn.workflow.create"
+            data-testid="btn-create-workflow"
             @click="handleCreateAction"
           >
             <Plus class="h-3.5 w-3.5 mr-1" />
@@ -331,7 +403,7 @@ watch(isOpen, (open) => {
           }"
         >
           <div
-            v-for="virtualRow in virtualItems"
+            v-for="virtualRow in displayItems"
             :key="(virtualRow.key as PropertyKey)"
             :ref="(el) => rowVirtualizer.measureElement(el as HTMLElement)"
             :data-index="virtualRow.index"

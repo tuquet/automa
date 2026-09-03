@@ -1,3 +1,4 @@
+import { client } from '@automa/types/api'
 import { QueryClient, VueQueryPlugin } from '@tanstack/vue-query'
 import type { App, Plugin } from 'vue'
 import { SETTINGS_QUERY_KEY } from '../hooks/useAppSettingsQuery'
@@ -14,6 +15,11 @@ export interface AutomaUiPluginOptions {
 
 export function createAutomaUiPlugin(options: AutomaUiPluginOptions = {}): Plugin {
   const baseUrl = (options.baseUrl || 'http://127.0.0.1:8765').replace(/\/$/, '')
+
+  // Set global API client configuration for @automa/types/api
+  client.setConfig({
+    baseUrl,
+  })
   const queryClient =
     options.queryClient ||
     new QueryClient({

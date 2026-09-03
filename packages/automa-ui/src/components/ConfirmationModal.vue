@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { AlertTriangle, Trash2 } from 'lucide-vue-next'
 
+defineOptions({
+  name: 'ConfirmationModal',
+})
+
 withDefaults(
   defineProps<{
     isOpen: boolean

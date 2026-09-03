@@ -29,6 +29,7 @@ import ConfirmationModal from './ConfirmationModal.vue'
 import { Button, type ButtonVariants } from './ui/button'
 
 defineOptions({
+  name: 'AutomaButton',
   inheritAttrs: false,
 })
 

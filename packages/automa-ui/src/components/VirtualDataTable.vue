@@ -30,6 +30,10 @@ import {
   TableRow,
 } from './ui'
 
+defineOptions({
+  name: 'VirtualDataTable',
+})
+
 const props = withDefaults(
   defineProps<{
     data: TData[]

@@ -15,6 +15,10 @@ export interface SettingsFormProps {
   autoFetch?: boolean
 }
 
+defineOptions({
+  name: 'SettingsForm',
+})
+
 const props = withDefaults(defineProps<SettingsFormProps>(), {
   initialSettings: null,
   autoFetch: true,
@@ -299,15 +303,15 @@ onMounted(() => {
     <!-- Settings Tabs -->
     <Tabs v-model="activeTab" class="w-full space-y-4">
       <TabsList class="grid grid-cols-3 w-full max-w-md">
-        <TabsTrigger value="browser" class="flex items-center gap-1.5 text-xs">
+        <TabsTrigger value="browser" data-testid="tab-settings-browser" class="flex items-center gap-1.5 text-xs">
           <Globe class="size-3.5" />
           <span>Browser</span>
         </TabsTrigger>
-        <TabsTrigger value="runner" class="flex items-center gap-1.5 text-xs">
+        <TabsTrigger value="runner" data-testid="tab-settings-runner" class="flex items-center gap-1.5 text-xs">
           <Cpu class="size-3.5" />
           <span>Runner</span>
         </TabsTrigger>
-        <TabsTrigger value="grid" class="flex items-center gap-1.5 text-xs">
+        <TabsTrigger value="grid" data-testid="tab-settings-grid" class="flex items-center gap-1.5 text-xs">
           <LayoutGrid class="size-3.5" />
           <span>Matrix Grid</span>
         </TabsTrigger>
@@ -329,6 +333,7 @@ onMounted(() => {
                 <select
                   v-model="formData.browser.default_type"
                   disabled
+                  data-testid="select-browser-default-type"
                   class="flex h-8 w-full rounded-md border border-input bg-muted px-2.5 py-1 text-xs text-muted-foreground shadow-2xs cursor-not-allowed"
                 >
                   <option value="chromium">Chromium (Built-in Anti-Detect)</option>
@@ -340,6 +345,7 @@ onMounted(() => {
                 <label class="font-medium text-foreground">Custom Executable Path</label>
                 <Input
                   v-model="formData.browser.executable_path"
+                  data-testid="input-browser-executable-path"
                   placeholder="e.g. C:\Program Files\Google\Chrome\Application\chrome.exe"
                 />
                 <p class="text-[11px] text-muted-foreground">Leave empty to use automatic system binary detection.</p>
@@ -350,6 +356,7 @@ onMounted(() => {
               <label class="font-medium text-foreground">Default User Agent Override</label>
               <Input
                 v-model="formData.browser.default_user_agent"
+                data-testid="input-browser-user-agent"
                 placeholder="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36..."
               />
               <p class="text-[11px] text-muted-foreground">Global User-Agent string applied if not overridden by browser profile.</p>
@@ -362,6 +369,7 @@ onMounted(() => {
               </div>
               <Switch
                 :checked="formData.browser.headless"
+                data-testid="switch-browser-headless"
                 @update:checked="formData.browser.headless = $event"
               />
             </div>
@@ -384,6 +392,7 @@ onMounted(() => {
                 <label class="font-medium text-foreground">Max Concurrent Jobs</label>
                 <Input
                   v-model="formData.runner.max_concurrent_jobs"
+                  data-testid="input-runner-max-concurrency"
                   type="number"
                   min="1"
                   max="32"
@@ -395,6 +404,7 @@ onMounted(() => {
                 <label class="font-medium text-foreground">Job Timeout (ms)</label>
                 <Input
                   v-model="formData.runner.timeout_ms"
+                  data-testid="input-runner-timeout"
                   type="number"
                   min="1000"
                   step="1000"
@@ -406,6 +416,7 @@ onMounted(() => {
                 <label class="font-medium text-foreground">History Retention (Days)</label>
                 <Input
                   v-model="formData.runner.auto_clean_history_days"
+                  data-testid="input-runner-retention-days"
                   type="number"
                   min="1"
                   max="365"

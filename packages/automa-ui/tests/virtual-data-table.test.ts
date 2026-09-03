@@ -6,6 +6,7 @@ import { ref } from 'vue'
 
 import {
   BrowserDataTable,
+  RemoteVirtualSelect,
   TablePagination,
   VirtualDataTable,
   WorkflowDataTable,
@@ -68,6 +69,16 @@ vi.mock('../src/hooks', () => ({
     mutateAsync: vi.fn(),
     isPending: ref(false),
   })),
+  useStorageTablesQuery: vi.fn(() => ({
+    data: ref([]),
+    isLoading: ref(false),
+    refetch: vi.fn(),
+  })),
+  useStorageVariablesQuery: vi.fn(() => ({
+    data: ref([]),
+    isLoading: ref(false),
+    refetch: vi.fn(),
+  })),
 }))
 
 describe('@automa/ui - TanStack Virtual Data Table Suite', () => {
@@ -87,8 +98,8 @@ describe('@automa/ui - TanStack Virtual Data Table Suite', () => {
         },
       })
 
-      expect(wrapper.text()).toContain('2 of 50 row(s) selected')
-      expect(wrapper.text()).toContain('Page 1 of 5')
+      expect(wrapper.text()).toContain('2 of 50 selected')
+      expect(wrapper.text()).toContain('Page 1 / 5')
 
       const prevBtn = wrapper.find('[data-testid="btn-pagination-prev"]')
       expect(prevBtn.attributes('disabled')).toBeDefined()
@@ -243,6 +254,54 @@ describe('@automa/ui - TanStack Virtual Data Table Suite', () => {
       expect(wrapper.text()).toContain('Workflow Two')
       expect(wrapper.text()).toContain('12 blocks')
       expect(wrapper.text()).toContain('5 blocks')
+    })
+  })
+
+  describe('RemoteVirtualSelect.vue', () => {
+    it('renders browser items when open', async () => {
+      const wrapper = mount(RemoteVirtualSelect, {
+        props: {
+          id: 'select.browser.profile',
+          placeholder: 'Select browser...',
+        },
+      })
+
+      const trigger = wrapper.find('.automa-select-trigger')
+      await trigger.trigger('click')
+
+      expect(wrapper.text()).toContain('Alpha Browser')
+    })
+
+    it('falls back to browserStore.browsers when remote query has no items', async () => {
+      const browserStore = useBrowserStore()
+      browserStore.setBrowsers([
+        {
+          id: 'store-b-1',
+          name: 'Fallback Pinia Browser',
+          isOnline: true,
+          createdAt: '',
+          updatedAt: '',
+        },
+      ])
+
+      const hooks = await import('../src/hooks')
+      vi.mocked(hooks.useBrowsersQuery).mockReturnValueOnce({
+        data: ref([]),
+        isLoading: ref(false),
+        refetch: vi.fn(),
+      } as any)
+
+      const wrapper = mount(RemoteVirtualSelect, {
+        props: {
+          id: 'select.browser.profile',
+          placeholder: 'Select browser...',
+        },
+      })
+
+      const trigger = wrapper.find('.automa-select-trigger')
+      await trigger.trigger('click')
+
+      expect(wrapper.text()).toContain('Fallback Pinia Browser')
     })
   })
 })

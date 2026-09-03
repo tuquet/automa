@@ -2,6 +2,7 @@ import {
   type CreateWorkflowStorageRequest,
   createStorageWorkflow,
   deleteStorageWorkflow,
+  type GetStorageWorkflowsData,
   getStorageWorkflow,
   getStorageWorkflows,
   type UpdateWorkflowStorageRequest,
@@ -17,6 +18,7 @@ export function useWorkflowsQuery(params?: {
   limit?: MaybeRefOrGetter<number | undefined>
   offset?: MaybeRefOrGetter<number | undefined>
   search?: MaybeRefOrGetter<string | undefined>
+  enabled?: MaybeRefOrGetter<boolean | undefined>
 }) {
   const queryParams = computed(() => ({
     limit: toValue(params?.limit),
@@ -24,22 +26,26 @@ export function useWorkflowsQuery(params?: {
     search: toValue(params?.search),
   }))
 
+  const isEnabled = computed(() =>
+    params?.enabled !== undefined ? Boolean(toValue(params.enabled)) : true,
+  )
+
   return useQuery({
     queryKey: computed(() => [...WORKFLOWS_QUERY_KEY, queryParams.value]),
     queryFn: async () => {
-      const res = await getStorageWorkflows({
-        query: {
-          limit: queryParams.value.limit,
-          offset: queryParams.value.offset,
-          search: queryParams.value.search,
-        },
-      })
+      const query: NonNullable<GetStorageWorkflowsData['query']> = {}
+      if (queryParams.value.limit !== undefined) query.limit = queryParams.value.limit
+      if (queryParams.value.offset !== undefined) query.offset = queryParams.value.offset
+      if (queryParams.value.search !== undefined) query.search = queryParams.value.search
+
+      const res = await getStorageWorkflows(Object.keys(query).length > 0 ? { query } : undefined)
       const error = (res as { error?: unknown }).error
       if (error) {
         throw new Error(typeof error === 'string' ? error : 'Failed to fetch workflows')
       }
       return (res.data ?? []) as WorkflowStorageItem[]
     },
+    enabled: isEnabled,
     staleTime: 1000 * 30,
   })
 }

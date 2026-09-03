@@ -14,6 +14,10 @@ import AutomaButton from './AutomaButton.vue'
 import { Badge, Button, Checkbox } from './ui'
 import VirtualDataTable from './VirtualDataTable.vue'
 
+defineOptions({
+  name: 'BrowserDataTable',
+})
+
 const props = withDefaults(
   defineProps<{
     items?: BrowserResponse[]

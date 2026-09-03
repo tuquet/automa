@@ -4,6 +4,10 @@ import { ArrowDownToLine, Search, Terminal, Trash2, X } from 'lucide-vue-next'
 import { computed, nextTick, ref, watch } from 'vue'
 import { useExecutionStore } from '../stores/useExecutionStore'
 
+defineOptions({
+  name: 'ExecutionConsoleDrawer',
+})
+
 const props = withDefaults(
   defineProps<{
     open?: boolean
@@ -89,6 +93,7 @@ watch(
             v-model="searchQuery"
             type="text"
             placeholder="Search..."
+            data-testid="input-console-search"
             class="automa-drawer-search-input"
           />
         </div>
@@ -99,6 +104,7 @@ watch(
             type="button"
             class="automa-drawer-filter-btn"
             :class="{ 'is-active': activeFilter === 'all' }"
+            data-testid="btn-filter-all"
             @click="activeFilter = 'all'"
           >
             ALL
@@ -107,6 +113,7 @@ watch(
             type="button"
             class="automa-drawer-filter-btn"
             :class="{ 'is-active-error': activeFilter === 'error' }"
+            data-testid="btn-filter-error"
             @click="activeFilter = 'error'"
           >
             ERR
@@ -118,6 +125,7 @@ watch(
           type="button"
           class="automa-drawer-follow-btn"
           :class="{ 'is-following': autoScroll }"
+          data-testid="btn-toggle-autoscroll"
           @click="autoScroll = !autoScroll"
         >
           <ArrowDownToLine class="h-3 w-3" />
@@ -129,6 +137,7 @@ watch(
           type="button"
           class="automa-drawer-icon-btn"
           title="Clear"
+          data-testid="btn-clear-console"
           @click="executionStore.clearLogs"
         >
           <Trash2 class="h-3.5 w-3.5" />
@@ -138,6 +147,7 @@ watch(
         <button
           type="button"
           class="automa-drawer-icon-btn"
+          data-testid="btn-close-console"
           @click="emit('close')"
         >
           <X class="h-3.5 w-3.5" />

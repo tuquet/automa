@@ -17,6 +17,10 @@ import AutomaButton from './AutomaButton.vue'
 import { Badge, Button, Checkbox } from './ui'
 import VirtualDataTable from './VirtualDataTable.vue'
 
+defineOptions({
+  name: 'WorkflowDataTable',
+})
+
 const props = withDefaults(
   defineProps<{
     items?: WorkflowStorageItem[]
