@@ -289,7 +289,7 @@ describe('@automa/ui - TanStack Virtual Data Table Suite', () => {
         data: ref([]),
         isLoading: ref(false),
         refetch: vi.fn(),
-      } as any)
+      } as ReturnType<typeof hooks.useBrowsersQuery>)
 
       const wrapper = mount(RemoteVirtualSelect, {
         props: {

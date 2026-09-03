@@ -76,14 +76,27 @@ const rawOptions = computed<SelectOption<T>[]>(() => {
     const list =
       browsersQuery.data.value && browsersQuery.data.value.length > 0
         ? browsersQuery.data.value
-        : (browserStore.browsers as any[])
+        : browserStore.browsers
 
-    return list.map((b) => ({
-      value: (b.id || '') as unknown as string | number,
-      label: b.name || b.id || '',
-      description: b.userAgent || b.user_agent || undefined,
-      badge: (b.isOnline ?? b.is_online) ? { text: 'Online', variant: 'success' } : undefined,
-    })) as SelectOption<T>[]
+    return list.map((b) => {
+      const bObj = b as {
+        id?: string
+        name?: string
+        userAgent?: string
+        user_agent?: string
+        isOnline?: boolean
+        is_online?: boolean
+      }
+      return {
+        value: (bObj.id || '') as unknown as string | number,
+        label: bObj.name || bObj.id || '',
+        description: bObj.userAgent || bObj.user_agent || undefined,
+        badge:
+          (bObj.isOnline ?? bObj.is_online)
+            ? { text: 'Online', variant: 'success' as const }
+            : undefined,
+      }
+    }) as SelectOption<T>[]
   }
 
   if (props.id === 'select.storage.workflow') {
@@ -98,7 +111,7 @@ const rawOptions = computed<SelectOption<T>[]>(() => {
     const list =
       tablesQuery.data.value && tablesQuery.data.value.length > 0
         ? tablesQuery.data.value
-        : (storageStore.tables as any[])
+        : (storageStore.tables as Array<{ id?: string; name?: string; columns?: unknown[] }>)
 
     return list.map((t) => ({
       value: (t.id || '') as unknown as string | number,
@@ -111,7 +124,12 @@ const rawOptions = computed<SelectOption<T>[]>(() => {
     const list =
       variablesQuery.data.value && variablesQuery.data.value.length > 0
         ? variablesQuery.data.value
-        : (storageStore.variables as any[])
+        : (storageStore.variables as Array<{
+            key?: string
+            id?: string
+            name?: string
+            value?: unknown
+          }>)
 
     return list.map((v) => ({
       value: (v.key || v.id || '') as unknown as string | number,
@@ -393,7 +411,7 @@ watch(isOpen, (open) => {
       <div
         v-else
         ref="parentRef"
-        class="max-h-60 overflow-y-auto py-1"
+        class="max-h-60 overflow-y-auto overflow-x-hidden p-1 automa-select-scroll"
       >
         <div
           :style="{
@@ -411,7 +429,7 @@ watch(isOpen, (open) => {
               position: 'absolute',
               top: 0,
               left: 0,
-              width: '100%',
+              right: 0,
               transform: `translateY(${virtualRow.start}px)`,
             }"
             class="automa-select-item"

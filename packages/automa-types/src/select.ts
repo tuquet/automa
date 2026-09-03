@@ -201,8 +201,8 @@ export const SELECT_CATALOG: readonly SelectBusinessLogicSchema[] = [
     id: 'select.browser.profile',
     context: 'WorkflowCanvas',
     presentation: {
-      label: 'Target Browser Profile',
-      placeholder: 'Select anti-detect browser...',
+      label: 'Browser',
+      placeholder: 'Select browser...',
       dataTestId: 'select-browser-profile',
       allowClear: true,
       icon: 'Globe',
@@ -217,7 +217,7 @@ export const SELECT_CATALOG: readonly SelectBusinessLogicSchema[] = [
       searchable: true,
       searchMode: 'hybrid',
       debounceMs: 200,
-      placeholder: 'Search browser profiles by name or ID...',
+      placeholder: 'Search browsers...',
       fuzzy: true,
     },
     remote: {

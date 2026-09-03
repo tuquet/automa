@@ -445,6 +445,7 @@ onMounted(() => {
               </div>
               <Switch
                 :checked="formData.grid.enabled"
+                data-testid="switch-grid-enabled"
                 @update:checked="formData.grid.enabled = $event"
               />
             </div>
@@ -455,6 +456,7 @@ onMounted(() => {
                   <label class="font-medium text-foreground">Matrix Columns</label>
                   <Input
                     v-model="formData.grid.matrix.columns"
+                    data-testid="input-grid-columns"
                     type="number"
                     min="1"
                     max="8"
@@ -466,6 +468,7 @@ onMounted(() => {
                   <label class="font-medium text-foreground">Matrix Rows</label>
                   <Input
                     v-model="formData.grid.matrix.rows"
+                    data-testid="input-grid-rows"
                     type="number"
                     min="1"
                     max="8"

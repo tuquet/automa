@@ -238,12 +238,33 @@
   color: var(--automa-text-primary);
 }
 
+.automa-select-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--automa-border) transparent;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.automa-select-scroll::-webkit-scrollbar {
+  width: 5px;
+  height: 0px;
+}
+
+.automa-select-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.automa-select-scroll::-webkit-scrollbar-thumb {
+  background: var(--automa-border);
+  border-radius: 9999px;
+}
+
 .automa-select-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 6px 10px;
-  margin: 2px 4px;
+  margin: 2px 0;
   border-radius: 5px;
   font-size: 12px;
   cursor: pointer;
