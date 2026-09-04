@@ -242,7 +242,10 @@ export interface ButtonBusinessLogicSchema<TContext = unknown, TResponse = unkno
 | **`btn.workflow.pause`** | **Pause Execution** <br>`⏸` Pause | `btn-pause-workflow` | *WebSocket* | WS Command:<br>`{ type: 'PAUSE_JOB', jobId }` | • WS `JOB_STATUS_CHANGED` (`status: 'paused'`) $\rightarrow$ Switch icon to Resume |
 | **`btn.workflow.resume`** | **Resume Execution** <br>`▶` Play | `btn-resume-workflow` | *WebSocket* | WS Command:<br>`{ type: 'RESUME_JOB', jobId }` | • WS `JOB_STATUS_CHANGED` (`status: 'running'`) $\rightarrow$ Switch icon to Pause |
 | **`btn.workflow.stop`** | **Stop / Kill** <br>`⏹` Square | `btn-stop-workflow` | `kill_job` | `DELETE /api/v1/jobs/{job_id}`<br>or WS `KILL_JOB` | • WS `JOB_STATUS_CHANGED` (`status: 'stopped'`) $\rightarrow$ Reset button state to Idle |
+| **`btn.workflow.create`** | **New Workflow** <br>`➕` Plus | `btn-create-workflow` | *Client Action* | IPC `workflow:create` | • Create a new blank workflow canvas |
 | **`btn.workflow.save`** | **Save Workflow** <br>`💾` Save | `btn-save-workflow` | `save_workflow` / `update_storage_workflow` | `PUT /api/v1/storage/workflow`<br>`SaveWorkflowPayload` | • Store: clear `isDirty = false`<br>• VSCE: Remove dirty dot indicator on editor tab |
+| **`btn.workflow.import`** | **Import Workflow** <br>`📥` Upload | `btn-import-workflow` | *Client Action* | IPC `workflow:import` | • Reads `.workflow.json` from disk to load into Canvas |
+| **`btn.workflow.export`** | **Export JSON** <br>`💾` Download | `btn-export-workflow` | *Client Action* | IPC `workflow:export` | • Exports active workflow as `.workflow.json` to disk |
 | **`btn.workflow.lint`** | **Lint & Check** <br>`🔍` Sparkles | `btn-lint-workflow` | `lint_workflow` | `POST /api/v1/lint`<br>`LintWorkflowRequest` | • Update canvas node markers with lint errors/warnings<br>• Focus Problems panel |
 | **`btn.workflow.open_studio`** | **Open in Studio** <br>`🖥️` ExternalLink | `btn-open-studio` | `open_web_studio` | `POST /api/v1/system/studio/session` | • Spawns / attaches standalone VueFlow canvas view |
 

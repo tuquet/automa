@@ -323,6 +323,64 @@ export const BUTTON_CATALOG: readonly ButtonBusinessLogicSchema[] = [
       onError: () => {},
     },
   },
+  {
+    id: 'btn.workflow.create',
+    context: 'WorkflowCanvas',
+    presentation: {
+      label: 'New Workflow',
+      icon: 'Plus',
+      dataTestId: 'btn-create-workflow',
+      tooltip: 'Create a new blank workflow',
+    },
+    preConditions: {},
+    dispatch: {
+      type: 'IPC',
+      channel: 'workflow:create',
+    },
+    postConditions: {
+      onSuccess: () => {},
+      onError: () => {},
+    },
+  },
+  {
+    id: 'btn.workflow.import',
+    context: 'WorkflowCanvas',
+    presentation: {
+      label: 'Import Workflow',
+      icon: 'Upload',
+      dataTestId: 'btn-import-workflow',
+      tooltip: 'Import workflow from JSON file (Ctrl+O)',
+      keyboardShortcut: 'Ctrl+O',
+    },
+    preConditions: {},
+    dispatch: {
+      type: 'IPC',
+      channel: 'workflow:import',
+    },
+    postConditions: {
+      onSuccess: () => {},
+      onError: () => {},
+    },
+  },
+  {
+    id: 'btn.workflow.export',
+    context: 'WorkflowCanvas',
+    presentation: {
+      label: 'Export JSON',
+      icon: 'Download',
+      dataTestId: 'btn-export-workflow',
+      tooltip: 'Export workflow as JSON file',
+    },
+    preConditions: {},
+    dispatch: {
+      type: 'IPC',
+      channel: 'workflow:export',
+    },
+    postConditions: {
+      onSuccess: () => {},
+      onError: () => {},
+    },
+  },
 
   // 4.2 Campaign & Matrix Fleet Scheduling
   {
