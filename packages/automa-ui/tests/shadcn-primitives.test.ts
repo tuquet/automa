@@ -22,6 +22,8 @@ import {
   sheetVariants,
   Table,
   Tabs,
+  TabsList,
+  TabsTrigger,
   Tooltip,
 } from '../src'
 
@@ -82,11 +84,18 @@ describe('@automa/ui - Shadcn UI Atomic Primitives & Utilities', () => {
     expect(Skeleton).toBeDefined()
     expect(Table).toBeDefined()
     expect(Tabs).toBeDefined()
+    expect(TabsList).toBeDefined()
+    expect(TabsTrigger).toBeDefined()
     expect(Switch).toBeDefined()
     expect(DropdownMenu).toBeDefined()
     expect(Checkbox).toBeDefined()
     expect(ScrollArea).toBeDefined()
     expect(Avatar).toBeDefined()
     expect(Accordion).toBeDefined()
+  })
+
+  it('TabsTrigger and TabsList define authentic Shadcn horizontal layout', () => {
+    expect(TabsList).toBeDefined()
+    expect(TabsTrigger).toBeDefined()
   })
 })

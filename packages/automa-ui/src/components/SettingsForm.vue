@@ -271,16 +271,16 @@ onMounted(() => {
     <!-- Settings Tabs -->
     <Tabs v-model="activeTab" class="w-full flex-1 flex flex-col space-y-4">
       <TabsList class="inline-flex h-8 items-center rounded-lg bg-muted p-1 text-muted-foreground w-fit">
-        <TabsTrigger value="browser" data-testid="tab-settings-browser" class="flex items-center gap-1.5 text-xs px-3 py-1">
-          <Globe class="size-3.5" />
+        <TabsTrigger value="browser" data-testid="tab-settings-browser" class="px-3 py-1">
+          <Globe class="size-3.5 shrink-0" />
           <span>Browser</span>
         </TabsTrigger>
-        <TabsTrigger value="runner" data-testid="tab-settings-runner" class="flex items-center gap-1.5 text-xs px-3 py-1">
-          <Cpu class="size-3.5" />
+        <TabsTrigger value="runner" data-testid="tab-settings-runner" class="px-3 py-1">
+          <Cpu class="size-3.5 shrink-0" />
           <span>Runner</span>
         </TabsTrigger>
-        <TabsTrigger value="grid" data-testid="tab-settings-grid" class="flex items-center gap-1.5 text-xs px-3 py-1">
-          <LayoutGrid class="size-3.5" />
+        <TabsTrigger value="grid" data-testid="tab-settings-grid" class="px-3 py-1">
+          <LayoutGrid class="size-3.5 shrink-0" />
           <span>Matrix Grid</span>
         </TabsTrigger>
       </TabsList>
