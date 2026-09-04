@@ -169,11 +169,7 @@ const columns: ColumnDef<BrowserResponse>[] = [
       return h('div', { class: 'flex items-center gap-1.5' }, [
         h('span', { class: 'font-semibold text-sm text-foreground truncate' }, b.name),
         hasDistinctId
-          ? h(
-              'span',
-              { class: 'font-mono text-xs text-muted-foreground/60 truncate' },
-              `(${b.id})`,
-            )
+          ? h('span', { class: 'font-mono text-xs text-muted-foreground/60 truncate' }, `(${b.id})`)
           : null,
       ])
     },
@@ -184,11 +180,7 @@ const columns: ColumnDef<BrowserResponse>[] = [
     accessorKey: 'timezone',
     cell: ({ row }) => {
       const tz = row.original.timezone
-      return h(
-        'span',
-        { class: 'font-mono text-xs text-muted-foreground' },
-        tz || 'UTC (System)',
-      )
+      return h('span', { class: 'font-mono text-xs text-muted-foreground' }, tz || 'UTC (System)')
     },
     size: 140,
   },
