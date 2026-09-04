@@ -57,6 +57,7 @@ const props = withDefaults(
     emptyText?: string
     emptyDescription?: string
     enableRowSelection?: boolean
+    borderless?: boolean
   }>(),
   {
     title: undefined,
@@ -73,6 +74,7 @@ const props = withDefaults(
     emptyText: 'No records',
     emptyDescription: '',
     enableRowSelection: false,
+    borderless: false,
   },
 )
 
@@ -249,7 +251,14 @@ function measureRowElement(el: unknown) {
 </script>
 
 <template>
-  <div class="automa-virtual-data-table flex flex-col w-full h-full border border-border rounded-lg bg-card overflow-hidden select-none">
+  <div
+    class="automa-virtual-data-table flex flex-col w-full h-full overflow-hidden select-none"
+    :class="
+      borderless
+        ? 'border-0 rounded-none bg-transparent'
+        : 'border border-border rounded-lg bg-card'
+    "
+  >
     <!-- Top Toolbar Bar -->
     <div
       v-if="title || enableSearch || $slots.toolbar"

@@ -202,6 +202,22 @@ describe('@automa/ui - TanStack Virtual Data Table Suite', () => {
 
       expect(wrapper.emitted('row-click')?.[0]).toEqual([testData[0]])
     })
+
+    it('renders without outer border and rounded classes when borderless is true', () => {
+      const wrapper = mount(VirtualDataTable, {
+        props: {
+          data: testData,
+          columns: testColumns,
+          enableVirtualization: false,
+          borderless: true,
+        },
+      })
+
+      const container = wrapper.find('.automa-virtual-data-table')
+      expect(container.classes()).toContain('border-0')
+      expect(container.classes()).toContain('rounded-none')
+      expect(container.classes()).not.toContain('border-border')
+    })
   })
 
   describe('BrowserDataTable.vue', () => {
