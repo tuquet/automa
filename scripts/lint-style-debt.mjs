@@ -50,6 +50,19 @@ const RULES = [
     regex: /font-size:\s*(?:[1-9]|1[01])px/g,
     message: 'Hardcoded sub-12px font size detected. Minimum allowed font size is 12px (text-xs / 0.75rem).',
   },
+  {
+    id: 'no-centered-dialog-header',
+    regex: /\btext-center\s+sm:text-left\b/g,
+    message: 'Centered dialog header detected. Dialog/sheet/alert headers must be unconditionally left-aligned (text-left) in desktop/IDE panels.',
+  },
+];
+
+const FILE_RULES = [
+  {
+    id: 'no-modal-hardcoded-min-height',
+    regex: /\.modal-[a-zA-Z0-9_-]+[\s\S]*?min-height:\s*\d+px/g,
+    message: 'Hardcoded min-height on modal container class detected. Modals must use intrinsic content sizing or flex-col layout to prevent empty space.',
+  },
 ];
 
 let totalViolations = 0;
@@ -71,6 +84,28 @@ function scanDir(dir) {
       if (!EXTENSIONS.some((ext) => entry.name.endsWith(ext))) continue;
 
       const content = fs.readFileSync(res, 'utf-8');
+
+      // Check whole-file rules
+      for (const rule of FILE_RULES) {
+        rule.regex.lastIndex = 0;
+        let fileMatch;
+        while ((fileMatch = rule.regex.exec(content)) !== null) {
+          totalViolations++;
+          if (!violationsByFile.has(rel)) {
+            violationsByFile.set(rel, []);
+          }
+          const upToMatch = content.slice(0, fileMatch.index);
+          const lineNum = upToMatch.split('\n').length;
+          violationsByFile.get(rel).push({
+            line: lineNum,
+            rule: rule.id,
+            match: fileMatch[0].replace(/\s+/g, ' ').slice(0, 50),
+            message: rule.message,
+          });
+        }
+      }
+
+      // Check line-by-line rules
       const lines = content.split('\n');
 
       for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
