@@ -15,7 +15,32 @@
   --automa-border-subtle: var(--vscode-sideBarSectionHeader-border, #f1f5f9);
   --automa-border-focus: var(--vscode-focusBorder, #3b82f6);
 
-  /* Typography */
+  /* Typography Tokens */
+  --automa-font-sans: var(
+    --vscode-font-family,
+    "Inter",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif
+  );
+  --automa-font-mono: var(
+    --vscode-editor-font-family,
+    "JetBrains Mono",
+    "Source Code Pro",
+    "Fira Code",
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace
+  );
+
   --automa-text-primary: var(--vscode-foreground, #0f172a);
   --automa-text-muted: var(--vscode-descriptionForeground, #64748b);
   --automa-text-disabled: var(--vscode-disabledForeground, #94a3b8);
@@ -103,6 +128,14 @@
   --border: var(--automa-border);
   --input: var(--automa-border);
   --ring: var(--automa-border-focus);
+}
+
+/* Base Typography & Rendering Optimization */
+html, body {
+  font-family: var(--automa-font-sans);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ==========================================================================
