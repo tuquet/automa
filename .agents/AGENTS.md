@@ -168,11 +168,10 @@ When running the recurring 15-minute cron wakeups or evaluating overall system r
 
 # Real-Time Dev Error Inspection & Sentry Diagnostics Invariant
 
-- **Mandatory Log Inspection Before Fix**: When investigating runtime bugs, process crashes, compilation failures, UI blank screens, or cross-service errors, Agent **MUST ALWAYS** inspect `.automa/logs/dev-errors.log` and `.automa/logs/sentry-errors.log` before making assumptions or modifying code. Guessing root causes without checking runtime log streams is strictly FORBIDDEN.
-- **Sentry Dev Diagnostics (`.automa/logs/sentry-errors.log`)**: Dev orchestrator automatically maps errors from all services (`[CORE]`, `[STUDIO]`, `[DESK]`, `[RUNNER]`, `[VSCE]`, `[DOCS]`) into structured Sentry issue events in `.automa/logs/sentry-errors.log` with service tags, error categories, and preceding breadcrumbs. Agents MUST consult this file for high-signal root-cause tracing.
+- **Mandatory Log Inspection Before Fix**: When investigating runtime bugs, process crashes, compilation failures, UI blank screens, or cross-service errors, Agent **MUST ALWAYS** inspect `.automa/logs/dev-errors.log` before making assumptions or modifying code. Guessing root causes without checking runtime log streams is strictly FORBIDDEN.
+- **Unified Sentry Diagnostics in `dev-errors.log`**: All runtime problems (Errors & Warnings) across all services (`[CORE]`, `[STUDIO]`, `[DESK]`, `[RUNNER]`, `[VSCE]`, `[DOCS]`) are automatically consolidated into structured Sentry Diagnostic Cards directly inside `.automa/logs/dev-errors.log`. Each card contains the exact Service Tag, Error Category, Message, and the last 8 preceding Breadcrumbs for instant root-cause tracing.
 - **Log Diagnostic Sequence**:
-  1. Inspect `.automa/logs/sentry-errors.log`: Check categorized Sentry events and recent breadcrumbs to isolate the failing component and stack trace.
-  2. Inspect `.automa/logs/dev-errors.log`: Check the raw aggregated stream of `[ERROR]` and `[WARN]` logs with exact timestamps (`+07:00`).
-  3. Inspect `.automa/logs/dev-all.log`: Only check if deep stdout/stderr context is needed.
+  1. Inspect `.automa/logs/dev-errors.log`: Check categorized Sentry diagnostic cards with preceding breadcrumbs and contextual tags (or press `e` in Dev Orchestrator).
+  2. Inspect `.automa/logs/dev-all.log`: Check the full raw timeline stream if deep stdout/stderr context is needed.
 - **Preserve Dev Logs Invariant**: Agents MUST NOT arbitrarily delete, truncate, or overwrite `.automa/logs/` during debugging. The dev orchestrator manages log rotation (5MB threshold) and session backups (`*.prev`) automatically.
 
