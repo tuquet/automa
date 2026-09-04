@@ -131,7 +131,8 @@
 }
 
 /* Base Typography & Rendering Optimization */
-html, body {
+html,
+body {
   font-family: var(--automa-font-sans);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

@@ -5,7 +5,6 @@ import { Check, Cpu, Globe, LayoutGrid, RefreshCw, Save, Sliders } from 'lucide-
 import { computed, onMounted, reactive, ref } from 'vue'
 import AutomaButton from './AutomaButton.vue'
 import { Badge } from './ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Input } from './ui/input'
 import { Switch } from './ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
@@ -13,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 export interface SettingsFormProps {
   initialSettings?: AppSettings | null
   autoFetch?: boolean
+  showHeader?: boolean
 }
 
 defineOptions({
@@ -22,6 +22,7 @@ defineOptions({
 const props = withDefaults(defineProps<SettingsFormProps>(), {
   initialSettings: null,
   autoFetch: true,
+  showHeader: true,
 })
 
 const emit = defineEmits<{
@@ -242,34 +243,280 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-full flex flex-col space-y-6 text-foreground">
-    <!-- Header Controls -->
-    <div class="flex items-center justify-between pb-4 border-b border-border">
-      <div class="flex items-center gap-3">
-        <div class="p-2.5 rounded-xl bg-primary/10 text-primary border border-primary/20">
-          <Sliders class="size-5" :stroke-width="2" />
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h2 class="text-base font-bold tracking-tight">Core Engine Settings</h2>
-            <Badge v-if="isDirty" variant="warning">
-              Unsaved Changes
-            </Badge>
-            <Badge v-else-if="saveSuccess" variant="success" class="flex items-center gap-1">
-              <Check class="size-3" /> Saved
-            </Badge>
+  <div class="w-full flex flex-col space-y-4 text-foreground">
+    <!-- Optional Header Controls (Used when embedded standalone) -->
+    <div v-if="showHeader" class="flex items-center justify-between pb-3 border-b border-border">
+      <div class="flex items-center gap-2.5">
+        <Sliders class="size-4 text-primary" :stroke-width="2" />
+        <h2 class="text-xs font-semibold tracking-tight text-foreground">Core Engine Settings</h2>
+      </div>
+      <div class="flex items-center gap-2">
+        <Badge v-if="isDirty" variant="warning" class="text-[10px] px-1.5 py-0.5">
+          Unsaved
+        </Badge>
+        <Badge v-else-if="saveSuccess" variant="success" class="text-[10px] px-1.5 py-0.5 flex items-center gap-1">
+          <Check class="size-3" /> Saved
+        </Badge>
+      </div>
+    </div>
+
+    <!-- Error Banner -->
+    <div
+      v-if="errorMessage"
+      class="p-2.5 rounded-lg border border-destructive/30 bg-destructive/10 text-destructive text-xs font-medium"
+    >
+      {{ errorMessage }}
+    </div>
+
+    <!-- Settings Tabs -->
+    <Tabs v-model="activeTab" class="w-full flex-1 flex flex-col space-y-4">
+      <TabsList class="inline-flex h-8 items-center rounded-lg bg-muted p-1 text-muted-foreground w-fit">
+        <TabsTrigger value="browser" data-testid="tab-settings-browser" class="flex items-center gap-1.5 text-xs px-3 py-1">
+          <Globe class="size-3.5" />
+          <span>Browser</span>
+        </TabsTrigger>
+        <TabsTrigger value="runner" data-testid="tab-settings-runner" class="flex items-center gap-1.5 text-xs px-3 py-1">
+          <Cpu class="size-3.5" />
+          <span>Runner</span>
+        </TabsTrigger>
+        <TabsTrigger value="grid" data-testid="tab-settings-grid" class="flex items-center gap-1.5 text-xs px-3 py-1">
+          <LayoutGrid class="size-3.5" />
+          <span>Matrix Grid</span>
+        </TabsTrigger>
+      </TabsList>
+
+      <!-- TAB 1: BROWSER SETTINGS -->
+      <TabsContent value="browser" class="space-y-4 pt-1 outline-none">
+        <div class="space-y-3 text-xs">
+          <!-- Runtime Engine -->
+          <div class="flex items-center justify-between py-2 border-b border-border/50">
+            <div>
+              <span class="font-medium text-foreground block">Browser Engine</span>
+              <span class="text-muted-foreground text-[11px]">Anti-detect automation runtime</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-mono font-medium text-foreground">Chromium</span>
+              <Badge variant="secondary" class="text-[10px] uppercase font-mono px-1.5 py-0.2">Built-in</Badge>
+              <!-- Hidden select for testid backward compatibility -->
+              <select
+                v-model="formData.browser.default_type"
+                disabled
+                data-testid="select-browser-default-type"
+                class="sr-only"
+              >
+                <option value="chromium">Chromium</option>
+              </select>
+            </div>
           </div>
-          <p class="text-xs text-muted-foreground mt-0.5">
-            Configure execution runner, anti-detect browser defaults, and multi-window matrix.
-          </p>
+
+          <!-- Executable Path -->
+          <div class="py-2 border-b border-border/50 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="font-medium text-foreground">Custom Executable Path</label>
+              <span class="text-muted-foreground text-[11px]">Leave blank for auto detection</span>
+            </div>
+            <Input
+              v-model="formData.browser.executable_path"
+              data-testid="input-browser-executable-path"
+              placeholder="e.g. C:\Program Files\Google\Chrome\Application\chrome.exe"
+              class="h-8 text-xs font-mono"
+            />
+          </div>
+
+          <!-- User Agent -->
+          <div class="py-2 border-b border-border/50 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="font-medium text-foreground">User Agent Override</label>
+              <span class="text-muted-foreground text-[11px]">Global fallback</span>
+            </div>
+            <Input
+              v-model="formData.browser.default_user_agent"
+              data-testid="input-browser-user-agent"
+              placeholder="Mozilla/5.0 (Windows NT 10.0; Win64; x64)..."
+              class="h-8 text-xs font-mono"
+            />
+          </div>
+
+          <!-- Headless Mode -->
+          <div class="flex items-center justify-between py-2">
+            <div>
+              <span class="font-medium text-foreground block">Headless Mode</span>
+              <span class="text-muted-foreground text-[11px]">Execute background jobs without GUI window</span>
+            </div>
+            <Switch
+              :checked="formData.browser.headless"
+              data-testid="switch-browser-headless"
+              @update:checked="formData.browser.headless = $event"
+            />
+          </div>
         </div>
+      </TabsContent>
+
+      <!-- TAB 2: RUNNER SETTINGS -->
+      <TabsContent value="runner" class="space-y-4 pt-1 outline-none">
+        <div class="space-y-3 text-xs">
+          <!-- Concurrency -->
+          <div class="flex items-center justify-between py-2 border-b border-border/50">
+            <div>
+              <span class="font-medium text-foreground block">Max Concurrent Jobs</span>
+              <span class="text-muted-foreground text-[11px]">Parallel job execution pool limit</span>
+            </div>
+            <div class="flex items-center gap-2 w-32">
+              <Input
+                v-model="formData.runner.max_concurrent_jobs"
+                data-testid="input-runner-max-concurrency"
+                type="number"
+                min="1"
+                max="32"
+                class="h-8 text-xs font-mono text-right"
+              />
+              <span class="text-xs text-muted-foreground shrink-0">jobs</span>
+            </div>
+          </div>
+
+          <!-- Timeout -->
+          <div class="flex items-center justify-between py-2 border-b border-border/50">
+            <div>
+              <span class="font-medium text-foreground block">Execution Timeout</span>
+              <span class="text-muted-foreground text-[11px]">Runaway task termination threshold</span>
+            </div>
+            <div class="flex items-center gap-2 w-36">
+              <Input
+                v-model="formData.runner.timeout_ms"
+                data-testid="input-runner-timeout"
+                type="number"
+                min="1000"
+                step="1000"
+                class="h-8 text-xs font-mono text-right"
+              />
+              <span class="text-xs text-muted-foreground shrink-0">ms</span>
+            </div>
+          </div>
+
+          <!-- History Retention -->
+          <div class="flex items-center justify-between py-2">
+            <div>
+              <span class="font-medium text-foreground block">History Retention</span>
+              <span class="text-muted-foreground text-[11px]">Auto-purge execution telemetry logs</span>
+            </div>
+            <div class="flex items-center gap-2 w-32">
+              <Input
+                v-model="formData.runner.auto_clean_history_days"
+                data-testid="input-runner-retention-days"
+                type="number"
+                min="1"
+                max="365"
+                class="h-8 text-xs font-mono text-right"
+              />
+              <span class="text-xs text-muted-foreground shrink-0">days</span>
+            </div>
+          </div>
+        </div>
+      </TabsContent>
+
+      <!-- TAB 3: MATRIX & GRID SETTINGS -->
+      <TabsContent value="grid" class="space-y-4 pt-1 outline-none">
+        <div class="space-y-3 text-xs">
+          <!-- Grid Toggle -->
+          <div class="flex items-center justify-between py-2 border-b border-border/50">
+            <div>
+              <span class="font-medium text-foreground block">Auto-Grid Tiling</span>
+              <span class="text-muted-foreground text-[11px]">Position browser windows across screen coordinates</span>
+            </div>
+            <Switch
+              :checked="formData.grid.enabled"
+              data-testid="switch-grid-enabled"
+              @update:checked="formData.grid.enabled = $event"
+            />
+          </div>
+
+          <div v-if="formData.grid.enabled" class="space-y-3 pt-1">
+            <!-- Matrix Columns & Rows in 2-col compact card -->
+            <div class="grid grid-cols-2 gap-3">
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-muted/40 border border-border/50">
+                <div>
+                  <span class="font-medium text-foreground block text-xs">Columns</span>
+                  <span class="text-muted-foreground text-[11px]">Horizontal slots</span>
+                </div>
+                <div class="flex items-center gap-1.5 w-20">
+                  <Input
+                    v-model="formData.grid.matrix.columns"
+                    data-testid="input-grid-columns"
+                    type="number"
+                    min="1"
+                    max="8"
+                    class="h-8 text-xs font-mono text-right"
+                  />
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between p-2.5 rounded-lg bg-muted/40 border border-border/50">
+                <div>
+                  <span class="font-medium text-foreground block text-xs">Rows</span>
+                  <span class="text-muted-foreground text-[11px]">Vertical slots</span>
+                </div>
+                <div class="flex items-center gap-1.5 w-20">
+                  <Input
+                    v-model="formData.grid.matrix.rows"
+                    data-testid="input-grid-rows"
+                    type="number"
+                    min="1"
+                    max="8"
+                    class="h-8 text-xs font-mono text-right"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Auto-Recycle -->
+            <div class="flex items-center justify-between py-2 border-b border-border/50">
+              <div>
+                <span class="font-medium text-foreground block">Auto-Recycle Slots</span>
+                <span class="text-muted-foreground text-[11px]">Reuse closed window positions for pending jobs</span>
+              </div>
+              <Switch
+                :checked="formData.grid.behavior.auto_recycle_slots"
+                @update:checked="formData.grid.behavior.auto_recycle_slots = $event"
+              />
+            </div>
+
+            <!-- CDP Bounds -->
+            <div class="flex items-center justify-between py-2">
+              <div>
+                <span class="font-medium text-foreground block">Enforce CDP Bounds</span>
+                <span class="text-muted-foreground text-[11px]">Lock coordinates strictly via Chrome DevTools Protocol</span>
+              </div>
+              <Switch
+                :checked="formData.grid.behavior.enforce_cdp_bounds"
+                @update:checked="formData.grid.behavior.enforce_cdp_bounds = $event"
+              />
+            </div>
+          </div>
+        </div>
+      </TabsContent>
+    </Tabs>
+
+    <!-- Sticky Footer Bar -->
+    <div class="sticky bottom-0 z-10 -mx-6 -mb-6 px-6 py-3 border-t border-border bg-card/95 backdrop-blur-sm flex items-center justify-between mt-auto">
+      <div class="flex items-center gap-2 text-xs">
+        <span v-if="isDirty" class="inline-flex items-center gap-1.5 text-amber-500 font-medium">
+          <span class="size-2 rounded-full bg-amber-500 animate-pulse" />
+          Unsaved changes
+        </span>
+        <span v-else-if="saveSuccess" class="inline-flex items-center gap-1.5 text-emerald-500 font-medium">
+          <Check class="size-3.5" />
+          Saved
+        </span>
+        <span v-else class="text-muted-foreground text-[11px]">
+          All settings up to date
+        </span>
       </div>
 
       <div class="flex items-center gap-2">
         <AutomaButton
           id="btn.settings.refresh"
           size="sm"
-          variant="outline"
+          variant="ghost"
           :loading="isLoading"
           :disabled="isSaving"
           @click="fetchSettings"
@@ -291,217 +538,5 @@ onMounted(() => {
         </AutomaButton>
       </div>
     </div>
-
-    <!-- Error Banner -->
-    <div
-      v-if="errorMessage"
-      class="p-3 rounded-lg border border-destructive/30 bg-destructive/10 text-destructive text-xs font-medium"
-    >
-      {{ errorMessage }}
-    </div>
-
-    <!-- Settings Tabs -->
-    <Tabs v-model="activeTab" class="w-full space-y-4">
-      <TabsList class="grid grid-cols-3 w-full max-w-md">
-        <TabsTrigger value="browser" data-testid="tab-settings-browser" class="flex items-center gap-1.5 text-xs">
-          <Globe class="size-3.5" />
-          <span>Browser</span>
-        </TabsTrigger>
-        <TabsTrigger value="runner" data-testid="tab-settings-runner" class="flex items-center gap-1.5 text-xs">
-          <Cpu class="size-3.5" />
-          <span>Runner</span>
-        </TabsTrigger>
-        <TabsTrigger value="grid" data-testid="tab-settings-grid" class="flex items-center gap-1.5 text-xs">
-          <LayoutGrid class="size-3.5" />
-          <span>Matrix Grid</span>
-        </TabsTrigger>
-      </TabsList>
-
-      <!-- TAB 1: BROWSER SETTINGS -->
-      <TabsContent value="browser" class="space-y-4 pt-1">
-        <Card>
-          <CardHeader>
-            <CardTitle class="text-sm font-semibold">Anti-Detect Browser Defaults</CardTitle>
-            <CardDescription class="text-xs">
-              Default Chromium engine options used when launching automation workflows.
-            </CardDescription>
-          </CardHeader>
-          <CardContent class="space-y-4 text-xs">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="space-y-1.5">
-                <label class="font-medium text-foreground">Default Browser Engine</label>
-                <select
-                  v-model="formData.browser.default_type"
-                  disabled
-                  data-testid="select-browser-default-type"
-                  class="flex h-8 w-full rounded-md border border-input bg-muted px-2.5 py-1 text-xs text-muted-foreground shadow-2xs cursor-not-allowed"
-                >
-                  <option value="chromium">Chromium (Built-in Anti-Detect)</option>
-                </select>
-                <p class="text-[11px] text-muted-foreground">The system is locked to Chromium engine for Phase 1 to guarantee anti-detect stability.</p>
-              </div>
-
-              <div class="space-y-1.5">
-                <label class="font-medium text-foreground">Custom Executable Path</label>
-                <Input
-                  v-model="formData.browser.executable_path"
-                  data-testid="input-browser-executable-path"
-                  placeholder="e.g. C:\Program Files\Google\Chrome\Application\chrome.exe"
-                />
-                <p class="text-[11px] text-muted-foreground">Leave empty to use automatic system binary detection.</p>
-              </div>
-            </div>
-
-            <div class="pt-2 border-t border-border space-y-1.5">
-              <label class="font-medium text-foreground">Default User Agent Override</label>
-              <Input
-                v-model="formData.browser.default_user_agent"
-                data-testid="input-browser-user-agent"
-                placeholder="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36..."
-              />
-              <p class="text-[11px] text-muted-foreground">Global User-Agent string applied if not overridden by browser profile.</p>
-            </div>
-
-            <div class="pt-2 border-t border-border flex items-center justify-between">
-              <div>
-                <span class="font-medium text-foreground block">Headless Mode</span>
-                <span class="text-[11px] text-muted-foreground">Run browser instances in the background without opening GUI windows.</span>
-              </div>
-              <Switch
-                :checked="formData.browser.headless"
-                data-testid="switch-browser-headless"
-                @update:checked="formData.browser.headless = $event"
-              />
-            </div>
-          </CardContent>
-        </Card>
-      </TabsContent>
-
-      <!-- TAB 2: RUNNER SETTINGS -->
-      <TabsContent value="runner" class="space-y-4 pt-1">
-        <Card>
-          <CardHeader>
-            <CardTitle class="text-sm font-semibold">Execution Engine & Concurrency</CardTitle>
-            <CardDescription class="text-xs">
-              Configure concurrent workflow job pool and execution timeouts.
-            </CardDescription>
-          </CardHeader>
-          <CardContent class="space-y-4 text-xs">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div class="space-y-1.5">
-                <label class="font-medium text-foreground">Max Concurrent Jobs</label>
-                <Input
-                  v-model="formData.runner.max_concurrent_jobs"
-                  data-testid="input-runner-max-concurrency"
-                  type="number"
-                  min="1"
-                  max="32"
-                />
-                <p class="text-[11px] text-muted-foreground">Maximum simultaneous automation jobs (1-32).</p>
-              </div>
-
-              <div class="space-y-1.5">
-                <label class="font-medium text-foreground">Job Timeout (ms)</label>
-                <Input
-                  v-model="formData.runner.timeout_ms"
-                  data-testid="input-runner-timeout"
-                  type="number"
-                  min="1000"
-                  step="1000"
-                />
-                <p class="text-[11px] text-muted-foreground">Kill runaway execution after specified milliseconds.</p>
-              </div>
-
-              <div class="space-y-1.5">
-                <label class="font-medium text-foreground">History Retention (Days)</label>
-                <Input
-                  v-model="formData.runner.auto_clean_history_days"
-                  data-testid="input-runner-retention-days"
-                  type="number"
-                  min="1"
-                  max="365"
-                />
-                <p class="text-[11px] text-muted-foreground">Auto-purge telemetry logs older than N days.</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </TabsContent>
-
-      <!-- TAB 3: MATRIX & GRID SETTINGS -->
-      <TabsContent value="grid" class="space-y-4 pt-1">
-        <Card>
-          <CardHeader>
-            <CardTitle class="text-sm font-semibold">Campaign Matrix Grid Layout</CardTitle>
-            <CardDescription class="text-xs">
-              Automatic window tiling and screen partition for multi-browser campaign execution.
-            </CardDescription>
-          </CardHeader>
-          <CardContent class="space-y-4 text-xs">
-            <div class="flex items-center justify-between pb-3 border-b border-border">
-              <div>
-                <span class="font-medium text-foreground block">Enable Auto-Grid Tiling</span>
-                <span class="text-[11px] text-muted-foreground">Arrange launched browser windows automatically across screen coordinates.</span>
-              </div>
-              <Switch
-                :checked="formData.grid.enabled"
-                data-testid="switch-grid-enabled"
-                @update:checked="formData.grid.enabled = $event"
-              />
-            </div>
-
-            <div v-if="formData.grid.enabled" class="space-y-4">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="space-y-1.5">
-                  <label class="font-medium text-foreground">Matrix Columns</label>
-                  <Input
-                    v-model="formData.grid.matrix.columns"
-                    data-testid="input-grid-columns"
-                    type="number"
-                    min="1"
-                    max="8"
-                  />
-                  <p class="text-[11px] text-muted-foreground">Number of horizontal slots across display.</p>
-                </div>
-
-                <div class="space-y-1.5">
-                  <label class="font-medium text-foreground">Matrix Rows</label>
-                  <Input
-                    v-model="formData.grid.matrix.rows"
-                    data-testid="input-grid-rows"
-                    type="number"
-                    min="1"
-                    max="8"
-                  />
-                  <p class="text-[11px] text-muted-foreground">Number of vertical slots per column.</p>
-                </div>
-              </div>
-
-              <div class="pt-2 border-t border-border flex items-center justify-between">
-                <div>
-                  <span class="font-medium text-foreground block">Auto-Recycle Slots</span>
-                  <span class="text-[11px] text-muted-foreground">Reuse finished grid slots for next scheduled campaign browser.</span>
-                </div>
-                <Switch
-                  :checked="formData.grid.behavior.auto_recycle_slots"
-                  @update:checked="formData.grid.behavior.auto_recycle_slots = $event"
-                />
-              </div>
-
-              <div class="flex items-center justify-between">
-                <div>
-                  <span class="font-medium text-foreground block">Enforce CDP Bounds</span>
-                  <span class="text-[11px] text-muted-foreground">Lock Chromium window viewport coordinates strictly via Chrome DevTools Protocol.</span>
-                </div>
-                <Switch
-                  :checked="formData.grid.behavior.enforce_cdp_bounds"
-                  @update:checked="formData.grid.behavior.enforce_cdp_bounds = $event"
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </TabsContent>
-    </Tabs>
   </div>
 </template>
