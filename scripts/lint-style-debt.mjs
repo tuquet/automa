@@ -55,6 +55,11 @@ const RULES = [
     regex: /\btext-center\s+sm:text-left\b/g,
     message: 'Centered dialog header detected. Dialog/sheet/alert headers must be unconditionally left-aligned (text-left) in desktop/IDE panels.',
   },
+  {
+    id: 'no-fractional-control-height',
+    regex: /\b(?:h|min-h|max-h)-(?:[4-9]\.5|1[0-9]\.5)\b/g,
+    message: 'Arbitrary fractional control height detected. Control heights must strictly follow Shadcn scale (h-7 for xs/28px, h-8 for sm/32px, h-9 for default/36px, h-10 for lg/40px).',
+  },
 ];
 
 const FILE_RULES = [

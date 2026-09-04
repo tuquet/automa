@@ -64,7 +64,7 @@ function onPageSizeChange(value: unknown) {
           @update:model-value="onPageSizeChange"
         >
           <SelectTrigger
-            class="h-6.5 w-[64px] text-xs bg-background"
+            class="h-8 w-16 text-xs bg-background"
             data-testid="select-page-size"
           >
             <SelectValue :placeholder="String(pageSize)" />

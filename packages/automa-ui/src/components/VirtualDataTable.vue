@@ -275,7 +275,7 @@ function measureRowElement(el: unknown) {
           <Input
             :model-value="globalFilter"
             :placeholder="searchPlaceholder"
-            class="pl-8 h-8.5 text-sm bg-background/80"
+            class="pl-8 h-8 text-xs bg-background/80"
             data-testid="input-table-search"
             @update:model-value="table.setGlobalFilter(String($event))"
           />

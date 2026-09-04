@@ -1,6 +1,7 @@
 export * from './useAppSettingsQuery'
 export * from './useBindStoreSse'
 export * from './useBrowsersQuery'
+export * from './useDraggableDialog'
 export * from './useJobHistoryQuery'
 export * from './useStorageQuery'
 export * from './useWorkflowsQuery'

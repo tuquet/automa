@@ -243,7 +243,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-full flex flex-col space-y-4 text-foreground">
+  <div class="w-full flex-1 flex flex-col space-y-4 text-foreground">
     <!-- Optional Header Controls (Used when embedded standalone) -->
     <div v-if="showHeader" class="flex items-center justify-between pb-3 border-b border-border">
       <div class="flex items-center gap-2.5">
@@ -319,7 +319,7 @@ onMounted(() => {
               v-model="formData.browser.executable_path"
               data-testid="input-browser-executable-path"
               placeholder="e.g. C:\Program Files\Google\Chrome\Application\chrome.exe"
-              class="h-8.5 text-xs font-mono"
+              class="h-8 text-xs font-mono"
             />
           </div>
 
@@ -333,7 +333,7 @@ onMounted(() => {
               v-model="formData.browser.default_user_agent"
               data-testid="input-browser-user-agent"
               placeholder="Mozilla/5.0 (Windows NT 10.0; Win64; x64)..."
-              class="h-8.5 text-xs font-mono"
+              class="h-8 text-xs font-mono"
             />
           </div>
 
@@ -368,7 +368,7 @@ onMounted(() => {
                 type="number"
                 min="1"
                 max="32"
-                class="h-8.5 text-xs font-mono text-right"
+                class="h-8 text-xs font-mono text-right"
               />
               <span class="text-xs text-muted-foreground shrink-0">jobs</span>
             </div>
@@ -387,7 +387,7 @@ onMounted(() => {
                 type="number"
                 min="1000"
                 step="1000"
-                class="h-8.5 text-xs font-mono text-right"
+                class="h-8 text-xs font-mono text-right"
               />
               <span class="text-xs text-muted-foreground shrink-0">ms</span>
             </div>
@@ -406,7 +406,7 @@ onMounted(() => {
                 type="number"
                 min="1"
                 max="365"
-                class="h-8.5 text-xs font-mono text-right"
+                class="h-8 text-xs font-mono text-right"
               />
               <span class="text-xs text-muted-foreground shrink-0">days</span>
             </div>
@@ -445,7 +445,7 @@ onMounted(() => {
                     type="number"
                     min="1"
                     max="8"
-                    class="h-8.5 text-xs font-mono text-right"
+                    class="h-8 text-xs font-mono text-right"
                   />
                 </div>
               </div>
@@ -462,7 +462,7 @@ onMounted(() => {
                     type="number"
                     min="1"
                     max="8"
-                    class="h-8.5 text-xs font-mono text-right"
+                    class="h-8 text-xs font-mono text-right"
                   />
                 </div>
               </div>
@@ -497,7 +497,7 @@ onMounted(() => {
     </Tabs>
 
     <!-- Sticky Footer Bar -->
-    <div class="sticky bottom-0 z-10 -mx-6 -mb-6 px-6 py-3 border-t border-border bg-card/95 backdrop-blur-sm flex items-center justify-between mt-auto">
+    <div class="sticky -bottom-6 z-10 -mx-6 -mb-6 px-6 py-3 border-t border-border bg-card/95 backdrop-blur-sm flex items-center justify-between mt-auto">
       <div class="flex items-center gap-2 text-xs">
         <span v-if="isDirty" class="inline-flex items-center gap-1.5 text-amber-500 font-medium">
           <span class="size-2 rounded-full bg-amber-500 animate-pulse" />
