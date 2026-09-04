@@ -84,6 +84,14 @@ const PRESETS = {
   },
 };
 
+// aaKeeG is the official shadcn-vue preset code for Neutral / Nova with Inter and Pointer
+PRESETS.aaKeeG = {
+  ...PRESETS.b1buPAiSjA,
+  name: 'Neutral / Nova (Vue)',
+  code: 'aaKeeG',
+  pointer: true,
+};
+
 function formatCssVariables(vars, indent = '  ') {
   return Object.entries(vars)
     .map(([key, val]) => `${indent}${key}: ${val};`)

@@ -1,4 +1,12 @@
-import { computed, type MaybeRefOrGetter, onUnmounted, type Ref, ref, toValue } from 'vue'
+import {
+  computed,
+  getCurrentInstance,
+  type MaybeRefOrGetter,
+  onUnmounted,
+  type Ref,
+  ref,
+  toValue,
+} from 'vue'
 
 export interface UseDraggableDialogOptions {
   enabled?: MaybeRefOrGetter<boolean>
@@ -122,11 +130,13 @@ export function useDraggableDialog(
     isDragging.value = false
   }
 
-  onUnmounted(() => {
-    window.removeEventListener('pointermove', onPointerMove)
-    window.removeEventListener('pointerup', onPointerUp)
-    window.removeEventListener('pointercancel', onPointerUp)
-  })
+  if (getCurrentInstance()) {
+    onUnmounted(() => {
+      window.removeEventListener('pointermove', onPointerMove)
+      window.removeEventListener('pointerup', onPointerUp)
+      window.removeEventListener('pointercancel', onPointerUp)
+    })
+  }
 
   return {
     deltaX,

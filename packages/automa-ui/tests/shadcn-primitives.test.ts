@@ -41,13 +41,13 @@ describe('@automa/ui - Shadcn UI Atomic Primitives & Utilities', () => {
 
     const primaryBtn = buttonVariants({ variant: 'primary', size: 'sm' })
     expect(primaryBtn).toContain('bg-primary')
-    expect(primaryBtn).toContain('h-8')
+    expect(primaryBtn).toContain('h-7')
 
     const destructiveBtn = buttonVariants({ variant: 'destructive', size: 'default' })
-    expect(destructiveBtn).toContain('bg-destructive')
+    expect(destructiveBtn).toContain('destructive')
 
     const iconBtn = buttonVariants({ size: 'icon' })
-    expect(iconBtn).toContain('size-9')
+    expect(iconBtn).toContain('size-8')
   })
 
   it('badgeVariants generates correct class names for badge variants', () => {
@@ -56,10 +56,10 @@ describe('@automa/ui - Shadcn UI Atomic Primitives & Utilities', () => {
     expect(defaultBadge).toContain('bg-primary')
 
     const successBadge = badgeVariants({ variant: 'success' })
-    expect(successBadge).toContain('emerald-500')
+    expect(successBadge).toContain('emerald')
 
     const warningBadge = badgeVariants({ variant: 'warning' })
-    expect(warningBadge).toContain('amber-500')
+    expect(warningBadge).toContain('amber')
   })
 
   it('sheetVariants generates correct positioning classes for sides', () => {

@@ -14,11 +14,10 @@ const forwardedProps = useForwardProps(delegatedProps)
 
 <template>
   <AccordionItem
-    v-slot="slotProps"
     data-slot="accordion-item"
     v-bind="forwardedProps"
     :class="cn('not-last:border-b', props.class)"
   >
-    <slot v-bind="slotProps" />
+    <slot />
   </AccordionItem>
 </template>
