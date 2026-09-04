@@ -5,15 +5,15 @@
 
 :root {
   /* Surface & Backgrounds */
-  --automa-bg: var(--vscode-sideBar-background, #ffffff);
-  --automa-bg-subtle: var(--vscode-editor-background, #f8fafc);
+  --automa-bg: var(--vscode-sideBar-background, oklch(1 0 0));
+  --automa-bg-subtle: var(--vscode-editor-background, oklch(0.97 0 0));
   --automa-bg-hover: var(--vscode-list-hoverBackground, rgba(0, 0, 0, 0.04));
   --automa-bg-active: var(--vscode-list-activeSelectionBackground, rgba(59, 130, 246, 0.1));
 
   /* Borders */
-  --automa-border: var(--vscode-panel-border, #e2e8f0);
+  --automa-border: var(--vscode-panel-border, oklch(0.922 0 0));
   --automa-border-subtle: var(--vscode-sideBarSectionHeader-border, #f1f5f9);
-  --automa-border-focus: var(--vscode-focusBorder, #3b82f6);
+  --automa-border-focus: var(--vscode-focusBorder, oklch(0.708 0 0));
 
   /* Typography Tokens */
   --automa-font-sans: var(
@@ -41,18 +41,18 @@
     monospace
   );
 
-  --automa-text-primary: var(--vscode-foreground, #0f172a);
-  --automa-text-muted: var(--vscode-descriptionForeground, #64748b);
+  --automa-text-primary: var(--vscode-foreground, oklch(0.145 0 0));
+  --automa-text-muted: var(--vscode-descriptionForeground, oklch(0.556 0 0));
   --automa-text-disabled: var(--vscode-disabledForeground, #94a3b8);
 
   /* Accent & Status Colors */
-  --automa-accent: var(--vscode-button-background, #2563eb);
+  --automa-accent: var(--vscode-button-background, oklch(0.205 0 0));
   --automa-accent-hover: var(--vscode-button-hoverBackground, #1d4ed8);
-  --automa-accent-foreground: var(--vscode-button-foreground, #ffffff);
+  --automa-accent-foreground: var(--vscode-button-foreground, oklch(0.985 0 0));
 
   --automa-success: #10b981;
   --automa-warning: #f59e0b;
-  --automa-error: var(--vscode-errorForeground, #ef4444);
+  --automa-error: var(--vscode-errorForeground, oklch(0.577 0.245 27.325));
   --automa-info: #3b82f6;
 
   /* Geometry & Layout */
@@ -82,29 +82,29 @@
   --border: var(--automa-border);
   --input: var(--automa-border);
   --ring: var(--automa-border-focus);
-  --radius: 0.5rem;
+  --radius: 0.625rem;
 }
 
 /* Dark Mode Tokens */
 .dark,
 [data-theme="dark"],
 .vscode-dark {
-  --automa-bg: var(--vscode-sideBar-background, #18181b);
-  --automa-bg-subtle: var(--vscode-editor-background, #09090b);
+  --automa-bg: var(--vscode-sideBar-background, oklch(0.205 0 0));
+  --automa-bg-subtle: var(--vscode-editor-background, oklch(0.145 0 0));
   --automa-bg-hover: var(--vscode-list-hoverBackground, rgba(255, 255, 255, 0.08));
   --automa-bg-active: var(--vscode-list-activeSelectionBackground, rgba(99, 102, 241, 0.15));
 
-  --automa-border: var(--vscode-panel-border, #27272a);
+  --automa-border: var(--vscode-panel-border, oklch(1 0 0 / 10%));
   --automa-border-subtle: var(--vscode-sideBarSectionHeader-border, #1e1e24);
-  --automa-border-focus: var(--vscode-focusBorder, #6366f1);
+  --automa-border-focus: var(--vscode-focusBorder, oklch(0.556 0 0));
 
-  --automa-text-primary: var(--vscode-foreground, #f4f4f5);
-  --automa-text-muted: var(--vscode-descriptionForeground, #a1a1aa);
+  --automa-text-primary: var(--vscode-foreground, oklch(0.985 0 0));
+  --automa-text-muted: var(--vscode-descriptionForeground, oklch(0.708 0 0));
   --automa-text-disabled: var(--vscode-disabledForeground, #71717a);
 
-  --automa-accent: var(--vscode-button-background, #6366f1);
+  --automa-accent: var(--vscode-button-background, oklch(0.922 0 0));
   --automa-accent-hover: var(--vscode-button-hoverBackground, #4f46e5);
-  --automa-accent-foreground: var(--vscode-button-foreground, #ffffff);
+  --automa-accent-foreground: var(--vscode-button-foreground, oklch(0.205 0 0));
 
   --automa-shadow-dropdown: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
 

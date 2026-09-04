@@ -166,3 +166,13 @@ When running the recurring 15-minute cron wakeups or evaluating overall system r
 - **Strict No-Test Invariant**:
   - In periodic health audits, **DO NOT run test runners** (`vitest`, `cargo test`, `test-all.mjs`) to conserve system resources (2GB RAM limit) unless explicitly instructed by the user.
 
+# Real-Time Dev Error Inspection & Sentry Diagnostics Invariant
+
+- **Mandatory Log Inspection Before Fix**: When investigating runtime bugs, process crashes, compilation failures, UI blank screens, or cross-service errors, Agent **MUST ALWAYS** inspect `.automa/logs/dev-errors.log` and `.automa/logs/sentry-errors.log` before making assumptions or modifying code. Guessing root causes without checking runtime log streams is strictly FORBIDDEN.
+- **Sentry Dev Diagnostics (`.automa/logs/sentry-errors.log`)**: Dev orchestrator automatically maps errors from all services (`[CORE]`, `[STUDIO]`, `[DESK]`, `[RUNNER]`, `[VSCE]`, `[DOCS]`) into structured Sentry issue events in `.automa/logs/sentry-errors.log` with service tags, error categories, and preceding breadcrumbs. Agents MUST consult this file for high-signal root-cause tracing.
+- **Log Diagnostic Sequence**:
+  1. Inspect `.automa/logs/sentry-errors.log`: Check categorized Sentry events and recent breadcrumbs to isolate the failing component and stack trace.
+  2. Inspect `.automa/logs/dev-errors.log`: Check the raw aggregated stream of `[ERROR]` and `[WARN]` logs with exact timestamps (`+07:00`).
+  3. Inspect `.automa/logs/dev-all.log`: Only check if deep stdout/stderr context is needed.
+- **Preserve Dev Logs Invariant**: Agents MUST NOT arbitrarily delete, truncate, or overwrite `.automa/logs/` during debugging. The dev orchestrator manages log rotation (5MB threshold) and session backups (`*.prev`) automatically.
+

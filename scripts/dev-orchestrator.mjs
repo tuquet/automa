@@ -6,12 +6,14 @@
  */
 
 import { spawn } from 'node:child_process';
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import readline from 'node:readline';
 import { fileURLToPath } from 'node:url';
 import * as p from '@clack/prompts';
+import * as Sentry from '@sentry/node';
 import pc from 'picocolors';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -21,6 +23,16 @@ const stateFile = path.join(automaDir, '.dev-selection.json');
 const logsDir = path.join(automaDir, 'logs');
 const allLogFile = path.join(logsDir, 'dev-all.log');
 const errorLogFile = path.join(logsDir, 'dev-errors.log');
+const sentryErrorLogFile = path.join(logsDir, 'sentry-errors.log');
+
+// --- Sentry Dev Diagnostics Initialization ---
+const SENTRY_DSN = process.env.SENTRY_DSN || '';
+Sentry.init({
+  dsn: SENTRY_DSN || undefined,
+  environment: process.env.NODE_ENV || 'development',
+  release: 'automa-ecosystem@dev',
+  tracesSampleRate: 1.0,
+});
 
 // --- Logging & File Tracking System ---
 const ANSI_REGEX = /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
@@ -117,6 +129,80 @@ function getLocalTimestamp(date = new Date()) {
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${ms}${sign}${absOffsetHours}:${absOffsetMinutes}`;
 }
 
+const MAX_BREADCRUMBS = 8;
+const serviceBreadcrumbs = new Map();
+
+function addBreadcrumb(taskName, level, message) {
+  if (!serviceBreadcrumbs.has(taskName)) {
+    serviceBreadcrumbs.set(taskName, []);
+  }
+  const list = serviceBreadcrumbs.get(taskName);
+  list.push({
+    time: getLocalTimestamp(),
+    level,
+    message,
+  });
+  if (list.length > MAX_BREADCRUMBS) {
+    list.shift();
+  }
+
+  Sentry.addBreadcrumb({
+    category: taskName,
+    message,
+    level: level.toLowerCase() === 'error' ? 'error' : level.toLowerCase() === 'warn' ? 'warning' : 'info',
+    timestamp: Date.now() / 1000,
+  });
+}
+
+function captureSentryError(taskName, rawMessage) {
+  const clean = stripAnsi(rawMessage).trim();
+  if (!clean || isBenignNoise(clean)) return;
+
+  const eventId = crypto.randomUUID().replace(/-/g, '').slice(0, 16);
+  const timestamp = getLocalTimestamp();
+  const breadcrumbs = serviceBreadcrumbs.get(taskName) || [];
+
+  // Categorize error for dev readability
+  let category = 'Runtime Exception';
+  if (/panic/i.test(clean)) category = 'Rust Panic';
+  else if (/TypeError|ReferenceError|SyntaxError/i.test(clean)) category = 'JavaScript Exception';
+  else if (/EADDRINUSE|address already in use/i.test(clean)) category = 'Port Collision (:8765/:1420/:5173)';
+  else if (/Module not found|Cannot find module/i.test(clean)) category = 'Module Resolution';
+  else if (/TS\d{4}|typecheck/i.test(clean)) category = 'TypeScript Compiler Diagnostic';
+  else if (/build failed|compilation failed/i.test(clean)) category = 'Build / Compiler Failure';
+
+  // Send to Sentry (if DSN provided)
+  Sentry.withScope((scope) => {
+    scope.setTag('service', taskName);
+    scope.setTag('category', category);
+    scope.setExtra('recent_breadcrumbs', breadcrumbs);
+    Sentry.captureMessage(`[${taskName}] ${clean}`, 'error');
+  });
+
+  // Human-friendly structured Sentry Event Card for sentry-errors.log
+  const breadcrumbLines = breadcrumbs.length > 0
+    ? breadcrumbs.map((b, idx) => `   ${idx + 1}. [${b.time.split('T')[1] || b.time}] [${b.level}] ${b.message}`).join('\n')
+    : '   (No previous breadcrumbs)';
+
+  const card = [
+    '┌────────────────────────────────────────────────────────────────────────────────────────',
+    `│ 🚨 SENTRY ERROR EVENT [ID: ${eventId}] ${timestamp}`,
+    `│ 🏷️  Service  : ${taskName}`,
+    `│ ⚡ Category : ${category}`,
+    `│ 💬 Error    : ${clean}`,
+    '├────────────────────────────────────────────────────────────────────────────────────────',
+    '│ 📜 Preceding Breadcrumbs (Context):',
+    breadcrumbLines,
+    '└────────────────────────────────────────────────────────────────────────────────────────\n',
+  ].join('\n');
+
+  try {
+    ensureLogsDir();
+    checkRotateLog(sentryErrorLogFile);
+    fs.appendFileSync(sentryErrorLogFile, card, 'utf8');
+  } catch (_) {}
+}
+
 function appendLog(taskName, level, rawLine) {
   const clean = stripAnsi(rawLine).trim();
   if (!clean) return;
@@ -131,11 +217,17 @@ function appendLog(taskName, level, rawLine) {
   try {
     fs.appendFileSync(allLogFile, logEntry, 'utf8');
 
+    addBreadcrumb(taskName, level, clean);
+
     // Catch all Problems (Errors and Warnings) in dev-errors.log while filtering out noisy progress bars
     const isProblem = (level === 'ERROR' || level === 'WARN') && !isBenignNoise(clean);
 
     if (isProblem) {
       fs.appendFileSync(errorLogFile, logEntry, 'utf8');
+    }
+
+    if (level === 'ERROR') {
+      captureSentryError(taskName, clean);
     }
   } catch (_) {}
 }
@@ -151,6 +243,9 @@ function initLogSession(tasks) {
     if (fs.existsSync(errorLogFile)) {
       fs.copyFileSync(errorLogFile, `${errorLogFile}.prev`);
     }
+    if (fs.existsSync(sentryErrorLogFile)) {
+      fs.copyFileSync(sentryErrorLogFile, `${sentryErrorLogFile}.prev`);
+    }
   } catch (_) {}
 
   // Rewrite fresh for the new dev session
@@ -158,6 +253,7 @@ function initLogSession(tasks) {
   try {
     fs.writeFileSync(allLogFile, header, 'utf8');
     fs.writeFileSync(errorLogFile, '', 'utf8'); // Start completely clean
+    fs.writeFileSync(sentryErrorLogFile, '', 'utf8'); // Start completely clean
   } catch (_) {}
 }
 
@@ -452,10 +548,32 @@ function showRecentErrors() {
   }
 }
 
+function showSentryErrors() {
+  try {
+    if (fs.existsSync(sentryErrorLogFile)) {
+      const content = fs.readFileSync(sentryErrorLogFile, 'utf8').trim();
+      console.log(`\n${pc.bold(pc.red('🔥 Sentry Error Events (sentry-errors.log):'))}\n`);
+      if (!content) {
+        console.log(pc.green('  (Chưa có sự kiện lỗi Sentry nào được ghi nhận)'));
+      } else {
+        const events = content.split('┌──────').filter(Boolean);
+        const latest = events.slice(-5).map((e) => `┌──────${e}`).join('');
+        console.log(latest);
+      }
+      console.log(`\n${pc.dim(`Xem toàn bộ tại: ${sentryErrorLogFile}\n`)}`);
+    } else {
+      console.log(pc.green('\n✔ Chưa có file sentry-errors.log (Hệ thống hoạt động ổn định)'));
+    }
+  } catch (err) {
+    console.error(pc.red(`Không thể đọc file sentry-errors.log: ${err.message}`));
+  }
+}
+
 function showLogPaths() {
   console.log(`\n${pc.bold(pc.cyan('📂 Thư mục & File Log Dev Tracking:'))}`);
-  console.log(`  • Toàn bộ Log  : ${pc.bold(allLogFile)}`);
-  console.log(`  • Log Lỗi/Warn : ${pc.bold(errorLogFile)}\n`);
+  console.log(`  • Toàn bộ Log       : ${pc.bold(allLogFile)}`);
+  console.log(`  • Log Lỗi/Warn      : ${pc.bold(errorLogFile)}`);
+  console.log(`  • Sentry Dev Errors : ${pc.bold(sentryErrorLogFile)}\n`);
 }
 
 function showHotkeysBar() {
@@ -463,6 +581,7 @@ function showHotkeysBar() {
     `${pc.bold('r')} Restart`,
     `${pc.bold('c')} Clear`,
     `${pc.bold('e')} Lỗi gần nhất`,
+    `${pc.bold('s')} Sentry errors`,
     `${pc.bold('l')} File logs`,
     `${pc.bold('o')} Mở browser`,
     `${pc.bold('q')} Thoát`,
@@ -503,6 +622,8 @@ function setupHotkeys() {
       showHotkeysBar();
     } else if (key === 'e') {
       showRecentErrors();
+    } else if (key === 's') {
+      showSentryErrors();
     } else if (key === 'l') {
       showLogPaths();
     } else if (key === 'o') {

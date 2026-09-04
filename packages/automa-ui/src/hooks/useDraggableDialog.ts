@@ -43,10 +43,11 @@ export function useDraggableDialog(
 
     // Viewport Clamping: keep dialog within viewport bounds
     const rect = targetEl.getBoundingClientRect()
+    const halfH = rect.height / 2
     const minDeltaX = -(window.innerWidth / 2 - 30)
     const maxDeltaX = window.innerWidth / 2 - 30
     const minDeltaY = -(window.innerHeight / 2 - 30)
-    const maxDeltaY = window.innerHeight / 2 - 30
+    const maxDeltaY = window.innerHeight / 2 - Math.min(halfH, 60)
 
     deltaX.value = Math.max(minDeltaX, Math.min(maxDeltaX, initialDeltaX + moveX))
     deltaY.value = Math.max(minDeltaY, Math.min(maxDeltaY, initialDeltaY + moveY))
