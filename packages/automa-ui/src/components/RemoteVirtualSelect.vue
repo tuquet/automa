@@ -295,7 +295,7 @@ watch(isOpen, (open) => {
           <span class="font-medium truncate">{{ selectedOption.label }}</span>
           <span
             v-if="selectedOption.badge"
-            class="inline-flex items-center rounded px-1.5 py-0.2 text-[10px] font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shrink-0"
+            class="inline-flex items-center rounded px-1.5 py-0.2 text-xs font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 shrink-0"
           >
             {{ selectedOption.badge.text }}
           </span>
@@ -352,7 +352,7 @@ watch(isOpen, (open) => {
           <SearchX class="h-6 w-6 text-[var(--automa-text-muted)] opacity-60" />
           <div class="text-center px-3">
             <p class="text-xs font-semibold text-[var(--automa-text-primary)]">No results</p>
-            <p class="text-[11px] text-[var(--automa-text-muted)] mt-0.5 break-all">
+            <p class="text-xs text-[var(--automa-text-muted)] mt-0.5 break-all">
               "<span class="font-mono text-[var(--automa-text-primary)]">{{ searchQuery }}</span>"
             </p>
           </div>
@@ -441,7 +441,7 @@ watch(isOpen, (open) => {
           >
             <div class="flex flex-col truncate">
               <span class="truncate font-medium">{{ filteredOptions[virtualRow.index]?.label }}</span>
-              <span v-if="filteredOptions[virtualRow.index]?.description" class="truncate text-[10px] text-[var(--automa-text-muted)]">
+              <span v-if="filteredOptions[virtualRow.index]?.description" class="truncate text-xs text-[var(--automa-text-muted)]">
                 {{ filteredOptions[virtualRow.index]?.description }}
               </span>
             </div>
@@ -449,7 +449,7 @@ watch(isOpen, (open) => {
             <div class="ml-2 flex flex-shrink-0 items-center gap-1.5">
               <span
                 v-if="filteredOptions[virtualRow.index]?.badge"
-                class="rounded px-1.5 py-0.2 text-[10px] font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
+                class="rounded px-1.5 py-0.2 text-xs font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20"
               >
                 {{ filteredOptions[virtualRow.index]?.badge?.text }}
               </span>

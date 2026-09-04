@@ -275,7 +275,7 @@ function measureRowElement(el: unknown) {
           <Input
             :model-value="globalFilter"
             :placeholder="searchPlaceholder"
-            class="pl-8 h-8 text-xs bg-background/80"
+            class="pl-8 h-8.5 text-sm bg-background/80"
             data-testid="input-table-search"
             @update:model-value="table.setGlobalFilter(String($event))"
           />
@@ -301,10 +301,10 @@ function measureRowElement(el: unknown) {
         data-testid="table-loading-spinner"
       >
         <Loader2 class="size-6 animate-spin text-primary mb-1.5" />
-        <span class="text-xs text-muted-foreground font-medium">Loading records...</span>
+        <span class="text-sm text-muted-foreground font-medium">Loading records...</span>
       </div>
 
-      <Table class="w-full text-xs">
+      <Table class="w-full text-sm">
         <!-- Sticky Header -->
         <TableHeader class="sticky top-0 z-10 bg-muted/80 backdrop-blur-xs border-b border-border">
           <TableRow
@@ -316,7 +316,7 @@ function measureRowElement(el: unknown) {
               v-for="header in headerGroup.headers"
               :key="header.id"
               :style="{ width: header.getSize() ? `${header.getSize()}px` : undefined }"
-              class="h-9 px-3 text-xs font-semibold text-foreground select-none"
+              class="h-9 px-3 text-sm font-semibold text-foreground select-none"
             >
               <div
                 v-if="!header.isPlaceholder"
@@ -396,7 +396,7 @@ function measureRowElement(el: unknown) {
               <TableCell
                 v-for="cell in tableRows[virtualRow.index]!.getVisibleCells()"
                 :key="cell.id"
-                class="px-3 py-2 text-xs"
+                class="px-3 py-2.5 text-sm"
               >
                 <slot
                   :name="`cell-${cell.column.id}`"
@@ -437,7 +437,7 @@ function measureRowElement(el: unknown) {
               <TableCell
                 v-for="cell in row.getVisibleCells()"
                 :key="cell.id"
-                class="px-3 py-2 text-xs"
+                class="px-3 py-2.5 text-sm"
               >
                 <slot
                   :name="`cell-${cell.column.id}`"

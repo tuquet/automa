@@ -131,9 +131,15 @@
 }
 
 /* Base Typography & Rendering Optimization */
-html,
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
   font-family: var(--automa-font-sans);
+  font-size: 1rem;
+  line-height: 1.5;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -148,7 +154,7 @@ body {
   display: inline-block;
   width: 100%;
   font-family: inherit;
-  font-size: 13px;
+  font-size: 0.875rem;
 }
 
 .automa-select-trigger {
@@ -162,7 +168,7 @@ body {
   background-color: var(--automa-bg-subtle);
   padding: 0 10px;
   color: var(--automa-text-primary);
-  font-size: 13px;
+  font-size: 0.875rem;
   transition: all 0.15s ease-in-out;
   cursor: pointer;
   outline: none;
@@ -341,7 +347,7 @@ body {
 }
 
 .automa-select-clear-link {
-  font-size: 11px;
+  font-size: 0.75rem;
   font-weight: 500;
   color: var(--automa-accent);
   background: transparent;
@@ -370,7 +376,7 @@ body {
   border-top: 1px solid var(--automa-border);
   background-color: var(--automa-bg);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 11px;
+  font-size: 0.75rem;
   box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.15);
   box-sizing: border-box;
   transition: height 0.2s ease;
@@ -393,13 +399,13 @@ body {
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 0.875rem;
 }
 
 .automa-drawer-badge {
   padding: 2px 8px;
   border-radius: 9999px;
-  font-size: 10px;
+  font-size: 0.75rem;
   font-weight: 600;
   background-color: var(--automa-bg-active);
   color: var(--automa-accent);
@@ -434,7 +440,7 @@ body {
   background-color: var(--automa-bg);
   padding-left: 26px;
   padding-right: 8px;
-  font-size: 11px;
+  font-size: 0.75rem;
   color: var(--automa-text-primary);
   outline: none;
   transition: all 0.15s ease;
@@ -456,7 +462,7 @@ body {
 
 .automa-drawer-filter-btn {
   padding: 2px 6px;
-  font-size: 10px;
+  font-size: 0.75rem;
   font-weight: 600;
   border-radius: 3px;
   border: none;
@@ -487,7 +493,7 @@ body {
   padding: 3px 8px;
   border-radius: 4px;
   border: 1px solid var(--automa-border);
-  font-size: 10px;
+  font-size: 0.75rem;
   font-weight: 500;
   cursor: pointer;
   background: transparent;
@@ -535,14 +541,14 @@ body {
   align-items: flex-start;
   gap: 8px;
   padding: 2px 0;
-  font-size: 11px;
+  font-size: 0.75rem;
   line-height: 1.6;
   color: var(--automa-text-primary);
 }
 
 .automa-log-time {
   color: var(--automa-text-muted);
-  font-size: 10px;
+  font-size: 0.75rem;
   flex-shrink: 0;
   min-width: 60px;
   font-variant-numeric: tabular-nums;
@@ -553,7 +559,7 @@ body {
   align-items: center;
   padding: 1px 4px;
   border-radius: 3px;
-  font-size: 9px;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   flex-shrink: 0;
@@ -621,28 +627,28 @@ body {
 .automa-btn-xs {
   height: 24px;
   padding: 0 6px;
-  font-size: 11px;
+  font-size: 0.75rem;
   gap: 4px;
 }
 
 .automa-btn-sm {
   height: 28px;
   padding: 0 10px;
-  font-size: 12px;
+  font-size: 0.875rem;
   gap: 6px;
 }
 
 .automa-btn-md {
   height: 32px;
   padding: 0 12px;
-  font-size: 13px;
+  font-size: 0.875rem;
   gap: 8px;
 }
 
 .automa-btn-lg {
   height: 36px;
   padding: 0 16px;
-  font-size: 14px;
+  font-size: 1rem;
   gap: 8px;
 }
 
@@ -736,7 +742,7 @@ body {
   background-color: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(4px);
   font-family: inherit;
-  font-size: 13px;
+  font-size: 0.875rem;
   animation: automaModalFadeIn 0.15s ease-out;
 }
 
@@ -773,7 +779,7 @@ body {
 }
 
 .automa-modal-title {
-  font-size: 15px;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--automa-text-primary);
   margin: 0;
@@ -782,7 +788,7 @@ body {
 .automa-modal-body {
   color: var(--automa-text-muted);
   line-height: 1.6;
-  font-size: 13px;
+  font-size: 0.875rem;
   margin: 0;
 }
 

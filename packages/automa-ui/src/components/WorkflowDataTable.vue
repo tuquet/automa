@@ -147,7 +147,7 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
           h('div', { class: 'flex items-center gap-1.5' }, [
             h(
               'span',
-              { class: 'font-medium text-xs text-foreground truncate' },
+              { class: 'font-semibold text-sm text-foreground truncate' },
               wf.name || 'Untitled Workflow',
             ),
             isPkg
@@ -155,7 +155,7 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
                   Badge,
                   {
                     variant: 'secondary',
-                    class: 'text-[9px] px-1 py-0 text-amber-600 dark:text-amber-400',
+                    class: 'text-xs px-1.5 py-0 text-amber-600 dark:text-amber-400 font-medium',
                   },
                   () => 'Package',
                 )
@@ -163,7 +163,7 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
           ]),
           h(
             'span',
-            { class: 'font-mono text-[10px] text-muted-foreground/80 truncate' },
+            { class: 'font-mono text-xs text-muted-foreground/80 truncate' },
             wf.description || wf.id,
           ),
         ]),
@@ -176,7 +176,7 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
     accessorKey: 'version',
     cell: ({ row }) => {
       const ver = row.original.version || 'v1.0.0'
-      return h(Badge, { variant: 'outline', class: 'font-mono text-[10px]' }, () => ver)
+      return h(Badge, { variant: 'outline', class: 'font-mono text-xs' }, () => ver)
     },
     size: 90,
   },
@@ -192,8 +192,8 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
       const count = (extra.blocksCount as number) ?? 0
       return h(
         'div',
-        { class: 'flex items-center gap-1 font-mono text-[11px] text-muted-foreground' },
-        [h(Layers, { class: 'size-3' }), h('span', `${count} blocks`)],
+        { class: 'flex items-center gap-1.5 font-mono text-xs text-muted-foreground' },
+        [h(Layers, { class: 'size-3.5' }), h('span', `${count} blocks`)],
       )
     },
     size: 110,
@@ -206,7 +206,7 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
       const time = row.original.updatedAt
       return h(
         'span',
-        { class: 'text-[11px] text-muted-foreground whitespace-nowrap' },
+        { class: 'text-xs text-muted-foreground whitespace-nowrap' },
         time ? String(time).split('T')[0] : '-',
       )
     },

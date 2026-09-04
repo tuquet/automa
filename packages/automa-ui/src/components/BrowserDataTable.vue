@@ -144,7 +144,7 @@ const columns: ColumnDef<BrowserResponse>[] = [
         Badge,
         {
           variant: isOnline ? 'success' : 'secondary',
-          class: 'gap-1.5 font-mono text-[11px] uppercase tracking-wider',
+          class: 'gap-1.5 font-mono text-xs uppercase tracking-wider',
         },
         () => [
           h('span', {
@@ -167,11 +167,11 @@ const columns: ColumnDef<BrowserResponse>[] = [
       const b = row.original
       const hasDistinctId = b.id && b.id !== b.name
       return h('div', { class: 'flex items-center gap-1.5' }, [
-        h('span', { class: 'font-medium text-xs text-foreground truncate' }, b.name),
+        h('span', { class: 'font-semibold text-sm text-foreground truncate' }, b.name),
         hasDistinctId
           ? h(
               'span',
-              { class: 'font-mono text-[10px] text-muted-foreground/60 truncate' },
+              { class: 'font-mono text-xs text-muted-foreground/60 truncate' },
               `(${b.id})`,
             )
           : null,
@@ -186,7 +186,7 @@ const columns: ColumnDef<BrowserResponse>[] = [
       const tz = row.original.timezone
       return h(
         'span',
-        { class: 'font-mono text-[11px] text-muted-foreground' },
+        { class: 'font-mono text-xs text-muted-foreground' },
         tz || 'UTC (System)',
       )
     },
@@ -206,12 +206,12 @@ const columns: ColumnDef<BrowserResponse>[] = [
       if (!proxy?.server) {
         return h(
           Badge,
-          { variant: 'secondary', class: 'text-[10px] font-mono text-muted-foreground' },
+          { variant: 'secondary', class: 'text-xs font-mono text-muted-foreground' },
           () => 'Direct',
         )
       }
-      return h('div', { class: 'flex items-center gap-1 font-mono text-[11px] text-foreground' }, [
-        h(Server, { class: 'size-3 text-muted-foreground' }),
+      return h('div', { class: 'flex items-center gap-1.5 font-mono text-xs text-foreground' }, [
+        h(Server, { class: 'size-3.5 text-muted-foreground' }),
         h('span', { class: 'truncate max-w-[140px]' }, proxy.server),
       ])
     },

@@ -248,14 +248,14 @@ onMounted(() => {
     <div v-if="showHeader" class="flex items-center justify-between pb-3 border-b border-border">
       <div class="flex items-center gap-2.5">
         <Sliders class="size-4 text-primary" :stroke-width="2" />
-        <h2 class="text-xs font-semibold tracking-tight text-foreground">Core Engine Settings</h2>
+        <h2 class="text-base font-semibold tracking-tight text-foreground">Core Engine Settings</h2>
       </div>
       <div class="flex items-center gap-2">
-        <Badge v-if="isDirty" variant="warning" class="text-[10px] px-1.5 py-0.5">
+        <Badge v-if="isDirty" variant="warning" class="text-xs px-2 py-0.5 font-medium">
           Unsaved
         </Badge>
-        <Badge v-else-if="saveSuccess" variant="success" class="text-[10px] px-1.5 py-0.5 flex items-center gap-1">
-          <Check class="size-3" /> Saved
+        <Badge v-else-if="saveSuccess" variant="success" class="text-xs px-2 py-0.5 font-medium flex items-center gap-1">
+          <Check class="size-3.5" /> Saved
         </Badge>
       </div>
     </div>
@@ -263,23 +263,23 @@ onMounted(() => {
     <!-- Error Banner -->
     <div
       v-if="errorMessage"
-      class="p-2.5 rounded-lg border border-destructive/30 bg-destructive/10 text-destructive text-xs font-medium"
+      class="p-2.5 rounded-lg border border-destructive/30 bg-destructive/10 text-destructive text-sm font-medium"
     >
       {{ errorMessage }}
     </div>
 
     <!-- Settings Tabs -->
     <Tabs v-model="activeTab" class="w-full flex-1 flex flex-col space-y-4">
-      <TabsList class="inline-flex h-8 items-center rounded-lg bg-muted p-1 text-muted-foreground w-fit">
-        <TabsTrigger value="browser" data-testid="tab-settings-browser" class="px-3 py-1">
+      <TabsList class="inline-flex h-9 items-center rounded-lg bg-muted p-1 text-muted-foreground w-fit">
+        <TabsTrigger value="browser" data-testid="tab-settings-browser" class="px-3 py-1 text-sm font-medium">
           <Globe class="size-3.5 shrink-0" />
           <span>Browser</span>
         </TabsTrigger>
-        <TabsTrigger value="runner" data-testid="tab-settings-runner" class="px-3 py-1">
+        <TabsTrigger value="runner" data-testid="tab-settings-runner" class="px-3 py-1 text-sm font-medium">
           <Cpu class="size-3.5 shrink-0" />
           <span>Runner</span>
         </TabsTrigger>
-        <TabsTrigger value="grid" data-testid="tab-settings-grid" class="px-3 py-1">
+        <TabsTrigger value="grid" data-testid="tab-settings-grid" class="px-3 py-1 text-sm font-medium">
           <LayoutGrid class="size-3.5 shrink-0" />
           <span>Matrix Grid</span>
         </TabsTrigger>
@@ -287,16 +287,16 @@ onMounted(() => {
 
       <!-- TAB 1: BROWSER SETTINGS -->
       <TabsContent value="browser" class="space-y-4 pt-1 outline-none">
-        <div class="space-y-3 text-xs">
+        <div class="space-y-3 text-sm">
           <!-- Runtime Engine -->
-          <div class="flex items-center justify-between py-2 border-b border-border/50">
+          <div class="flex items-center justify-between py-2.5 border-b border-border/50">
             <div>
-              <span class="font-medium text-foreground block">Browser Engine</span>
-              <span class="text-muted-foreground text-[11px]">Anti-detect automation runtime</span>
+              <span class="font-medium text-foreground block text-sm">Browser Engine</span>
+              <span class="text-muted-foreground text-xs">Anti-detect automation runtime</span>
             </div>
             <div class="flex items-center gap-2">
               <span class="text-xs font-mono font-medium text-foreground">Chromium</span>
-              <Badge variant="secondary" class="text-[10px] uppercase font-mono px-1.5 py-0.2">Built-in</Badge>
+              <Badge variant="secondary" class="text-xs uppercase font-mono px-1.5 py-0.2">Built-in</Badge>
               <!-- Hidden select for testid backward compatibility -->
               <select
                 v-model="formData.browser.default_type"
@@ -310,38 +310,38 @@ onMounted(() => {
           </div>
 
           <!-- Executable Path -->
-          <div class="py-2 border-b border-border/50 space-y-1.5">
+          <div class="py-2.5 border-b border-border/50 space-y-1.5">
             <div class="flex items-center justify-between">
-              <label class="font-medium text-foreground">Custom Executable Path</label>
-              <span class="text-muted-foreground text-[11px]">Leave blank for auto detection</span>
+              <label class="font-medium text-foreground text-sm">Custom Executable Path</label>
+              <span class="text-muted-foreground text-xs">Leave blank for auto detection</span>
             </div>
             <Input
               v-model="formData.browser.executable_path"
               data-testid="input-browser-executable-path"
               placeholder="e.g. C:\Program Files\Google\Chrome\Application\chrome.exe"
-              class="h-8 text-xs font-mono"
+              class="h-8.5 text-xs font-mono"
             />
           </div>
 
           <!-- User Agent -->
-          <div class="py-2 border-b border-border/50 space-y-1.5">
+          <div class="py-2.5 border-b border-border/50 space-y-1.5">
             <div class="flex items-center justify-between">
-              <label class="font-medium text-foreground">User Agent Override</label>
-              <span class="text-muted-foreground text-[11px]">Global fallback</span>
+              <label class="font-medium text-foreground text-sm">User Agent Override</label>
+              <span class="text-muted-foreground text-xs">Global fallback</span>
             </div>
             <Input
               v-model="formData.browser.default_user_agent"
               data-testid="input-browser-user-agent"
               placeholder="Mozilla/5.0 (Windows NT 10.0; Win64; x64)..."
-              class="h-8 text-xs font-mono"
+              class="h-8.5 text-xs font-mono"
             />
           </div>
 
           <!-- Headless Mode -->
-          <div class="flex items-center justify-between py-2">
+          <div class="flex items-center justify-between py-2.5">
             <div>
-              <span class="font-medium text-foreground block">Headless Mode</span>
-              <span class="text-muted-foreground text-[11px]">Execute background jobs without GUI window</span>
+              <span class="font-medium text-foreground block text-sm">Headless Mode</span>
+              <span class="text-muted-foreground text-xs">Execute background jobs without GUI window</span>
             </div>
             <Switch
               :checked="formData.browser.headless"
@@ -354,12 +354,12 @@ onMounted(() => {
 
       <!-- TAB 2: RUNNER SETTINGS -->
       <TabsContent value="runner" class="space-y-4 pt-1 outline-none">
-        <div class="space-y-3 text-xs">
+        <div class="space-y-3 text-sm">
           <!-- Concurrency -->
-          <div class="flex items-center justify-between py-2 border-b border-border/50">
+          <div class="flex items-center justify-between py-2.5 border-b border-border/50">
             <div>
-              <span class="font-medium text-foreground block">Max Concurrent Jobs</span>
-              <span class="text-muted-foreground text-[11px]">Parallel job execution pool limit</span>
+              <span class="font-medium text-foreground block text-sm">Max Concurrent Jobs</span>
+              <span class="text-muted-foreground text-xs">Parallel job execution pool limit</span>
             </div>
             <div class="flex items-center gap-2 w-32">
               <Input
@@ -368,17 +368,17 @@ onMounted(() => {
                 type="number"
                 min="1"
                 max="32"
-                class="h-8 text-xs font-mono text-right"
+                class="h-8.5 text-xs font-mono text-right"
               />
               <span class="text-xs text-muted-foreground shrink-0">jobs</span>
             </div>
           </div>
 
           <!-- Timeout -->
-          <div class="flex items-center justify-between py-2 border-b border-border/50">
+          <div class="flex items-center justify-between py-2.5 border-b border-border/50">
             <div>
-              <span class="font-medium text-foreground block">Execution Timeout</span>
-              <span class="text-muted-foreground text-[11px]">Runaway task termination threshold</span>
+              <span class="font-medium text-foreground block text-sm">Execution Timeout</span>
+              <span class="text-muted-foreground text-xs">Runaway task termination threshold</span>
             </div>
             <div class="flex items-center gap-2 w-36">
               <Input
@@ -387,17 +387,17 @@ onMounted(() => {
                 type="number"
                 min="1000"
                 step="1000"
-                class="h-8 text-xs font-mono text-right"
+                class="h-8.5 text-xs font-mono text-right"
               />
               <span class="text-xs text-muted-foreground shrink-0">ms</span>
             </div>
           </div>
 
           <!-- History Retention -->
-          <div class="flex items-center justify-between py-2">
+          <div class="flex items-center justify-between py-2.5">
             <div>
-              <span class="font-medium text-foreground block">History Retention</span>
-              <span class="text-muted-foreground text-[11px]">Auto-purge execution telemetry logs</span>
+              <span class="font-medium text-foreground block text-sm">History Retention</span>
+              <span class="text-muted-foreground text-xs">Auto-purge execution telemetry logs</span>
             </div>
             <div class="flex items-center gap-2 w-32">
               <Input
@@ -406,7 +406,7 @@ onMounted(() => {
                 type="number"
                 min="1"
                 max="365"
-                class="h-8 text-xs font-mono text-right"
+                class="h-8.5 text-xs font-mono text-right"
               />
               <span class="text-xs text-muted-foreground shrink-0">days</span>
             </div>
@@ -416,12 +416,12 @@ onMounted(() => {
 
       <!-- TAB 3: MATRIX & GRID SETTINGS -->
       <TabsContent value="grid" class="space-y-4 pt-1 outline-none">
-        <div class="space-y-3 text-xs">
+        <div class="space-y-3 text-sm">
           <!-- Grid Toggle -->
-          <div class="flex items-center justify-between py-2 border-b border-border/50">
+          <div class="flex items-center justify-between py-2.5 border-b border-border/50">
             <div>
-              <span class="font-medium text-foreground block">Auto-Grid Tiling</span>
-              <span class="text-muted-foreground text-[11px]">Position browser windows across screen coordinates</span>
+              <span class="font-medium text-foreground block text-sm">Auto-Grid Tiling</span>
+              <span class="text-muted-foreground text-xs">Position browser windows across screen coordinates</span>
             </div>
             <Switch
               :checked="formData.grid.enabled"
@@ -435,8 +435,8 @@ onMounted(() => {
             <div class="grid grid-cols-2 gap-3">
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-muted/40 border border-border/50">
                 <div>
-                  <span class="font-medium text-foreground block text-xs">Columns</span>
-                  <span class="text-muted-foreground text-[11px]">Horizontal slots</span>
+                  <span class="font-medium text-foreground block text-sm">Columns</span>
+                  <span class="text-muted-foreground text-xs">Horizontal slots</span>
                 </div>
                 <div class="flex items-center gap-1.5 w-20">
                   <Input
@@ -445,15 +445,15 @@ onMounted(() => {
                     type="number"
                     min="1"
                     max="8"
-                    class="h-8 text-xs font-mono text-right"
+                    class="h-8.5 text-xs font-mono text-right"
                   />
                 </div>
               </div>
 
               <div class="flex items-center justify-between p-2.5 rounded-lg bg-muted/40 border border-border/50">
                 <div>
-                  <span class="font-medium text-foreground block text-xs">Rows</span>
-                  <span class="text-muted-foreground text-[11px]">Vertical slots</span>
+                  <span class="font-medium text-foreground block text-sm">Rows</span>
+                  <span class="text-muted-foreground text-xs">Vertical slots</span>
                 </div>
                 <div class="flex items-center gap-1.5 w-20">
                   <Input
@@ -462,17 +462,17 @@ onMounted(() => {
                     type="number"
                     min="1"
                     max="8"
-                    class="h-8 text-xs font-mono text-right"
+                    class="h-8.5 text-xs font-mono text-right"
                   />
                 </div>
               </div>
             </div>
 
             <!-- Auto-Recycle -->
-            <div class="flex items-center justify-between py-2 border-b border-border/50">
+            <div class="flex items-center justify-between py-2.5 border-b border-border/50">
               <div>
-                <span class="font-medium text-foreground block">Auto-Recycle Slots</span>
-                <span class="text-muted-foreground text-[11px]">Reuse closed window positions for pending jobs</span>
+                <span class="font-medium text-foreground block text-sm">Auto-Recycle Slots</span>
+                <span class="text-muted-foreground text-xs">Reuse closed window positions for pending jobs</span>
               </div>
               <Switch
                 :checked="formData.grid.behavior.auto_recycle_slots"
@@ -481,10 +481,10 @@ onMounted(() => {
             </div>
 
             <!-- CDP Bounds -->
-            <div class="flex items-center justify-between py-2">
+            <div class="flex items-center justify-between py-2.5">
               <div>
-                <span class="font-medium text-foreground block">Enforce CDP Bounds</span>
-                <span class="text-muted-foreground text-[11px]">Lock coordinates strictly via Chrome DevTools Protocol</span>
+                <span class="font-medium text-foreground block text-sm">Enforce CDP Bounds</span>
+                <span class="text-muted-foreground text-xs">Lock coordinates strictly via Chrome DevTools Protocol</span>
               </div>
               <Switch
                 :checked="formData.grid.behavior.enforce_cdp_bounds"
@@ -507,7 +507,7 @@ onMounted(() => {
           <Check class="size-3.5" />
           Saved
         </span>
-        <span v-else class="text-muted-foreground text-[11px]">
+        <span v-else class="text-muted-foreground text-xs">
           All settings up to date
         </span>
       </div>

@@ -41,7 +41,7 @@ describe('@automa/ui - Shadcn UI Atomic Primitives & Utilities', () => {
 
     const primaryBtn = buttonVariants({ variant: 'primary', size: 'sm' })
     expect(primaryBtn).toContain('bg-primary')
-    expect(primaryBtn).toContain('h-7.5')
+    expect(primaryBtn).toContain('h-8')
 
     const destructiveBtn = buttonVariants({ variant: 'destructive', size: 'default' })
     expect(destructiveBtn).toContain('bg-destructive')

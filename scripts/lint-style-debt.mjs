@@ -40,6 +40,16 @@ const RULES = [
     regex: /style="[^"]*#[0-9a-fA-F]{3,8}[^"]*"/g,
     message: 'Raw inline hex color detected in style attribute. Use semantic CSS variables or theme tokens.',
   },
+  {
+    id: 'no-arbitrary-font-sizes',
+    regex: /\btext-\[(?:8|9|10|11|13|15)px\]/g,
+    message: 'Arbitrary micro font size detected. Use semantic tokens (text-xs for >=12px, text-sm for 14px, text-base for 16px). Sub-12px is forbidden.',
+  },
+  {
+    id: 'no-sub-12px-css',
+    regex: /font-size:\s*(?:[1-9]|1[01])px/g,
+    message: 'Hardcoded sub-12px font size detected. Minimum allowed font size is 12px (text-xs / 0.75rem).',
+  },
 ];
 
 let totalViolations = 0;

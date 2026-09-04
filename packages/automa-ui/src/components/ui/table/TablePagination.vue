@@ -57,7 +57,7 @@ function onPageSizeChange(value: unknown) {
     <div class="flex items-center gap-3 sm:gap-5">
       <!-- Rows per page selector -->
       <div class="flex items-center gap-1.5">
-        <span class="hidden sm:inline text-muted-foreground text-[11px]">Rows</span>
+        <span class="hidden sm:inline text-muted-foreground text-xs">Rows</span>
         <Select
           :model-value="String(pageSize)"
           :disabled="disabled"
@@ -82,7 +82,7 @@ function onPageSizeChange(value: unknown) {
       </div>
 
       <!-- Page info indicator -->
-      <div class="flex items-center justify-center font-medium text-[11px] min-w-[65px]">
+      <div class="flex items-center justify-center font-medium text-xs min-w-[65px]">
         Page {{ pageIndex + 1 }} / {{ Math.max(1, pageCount) }}
       </div>
 
