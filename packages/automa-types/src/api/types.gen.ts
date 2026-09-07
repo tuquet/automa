@@ -347,6 +347,32 @@ export type ExecuteCampaignResponse = {
     totalJobs: number;
 };
 
+/**
+ * Full Automa backup export payload
+ */
+export type ExportBackupResponse = {
+    /**
+     * Export timestamp in milliseconds
+     */
+    exportedAt: string;
+    /**
+     * True if workflows are encrypted with AES-256-CBC
+     */
+    isProtected: boolean;
+    /**
+     * Stored tables with nested items
+     */
+    storageTables: Array<StorageTable>;
+    /**
+     * Stored variables
+     */
+    storageVariables: Array<StorageVariable>;
+    /**
+     * Array of workflow objects or encrypted HMAC-SHA256 string
+     */
+    workflows: unknown;
+};
+
 export type GridBehavior = {
     auto_recycle_slots: boolean;
     enforce_cdp_bounds: boolean;
@@ -673,6 +699,48 @@ export type MatrixStatusResponse = {
      * Total tasks queued in the campaign
      */
     totalTasks: number;
+};
+
+/**
+ * Request payload to restore a full Automa backup JSON into SQLite
+ */
+export type RestoreBackupRequest = {
+    /**
+     * Full Automa backup JSON payload
+     */
+    backup: {
+        [key: string]: unknown;
+    };
+    /**
+     * Optional password to decrypt protected workflows
+     */
+    password?: string | null;
+};
+
+/**
+ * Summary response returned after successfully restoring an Automa backup
+ */
+export type RestoreBackupResponse = {
+    /**
+     * Human-readable summary message
+     */
+    message: string;
+    /**
+     * True if restore succeeded
+     */
+    success: boolean;
+    /**
+     * Number of storage tables imported
+     */
+    tablesCount: number;
+    /**
+     * Number of storage variables imported
+     */
+    variablesCount: number;
+    /**
+     * Number of workflows imported
+     */
+    workflowsCount: number;
 };
 
 export type RunnerSettings = {
@@ -2022,6 +2090,65 @@ export type EncryptSecretResponses = {
 };
 
 export type EncryptSecretResponse2 = EncryptSecretResponses[keyof EncryptSecretResponses];
+
+export type ExportStorageBackupData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Optional password to encrypt workflows using AES-256-CBC + HMAC
+         */
+        password?: string | null;
+    };
+    url: '/api/v1/storage/backup/export';
+};
+
+export type ExportStorageBackupErrors = {
+    /**
+     * Database read error
+     */
+    500: ApiErrorResponse;
+};
+
+export type ExportStorageBackupError = ExportStorageBackupErrors[keyof ExportStorageBackupErrors];
+
+export type ExportStorageBackupResponses = {
+    /**
+     * Full backup exported successfully
+     */
+    200: ExportBackupResponse;
+};
+
+export type ExportStorageBackupResponse = ExportStorageBackupResponses[keyof ExportStorageBackupResponses];
+
+export type RestoreStorageBackupData = {
+    body: RestoreBackupRequest;
+    path?: never;
+    query?: never;
+    url: '/api/v1/storage/backup/restore';
+};
+
+export type RestoreStorageBackupErrors = {
+    /**
+     * Invalid backup format or decryption error
+     */
+    400: ApiErrorResponse;
+    /**
+     * Database write error
+     */
+    500: ApiErrorResponse;
+};
+
+export type RestoreStorageBackupError = RestoreStorageBackupErrors[keyof RestoreStorageBackupErrors];
+
+export type RestoreStorageBackupResponses = {
+    /**
+     * Backup restored successfully
+     */
+    200: RestoreBackupResponse;
+};
+
+export type RestoreStorageBackupResponse = RestoreStorageBackupResponses[keyof RestoreStorageBackupResponses];
 
 export type GetStorageCampaignsData = {
     body?: never;
