@@ -2,7 +2,7 @@
 import type { BrowserResponse } from '@automa/types/api'
 import type { CellContext, ColumnDef, HeaderContext } from '@tanstack/vue-table'
 import { Plus, RefreshCw, Server, Square, Trash2 } from 'lucide-vue-next'
-import { computed, h, ref } from 'vue'
+import { computed, getCurrentInstance, h, ref } from 'vue'
 import {
   useBrowsersQuery,
   useDeleteBrowserMutation,
@@ -11,6 +11,7 @@ import {
 } from '../hooks'
 import { useBrowserStore } from '../stores'
 import AutomaButton from './AutomaButton.vue'
+import ConfirmationModal from './ConfirmationModal.vue'
 import { Badge, Button, Checkbox } from './ui'
 import VirtualDataTable from './VirtualDataTable.vue'
 
@@ -86,24 +87,48 @@ const onlineCount = computed(
   () => allBrowsers.value.filter((b) => browserStore.onlineBrowserIds.includes(b.id)).length,
 )
 
+const instance = getCurrentInstance()
+const hasLaunchListener = computed(() => Boolean(instance?.vnode.props?.onLaunchBrowser))
+const hasStopListener = computed(() => Boolean(instance?.vnode.props?.onStopBrowser))
+const hasDeleteListener = computed(() => Boolean(instance?.vnode.props?.onDeleteBrowser))
+
+const isDeleteModalOpen = ref(false)
+const browserToDeleteId = ref<string | null>(null)
+
 // Actions
 async function onLaunch(browserId: string) {
-  emit('launch-browser', browserId)
-  await startBrowserMutation.mutateAsync(browserId)
-  browserStore.setBrowserOnline(browserId, true)
+  if (hasLaunchListener.value) {
+    emit('launch-browser', browserId)
+  } else {
+    await startBrowserMutation.mutateAsync(browserId)
+    browserStore.setBrowserOnline(browserId, true)
+  }
 }
 
 async function onStop(browserId: string) {
-  emit('stop-browser', browserId)
-  await stopBrowserMutation.mutateAsync(browserId)
-  browserStore.setBrowserOnline(browserId, false)
+  if (hasStopListener.value) {
+    emit('stop-browser', browserId)
+  } else {
+    await stopBrowserMutation.mutateAsync(browserId)
+    browserStore.setBrowserOnline(browserId, false)
+  }
 }
 
-async function onDelete(browserId: string) {
-  if (window.confirm(`Are you sure you want to delete browser "${browserId}"?`)) {
+function onDelete(browserId: string) {
+  if (hasDeleteListener.value) {
     emit('delete-browser', browserId)
-    await deleteBrowserMutation.mutateAsync(browserId)
-    browserStore.removeBrowser(browserId)
+  } else {
+    browserToDeleteId.value = browserId
+    isDeleteModalOpen.value = true
+  }
+}
+
+async function handleConfirmedDelete() {
+  if (browserToDeleteId.value) {
+    const id = browserToDeleteId.value
+    browserToDeleteId.value = null
+    await deleteBrowserMutation.mutateAsync(id)
+    browserStore.removeBrowser(id)
   }
 }
 
@@ -227,10 +252,11 @@ const columns: ColumnDef<BrowserResponse>[] = [
           // Launch / Stop Button
           isOnline
             ? h(
-                Button,
+                AutomaButton,
                 {
-                  variant: 'outline',
+                  id: 'btn.browser.stop',
                   size: 'xs',
+                  variant: 'outline',
                   class: 'border-amber-500/40 text-amber-500 hover:bg-amber-500/10',
                   title: 'Stop Browser Process',
                   disabled: isPending,
@@ -249,13 +275,16 @@ const columns: ColumnDef<BrowserResponse>[] = [
 
           // Delete Button
           h(
-            Button,
+            AutomaButton,
             {
+              id: 'btn.browser.delete',
               variant: 'ghost',
               size: 'icon-xs',
+              iconOnly: true,
               class:
                 'text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-70 hover:opacity-100 transition-opacity',
               title: 'Delete',
+              disabled: isPending,
               onClick: () => onDelete(b.id),
             },
             () => h(Trash2, { class: 'size-3.5' }),
@@ -353,5 +382,15 @@ const columns: ColumnDef<BrowserResponse>[] = [
         </Button>
       </template>
     </VirtualDataTable>
+
+    <!-- Confirmation Modal for Deleting Browser -->
+    <ConfirmationModal
+      v-model:is-open="isDeleteModalOpen"
+      title="Delete Browser"
+      message="Are you sure you want to permanently delete this browser profile?"
+      confirm-text="Delete"
+      variant="destructive"
+      @confirm="handleConfirmedDelete"
+    />
   </div>
 </template>

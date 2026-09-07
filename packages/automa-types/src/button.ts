@@ -605,6 +605,35 @@ export const BUTTON_CATALOG: readonly ButtonBusinessLogicSchema[] = [
     },
   },
   {
+    id: 'btn.browser.delete',
+    context: 'BrowserManager',
+    presentation: {
+      label: 'Delete Profile',
+      icon: 'Trash2',
+      dataTestId: 'btn-delete-browser',
+      tooltip: 'Permanently remove browser profile from database',
+    },
+    preConditions: {
+      requiresDaemonHealthy: true,
+      confirmationModal: {
+        title: 'Delete Browser Profile',
+        message: 'Permanently remove this browser profile?',
+        confirmText: 'Delete',
+        variant: 'destructive',
+      },
+    },
+    dispatch: {
+      type: 'REST',
+      operationId: 'delete_browser',
+      method: 'DELETE',
+      pathTemplate: '/api/v1/browsers/{id}',
+    },
+    postConditions: {
+      onSuccess: () => {},
+      onError: () => {},
+    },
+  },
+  {
     id: 'btn.browser.import_csv',
     context: 'BrowserManager',
     presentation: {
@@ -744,6 +773,29 @@ export const BUTTON_CATALOG: readonly ButtonBusinessLogicSchema[] = [
   },
 
   // 4.4 Global Storage
+  {
+    id: 'btn.storage.refresh',
+    context: 'StorageExplorer',
+    presentation: {
+      label: 'Refresh',
+      icon: 'RefreshCw',
+      dataTestId: 'btn-refresh-storage',
+      tooltip: 'Reload tables, variables, and credentials from storage',
+    },
+    preConditions: {
+      requiresDaemonHealthy: true,
+    },
+    dispatch: {
+      type: 'REST',
+      operationId: 'get_storage_tables',
+      method: 'GET',
+      pathTemplate: '/api/v1/storage/tables',
+    },
+    postConditions: {
+      onSuccess: () => {},
+      onError: () => {},
+    },
+  },
   {
     id: 'btn.storage.table.add',
     context: 'StorageExplorer',
@@ -925,6 +977,29 @@ export const BUTTON_CATALOG: readonly ButtonBusinessLogicSchema[] = [
   },
 
   // 4.5 Telemetry & Execution History
+  {
+    id: 'btn.history.refresh',
+    context: 'HistoryLogs',
+    presentation: {
+      label: 'Refresh',
+      icon: 'RefreshCw',
+      dataTestId: 'btn-refresh-history',
+      tooltip: 'Refresh execution history log list',
+    },
+    preConditions: {
+      requiresDaemonHealthy: true,
+    },
+    dispatch: {
+      type: 'REST',
+      operationId: 'get_job_history',
+      method: 'GET',
+      pathTemplate: '/api/v1/history',
+    },
+    postConditions: {
+      onSuccess: () => {},
+      onError: () => {},
+    },
+  },
   {
     id: 'btn.history.clear_all',
     context: 'HistoryLogs',
