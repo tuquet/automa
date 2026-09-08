@@ -63,10 +63,10 @@ describe('Unit: Feature Store Contracts & Reactive Topology', () => {
 
   it('4. Validates StorageStoreState contract', () => {
     const state: StorageStoreState = {
-      tables: [{ id: 'tbl_1', name: 'Users Table', rowCount: 50 }],
+      tables: [{ id: 'tbl_1', name: 'Users Table' }],
       activeTableId: 'tbl_1',
       activeTableRows: [{ id: 'row_1', name: 'Alice' }],
-      variables: [{ id: 'var_1', key: 'apiUrl', name: 'API URL', value: 'https://example.com' }],
+      variables: [{ id: 'var_1', key: 'apiUrl', name: 'API URL', value: { url: 'https://example.com' } }],
       credentials: [{ id: 'cred_1', key: 'token', name: 'Auth Token' }],
       isLoading: false,
     };
