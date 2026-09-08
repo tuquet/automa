@@ -634,4 +634,9 @@ export const updateAppSettings = <ThrowOnError extends boolean = false>(options:
  */
 export const openWebStudio = <ThrowOnError extends boolean = false>(options?: Options<OpenWebStudioData, ThrowOnError>): RequestResult<OpenWebStudioResponses, unknown, ThrowOnError> => (options?.client ?? client).post<OpenWebStudioResponses, unknown, ThrowOnError>({ url: '/api/v1/system/studio/session', ...options });
 
+/**
+ * Establish WebSocket connection for real-time control
+ *
+ * Low-latency bidirectional WebSocket connection consuming types from @automa/types/ws for PAUSE_JOB, RESUME_JOB, KILL_JOB, and live breakpoints.
+ */
 export const wsHandler = <ThrowOnError extends boolean = false>(options?: Options<WsHandlerData, ThrowOnError>): RequestResult<unknown, unknown, ThrowOnError> => (options?.client ?? client).get<unknown, unknown, ThrowOnError>({ url: '/api/v1/ws', ...options });
