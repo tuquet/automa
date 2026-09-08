@@ -243,9 +243,9 @@ export const submitJob = <ThrowOnError extends boolean = false>(options: Options
 });
 
 /**
- * Abort a running job
+ * Terminate a running job
  *
- * Immediately triggers the cancellation token for the specified job, sends a stop signal to the browser worker, and updates job state.
+ * Cancels execution token for a job, releases the associated browser process, records terminated status, and clears state.
  */
 export const killJob = <ThrowOnError extends boolean = false>(options: Options<KillJobData, ThrowOnError>): RequestResult<KillJobResponses, KillJobErrors, ThrowOnError> => (options.client ?? client).delete<KillJobResponses, KillJobErrors, ThrowOnError>({ url: '/api/v1/jobs/{job_id}', ...options });
 

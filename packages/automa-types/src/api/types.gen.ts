@@ -1955,7 +1955,7 @@ export type KillJobError = KillJobErrors[keyof KillJobErrors];
 
 export type KillJobResponses = {
     /**
-     * Job aborted successfully
+     * Job terminated successfully
      */
     200: unknown;
 };
