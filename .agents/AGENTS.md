@@ -1,6 +1,6 @@
 # Git Repository & Submodule Operations
 
-- **Zero Git Push**: `git push` is strictly FORBIDDEN. Only the USER pushes to remote. Keep all changes in local git / staging.
+- **Zero Git Push to `main`**: Pushing directly to branch `main` is strictly FORBIDDEN (reserved for production releases by the USER only). Pushing feature/development code to branch `dev` (and its submodules) is permitted when explicitly requested by the USER.
 - **Submodule Pointer Sync**: When committing inside any submodule (`automa-core`, `automa-webe`, `automa-vault`, `automa-vsce`), MUST run `pnpm run sync:submodules` to update root pointer before committing at Root.
 - **Branching (`dev` vs `main`)**: All feature and bugfix development MUST target `dev`. Branch `main` is reserved for production releases.
 - **Decoupled Changesets**: `@changesets/cli` runs independently per submodule (`cd <submodule>` before `pnpm changeset`). NEVER run changesets at root.
@@ -162,7 +162,7 @@ When running the recurring 15-minute cron wakeups or evaluating overall system r
 - **Layer 6 (Submodule Pointer Synchronization Coverage)**:
   - Verify all 5 submodule pointers via `node scripts/check-submodules.mjs`.
   - Staged pointers in root git index MUST match the HEAD of each submodule.
-  - **Zero Git Push Rule**: Only commit/stage locally.
+  - **Zero Git Push to `main`**: Production push strictly reserved for USER. Pushing `dev` is permitted on user request.
 - **Strict No-Test Invariant**:
   - In periodic health audits, **DO NOT run test runners** (`vitest`, `cargo test`, `test-all.mjs`) to conserve system resources (2GB RAM limit) unless explicitly instructed by the user.
 
