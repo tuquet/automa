@@ -381,6 +381,42 @@ export const BUTTON_CATALOG: readonly ButtonBusinessLogicSchema[] = [
       onError: () => {},
     },
   },
+  {
+    id: 'btn.workflow.delete',
+    context: 'WorkflowCanvas',
+    presentation: {
+      label: 'Delete Workflow',
+      icon: 'Trash2',
+      dataTestId: 'btn-delete-workflow',
+      tooltip: 'Permanently delete this workflow from SQLite database',
+    },
+    preConditions: {
+      requiresDaemonHealthy: true,
+      confirmationModal: {
+        title: 'Delete Workflow',
+        message: 'Are you sure you want to delete this workflow? This action cannot be undone.',
+        confirmText: 'Delete',
+        variant: 'destructive',
+      },
+    },
+    dispatch: {
+      type: 'REST',
+      operationId: 'delete_storage_workflow',
+      method: 'DELETE',
+      pathTemplate: '/api/v1/storage/workflows/{id}',
+    },
+    reactiveReflections: [
+      {
+        targetId: 'select.storage.workflow',
+        reflectionType: 'INVALIDATE_CACHE',
+        description: 'Invalidates workflow dropdown and storage library list upon deletion',
+      },
+    ],
+    postConditions: {
+      onSuccess: () => {},
+      onError: () => {},
+    },
+  },
 
   // 4.2 Campaign & Matrix Fleet Scheduling
   {

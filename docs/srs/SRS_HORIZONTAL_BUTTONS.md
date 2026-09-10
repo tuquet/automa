@@ -246,6 +246,7 @@ export interface ButtonBusinessLogicSchema<TContext = unknown, TResponse = unkno
 | **`btn.workflow.save`** | **Save Workflow** <br>`💾` Save | `btn-save-workflow` | `save_workflow` / `update_storage_workflow` | `PUT /api/v1/storage/workflow`<br>`SaveWorkflowPayload` | • Store: clear `isDirty = false`<br>• VSCE: Remove dirty dot indicator on editor tab |
 | **`btn.workflow.import`** | **Import Workflow** <br>`📥` Upload | `btn-import-workflow` | *Client Action* | IPC `workflow:import` | • Reads `.workflow.json` from disk to load into Canvas |
 | **`btn.workflow.export`** | **Export JSON** <br>`💾` Download | `btn-export-workflow` | *Client Action* | IPC `workflow:export` | • Exports active workflow as `.workflow.json` to disk |
+| **`btn.workflow.delete`** | **Delete Workflow** <br>`🗑️` Trash2 | `btn-delete-workflow` | `delete_storage_workflow` | `DELETE /api/v1/storage/workflows/{id}` | • Precondition: `isJobRunning == false`<br>• Destructive Confirmation Modal<br>• Invalidate `select.storage.workflow` and reload list<br>• Auto fallback to remaining workflow or blank canvas<br>• IPC `automa:workflow-deleted` |
 | **`btn.workflow.lint`** | **Lint & Check** <br>`🔍` Sparkles | `btn-lint-workflow` | `lint_workflow` | `POST /api/v1/lint`<br>`LintWorkflowRequest` | • Update canvas node markers with lint errors/warnings<br>• Focus Problems panel |
 | **`btn.workflow.open_studio`** | **Open in Studio** <br>`🖥️` ExternalLink | `btn-open-studio` | `open_web_studio` | `POST /api/v1/system/studio/session` | • Spawns / attaches standalone VueFlow canvas view |
 
