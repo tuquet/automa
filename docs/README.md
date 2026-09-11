@@ -31,6 +31,7 @@ Hệ thống tài liệu được chuẩn hóa và quản trị theo mô hình *
 - 📜 [**SRS Horizontal Selects & Virtualization (`docs/srs/SRS_HORIZONTAL_SELECTS.md`)**](./srs/SRS_HORIZONTAL_SELECTS.md): Master catalog 11 Remote Select IDs (`select.*`), thuật toán cắt lát ảo hóa (Virtualization Slices), Debounce fuzzy search, và tự động làm mới qua SSE Cache Invalidation.
 - 🏛️ [**SRS Horizontal Feature Stores & Reactive Hub (`docs/srs/SRS_HORIZONTAL_FEATURE_STORES.md`)**](./srs/SRS_HORIZONTAL_FEATURE_STORES.md): Master architecture 6 Pinia Domain Stores theo mô hình 4 lớp (Primitive State, Entity Graph, Actions, SSE Mutations) và Ma trận Phản xạ Tức thì (Reactive Reflection Matrix).
 - 📘 [**OpenAPI Integration Guide (`docs/OPENAPI_INTEGRATION_GUIDE.md`)**](./OPENAPI_INTEGRATION_GUIDE.md): Cẩm nang lập trình kết nối Backend Axum Daemon bằng Typed SDK `@automa/types/api` và Zero-Leak Cryptography.
+- 🚇 [**Cloudflare SSH Tunnel & Git Relay Guide (`docs/CLOUDFLARE_TUNNEL_GIT_RELAY.md`)**](./CLOUDFLARE_TUNNEL_GIT_RELAY.md): Cẩm nang thiết lập hạ tầng mạng, đào hầm Cloudflare Tunnel và quy trình Git Relay 1-Click vượt tường lửa cho Automa Ecosystem.
 
 ---
 
