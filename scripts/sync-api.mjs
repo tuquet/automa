@@ -2,12 +2,11 @@
 
 /**
  * Automa Ecosystem - Contracts & Sync Wizard
- * Full 5-step Contract-First synchronization coordinator:
+ * Full 4-step Contract-First synchronization coordinator:
  * 1. Export OpenAPI spec from Rust source / live daemon
  * 2. Validate strict schema annotations
- * 3. Synchronize Bruno API Collection
- * 4. Generate TypeScript SDK (@hey-api)
- * 5. Build @automa/types SDK client
+ * 3. Generate TypeScript SDK (@hey-api)
+ * 4. Build @automa/types SDK client
  */
 
 import process from 'node:process';
@@ -23,14 +22,13 @@ import {
 const SYNC_TARGETS = [
   {
     id: 'all',
-    label: '🔄 Full API Contract Pipeline (OpenAPI + Schema + Bruno + SDK)',
-    hint: 'Đồng bộ toàn diện Spec, Bruno, sinh mã SDK và build @automa/types',
+    label: '🔄 Full API Contract Pipeline (OpenAPI + Schema + SDK)',
+    hint: 'Đồng bộ toàn diện Spec, sinh mã SDK và build @automa/types',
     steps: [
       { name: '1. Export OpenAPI Spec', cmd: 'node', args: ['scripts/export-openapi.mjs'] },
       { name: '2. Strict Schema Validation', cmd: 'node', args: ['scripts/enforce-strict-schema.mjs'] },
-      { name: '3. Sync Bruno Collection', cmd: 'node', args: ['scripts/sync-bruno.mjs'] },
-      { name: '4. Generate TypeScript SDK Client', cmd: 'pnpm', args: ['-F', '@automa/types', 'run', 'generate:api'] },
-      { name: '5. Build @automa/types Distribution', cmd: 'pnpm', args: ['-F', '@automa/types', 'run', 'build'] },
+      { name: '3. Generate TypeScript SDK Client', cmd: 'pnpm', args: ['-F', '@automa/types', 'run', 'generate:api'] },
+      { name: '4. Build @automa/types Distribution', cmd: 'pnpm', args: ['-F', '@automa/types', 'run', 'build'] },
     ],
   },
   {
@@ -39,14 +37,6 @@ const SYNC_TARGETS = [
     hint: 'Trích xuất openapi.json từ backend live hoặc cargo export',
     steps: [
       { name: 'Export OpenAPI Spec', cmd: 'node', args: ['scripts/export-openapi.mjs'] },
-    ],
-  },
-  {
-    id: 'bruno',
-    label: '📁 Chỉ đồng bộ Bruno Collection (automa-bruno/)',
-    hint: 'Tạo và cập nhật collection Bruno từ openapi.json',
-    steps: [
-      { name: 'Sync Bruno Collection', cmd: 'node', args: ['scripts/sync-bruno.mjs'] },
     ],
   },
   {
@@ -103,7 +93,7 @@ async function resolveTarget() {
 }
 
 async function main() {
-  printWizardBanner('Contracts & Sync Wizard', 'Keep OpenAPI, Bruno, SDK and Submodules in sync');
+  printWizardBanner('Contracts & Sync Wizard', 'Keep OpenAPI, TypeScript SDK and Submodules in sync');
 
   const target = await resolveTarget();
   console.log(`\n${pc.bold(pc.cyan(`Khởi chạy quy trình: ${target.label}`))}\n`);

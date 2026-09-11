@@ -27,8 +27,26 @@ flowchart TD
         M6["⚙️ System Settings & Core Config<br/>(docs/srs/SRS_MENU_SETTINGS.md)"]
     end
 
-    HorizontalStandards <== Liên Kết Ma Trận 1-to-1 ==> VerticalMenus
-```
+---
+
+## 🧠 TRIẾT LÝ KIẾN TRÚC MA TRẬN 2 CHIỀU (THE 2D MATRIX MINDSET)
+
+Tại sao Automa Ecosystem không tổ chức tài liệu theo từng thư mục code truyền thống mà chọn mô hình **Ma Trận 2 Chiều (2D Matrix)**?
+
+Code thay đổi liên tục: hàm có thể refactor, UI có thể di dời từ Desktop sang Extension. Nhưng **Ma Trận 2 Chiều thiết lập một giao ước bất biến (Architectural Contract)** bảo đảm toàn bộ hệ thống luôn khớp nhau:
+
+### 1. Phân Định Hai Chiều Trừu Tượng:
+- **Trục Ngang (Horizontal Standards - Hạ Tầng Dùng Chung)**:
+  - Giải quyết các bài toán hạ tầng dùng chung không phụ thuộc vào màn hình: Máy trạng thái nút bấm (Button FSM), Tìm kiếm ảo hóa (Remote Virtualized Select), Quản trị state phản xạ (Pinia Reactive Stores), và Design System thích ứng theme (Shadcn-Vue Tokens).
+  - Mục tiêu: **Nhất Quán 100% (Consistency) & Tái Sử Dụng Triệt Để (Zero Code Duplication)** trên cả 3 nền tảng: Desktop Tauri, VS Code Extension, và Web Extension.
+- **Trục Dọc (Vertical Menu Specs - Nghiệp Vụ Chuyên Biệt)**:
+  - Giải quyết bài toán nghiệp vụ của từng màn hình chức năng: Studio Canvas, Anti-detect Browsers, Campaign Matrix, Storage Vault, History Telemetry, và Settings.
+  - Mục tiêu: **Tập trung hóa Domain Logic (Domain-Driven Design)**.
+
+### 2. Ba Quy Tắc Bất Biến Của Ma Trận (The 3 Matrix Invariants):
+1. **Zero Ad-Hoc Components**: Màn hình nghiệp vụ dọc **nghiêm cấm tự sáng tạo nút bấm hay dropdown tùy tiện**. Mọi nút bấm bắt buộc phải kế thừa canonical ID (`btn.*`) và tuân thủ FSM 7 bước từ Trục Ngang.
+2. **Zero Polling & Passive Reactivity**: Mọi màn hình dọc không được viết hàm `setInterval` hay thăm dò định kỳ. Trạng thái chỉ được cập nhật khi nhận tín hiệu từ SSE `/api/v1/events` hoặc WebSocket `/api/v1/ws` thông qua Pinia Stores.
+3. **Zero Frontend Contract Invention**: Không một màn hình nào được phép tự viết type payload giả lập (`Record<string, unknown>` hay `as any`). Toàn bộ giao tiếp bắt buộc phải import trực tiếp từ SDK `@automa/types/api`.
 
 ---
 
