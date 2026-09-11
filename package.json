@@ -60,6 +60,12 @@
         "audit:ui": "node scripts/audit-shadcn-reverse.mjs",
         "theme:apply": "node scripts/apply-shadcn-preset.mjs",
         "apply:preset": "node scripts/apply-shadcn-preset.mjs",
+        "tunnel": "node scripts/tunnel-wizard.mjs",
+        "tunnel:start": "node scripts/tunnel-wizard.mjs start",
+        "tunnel:stop": "node scripts/tunnel-wizard.mjs stop",
+        "tunnel:status": "node scripts/tunnel-wizard.mjs status",
+        "tunnel:setup": "node scripts/tunnel-wizard.mjs setup",
+        "push:relay": "node scripts/tunnel-wizard.mjs push",
         "postsync:api": "pnpm run lint"
     },
     "devDependencies": {

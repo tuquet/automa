@@ -7,6 +7,7 @@
  */
 
 import { execSync } from 'node:child_process';
+import fs from 'node:fs';
 import process from 'node:process';
 import {
   formatDuration,
@@ -85,6 +86,23 @@ async function runDoctor() {
         }
       },
     },
+    {
+      name: 'Cloudflare Tunnel CLI (cloudflared)',
+      check: () => {
+        try {
+          const userProfile = process.env.USERPROFILE || '';
+          const p1 = `${userProfile}/scoop/apps/cloudflared/current/cloudflared.exe`;
+          const p2 = `${userProfile}/scoop/shims/cloudflared.exe`;
+          if (fs.existsSync(p1) || fs.existsSync(p2)) {
+            return { pass: true, info: 'Installed via Scoop' };
+          }
+          const version = execSync('cloudflared --version', { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
+          return { pass: true, info: version };
+        } catch (_) {
+          return { pass: false, info: 'cloudflared not found (run pnpm run tunnel:setup).' };
+        }
+      },
+    },
   ];
 
   for (const c of checks) {
@@ -137,7 +155,8 @@ async function main() {
           { value: 'all', label: '🚀 Full Setup', hint: 'Tải Submodules + Cài đặt pnpm install (Khuyến nghị)' },
           { value: 'submodules', label: '📦 Submodules Only', hint: 'Chỉ cập nhật git submodule update --init --recursive' },
           { value: 'pnpm', label: '⚡ Dependencies Only', hint: 'Chỉ cài đặt pnpm install cho toàn bộ monorepo' },
-          { value: 'doctor', label: '🩺 Doctor & Diagnostics', hint: 'Kiểm tra phiên bản Node, pnpm, git, rust' },
+          { value: 'doctor', label: '🩺 Doctor & Diagnostics', hint: 'Kiểm tra phiên bản Node, pnpm, git, rust, cloudflared' },
+          { value: 'cloudflared', label: '🚇 Cloudflare Tunnel Setup', hint: 'Cài đặt cloudflared qua Scoop và kiểm tra kết nối' },
         ],
       });
 
@@ -155,6 +174,8 @@ async function main() {
   const start = Date.now();
   if (mode === 'doctor') {
     await runDoctor();
+  } else if (mode === 'cloudflared') {
+    await runProcess('node', ['scripts/tunnel-wizard.mjs', 'setup'], { cwd: rootDir });
   } else if (mode === 'submodules') {
     await updateSubmodules();
   } else if (mode === 'pnpm') {
