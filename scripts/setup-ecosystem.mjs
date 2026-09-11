@@ -13,6 +13,7 @@ import {
   formatDuration,
   pc,
   printWizardBanner,
+  refreshRuntimePaths,
   rootDir,
   runProcess,
 } from './lib/utils.mjs';
@@ -21,6 +22,7 @@ const args = process.argv.slice(2);
 const isAll = args.includes('all') || args.includes('--all');
 const isSubmodulesOnly = args.includes('submodules') || args.includes('--submodules');
 const isPnpmOnly = args.includes('pnpm') || args.includes('--pnpm');
+const isRustOnly = args.includes('rust') || args.includes('--rust');
 const isDoctor = args.includes('doctor') || args.includes('--doctor');
 
 // Dynamic loader for @clack/prompts if node_modules are present
@@ -79,10 +81,11 @@ async function runDoctor() {
       name: 'Rust & Cargo (for automa-core)',
       check: () => {
         try {
+          refreshRuntimePaths();
           const version = execSync('cargo --version', { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
           return { pass: true, info: version };
         } catch (_) {
-          return { pass: false, info: 'cargo not found in PATH (Optional for frontend-only dev).' };
+          return { pass: false, info: 'cargo not found in PATH (Run `pnpm run setup:rust` or `scoop install rustup`).' };
         }
       },
     },
@@ -116,8 +119,8 @@ async function runDoctor() {
   console.log('');
 }
 
-async function updateSubmodules() {
-  console.log(`\n${pc.cyan('📦 [1/2] Initializing and updating Git Submodules...')}`);
+async function updateSubmodules(totalSteps = 3, stepIndex = 1) {
+  console.log(`\n${pc.cyan(`📦 [${stepIndex}/${totalSteps}] Initializing and updating Git Submodules...`)}`);
   const res = await runProcess('git', ['submodule', 'update', '--init', '--recursive'], { cwd: rootDir });
   if (res.success) {
     console.log(`${pc.green('✔')} Git Submodules initialized successfully (${res.duration})`);
@@ -127,8 +130,8 @@ async function updateSubmodules() {
   }
 }
 
-async function installDependencies() {
-  console.log(`\n${pc.cyan('⚡ [2/2] Installing Monorepo dependencies via pnpm...')}`);
+async function installDependencies(totalSteps = 3, stepIndex = 2) {
+  console.log(`\n${pc.cyan(`⚡ [${stepIndex}/${totalSteps}] Installing Monorepo dependencies via pnpm...`)}`);
   const res = await runProcess('pnpm', ['install'], { cwd: rootDir });
   if (res.success) {
     console.log(`${pc.green('✔')} Dependencies installed successfully (${res.duration})`);
@@ -138,6 +141,48 @@ async function installDependencies() {
   }
 }
 
+async function setupRust(totalSteps = 3, stepIndex = 3) {
+  console.log(`\n${pc.cyan(`🦀 [${stepIndex}/${totalSteps}] Setting up Rust & Cargo (for automa-core)...`)}`);
+  refreshRuntimePaths();
+
+  try {
+    const version = execSync('cargo --version', { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
+    console.log(`${pc.green('✔')} Rust & Cargo is already installed: ${pc.dim(version)}`);
+    return true;
+  } catch (_) {
+    // Proceed to Scoop install
+  }
+
+  console.log(`  ${pc.yellow('!')} Rust & Cargo not found on system.`);
+  console.log(`  ${pc.cyan('⏳')} Installing rustup via Scoop...\n`);
+
+  try {
+    execSync('scoop --version', { stdio: ['pipe', 'pipe', 'pipe'] });
+  } catch (_) {
+    console.log(`  ${pc.red('✖')} Scoop package manager is not installed.`);
+    console.log(`  ${pc.yellow('👉')} Please install Scoop first: irm get.scoop.sh | iex`);
+    return false;
+  }
+
+  const result = await runProcess('scoop', ['install', 'rustup'], { cwd: rootDir });
+  refreshRuntimePaths();
+
+  if (result.success) {
+    try {
+      const version = execSync('cargo --version', { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
+      console.log(`\n  ${pc.green('✔')} Rust & Cargo installed successfully via Scoop! (${version})`);
+      return true;
+    } catch (_) {
+      console.log(`\n  ${pc.green('✔')} rustup package installed via Scoop.`);
+      console.log(`  ${pc.yellow('ℹ')} Note: Run 'rustup-init' or restart terminal if cargo is not immediately visible.`);
+      return true;
+    }
+  }
+
+  console.log(`\n  ${pc.red('✖')} Failed to install rustup via Scoop.`);
+  return false;
+}
+
 async function main() {
   printWizardBanner('Ecosystem Setup & Initialization Wizard', 'Configure monorepo dependencies, submodules and environment');
 
@@ -145,6 +190,7 @@ async function main() {
   if (isDoctor) mode = 'doctor';
   else if (isSubmodulesOnly) mode = 'submodules';
   else if (isPnpmOnly) mode = 'pnpm';
+  else if (isRustOnly) mode = 'rust';
   else if (isAll) mode = 'all';
   else {
     const p = await getPrompts();
@@ -152,7 +198,8 @@ async function main() {
       const choice = await p.select({
         message: 'Setup cái gì? Bạn muốn thực hiện thao tác khởi tạo nào?',
         options: [
-          { value: 'all', label: '🚀 Full Setup', hint: 'Tải Submodules + Cài đặt pnpm install (Khuyến nghị)' },
+          { value: 'all', label: '🚀 Full Setup', hint: 'Submodules + pnpm install + Rust & Cargo (Khuyến nghị)' },
+          { value: 'rust', label: '🦀 Rust & Cargo Setup', hint: 'Cài đặt rustup qua Scoop cho automa-core' },
           { value: 'submodules', label: '📦 Submodules Only', hint: 'Chỉ cập nhật git submodule update --init --recursive' },
           { value: 'pnpm', label: '⚡ Dependencies Only', hint: 'Chỉ cài đặt pnpm install cho toàn bộ monorepo' },
           { value: 'doctor', label: '🩺 Doctor & Diagnostics', hint: 'Kiểm tra phiên bản Node, pnpm, git, rust, cloudflared' },
@@ -177,12 +224,16 @@ async function main() {
   } else if (mode === 'cloudflared') {
     await runProcess('node', ['scripts/tunnel-wizard.mjs', 'setup'], { cwd: rootDir });
   } else if (mode === 'submodules') {
-    await updateSubmodules();
+    await updateSubmodules(1, 1);
   } else if (mode === 'pnpm') {
-    await installDependencies();
+    await installDependencies(1, 1);
+  } else if (mode === 'rust') {
+    await setupRust(1, 1);
+    await runDoctor();
   } else {
-    await updateSubmodules();
-    await installDependencies();
+    await updateSubmodules(3, 1);
+    await installDependencies(3, 2);
+    await setupRust(3, 3);
     await runDoctor();
   }
 

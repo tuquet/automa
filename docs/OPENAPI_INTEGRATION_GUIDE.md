@@ -49,7 +49,7 @@ Automa Core vận hành dưới dạng một Daemon Rust hiệu năng cao (`http
 1. **Contract-First & Single Source of Truth**: Toàn bộ DTOs và Endpoints được định nghĩa bằng Rust (`utoipa`) và tự động xuất ra OpenAPI 3.1.0 spec (`openapi.json`). Client **tuyệt đối không viết `fetch` thủ công** mà luôn sử dụng SDK `@automa/types/api` được sinh tự động. Loại bỏ hoàn toàn các file markdown tĩnh sao chép API để tránh Documentation Drift.
 2. **Hệ Sinh Thái 3 Tầng Khép Kín (The Unified API Trinity)**:
    - **Tier 1 (Code-to-Code / Compiler)**: SDK `@automa/types/api` cung cấp Type-Safety tuyệt đối, autocomplete và compile-time validation cho TypeScript.
-   - **Tier 2 (Interactive Explorer / QA)**: **Scalar API Reference** (`pnpm run docs:api` tại `http://localhost:8767`) với giao diện hiện đại, tìm kiếm nhanh `Ctrl+K`, test trực tiếp và live reload. Cùng với **Bruno Collection** (`automa-bruno/`) để kiểm thử và chạy regression test.
+   - **Tier 2 (Interactive Explorer / QA)**: **Scalar API Reference** (`pnpm run docs:api` tại `http://localhost:8767`) với giao diện hiện đại, tìm kiếm nhanh `Ctrl+K`, test trực tiếp và live reload.
    - **Tier 3 (Architecture & Blueprints)**: Tài liệu hướng dẫn này và các đặc tả 2D Matrix trong `docs/srs/`, tập trung vào tư duy kiến trúc, workflows và recipes thực tế.
 3. **Zero-Dummy UI**: Mọi nút bấm (Run, Stop, Pause, Delete, Sideload) phải ánh xạ tới đúng `operation_id` trong OpenAPI spec và xử lý triệt để các trạng thái `Loading`, `Success`, `Error`.
 4. **Event-Driven UI Reactions**: Client gửi lệnh bất đồng bộ $\rightarrow$ Nhận `200 OK (job_id)` ngay lập tức $\rightarrow$ Đăng ký lắng nghe kênh SSE/WS để cập nhật tiến trình hiển thị cho người dùng.

@@ -10,6 +10,7 @@
         "prepare": "husky",
         "wizard": "node scripts/ecosystem-wizard.mjs",
         "setup": "node scripts/setup-ecosystem.mjs",
+        "setup:rust": "node scripts/setup-ecosystem.mjs rust",
         "init": "node scripts/setup-ecosystem.mjs",
         "build": "turbo run build",
         "build:wizard": "node scripts/build-wizard.mjs",

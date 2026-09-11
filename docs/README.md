@@ -6,6 +6,75 @@ Hệ thống tài liệu được quản trị theo mô hình **Tài liệu số
 
 ---
 
+## 🧠 BẢN ĐỒ TƯ DUY KIẾN TRÚC & 7 NGUYÊN TẮC BẤT BIẾN (CORE ARCHITECTURAL INVARIANTS)
+
+Mã nguồn (code) có thể thay đổi liên tục qua từng bản commit, nhưng **Tư Duy Thiết Kế (Mindset)** và **Các Quy Tắc Bất Biến (Invariants)** là những chân lý định hình sự ổn định lâu dài của Automa Ecosystem:
+
+```mermaid
+mindmap
+  root((AUTOMA MINDSET))
+    (1. Single Source of Truth)
+      Rust utoipa -> openapi.json
+      Zero API Docs Duplication
+      100% Typed SDK Client
+    (2. SQLite Database-First)
+      Zero Folder JSON Scanning
+      Centralized State Management
+      API-Driven Entity CRUD
+    (3. Dedicated Chromium Isolation)
+      Zero Host Browser Scanning
+      Standalone Binary Runtime
+      Chong Ro Ri Danh Tinh
+    (4. Event-Driven Architecture)
+      REST: Async Command Dispatch
+      SSE: 1-Way Telemetry & Progress
+      WS: Low-Latency 2-Way Control
+    (5. Theme Variable Inversion)
+      Pure Shadcn Atomic Primitives
+      CSS Variable Tokens Tầng 0
+      Tu Tuong Thich Ung 100+ Themes
+    (6. Zero-Leak Cryptography)
+      HMAC-SHA256 + AES-256-CBC
+      Giai Ma Tren RAM Only
+      Zero Decrypted Secrets On Disk/Logs
+    (7. Engine Reusability)
+      automa-webe Xuat Dual Artifacts
+      dist/cli-runner Headless Engine
+      dist/studio Standalone Canvas
+```
+
+### 💎 7 Nguyên Tắc Bất Biến (The 7 Golden Invariants):
+
+1. **Single Source of Truth & Zero Redundancy (Nguồn Chân Lý Duy Nhất)**:
+   - Toàn bộ đặc tả API được định nghĩa tại `automa-core` (Rust + `utoipa`) và xuất ra [`openapi.json`](../openapi.json).
+   - Client tiêu thụ duy nhất qua SDK [`@automa/types/api`](../packages/automa-types/README.md).
+   - **Tư duy**: Tuyệt đối không viết tài liệu sao chép lại schema của API dạng Markdown tĩnh (tránh Documentation Drift). Khám phá tương tác trực tiếp qua **Scalar API Server** (`:8767`).
+2. **Database-First State & Zero Folder Scanning (Dữ Liệu Tập Trung SQLite)**:
+   - **Tư duy**: Quét thư mục tìm file JSON (`*.workflow.json`, `*.browser.json`) là phương pháp phản mô hình (anti-pattern) gây nghẽn I/O và xung đột trạng thái.
+   - Mọi thực thể (Workflows, Browsers, Campaigns, Tables, Variables, Credentials) được quản lý tập trung và bền vững trong SQLite Database thông qua Automa Core REST API (`/api/v1/...`).
+3. **Dedicated Downloaded Chromium & Zero Host Browser Scanning (Cách Ly Danh Tính)**:
+   - **Tư duy**: Quét và chiếm quyền điều khiển trình duyệt của máy người dùng (`chrome.exe`, `msedge.exe`) tiềm ẩn nguy cơ rò rỉ dữ liệu cá nhân và không thể đảm bảo môi trường thực thi đồng nhất.
+   - Automa Core sử dụng binary Chromium độc lập được tải và duy trì riêng biệt (theo kiến trúc Playwright), loại trừ 100% version drift và cô lập phiên làm việc hoàn toàn.
+4. **Event-Driven UI Reactions (Kiến Trúc Phản Xạ Hướng Sự Kiện)**:
+   - **Tư duy**: Chia tách ranh giới rõ ràng giữa **Điều khiển (Command)** và **Quan sát (Observation)**:
+     - **HTTP REST**: Gửi lệnh bất đồng bộ, trả về ngay lập tức `200 OK (job_id)` (Non-blocking).
+     - **SSE (`/api/v1/events`)**: Truyền phát luồng dữ liệu 1 chiều (Logs, Telemetry, Matrix Progress) để cập nhật phản xạ Pinia Store.
+     - **WebSocket (`/api/v1/ws`)**: Kênh 2 chiều độ trễ cực thấp để can thiệp trực tiếp (`PAUSE_JOB`, `RESUME_JOB`, `KILL_JOB`, live breakpoints).
+   - Nghiêm cấm sử dụng cơ chế Polling (thăm dò định kỳ) làm quá tải server.
+5. **Theme Variable Inversion & Pure Atomic UI (Đảo Ngược Biến Giao Diện)**:
+   - **Tư duy**: Linh kiện giao diện nguyên tử không được chứa logic nhận biết theme (Dark/Light/VS Code).
+   - Mọi linh kiện Shadcn-Vue giữ nguyên 100% class chuẩn hóa (`bg-primary`, `border-border`). Toàn bộ khả năng thích ứng với hơn 100 theme của VS Code, Desktop, hay Web Extension được giải quyết triệt để tại tầng CSS Variables Tokens (`tokens.css`).
+6. **Zero-Leak RAM-Only Cryptography (Mật Mã An Toàn Tuyệt Đối)**:
+   - **Tư duy**: Dữ liệu nhạy cảm chỉ tồn tại dưới dạng mã hóa `HMAC-SHA256 + AES-256-CBC` khi lưu trữ.
+   - Quá trình giải mã `{{secrets.key}}` chỉ diễn ra trên bộ nhớ RAM tại microsecond block thực thi, và bộ nhớ được xóa sạch ngay sau đó. Nghiêm cấm ghi log hoặc lưu trữ secret đã giải mã xuống đĩa.
+7. **Single Core Engine & Dual Reusable Artifacts (Một Động Cơ, Đa Nền Tảng)**:
+   - `automa-webe` đóng vai trò là Engine cốt lõi, đóng gói thành 2 artifacts tái sử dụng:
+     - `dist/cli-runner`: Headless Execution Engine tiêu thụ bởi Daemon Rust.
+     - `dist/studio`: Standalone Web Canvas nhúng vào VS Code Webview và Desktop Tauri.
+   - Không một dòng code thực thi hay canvas layout nào được phép sao chép thủ công (Zero Code Duplication).
+
+---
+
 ## 🏛️ TRỤ CỘT 1: HỆ THỐNG ĐẶC TẢ SRS MA TRẬN 2 CHIỀU (2D MATRIX SPECIFICATION)
 
 > 📍 **Trung tâm điều hướng chi tiết**: [**`docs/srs/README.md`**](./srs/README.md)

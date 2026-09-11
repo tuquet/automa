@@ -10,19 +10,36 @@ export const automaDir = path.join(rootDir, '.automa');
 export const logsDir = path.join(automaDir, 'logs');
 export const packagesDir = path.join(rootDir, 'packages');
 
-// Process-Scoped Runtime Path Priority for Scoop (Node.js LTS & pnpm)
-const userProfile = process.env.USERPROFILE || '';
-const scoopPnpmDir = path.join(userProfile, 'scoop/apps/pnpm/current');
-const scoopNodeDir = path.join(userProfile, 'scoop/apps/nodejs-lts/current');
-const scoopShimsDir = path.join(userProfile, 'scoop/shims');
+// Process-Scoped Runtime Path Priority for Scoop (Node.js LTS, pnpm, rustup/cargo)
+export function refreshRuntimePaths() {
+  const userProfile = process.env.USERPROFILE || '';
+  const scoopPnpmDir = path.join(userProfile, 'scoop/apps/pnpm/current');
+  const scoopNodeDir = path.join(userProfile, 'scoop/apps/nodejs-lts/current');
+  const scoopShimsDir = path.join(userProfile, 'scoop/shims');
+  const scoopCargoDir = path.join(userProfile, 'scoop/apps/rustup/current/.cargo/bin');
+  const scoopPersistCargoDir = path.join(userProfile, 'scoop/persist/rustup/.cargo/bin');
+  const scoopRustDir = path.join(userProfile, 'scoop/apps/rust/current/bin');
+  const userCargoDir = path.join(userProfile, '.cargo/bin');
 
-const priorityDirs = [scoopPnpmDir, scoopNodeDir, scoopShimsDir].filter((d) => fs.existsSync(d));
-if (priorityDirs.length > 0) {
-  const currentPaths = (process.env.PATH || '')
-    .split(path.delimiter)
-    .filter((p) => p && !priorityDirs.includes(p));
-  process.env.PATH = [...priorityDirs, ...currentPaths].join(path.delimiter);
+  const priorityDirs = [
+    scoopPnpmDir,
+    scoopNodeDir,
+    scoopShimsDir,
+    scoopCargoDir,
+    scoopPersistCargoDir,
+    scoopRustDir,
+    userCargoDir,
+  ].filter((d) => fs.existsSync(d));
+
+  if (priorityDirs.length > 0) {
+    const currentPaths = (process.env.PATH || '')
+      .split(path.delimiter)
+      .filter((p) => p && !priorityDirs.includes(p));
+    process.env.PATH = [...priorityDirs, ...currentPaths].join(path.delimiter);
+  }
 }
+
+refreshRuntimePaths();
 
 /**
  * Resilient picocolors loader with zero-dependency fallback for bootstrap scripts
