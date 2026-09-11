@@ -4,7 +4,7 @@
 
 ## 🏛️ 1. TỔNG QUAN VÀ MỤC TIÊU KIẾN TRÚC
 
-Hệ thống giao diện người dùng của Automa Ecosystem được chuẩn hóa theo mô hình **Design System 3 Tầng Phân Lớp Độc Lập** dựa trên nền tảng **Shadcn-Vue** và **Radix-Vue**, đóng gói tập trung tại package [`@automa/ui`](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/packages/automa-ui).
+Hệ thống giao diện người dùng của Automa Ecosystem được chuẩn hóa theo mô hình **Design System 3 Tầng Phân Lớp Độc Lập** dựa trên nền tảng **Shadcn-Vue** và **Radix-Vue**, đóng gói tập trung tại package [`@automa/ui`](../../packages/automa-ui).
 
 ```mermaid
 flowchart TD
@@ -54,11 +54,11 @@ flowchart TD
 ### Invariant 1: Theme Variable Inversion (Đảo Ngược Biến Theme)
 * Các linh kiện Vue nguyên tử (`src/components/ui/`) **BẮT BUỘC giữ nguyên 100% class chuẩn hóa của Shadcn/Tailwind** (`bg-primary`, `text-primary-foreground`, `border-border`, `bg-card`, `bg-muted`...).
 * **Nghiêm cấm tuyệt đối**: Hardcode mã màu hex hoặc viết class ad-hoc `bg-[var(--automa-...)]` trực tiếp trong template Vue của linh kiện.
-* Mọi sự thích ứng đa nền tảng (VS Code 100+ themes, Desktop Dark/Light, Web Extension) được giải quyết triệt để tại tầng **CSS Variables** trong file [`packages/automa-ui/src/styles/tokens.css`](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/packages/automa-ui/src/styles/tokens.css).
+* Mọi sự thích ứng đa nền tảng (VS Code 100+ themes, Desktop Dark/Light, Web Extension) được giải quyết triệt để tại tầng **CSS Variables** trong file [`packages/automa-ui/src/styles/tokens.css`](../../packages/automa-ui/src/styles/tokens.css).
 
 ### Invariant 2: Tự Động Hóa 100% (Zero Manual Component Copying)
 * Không copy hoặc sửa tay các linh kiện nguyên tử từ upstream.
-* Mọi thao tác tải mới hoặc đồng bộ linh kiện phải thông qua **Script Đồng Bộ Chính Thức** [`scripts/sync-shadcn-components.mjs`](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/scripts/sync-shadcn-components.mjs).
+* Mọi thao tác tải mới hoặc đồng bộ linh kiện phải thông qua **Script Đồng Bộ Chính Thức** [`scripts/sync-shadcn-components.mjs`](../../scripts/sync-shadcn-components.mjs).
 
 ### Invariant 3: Không Lưu Trữ Duplicate Mirror Trong Source Control
 * Thư mục bản nháp hoặc mirror thô (`upstream-shadcn/`) không được phép commit vào repository.

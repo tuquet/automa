@@ -2,6 +2,18 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "🦀 Debug: Automa Core (Rust Daemon)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/automa-core/target/debug/automa-core${command:extension.vscode-lldb.executableSuffix}",
+      "args": [
+        "--port",
+        "8765"
+      ],
+      "cwd": "${workspaceFolder}/automa-core",
+      "preLaunchTask": "build:core"
+    },
+    {
       "name": "🧩 Debug: VS Code Extension Host",
       "type": "extensionHost",
       "request": "launch",
@@ -10,14 +22,8 @@
       ],
       "outFiles": [
         "${workspaceFolder}/automa-vsce/dist/**/*.js"
-      ]
-    },
-    {
-      "name": "🌐 Debug: Web Studio (Chrome)",
-      "type": "chrome",
-      "request": "launch",
-      "url": "http://127.0.0.1:8765/studio/",
-      "webRoot": "${workspaceFolder}/automa-webe"
+      ],
+      "preLaunchTask": "build:vsce"
     }
   ]
 }

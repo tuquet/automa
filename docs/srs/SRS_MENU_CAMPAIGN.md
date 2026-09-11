@@ -60,7 +60,7 @@ CampaignView.vue (hoặc CampaignMatrixView.vue trong VS Code)
 
 ## 🍍 5. QUẢN LÝ TRẠNG THÁI PINIA STORE LIÊN QUAN (`useCampaignStore`)
 
-Store [`useCampaignStore`](file:///root/automa-ecosystem/automa-desk/src/stores/useCampaignStore.ts) quản lý ma trận chiến dịch:
+Store [`useCampaignStore`](../../packages/automa-ui/src/stores/useCampaignStore.ts) quản lý ma trận chiến dịch:
 - `campaignId`, `campaignName`: Định danh chiến dịch.
 - `activeSlots`: Mảng các slot (`slotIndex`, `browserId`, `workflowId`, `status`, `progressPercent`).
 - `status`: Trạng thái tổng thể (`'idle' | 'running' | 'aborted' | 'completed'`).

@@ -1,5 +1,7 @@
 # 📚 AUTOMA ECOSYSTEM: HỆ THỐNG ĐẶC TẢ SRS MA TRẬN 2 CHIỀU (2D MATRIX SPECIFICATION HUB)
 
+> 🔙 Quay lại Trung tâm tài liệu: [**`docs/README.md`**](../README.md) | [**`docs/Home.md`**](../Home.md)
+
 ---
 
 ## 🏛️ 1. TỔNG QUAN KIẾN TRÚC MA TRẬN 2 CHIỀU

@@ -1,6 +1,6 @@
 # 🛡️ Automa Minimalist UI/UX Audit Log (5-Round Periodic Audit)
 
-> **Standard Protocol**: [`skills/automa-minimalist-ux-audit/SKILL.md`](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/skills/automa-minimalist-ux-audit/SKILL.md)  
+> **Standard Protocol**: [`skills/automa-minimalist-ux-audit/SKILL.md`](../skills/automa-minimalist-ux-audit/SKILL.md)  
 > **Cadence**: 10 phút / lần qua công cụ `schedule` (Tổng cộng 5 vòng rà soát chuyên sâu).  
 > **Mục tiêu**: Loại bỏ triệt để hành động trùng lặp (Duplicate CTAs), text rác/marketing fluff (Rule of 1–3 Words), giảm tải thị giác (Visual Noise), và chuẩn hóa bố cục 4 tầng (Header $\rightarrow$ Toolbar $\rightarrow$ Content $\rightarrow$ Footer).
 
@@ -35,7 +35,7 @@
 
 ### 2. Rà Soát Microcopy & Text Rác (Text Audit)
 1. **[RunWorkflowModal.vue:14] Vi phạm thuật ngữ cấm (`Browser Profile`)**:
-   - Nhãn hiển thị `Browser Profile` vi phạm quy chuẩn thuật ngữ trong [`.agents/AGENTS.md`](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/.agents/AGENTS.md) (nghiêm cấm dùng từ *Profile* hoặc *Member*).
+   - Nhãn hiển thị `Browser Profile` vi phạm quy chuẩn thuật ngữ trong [`.agents/AGENTS.md`](../.agents/AGENTS.md) (nghiêm cấm dùng từ *Profile* hoặc *Member*).
    - *Đề xuất*: Sửa thành `Browser`.
 2. **[WorkflowLibraryModal.vue:121-123] Dòng thống kê Footer trùng lặp thông tin**:
    - Dòng chữ `{{ workflows.length }} workflows, {{ campaigns.length }} campaigns` ở chân modal là thừa thãi vì 3 tab phía trên (`Workflows (N)`, `Packages (N)`, `Campaigns (N)`) đã hiển thị số lượng chính xác theo thời gian thực.

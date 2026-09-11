@@ -59,7 +59,7 @@ SettingsView.vue
 
 ## 🍍 5. QUẢN LÝ TRẠNG THÁI PINIA STORE LIÊN QUAN (`useSettingsStore`)
 
-Store [`useSettingsStore`](file:///root/automa-ecosystem/automa-desk/src/stores/useSettingsStore.ts) quản lý cấu hình hệ thống:
+Store [`useSettingsStore`](../../packages/automa-ui/src/stores/useSettingsStore.ts) quản lý cấu hình hệ thống:
 - `settings`: Object cấu hình hệ thống (`AppSettings`).
 - `isDaemonHealthy`: Cờ boolean đánh dấu trạng thái sống/chết của Core Daemon.
 - `theme`: Trạng thái theme hiện tại (`'dark' | 'light' | 'system'`).

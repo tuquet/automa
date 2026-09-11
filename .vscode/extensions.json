@@ -4,6 +4,8 @@
     "biomejs.biome",
     "dbaeumer.vscode-eslint",
     "tuquet.vscode-automa",
-    "github.vscode-github-actions"
+    "github.vscode-github-actions",
+    "rust-lang.rust-analyzer",
+    "vadimcn.vscode-lldb"
   ]
 }

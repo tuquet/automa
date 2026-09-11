@@ -2,21 +2,29 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "🧙 1. Dev Orchestrator (Wizard)",
+      "label": "build:core",
       "type": "shell",
-      "command": "node scripts/dev-orchestrator.mjs ${input:devTarget}",
-      "problemMatcher": [],
+      "command": "cargo build --manifest-path automa-core/Cargo.toml",
+      "problemMatcher": ["$rustc"],
       "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "focus": true,
-        "clear": false
+        "reveal": "silent",
+        "panel": "shared"
       }
     },
     {
-      "label": "📦 2. Build Pipeline (Wizard)",
+      "label": "build:vsce",
       "type": "shell",
-      "command": "node scripts/build-wizard.mjs ${input:buildTarget}",
+      "command": "pnpm -F vscode-automa run build",
+      "problemMatcher": ["$tsup"],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "📦 Automa: Build All",
+      "type": "shell",
+      "command": "pnpm run build",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -30,9 +38,9 @@
       }
     },
     {
-      "label": "🧪 3. Test Matrix (Wizard)",
+      "label": "🧪 Automa: Test Matrix",
       "type": "shell",
-      "command": "node scripts/test-all.mjs ${input:testTarget}",
+      "command": "pnpm run test",
       "group": {
         "kind": "test",
         "isDefault": true
@@ -46,9 +54,33 @@
       }
     },
     {
-      "label": "✨ 4. Lint & Quality (Wizard)",
+      "label": "🧙 Automa: Master Wizard",
       "type": "shell",
-      "command": "node scripts/lint-wizard.mjs ${input:lintTarget}",
+      "command": "node scripts/ecosystem-wizard.mjs",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "🚀 Automa: Dev Orchestrator",
+      "type": "shell",
+      "command": "pnpm run dev",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "✨ Automa: Lint & Quality",
+      "type": "shell",
+      "command": "pnpm run lint",
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
@@ -58,9 +90,9 @@
       }
     },
     {
-      "label": "🔄 5. Contracts & Sync (Wizard)",
+      "label": "🔄 Automa: Sync Contracts",
       "type": "shell",
-      "command": "node scripts/sync-api.mjs ${input:syncTarget}",
+      "command": "pnpm run sync:api",
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
@@ -70,141 +102,28 @@
       }
     },
     {
-      "label": "⚙️ 6. Ecosystem Setup & Init (Wizard)",
+      "label": "🚇 Automa: Cloudflare Tunnel & Git Relay",
       "type": "shell",
-      "command": "node scripts/setup-ecosystem.mjs ${input:setupTarget}",
+      "command": "node scripts/tunnel-wizard.mjs",
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
-        "panel": "shared",
+        "panel": "dedicated",
         "focus": true,
         "clear": false
       }
     },
     {
-      "label": "🏥 7. Compound Pre-Commit Audit",
-      "dependsOn": [
-        "✨ 4. Lint & Quality (Wizard)",
-        "🧪 3. Test Matrix (Wizard)"
-      ],
-      "dependsOrder": "sequence",
-      "problemMatcher": []
-    },
-    {
-      "label": "🚇 8. Cloudflare Tunnel & Git Relay (Wizard)",
+      "label": "🚀 Automa: 1-Click Git Push via Relay",
       "type": "shell",
-      "command": "node scripts/tunnel-wizard.mjs ${input:tunnelTarget}",
+      "command": "node scripts/tunnel-wizard.mjs push",
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
-        "panel": "shared",
+        "panel": "dedicated",
         "focus": true,
         "clear": false
       }
-    }
-  ],
-  "inputs": [
-    {
-      "id": "devTarget",
-      "type": "pickString",
-      "description": "Dev cái gì? Dev bao nhiêu module?",
-      "options": [
-        { "value": "--interactive", "label": "🧙 Interactive TUI (Chọn checklist từng service)" },
-        { "value": "--all", "label": "🚀 Full Stack (Khởi chạy toàn bộ 6 services)" },
-        { "value": "--core", "label": "🦀 Backend Core Only (Rust Daemon :8765)" },
-        { "value": "--vsce", "label": "🧩 VS Code Extension (Core + VSCE watcher)" },
-        { "value": "--studio", "label": "🎨 Studio Canvas (Core + Web Studio Canvas)" },
-        { "value": "--desk", "label": "🖥️  Desktop App (Core + Tauri v2 App :1420)" },
-        { "value": "--runner", "label": "⚡ CLI Runner (Core + Headless Engine)" },
-        { "value": "--docs", "label": "📖 Scalar API Docs (Live Reference :8767)" }
-      ],
-      "default": "--interactive"
-    },
-    {
-      "id": "buildTarget",
-      "type": "pickString",
-      "description": "Build cái gì? Build bao nhiêu module?",
-      "options": [
-        { "value": "all", "label": "📦 Tất cả Packages (Turborepo Full Build)" },
-        { "value": "core", "label": "🦀 Automa Core (Rust Cargo Release)" },
-        { "value": "studio", "label": "🎨 Automa Studio (Web Canvas -> dist/studio)" },
-        { "value": "runner", "label": "⚡ Automa Runner (Headless Engine -> dist/cli-runner)" },
-        { "value": "vsce", "label": "🧩 Automa VSCE (VS Code Extension VSIX)" },
-        { "value": "desk", "label": "🖥️  Automa Desk (Desktop Tauri App)" },
-        { "value": "sandbox", "label": "🚀 Production Bundles & Dev Sandbox Deploy" }
-      ],
-      "default": "all"
-    },
-    {
-      "id": "testTarget",
-      "type": "pickString",
-      "description": "Test cái gì? Test tầng nào?",
-      "options": [
-        { "value": "--all", "label": "🧪 Tất cả Suites (Tier 1 - 3 Toàn Diện)" },
-        { "value": "--tier 1", "label": "⚡ Tier 1: Unit Tests (Rust Core + VSCE + Desk)" },
-        { "value": "--tier 2", "label": "🌐 Tier 2: E2E Integration API Tests" },
-        { "value": "--tier 3", "label": "📐 Tier 3: Strict Schema Validator" },
-        { "value": "--core", "label": "🦀 Chỉ kiểm thử Automa Core (Cargo)" },
-        { "value": "--vsce", "label": "🧩 Chỉ kiểm thử Automa VSCE (Vitest)" },
-        { "value": "--desk", "label": "🖥️  Chỉ kiểm thử Automa Desk (Vitest)" },
-        { "value": "--schema", "label": "📐 Chỉ kiểm tra OpenAPI Schema Linter" }
-      ],
-      "default": "--all"
-    },
-    {
-      "id": "lintTarget",
-      "type": "pickString",
-      "description": "Lint cái gì? Lint bao nhiêu module?",
-      "options": [
-        { "value": "all", "label": "✨ Tất cả Packages (Biome + Style Debt Check)" },
-        { "value": "fix", "label": "🔧 Auto-Fix All (Biome --write & Format)" },
-        { "value": "vsce", "label": "🧩 Chỉ Lint Automa VSCE" },
-        { "value": "desk", "label": "🖥️  Chỉ Lint Automa Desk" },
-        { "value": "webe", "label": "🌐 Chỉ Lint Automa Webe" },
-        { "value": "ui", "label": "🎨 Chỉ Lint Packages UI (@automa/ui)" },
-        { "value": "style", "label": "🔍 Style Technical Debt Scanner" },
-        { "value": "schema", "label": "📐 Strict OpenAPI Schema Linter" }
-      ],
-      "default": "all"
-    },
-    {
-      "id": "syncTarget",
-      "type": "pickString",
-      "description": "Sync cái gì? Đồng bộ phần nào?",
-      "options": [
-        { "value": "all", "label": "🔄 Full Contract Pipeline (OpenAPI + Schema + Bruno + SDK)" },
-        { "value": "openapi", "label": "📄 Chỉ xuất OpenAPI Spec (openapi.json)" },
-        { "value": "bruno", "label": "📁 Chỉ đồng bộ Bruno Collection (automa-bruno/)" },
-        { "value": "submodules", "label": "📐 Đồng bộ Git Submodule Pointers" },
-        { "value": "ui", "label": "🎨 Đồng bộ Shadcn-Vue UI Primitives" }
-      ],
-      "default": "all"
-    },
-    {
-      "id": "setupTarget",
-      "type": "pickString",
-      "description": "Setup cái gì? Khởi tạo phần nào?",
-      "options": [
-        { "value": "all", "label": "🚀 Full Setup (Submodules + PNPM Install)" },
-        { "value": "submodules", "label": "📦 Submodules Only (git submodule update)" },
-        { "value": "pnpm", "label": "⚡ Dependencies Only (pnpm install)" },
-        { "value": "doctor", "label": "🩺 Doctor & Diagnostics (Node, PNPM, Git, Rust, Cloudflare)" },
-        { "value": "cloudflared", "label": "🚇 Cloudflare Tunnel Setup (Install & Verify via Scoop)" }
-      ],
-      "default": "all"
-    },
-    {
-      "id": "tunnelTarget",
-      "type": "pickString",
-      "description": "Thao tác gì với Cloudflare Tunnel / Git Relay?",
-      "options": [
-        { "value": "push", "label": "🚀 1-Click Push via Relay (Tự động mở tunnel nếu cần)" },
-        { "value": "start", "label": "🚇 Start Tunnel Bridge (127.0.0.1:2222)" },
-        { "value": "stop", "label": "🛑 Stop Tunnel Bridge" },
-        { "value": "status", "label": "🩺 Doctor & Healthcheck (4-Tier Diagnostics)" },
-        { "value": "setup", "label": "⚙️ Setup & Install Cloudflared (via Scoop)" }
-      ],
-      "default": "push"
     }
   ]
 }

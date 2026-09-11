@@ -51,6 +51,12 @@ const WIZARD_ACTIONS = [
     hint: 'Khởi tạo Git submodules, pnpm install và kiểm tra sức khỏe môi trường',
     script: 'scripts/setup-ecosystem.mjs',
   },
+  {
+    value: 'tunnel',
+    label: '🚇 7. Cloudflare Tunnel & Git Relay',
+    hint: 'Cầu nối proxy SSH & đẩy mã nguồn an toàn lên GitHub',
+    script: 'scripts/tunnel-wizard.mjs',
+  },
 ];
 
 async function main() {
