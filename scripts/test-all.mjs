@@ -1,129 +1,186 @@
-import { spawn } from "node:child_process";
-import path from "node:path";
-import process from "node:process";
+#!/usr/bin/env node
 
-const rootDir = process.cwd();
+/**
+ * Automa Ecosystem - Unified Test Matrix Wizard
+ * Supports 4-Tier verification, modular suite selection, and interactive TUI.
+ */
 
-// ANSI styling
-const BOLD = "\x1b[1m";
-const GREEN = "\x1b[32m";
-const RED = "\x1b[31m";
-const YELLOW = "\x1b[33m";
-const CYAN = "\x1b[36m";
-const RESET = "\x1b[0m";
+import path from 'node:path';
+import process from 'node:process';
+import {
+  formatDuration,
+  getPrompts,
+  pc,
+  printWizardBanner,
+  rootDir,
+  runProcess,
+} from './lib/utils.mjs';
 
-function runStep(name, command, args, cwd = rootDir) {
-	return new Promise((resolve) => {
-		const startTime = Date.now();
-		console.log(`\n${BOLD}${CYAN}▶ [RUNNING] ${name}...${RESET}`);
-		console.log(`${CYAN}$ ${command} ${args.join(" ")} (in ${cwd})${RESET}\n`);
+const SUITES = [
+  {
+    id: 'core',
+    tier: 1,
+    name: 'Automa Rust Core (Engine, API & State)',
+    hint: 'Cargo unit & integration tests trong automa-core',
+    cmd: 'cargo',
+    args: ['test'],
+    cwd: path.join(rootDir, 'automa-core'),
+  },
+  {
+    id: 'vsce',
+    tier: 1,
+    name: 'Automa VSCE Extension & Webview (Vitest)',
+    hint: 'Providers, Commands, Webview IPC unit tests',
+    cmd: 'pnpm',
+    args: ['-F', 'vscode-automa', 'test'],
+    cwd: rootDir,
+  },
+  {
+    id: 'desk',
+    tier: 1,
+    name: 'Automa Desktop OS App (Tauri v2 + Vue 3.5)',
+    hint: 'Desktop pinia stores, composables & components unit tests',
+    cmd: 'pnpm',
+    args: ['-F', '@automa/desk', 'run', 'test:unit'],
+    cwd: rootDir,
+  },
+  {
+    id: 'e2e',
+    tier: 2,
+    name: 'Cross-Service E2E API Integration (Port 8766)',
+    hint: 'Vitest Blackbox tests qua Generated SDK chống regression',
+    cmd: 'pnpm',
+    args: ['exec', 'vitest', 'run', '--config', 'vitest.config.ts'],
+    cwd: rootDir,
+  },
+  {
+    id: 'schema',
+    tier: 3,
+    name: 'Strict OpenAPI & JSON Schema Linter',
+    hint: 'Kiểm tra 100% tuân thủ utoipa annotations & snake_case',
+    cmd: 'node',
+    args: ['scripts/enforce-strict-schema.mjs'],
+    cwd: rootDir,
+  },
+];
 
-		const child = spawn(command, args, {
-			cwd,
-			stdio: "inherit",
-			shell: true,
-			env: { ...process.env, FORCE_COLOR: "1" },
-		});
+const args = process.argv.slice(2);
+const isBail = args.includes('--bail');
+const isList = args.includes('--list');
 
-		child.on("close", (code) => {
-			const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-			if (code === 0) {
-				console.log(`\n${BOLD}${GREEN}✔ [PASSED] ${name} (${duration}s)${RESET}`);
-				resolve({ name, success: true, duration, code });
-			} else {
-				console.log(`\n${BOLD}${RED}✘ [FAILED] ${name} (${duration}s, exit code: ${code})${RESET}`);
-				resolve({ name, success: false, duration, code });
-			}
-		});
+if (isList) {
+  console.log(`\n${pc.bold(pc.cyan('📋 Danh sách các Test Suites trong Automa Ecosystem:'))}\n`);
+  SUITES.forEach((s) => {
+    console.log(`  • [Tier ${s.tier}] ${pc.bold(s.id.padEnd(8))}: ${s.name} ${pc.dim(`(${s.hint})`)}`);
+  });
+  console.log('');
+  process.exit(0);
+}
 
-		child.on("error", (err) => {
-			const duration = ((Date.now() - startTime) / 1000).toFixed(2);
-			console.error(`\n${BOLD}${RED}✘ [ERROR] ${name}: ${err.message}${RESET}`);
-			resolve({ name, success: false, duration, code: 1, error: err });
-		});
-	});
+async function resolveSuites() {
+  if (args.includes('--core')) return SUITES.filter((s) => s.id === 'core');
+  if (args.includes('--vsce')) return SUITES.filter((s) => s.id === 'vsce');
+  if (args.includes('--desk')) return SUITES.filter((s) => s.id === 'desk');
+  if (args.includes('--e2e')) return SUITES.filter((s) => s.id === 'e2e');
+  if (args.includes('--schema')) return SUITES.filter((s) => s.id === 'schema');
+
+  if (args.includes('--tier') || args.some((a) => a.startsWith('--tier'))) {
+    const tierIdx = args.indexOf('--tier');
+    const tierVal = tierIdx !== -1 ? args[tierIdx + 1] : args.find((a) => a.startsWith('--tier='))?.split('=')[1];
+    const tierNum = Number.parseInt(tierVal || '1', 10);
+    return SUITES.filter((s) => s.tier === tierNum);
+  }
+
+  if (args.includes('--all') || args.includes('all')) {
+    return SUITES;
+  }
+
+  const p = await getPrompts();
+  if (!process.stdin.isTTY || !p) {
+    return SUITES; // Non-interactive or missing TUI deps defaults to all
+  }
+
+  const choice = await p.select({
+    message: 'Test cái gì? Test tầng nào trong 4 tầng kiểm thử?',
+    options: [
+      { value: 'all', label: '🧪 Tất cả Suites (Tier 1 - 3 Toàn Diện)', hint: 'Chạy toàn bộ 5 test suites' },
+      { value: 'tier1', label: '⚡ Tier 1: Unit Tests (Nhanh, RAM < 500MB)', hint: 'Rust Core + VSCE + Desk' },
+      { value: 'tier2', label: '🌐 Tier 2: E2E Integration API Tests', hint: 'Kiểm thử blackbox SDK chống daemon' },
+      { value: 'tier3', label: '📐 Tier 3: Strict Schema Validator', hint: 'Kiểm tra OpenAPI schema không tải máy' },
+      { value: 'core', label: '🦀 Chỉ kiểm thử Automa Core (Cargo test)', hint: 'automa-core Rust tests' },
+      { value: 'vsce', label: '🧩 Chỉ kiểm thử Automa VSCE (Vitest)', hint: 'vscode-automa extension tests' },
+      { value: 'desk', label: '🖥️  Chỉ kiểm thử Automa Desk (Vitest)', hint: 'automa-desk desktop tests' },
+    ],
+  });
+
+  if (p.isCancel(choice)) {
+    p.cancel('Đã hủy kiểm thử.');
+    process.exit(0);
+  }
+
+  if (choice === 'tier1') return SUITES.filter((s) => s.tier === 1);
+  if (choice === 'tier2') return SUITES.filter((s) => s.tier === 2);
+  if (choice === 'tier3') return SUITES.filter((s) => s.tier === 3);
+  if (choice === 'core') return SUITES.filter((s) => s.id === 'core');
+  if (choice === 'vsce') return SUITES.filter((s) => s.id === 'vsce');
+  if (choice === 'desk') return SUITES.filter((s) => s.id === 'desk');
+  return SUITES;
 }
 
 async function main() {
-	console.log(`\n${BOLD}======================================================${RESET}`);
-	console.log(`${BOLD}🚀  AUTOMA ECOSYSTEM UNIFIED TEST SUITE${RESET}`);
-	console.log(`${BOLD}======================================================${RESET}`);
+  printWizardBanner('Unified Test Matrix Wizard', 'Multi-tier regression & integration verification');
 
-	const results = [];
-	const overallStart = Date.now();
+  const selectedSuites = await resolveSuites();
+  console.log(`\n${pc.bold(pc.cyan(`Khởi chạy ${selectedSuites.length} test suites:`))}`);
+  selectedSuites.forEach((s) => console.log(`  • [Tier ${s.tier}] ${s.name}`));
+  console.log('');
 
-	// Step 1: Rust Core Tests (Cargo)
-	const rustRes = await runStep(
-		"Automa Rust Core (Engine, API & E2E)",
-		"cargo",
-		["test"],
-		path.join(rootDir, "automa-core")
-	);
-	results.push(rustRes);
+  const overallStart = Date.now();
+  const results = [];
 
-	// Step 2: VS Code Extension & Webview E2E Tests (Vitest + Playwright)
-	const vscodeRes = await runStep(
-		"Automa VS Code Extension & Webview E2E",
-		"pnpm",
-		["-F", "vscode-automa", "test"],
-		rootDir
-	);
-	results.push(vscodeRes);
+  for (const suite of selectedSuites) {
+    console.log(`\n${pc.bold(pc.cyan(`▶ [RUNNING] [Tier ${suite.tier}] ${suite.name}...`))}`);
+    console.log(`${pc.dim(`$ ${suite.cmd} ${suite.args.join(' ')} (in ${suite.cwd})`)}\n`);
 
-	// Step 3: Cross-Service E2E API Tests (Generated SDK against Isolated Core)
-	const e2eRes = await runStep(
-		"Cross-Service E2E API Tests (Generated SDK)",
-		"pnpm",
-		["exec", "vitest", "run", "--config", "vitest.config.ts"],
-		rootDir
-	);
-	results.push(e2eRes);
+    const res = await runProcess(suite.cmd, suite.args, { cwd: suite.cwd });
+    results.push({ ...suite, ...res });
 
-	// Step 4: Desktop OS App Unit Tests (Tauri v2 + Vue 3.5)
-	const deskRes = await runStep(
-		"Automa Desktop OS App (Tauri v2 & Vue 3.5)",
-		"pnpm",
-		["-F", "@automa/desk", "run", "test:unit"],
-		rootDir
-	);
-	results.push(deskRes);
+    if (res.success) {
+      console.log(`\n${pc.bold(pc.green(`✔ [PASSED] ${suite.name} (${res.duration})`))}`);
+    } else {
+      console.error(`\n${pc.bold(pc.red(`✘ [FAILED] ${suite.name} (${res.duration}, exit code: ${res.code})`))}`);
+      if (isBail) {
+        console.error(pc.red('\n[Bail Mode] Dừng ngay kiểm thử do phát hiện lỗi suite.'));
+        break;
+      }
+    }
+  }
 
-	// Step 5: Strict Schema Validation
-	const schemaRes = await runStep(
-		"Strict OpenAPI & JSON Schema Linter",
-		"node",
-		["scripts/enforce-strict-schema.mjs"],
-		rootDir
-	);
-	results.push(schemaRes);
+  const totalDuration = formatDuration(Date.now() - overallStart);
 
-	const totalDuration = ((Date.now() - overallStart) / 1000).toFixed(2);
+  // Summary Report
+  console.log(`\n${pc.bold(pc.cyan('===================================================================='))}`);
+  console.log(`${pc.bold(pc.white(`📊  TEST SUMMARY REPORT (${totalDuration})`))}`);
+  console.log(`${pc.bold(pc.cyan('===================================================================='))}`);
 
-	// Summary Report
-	console.log(`\n${BOLD}======================================================${RESET}`);
-	console.log(`${BOLD}📊  TEST SUMMARY REPORT (${totalDuration}s)${RESET}`);
-	console.log(`${BOLD}======================================================${RESET}`);
+  let allPassed = true;
+  for (const res of results) {
+    const status = res.success ? pc.green('✔ PASSED') : pc.red(`✘ FAILED (${res.code})`);
+    console.log(`  ${res.name.padEnd(52)} [${status}]  ${res.duration}`);
+    if (!res.success) allPassed = false;
+  }
+  console.log(`${pc.bold(pc.cyan('===================================================================='))}\n`);
 
-	let allPassed = true;
-	for (const res of results) {
-		const status = res.success
-			? `${GREEN}✔ PASSED${RESET}`
-			: `${RED}✘ FAILED (code ${res.code})${RESET}`;
-		console.log(`  ${res.name.padEnd(45)} [${status}]  ${res.duration}s`);
-		if (!res.success) allPassed = false;
-	}
-	console.log(`${BOLD}======================================================${RESET}\n`);
-
-	if (allPassed) {
-		console.log(`${BOLD}${GREEN}🎉 ALL TEST SUITES PASSED CLEANLY! 🎉${RESET}\n`);
-		process.exit(0);
-	} else {
-		console.error(`${BOLD}${RED}💥 SOME TEST SUITES FAILED! Please review logs above.${RESET}\n`);
-		process.exit(1);
-	}
+  if (allPassed) {
+    console.log(`${pc.bold(pc.green('🎉 ALL SELECTED TEST SUITES PASSED CLEANLY! 🎉'))}\n`);
+    process.exit(0);
+  } else {
+    console.error(`${pc.bold(pc.red('💥 SOME TEST SUITES FAILED! Please review logs above.'))}\n`);
+    process.exit(1);
+  }
 }
 
 main().catch((err) => {
-	console.error("Unexpected test runner failure:", err);
-	process.exit(1);
+  console.error('Unexpected test runner failure:', err);
+  process.exit(1);
 });

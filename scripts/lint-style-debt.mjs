@@ -1,7 +1,14 @@
-import fs from 'fs';
-import path from 'path';
+#!/usr/bin/env node
 
-const ROOT_DIR = process.cwd();
+/**
+ * Automa Ecosystem - Style Technical Debt Scanner
+ * Enforces semantic theme tokens, prohibits hardcoded grays, sub-12px text, and legacy classes.
+ */
+
+import fs from 'node:fs';
+import path from 'node:path';
+import process from 'node:process';
+import { pc, rootDir } from './lib/utils.mjs';
 
 const TARGET_DIRS = [
   'automa-webe/src/studio',
@@ -74,13 +81,13 @@ let totalViolations = 0;
 const violationsByFile = new Map();
 
 function scanDir(dir) {
-  const fullPath = path.join(ROOT_DIR, dir);
+  const fullPath = path.join(rootDir, dir);
   if (!fs.existsSync(fullPath)) return;
 
   const entries = fs.readdirSync(fullPath, { withFileTypes: true });
   for (const entry of entries) {
     const res = path.join(fullPath, entry.name);
-    const rel = path.relative(ROOT_DIR, res).replace(/\\/g, '/');
+    const rel = path.relative(rootDir, res).replace(/\\/g, '/');
 
     if (entry.isDirectory()) {
       if (entry.name === 'node_modules' || entry.name === 'dist' || entry.name === '.git') continue;
@@ -141,16 +148,16 @@ for (const target of TARGET_DIRS) {
 }
 
 if (totalViolations > 0) {
-  console.error(`\x1b[31m[Style Lint Failed]\x1b[0m Found ${totalViolations} style technical debt violations across ${violationsByFile.size} files:`);
+  console.error(`${pc.red('[Style Lint Failed]')} Found ${totalViolations} style technical debt violations across ${violationsByFile.size} files:`);
   for (const [filePath, fileViolations] of violationsByFile.entries()) {
-    console.error(`\n  \x1b[33m${filePath}\x1b[0m:`);
+    console.error(`\n  ${pc.yellow(filePath)}:`);
     for (const v of fileViolations) {
-      console.error(`    Line ${v.line}: [\x1b[31m${v.rule}\x1b[0m] "${v.match}" -> ${v.message}`);
+      console.error(`    Line ${v.line}: [${pc.red(v.rule)}] "${v.match}" -> ${v.message}`);
     }
   }
-  console.error(`\n\x1b[31mPlease fix the violations above to maintain 100% semantic theme token consistency.\x1b[0m`);
+  console.error(`\n${pc.red('Please fix the violations above to maintain 100% semantic theme token consistency.')}\n`);
   process.exit(1);
 } else {
-  console.log('\x1b[32m[Style Lint Passed]\x1b[0m 0 style technical debts found across all packages.');
+  console.log(`${pc.green('✔ [Style Lint Passed]')} 0 style technical debts found across all packages.`);
   process.exit(0);
 }

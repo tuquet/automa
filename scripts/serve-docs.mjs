@@ -5,16 +5,13 @@
  * Serves modern, interactive OpenAPI documentation on http://localhost:8767 with hot reload.
  */
 
-import http from 'node:http';
 import fs from 'node:fs';
+import http from 'node:http';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import process from 'node:process';
+import { pc, rootDir } from './lib/utils.mjs';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const rootDir = path.resolve(__dirname, '..');
 const openApiPath = path.join(rootDir, 'openapi.json');
-
 const PORT = process.env.PORT || 8767;
 
 // Connected SSE clients for live reload
@@ -79,8 +76,6 @@ function getScalarHtml() {
 </html>`;
 }
 
-
-
 const server = http.createServer((req, res) => {
   const url = req.url.split('?')[0];
 
@@ -129,7 +124,7 @@ if (fs.existsSync(openApiPath)) {
   fs.watch(openApiPath, () => {
     clearTimeout(debounceTimeout);
     debounceTimeout = setTimeout(() => {
-      console.log('\x1b[35m[Scalar]\x1b[0m 🔄 openapi.json changed. Notifying browser clients...');
+      console.log(`${pc.magenta('[Scalar]')} 🔄 openapi.json changed. Notifying browser clients...`);
       for (const client of sseClients) {
         client.write('data: reload\n\n');
       }
@@ -138,11 +133,10 @@ if (fs.existsSync(openApiPath)) {
 }
 
 server.listen(PORT, '127.0.0.1', () => {
-  console.log(`\n\x1b[1m\x1b[35m====================================================\x1b[0m`);
-  console.log(`\x1b[1m\x1b[36m📖 Automa Scalar API Reference Server\x1b[0m`);
-  console.log(`\x1b[1m\x1b[35m====================================================\x1b[0m`);
-  console.log(`\x1b[32m✔ Local URL    :\x1b[0m \x1b[1mhttp://127.0.0.1:${PORT}\x1b[0m`);
-  console.log(`\x1b[32m✔ OpenAPI Spec :\x1b[0m http://127.0.0.1:${PORT}/openapi.json`);
-  console.log(`\x1b[90m⚡ Live reload is active (watching openapi.json)\x1b[0m\n`);
+  console.log(`\n${pc.bold(pc.magenta('===================================================='))}`);
+  console.log(`${pc.bold(pc.cyan('📖 Automa Scalar API Reference Server'))}`);
+  console.log(`${pc.bold(pc.magenta('===================================================='))}`);
+  console.log(`${pc.green('✔ Local URL    :')} ${pc.bold(`http://127.0.0.1:${PORT}`)}`);
+  console.log(`${pc.green('✔ OpenAPI Spec :')} http://127.0.0.1:${PORT}/openapi.json`);
+  console.log(`${pc.dim('⚡ Live reload is active (watching openapi.json)\n')}`);
 });
-

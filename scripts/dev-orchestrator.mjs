@@ -372,17 +372,22 @@ const isDesk = args.includes('--desk');
 const isVsce = args.includes('--vsce');
 const isStudio = args.includes('--studio');
 const isRunner = args.includes('--runner');
+const isDocs = args.includes('--docs');
+const isInteractive = args.includes('--interactive');
 const isOpen = args.includes('--open') || args.includes('-o');
 
 async function resolveSelectedTasks() {
-  // Direct CLI Flags bypass interactive prompt
-  if (isAll) return TASKS.map((t) => t.id);
-  if (isLast) return loadSavedSelection();
-  if (isCore) return ['core'];
-  if (isDesk) return ['core', 'desk'];
-  if (isVsce) return ['core', 'vsce'];
-  if (isStudio) return ['core', 'studio'];
-  if (isRunner) return ['core', 'runner'];
+  // Direct CLI Flags bypass interactive prompt unless explicitly interactive
+  if (!isInteractive) {
+    if (isAll) return TASKS.map((t) => t.id);
+    if (isLast) return loadSavedSelection();
+    if (isCore) return ['core'];
+    if (isDesk) return ['core', 'desk'];
+    if (isVsce) return ['core', 'vsce'];
+    if (isStudio) return ['core', 'studio'];
+    if (isRunner) return ['core', 'runner'];
+    if (isDocs) return ['docs'];
+  }
 
   // If non-interactive environment (CI, pipe), use last saved or default
   if (!process.stdin.isTTY) {

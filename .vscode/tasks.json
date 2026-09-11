@@ -2,56 +2,183 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "🚀 Dev: Automa Ecosystem",
+      "label": "🧙 1. Dev Orchestrator (Wizard)",
       "type": "shell",
-      "command": "pnpm run dev",
+      "command": "node scripts/dev-orchestrator.mjs ${input:devTarget}",
       "problemMatcher": [],
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated"
+        "panel": "dedicated",
+        "focus": true,
+        "clear": false
       }
     },
     {
-      "label": "🚀 Dev: Automa Ecosystem (Auto-Open Studio)",
+      "label": "📦 2. Build Pipeline (Wizard)",
       "type": "shell",
-      "command": "pnpm run dev -- --open",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated"
-      }
-    },
-    {
-      "label": "📦 Build: All Packages (Turborepo)",
-      "type": "shell",
-      "command": "pnpm run build",
+      "command": "node scripts/build-wizard.mjs ${input:buildTarget}",
       "group": {
         "kind": "build",
         "isDefault": true
       },
-      "problemMatcher": []
+      "problemMatcher": ["$tsup", "$rustc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true,
+        "clear": true
+      }
     },
     {
-      "label": "🧪 Test: All Suites (Unified)",
+      "label": "🧪 3. Test Matrix (Wizard)",
       "type": "shell",
-      "command": "pnpm run test",
+      "command": "node scripts/test-all.mjs ${input:testTarget}",
       "group": {
         "kind": "test",
         "isDefault": true
       },
-      "problemMatcher": []
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true,
+        "clear": true
+      }
     },
     {
-      "label": "🔄 Sync: OpenAPI, Docs & Types SDK",
+      "label": "✨ 4. Lint & Quality (Wizard)",
       "type": "shell",
-      "command": "pnpm run sync:api",
-      "problemMatcher": []
+      "command": "node scripts/lint-wizard.mjs ${input:lintTarget}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true,
+        "clear": true
+      }
     },
     {
-      "label": "🧩 Build: VS Code Extension (vsce)",
+      "label": "🔄 5. Contracts & Sync (Wizard)",
       "type": "shell",
-      "command": "pnpm --filter=vscode-automa build",
-      "problemMatcher": ["$tsup"]
+      "command": "node scripts/sync-api.mjs ${input:syncTarget}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true,
+        "clear": true
+      }
+    },
+    {
+      "label": "⚙️ 6. Ecosystem Setup & Init (Wizard)",
+      "type": "shell",
+      "command": "node scripts/setup-ecosystem.mjs ${input:setupTarget}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "🏥 7. Compound Pre-Commit Audit",
+      "dependsOn": [
+        "✨ 4. Lint & Quality (Wizard)",
+        "🧪 3. Test Matrix (Wizard)"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "devTarget",
+      "type": "pickString",
+      "description": "Dev cái gì? Dev bao nhiêu module?",
+      "options": [
+        { "value": "--interactive", "label": "🧙 Interactive TUI (Chọn checklist từng service)" },
+        { "value": "--all", "label": "🚀 Full Stack (Khởi chạy toàn bộ 6 services)" },
+        { "value": "--core", "label": "🦀 Backend Core Only (Rust Daemon :8765)" },
+        { "value": "--vsce", "label": "🧩 VS Code Extension (Core + VSCE watcher)" },
+        { "value": "--studio", "label": "🎨 Studio Canvas (Core + Web Studio Canvas)" },
+        { "value": "--desk", "label": "🖥️  Desktop App (Core + Tauri v2 App :1420)" },
+        { "value": "--runner", "label": "⚡ CLI Runner (Core + Headless Engine)" },
+        { "value": "--docs", "label": "📖 Scalar API Docs (Live Reference :8767)" }
+      ],
+      "default": "--interactive"
+    },
+    {
+      "id": "buildTarget",
+      "type": "pickString",
+      "description": "Build cái gì? Build bao nhiêu module?",
+      "options": [
+        { "value": "all", "label": "📦 Tất cả Packages (Turborepo Full Build)" },
+        { "value": "core", "label": "🦀 Automa Core (Rust Cargo Release)" },
+        { "value": "studio", "label": "🎨 Automa Studio (Web Canvas -> dist/studio)" },
+        { "value": "runner", "label": "⚡ Automa Runner (Headless Engine -> dist/cli-runner)" },
+        { "value": "vsce", "label": "🧩 Automa VSCE (VS Code Extension VSIX)" },
+        { "value": "desk", "label": "🖥️  Automa Desk (Desktop Tauri App)" },
+        { "value": "sandbox", "label": "🚀 Production Bundles & Dev Sandbox Deploy" }
+      ],
+      "default": "all"
+    },
+    {
+      "id": "testTarget",
+      "type": "pickString",
+      "description": "Test cái gì? Test tầng nào?",
+      "options": [
+        { "value": "--all", "label": "🧪 Tất cả Suites (Tier 1 - 3 Toàn Diện)" },
+        { "value": "--tier 1", "label": "⚡ Tier 1: Unit Tests (Rust Core + VSCE + Desk)" },
+        { "value": "--tier 2", "label": "🌐 Tier 2: E2E Integration API Tests" },
+        { "value": "--tier 3", "label": "📐 Tier 3: Strict Schema Validator" },
+        { "value": "--core", "label": "🦀 Chỉ kiểm thử Automa Core (Cargo)" },
+        { "value": "--vsce", "label": "🧩 Chỉ kiểm thử Automa VSCE (Vitest)" },
+        { "value": "--desk", "label": "🖥️  Chỉ kiểm thử Automa Desk (Vitest)" },
+        { "value": "--schema", "label": "📐 Chỉ kiểm tra OpenAPI Schema Linter" }
+      ],
+      "default": "--all"
+    },
+    {
+      "id": "lintTarget",
+      "type": "pickString",
+      "description": "Lint cái gì? Lint bao nhiêu module?",
+      "options": [
+        { "value": "all", "label": "✨ Tất cả Packages (Biome + Style Debt Check)" },
+        { "value": "fix", "label": "🔧 Auto-Fix All (Biome --write & Format)" },
+        { "value": "vsce", "label": "🧩 Chỉ Lint Automa VSCE" },
+        { "value": "desk", "label": "🖥️  Chỉ Lint Automa Desk" },
+        { "value": "webe", "label": "🌐 Chỉ Lint Automa Webe" },
+        { "value": "ui", "label": "🎨 Chỉ Lint Packages UI (@automa/ui)" },
+        { "value": "style", "label": "🔍 Style Technical Debt Scanner" },
+        { "value": "schema", "label": "📐 Strict OpenAPI Schema Linter" }
+      ],
+      "default": "all"
+    },
+    {
+      "id": "syncTarget",
+      "type": "pickString",
+      "description": "Sync cái gì? Đồng bộ phần nào?",
+      "options": [
+        { "value": "all", "label": "🔄 Full Contract Pipeline (OpenAPI + Schema + Bruno + SDK)" },
+        { "value": "openapi", "label": "📄 Chỉ xuất OpenAPI Spec (openapi.json)" },
+        { "value": "bruno", "label": "📁 Chỉ đồng bộ Bruno Collection (automa-bruno/)" },
+        { "value": "submodules", "label": "📐 Đồng bộ Git Submodule Pointers" },
+        { "value": "ui", "label": "🎨 Đồng bộ Shadcn-Vue UI Primitives" }
+      ],
+      "default": "all"
+    },
+    {
+      "id": "setupTarget",
+      "type": "pickString",
+      "description": "Setup cái gì? Khởi tạo phần nào?",
+      "options": [
+        { "value": "all", "label": "🚀 Full Setup (Submodules + PNPM Install)" },
+        { "value": "submodules", "label": "📦 Submodules Only (git submodule update)" },
+        { "value": "pnpm", "label": "⚡ Dependencies Only (pnpm install)" },
+        { "value": "doctor", "label": "🩺 Doctor & Diagnostics (Node, PNPM, Git, Rust)" }
+      ],
+      "default": "all"
     }
   ]
 }

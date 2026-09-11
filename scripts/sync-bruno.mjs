@@ -1,97 +1,96 @@
-import { execSync } from 'child_process';
-import fs, { rmSync, writeFileSync, existsSync, readFileSync } from 'fs';
-import path, { join } from 'path';
+#!/usr/bin/env node
 
+/**
+ * Automa Ecosystem - Bruno Collection Synchronizer
+ * Converts openapi.json to Bruno .bru files and automates path parameter injection.
+ */
+
+import { execSync } from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
+import process from 'node:process';
 import { getOpenApiSpec } from './export-openapi.mjs';
+import { pc, rootDir, safeRm } from './lib/utils.mjs';
 
-const API_JSON_PATH = 'automa-bruno.tmp.json';
-const OUTPUT_DIR = 'automa-bruno';
+const API_JSON_PATH = path.join(rootDir, 'automa-bruno.tmp.json');
+const OUTPUT_DIR = path.join(rootDir, 'automa-bruno');
 
-console.log('Obtaining OpenAPI spec for Bruno collection...');
-try {
-  const spec = await getOpenApiSpec();
-  writeFileSync(API_JSON_PATH, JSON.stringify(spec, null, 2), 'utf-8');
-} catch (e) {
-  console.error('Failed to obtain OpenAPI spec for Bruno:', e.message);
-  process.exit(1);
-}
+async function syncBruno() {
+  console.log(`${pc.cyan('🔍 Obtaining OpenAPI spec for Bruno collection...')}`);
 
-console.log('Cleaning up old Bruno collection...');
-if (existsSync(OUTPUT_DIR)) {
-  rmSync(OUTPUT_DIR, { recursive: true, force: true });
-}
+  try {
+    const spec = await getOpenApiSpec();
+    fs.writeFileSync(API_JSON_PATH, JSON.stringify(spec, null, 2), 'utf-8');
 
-console.log('Importing OpenAPI spec to Bruno...');
-try {
-  execSync(
-    `pnpm exec bru import openapi -s ${API_JSON_PATH} -o . -n "automa-bruno" --collection-format bru -g path`,
-    { stdio: 'inherit' }
-  );
-} catch (e) {
-  console.error('Failed to import OpenAPI to Bruno.');
-  process.exit(1);
-}
+    console.log(`${pc.yellow('🧹 Cleaning up old Bruno collection...')}`);
+    safeRm(OUTPUT_DIR);
 
+    console.log(`${pc.cyan('📥 Importing OpenAPI spec to Bruno...')}`);
+    execSync(
+      `pnpm exec bru import openapi -s "${API_JSON_PATH}" -o "${rootDir}" -n "automa-bruno" --collection-format bru -g path`,
+      { cwd: rootDir, stdio: 'inherit' },
+    );
 
-
-console.log('Injecting baseUrl into collection.bru...');
-const collectionPath = join(OUTPUT_DIR, 'collection.bru');
-if (existsSync(collectionPath)) {
-  const fileContent = readFileSync(collectionPath, 'utf-8');
-  if (!fileContent.includes('vars:pre-request')) {
-    const appendContent = '\nvars:pre-request {\n  baseUrl: http://127.0.0.1:8765\n}\n';
-    writeFileSync(collectionPath, appendContent, { flag: 'a' });
-  } else {
-    console.log('vars:pre-request already exists in collection.bru. Skipping injection.');
-  }
-}
-
-
-console.log('Automating path parameters in .bru files...');
-function walkDir(dir) {
-  let results = [];
-  const list = fs.readdirSync(dir);
-  for (let file of list) {
-    file = path.join(dir, file);
-    const stat = fs.statSync(file);
-    if (stat && stat.isDirectory()) {
-      results = results.concat(walkDir(file));
-    } else if (file.endsWith('.bru') && !file.endsWith('collection.bru')) {
-      results.push(file);
+    console.log(`${pc.cyan('💉 Injecting baseUrl into collection.bru...')}`);
+    const collectionPath = path.join(OUTPUT_DIR, 'collection.bru');
+    if (fs.existsSync(collectionPath)) {
+      const fileContent = fs.readFileSync(collectionPath, 'utf-8');
+      if (!fileContent.includes('vars:pre-request')) {
+        const appendContent = '\nvars:pre-request {\n  baseUrl: http://127.0.0.1:8765\n}\n';
+        fs.writeFileSync(collectionPath, appendContent, { flag: 'a' });
+      } else {
+        console.log(`${pc.dim('vars:pre-request already exists in collection.bru. Skipping injection.')}`);
+      }
     }
+
+    console.log(`${pc.cyan('⚙️  Automating path parameters in .bru files...')}`);
+    function walkDir(dir) {
+      let results = [];
+      const list = fs.readdirSync(dir);
+      for (let file of list) {
+        file = path.join(dir, file);
+        const stat = fs.statSync(file);
+        if (stat && stat.isDirectory()) {
+          results = results.concat(walkDir(file));
+        } else if (file.endsWith('.bru') && !file.endsWith('collection.bru')) {
+          results.push(file);
+        }
+      }
+      return results;
+    }
+
+    if (fs.existsSync(OUTPUT_DIR)) {
+      const bruFiles = walkDir(OUTPUT_DIR);
+      let updatedCount = 0;
+      for (const file of bruFiles) {
+        let fileContent = fs.readFileSync(file, 'utf-8');
+        const pathRegex = /params:path \{[\s\S]*?\n\}/g;
+        let hasChanges = false;
+
+        fileContent = fileContent.replace(pathRegex, (match) => {
+          return match.replace(/^(\s+)([a-zA-Z0-9_\-]+):.*$/gm, (lineMatch, indent, paramName) => {
+            if (paramName.startsWith('@')) return lineMatch;
+            hasChanges = true;
+            return `${indent}${paramName}: {{${paramName}}}`;
+          });
+        });
+
+        if (hasChanges) {
+          fs.writeFileSync(file, fileContent);
+          updatedCount++;
+        }
+      }
+      console.log(`${pc.green('✔')} Automated path parameters in ${updatedCount} files.`);
+    }
+
+    console.log(`${pc.bold(pc.green('✅ Bruno collection synchronized successfully!'))}`);
+  } finally {
+    // Guaranteed cleanup of temporary spec file
+    safeRm(API_JSON_PATH);
   }
-  return results;
 }
 
-const bruFiles = walkDir(OUTPUT_DIR);
-let updatedCount = 0;
-for (const file of bruFiles) {
-  let fileContent = fs.readFileSync(file, 'utf-8');
-  
-  // Find the params:path { ... } block
-  const pathRegex = /params:path \{[\s\S]*?\n\}/g;
-  let hasChanges = false;
-  
-  fileContent = fileContent.replace(pathRegex, (match) => {
-    // Replace lines like '  id: 1234' or '  job_id: ' with '  id: {{id}}' and '  job_id: {{job_id}}'
-    // Ignore lines starting with '@'
-    return match.replace(/^(\s+)([a-zA-Z0-9_\-]+):.*$/gm, (lineMatch, indent, paramName) => {
-      if (paramName.startsWith('@')) return lineMatch;
-      hasChanges = true;
-      return `${indent}${paramName}: {{${paramName}}}`;
-    });
-  });
-  
-  if (hasChanges) {
-    fs.writeFileSync(file, fileContent);
-    updatedCount++;
-  }
-}
-console.log(`Automated path parameters in ${updatedCount} files.`);
-
-console.log('Cleaning up temporary spec file...');
-if (existsSync(API_JSON_PATH)) {
-  rmSync(API_JSON_PATH);
-}
-
-console.log('✅ Bruno collection synchronized successfully!');
+syncBruno().catch((err) => {
+  console.error(`${pc.red('✘ Failed to sync Bruno collection:')}`, err.message);
+  process.exit(1);
+});

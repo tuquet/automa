@@ -2,6 +2,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT_DIR = path.resolve(__dirname, '..')
 const UI_TARGET_DIR = path.join(ROOT_DIR, 'packages/automa-ui/src/components/ui')

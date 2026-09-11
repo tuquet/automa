@@ -12,4 +12,6 @@ allowBuilds:
   es5-ext: true
   unrs-resolver: true
   better-sqlite3: true
+  lefthook: true
+  protobufjs: true
 minimumReleaseAge: 0

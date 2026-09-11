@@ -4,28 +4,17 @@
  * Automa Submodule Pointer Drift Checker
  * Detects when submodules have new commits that haven't been staged/updated in root git index.
  * Supports auto-sync with `node scripts/check-submodules.mjs --sync`
+ * Supports machine output with `node scripts/check-submodules.mjs --json`
  */
 
 import { execSync } from 'node:child_process';
 import path from 'node:path';
 import process from 'node:process';
-import { fileURLToPath } from 'node:url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.resolve(__dirname, '..');
+import { pc, rootDir } from './lib/utils.mjs';
 
 const isSyncMode = process.argv.includes('--sync');
 const isStrictMode = process.argv.includes('--strict');
-
-const colors = {
-  reset: '\x1b[0m',
-  bright: '\x1b[1m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  red: '\x1b[31m',
-  cyan: '\x1b[36m',
-  gray: '\x1b[90m',
-};
+const isJsonMode = process.argv.includes('--json');
 
 function getSubmodules() {
   try {
@@ -69,11 +58,8 @@ function getRootSubmoduleCommit(submodulePath) {
 }
 
 function checkAll() {
-  console.log(`${colors.bright}${colors.cyan}====================================================${colors.reset}`);
-  console.log(`${colors.bright}🔍 Automa Submodule Pointer Drift Checker${colors.reset}`);
-  console.log(`${colors.bright}${colors.cyan}====================================================${colors.reset}\n`);
-
   const submodules = getSubmodules();
+  const results = [];
   const drifts = [];
 
   for (const sub of submodules) {
@@ -81,17 +67,37 @@ function checkAll() {
     const rootCommit = getRootSubmoduleCommit(sub);
 
     if (!subHead) {
-      console.log(`  ${colors.yellow}⚠️  ${sub}: Directory or git submodule not initialized.${colors.reset}`);
+      results.push({ sub, status: 'uninitialized', subHead: null, rootCommit });
       continue;
     }
 
     if (rootCommit && subHead !== rootCommit) {
       drifts.push({ sub, subHead, rootCommit });
-      console.log(`  ${colors.red}❌ ${sub}${colors.reset} is OUT OF SYNC:`);
-      console.log(`     Root Pointer:     ${colors.gray}${rootCommit.slice(0, 8)}${colors.reset}`);
-      console.log(`     Submodule HEAD:   ${colors.yellow}${subHead.slice(0, 8)}${colors.reset}`);
+      results.push({ sub, status: 'drift', subHead, rootCommit });
     } else {
-      console.log(`  ${colors.green}✔  ${sub}${colors.reset} is in sync (${colors.gray}${subHead.slice(0, 8)}${colors.reset})`);
+      results.push({ sub, status: 'synced', subHead, rootCommit });
+    }
+  }
+
+  if (isJsonMode) {
+    console.log(JSON.stringify({ submodules: results, driftCount: drifts.length }, null, 2));
+    if (isStrictMode && drifts.length > 0) process.exit(1);
+    return;
+  }
+
+  console.log(`${pc.bold(pc.cyan('===================================================='))}`);
+  console.log(`${pc.bold('🔍 Automa Submodule Pointer Drift Checker')}`);
+  console.log(`${pc.bold(pc.cyan('===================================================='))}\n`);
+
+  for (const item of results) {
+    if (item.status === 'uninitialized') {
+      console.log(`  ${pc.yellow('⚠️')}  ${item.sub}: Directory or git submodule not initialized.`);
+    } else if (item.status === 'drift') {
+      console.log(`  ${pc.red('❌')} ${pc.bold(item.sub)} is ${pc.red('OUT OF SYNC')}:`);
+      console.log(`     Root Pointer:     ${pc.dim(item.rootCommit?.slice(0, 8))}`);
+      console.log(`     Submodule HEAD:   ${pc.yellow(item.subHead?.slice(0, 8))}`);
+    } else {
+      console.log(`  ${pc.green('✔')}  ${item.sub} is in sync (${pc.dim(item.subHead?.slice(0, 8))})`);
     }
   }
 
@@ -99,21 +105,21 @@ function checkAll() {
 
   if (drifts.length > 0) {
     if (isSyncMode) {
-      console.log(`${colors.yellow}🔄 Auto-syncing drifted submodule pointers to root git staging...${colors.reset}`);
+      console.log(`${pc.yellow('🔄 Auto-syncing drifted submodule pointers to root git staging...')}`);
       for (const { sub } of drifts) {
         execSync(`git add ${sub}`, { cwd: rootDir });
-        console.log(`  ${colors.green}✔ Staged ${sub} pointer in root git index.${colors.reset}`);
+        console.log(`  ${pc.green('✔')} Staged ${sub} pointer in root git index.`);
       }
-      console.log(`\n${colors.bright}${colors.green}Done! Run 'git commit -m "chore(submodules): update submodules pointers"' to commit at root.${colors.reset}\n`);
+      console.log(`\n${pc.bold(pc.green('Done! Run \'git commit -m "chore(submodules): update submodules pointers"\' to commit at root.'))}\n`);
     } else {
-      console.log(`${colors.bright}${colors.yellow}Notice: ${drifts.length} submodule(s) have new commits not yet recorded in root repo.${colors.reset}`);
-      console.log(`${colors.gray}Run 'pnpm run sync:submodules' to automatically stage the updated pointers.${colors.reset}\n`);
+      console.log(`${pc.bold(pc.yellow(`Notice: ${drifts.length} submodule(s) have new commits not yet recorded in root repo.`))}`);
+      console.log(`${pc.dim('Run \'pnpm run sync:submodules\' to automatically stage the updated pointers.')}\n`);
       if (isStrictMode) {
         process.exit(1);
       }
     }
   } else {
-    console.log(`${colors.green}✔ All submodule pointers are 100% in sync with root repository.${colors.reset}\n`);
+    console.log(`${pc.green('✔ All submodule pointers are 100% in sync with root repository.')}\n`);
   }
 }
 
