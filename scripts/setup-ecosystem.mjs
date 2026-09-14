@@ -11,6 +11,7 @@ import fs from 'node:fs';
 import process from 'node:process';
 import {
   formatDuration,
+  getPrompts,
   pc,
   printWizardBanner,
   refreshRuntimePaths,
@@ -25,17 +26,8 @@ const isPnpmOnly = args.includes('pnpm') || args.includes('--pnpm');
 const isRustOnly = args.includes('rust') || args.includes('--rust');
 const isDoctor = args.includes('doctor') || args.includes('--doctor');
 
-// Dynamic loader for @clack/prompts if node_modules are present
-async function getPrompts() {
-  try {
-    const mod = await import('@clack/prompts');
-    return mod.default || mod;
-  } catch (_) {
-    return null;
-  }
-}
-
 async function runDoctor() {
+  refreshRuntimePaths();
   console.log(`\n${pc.bold(pc.cyan('🩺 Running Automa Ecosystem Environment Doctor...'))}\n`);
 
   const checks = [

@@ -46,7 +46,7 @@ mindmap
 ### 💎 7 Nguyên Tắc Bất Biến (The 7 Golden Invariants):
 
 1. **Single Source of Truth & Zero Redundancy (Nguồn Chân Lý Duy Nhất)**:
-   - Toàn bộ đặc tả API được định nghĩa tại `automa-core` (Rust + `utoipa`) và xuất ra [`openapi.json`](../openapi.json).
+   - Toàn bộ đặc tả API được định nghĩa tại `automa-core` (Rust + `utoipa`) và xuất ra [`openapi.json`](../packages/automa-types/openapi.json).
    - Client tiêu thụ duy nhất qua SDK [`@automa/types/api`](../packages/automa-types/README.md).
    - **Tư duy**: Tuyệt đối không viết tài liệu sao chép lại schema của API dạng Markdown tĩnh (tránh Documentation Drift). Khám phá tương tác trực tiếp qua **Scalar API Server** (`:8767`).
 2. **Database-First State & Zero Folder Scanning (Dữ Liệu Tập Trung SQLite)**:
@@ -122,7 +122,7 @@ mindmap
 
 ## ⚡ TRỤ CỘT 3: HỆ THỐNG API TẬP TRUNG (THE UNIFIED API TRINITY)
 
-Dự án áp dụng triết lý **Single Source of Truth (SSOT)**: Toàn bộ API contracts được định nghĩa tại `automa-core` (Rust + `utoipa`) và xuất ra [`openapi.json`](../openapi.json). Thay vì lưu trữ hàng trăm file Markdown tĩnh dễ bị lỗi thời, hệ thống cung cấp 3 tầng phục vụ chuyên biệt:
+Dự án áp dụng triết lý **Single Source of Truth (SSOT)**: Toàn bộ API contracts được định nghĩa tại `automa-core` (Rust + `utoipa`) và xuất ra [`openapi.json`](../packages/automa-types/openapi.json). Thay vì lưu trữ hàng trăm file Markdown tĩnh dễ bị lỗi thời, hệ thống cung cấp 3 tầng phục vụ chuyên biệt:
 
 ```mermaid
 graph TD

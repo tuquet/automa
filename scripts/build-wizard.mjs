@@ -81,16 +81,6 @@ const TARGETS = [
     args: ['-F', '@automa/ui', 'run', 'build'],
     cwd: rootDir,
   },
-  {
-    id: 'sandbox',
-    label: '🚀 Production Bundles & Dev Sandbox Deployment',
-    hint: 'Đóng gói toàn bộ và nạp vào ~/.automa/core-dev/bin',
-    cmd: process.platform === 'win32' ? 'powershell' : 'bash',
-    args: process.platform === 'win32'
-      ? ['-ExecutionPolicy', 'Bypass', '-File', 'scripts/build-prod.ps1']
-      : ['scripts/init-workspace.sh'],
-    cwd: rootDir,
-  },
 ];
 
 const args = process.argv.slice(2);

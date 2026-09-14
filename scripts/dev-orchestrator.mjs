@@ -15,12 +15,18 @@ import { fileURLToPath } from 'node:url';
 import * as p from '@clack/prompts';
 import * as Sentry from '@sentry/node';
 import pc from 'picocolors';
+import {
+  automaDir,
+  ensureLogsDir,
+  logsDir,
+  refreshRuntimePaths,
+  rootDir,
+} from './lib/utils.mjs';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.resolve(__dirname, '..');
-const automaDir = path.join(rootDir, '.automa');
+// Ensure Scoop and process-scoped PATH priorities are applied
+refreshRuntimePaths();
+
 const stateFile = path.join(automaDir, '.dev-selection.json');
-const logsDir = path.join(automaDir, 'logs');
 const allLogFile = path.join(logsDir, 'dev-all.log');
 const errorLogFile = path.join(logsDir, 'dev-errors.log');
 
@@ -39,12 +45,6 @@ function stripAnsi(str) {
   return typeof str === 'string' ? str.replace(ANSI_REGEX, '') : String(str);
 }
 
-function ensureLogsDir() {
-  if (!fs.existsSync(logsDir)) {
-    fs.mkdirSync(logsDir, { recursive: true });
-  }
-}
-
 function checkRotateLog(filePath, maxSize = 5 * 1024 * 1024) {
   try {
     if (fs.existsSync(filePath)) {
@@ -59,7 +59,6 @@ function checkRotateLog(filePath, maxSize = 5 * 1024 * 1024) {
 }
 
 const NOISE_PATTERNS = [
-  /\[webpack\.Progress\]/,
   /^\$\s+/,
   /^\s*(Compiling|Checking|Finished|Running|Downloading|Downloaded|Updating|Locking)\b/,
   /^\s*(VITE v|ready in \d+|➜\s+Local:|➜\s+Network:|➜\s+press h)\b/,
@@ -599,20 +598,18 @@ function setupHotkeys() {
     process.stdin.setEncoding('utf8');
   } catch (_) {}
 
-  const handleKey = (rawStr) => {
-    const key = (rawStr || '').trim().toLowerCase();
-    if (key === 'q' || rawStr === '\u0003') {
-      cleanup();
-    } else if (key === 'r') {
-      restartAll();
-    } else if (key === 'c') {
+  const hotkeyActions = {
+    q: cleanup,
+    '\u0003': cleanup,
+    r: restartAll,
+    c: () => {
       console.clear();
       showHotkeysBar();
-    } else if (key === 'e' || key === 's') {
-      showRecentErrors();
-    } else if (key === 'l') {
-      showLogPaths();
-    } else if (key === 'o') {
+    },
+    e: showRecentErrors,
+    s: showRecentErrors,
+    l: showLogPaths,
+    o: () => {
       console.log(`\n${pc.cyan('🌐 Đang mở các dashboard trên trình duyệt...')}${pc.reset('')}`);
       activeTasks.forEach((t) => {
         if (t.url) {
@@ -620,6 +617,14 @@ function setupHotkeys() {
           openBrowser(t.url);
         }
       });
+    },
+  };
+
+  const handleKey = (rawStr) => {
+    const key = (rawStr || '').trim().toLowerCase();
+    const action = hotkeyActions[key] || hotkeyActions[rawStr];
+    if (action) {
+      action();
     }
   };
 
@@ -654,7 +659,9 @@ async function main() {
 
   process.on('SIGINT', cleanup);
   process.on('SIGTERM', cleanup);
-  process.on('exit', cleanup);
+  process.on('exit', () => {
+    childProcesses.forEach(({ proc }) => killProcess(proc));
+  });
 
   setupHotkeys();
   startTasks(activeTasks);

@@ -1,12 +1,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { rootDir } from './lib/utils.mjs'
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const ROOT_DIR = path.resolve(__dirname, '..')
-const UI_TARGET_DIR = path.join(ROOT_DIR, 'packages/automa-ui/src/components/ui')
+const UI_TARGET_DIR = path.join(rootDir, 'packages/automa-ui/src/components/ui')
 
 // Core official components to sync into @automa/ui
 const DEFAULT_COMPONENTS = [
@@ -93,7 +89,7 @@ async function syncShadcnComponents(targetComponents = DEFAULT_COMPONENTS) {
             if (!content.includes('"icon-xs"')) {
               content = content.replace(
                 '"icon-sm": "size-9",',
-                `"xs": "h-6 px-2 text-[11px] rounded",
+                `"xs": "h-6 px-2 text-xs rounded",
         "icon-sm": "size-9",
         "icon-xs": "size-6 p-0",`,
               )

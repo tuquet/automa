@@ -11,7 +11,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { pc, rootDir } from './lib/utils.mjs';
 
-const openApiPath = path.join(rootDir, 'openapi.json');
+const openApiPath = path.join(rootDir, 'packages', 'automa-types', 'openapi.json');
 const PORT = process.env.PORT || 8767;
 
 // Connected SSE clients for live reload
@@ -131,6 +131,16 @@ if (fs.existsSync(openApiPath)) {
     }, 300);
   });
 }
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`\n${pc.red(`❌ Port ${PORT} is already in use.`)}`);
+    console.error(`${pc.yellow(`👉 Either terminate the existing process or run with: PORT=8768 node scripts/serve-docs.mjs`)}\n`);
+  } else {
+    console.error(`\n${pc.red(`❌ Server error:`)}`, err.message);
+  }
+  process.exit(1);
+});
 
 server.listen(PORT, '127.0.0.1', () => {
   console.log(`\n${pc.bold(pc.magenta('===================================================='))}`);

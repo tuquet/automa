@@ -10,20 +10,27 @@ export const automaDir = path.join(rootDir, '.automa');
 export const logsDir = path.join(automaDir, 'logs');
 export const packagesDir = path.join(rootDir, 'packages');
 
-// Process-Scoped Runtime Path Priority for Scoop (Node.js LTS, pnpm, rustup/cargo)
+export const homeDir = process.env.USERPROFILE || process.env.HOME || '';
+
+// Process-Scoped Runtime Path Priority for Scoop (Node.js LTS & Current, pnpm, rustup/cargo, cloudflared)
 export function refreshRuntimePaths() {
-  const userProfile = process.env.USERPROFILE || '';
-  const scoopPnpmDir = path.join(userProfile, 'scoop/apps/pnpm/current');
-  const scoopNodeDir = path.join(userProfile, 'scoop/apps/nodejs-lts/current');
-  const scoopShimsDir = path.join(userProfile, 'scoop/shims');
-  const scoopCargoDir = path.join(userProfile, 'scoop/apps/rustup/current/.cargo/bin');
-  const scoopPersistCargoDir = path.join(userProfile, 'scoop/persist/rustup/.cargo/bin');
-  const scoopRustDir = path.join(userProfile, 'scoop/apps/rust/current/bin');
-  const userCargoDir = path.join(userProfile, '.cargo/bin');
+  if (process.platform !== 'win32' || !homeDir) return;
+
+  const scoopPnpmDir = path.join(homeDir, 'scoop/apps/pnpm/current');
+  const scoopNodeDir = path.join(homeDir, 'scoop/apps/nodejs/current');
+  const scoopNodeLtsDir = path.join(homeDir, 'scoop/apps/nodejs-lts/current');
+  const scoopCloudflaredDir = path.join(homeDir, 'scoop/apps/cloudflared/current');
+  const scoopShimsDir = path.join(homeDir, 'scoop/shims');
+  const scoopCargoDir = path.join(homeDir, 'scoop/apps/rustup/current/.cargo/bin');
+  const scoopPersistCargoDir = path.join(homeDir, 'scoop/persist/rustup/.cargo/bin');
+  const scoopRustDir = path.join(homeDir, 'scoop/apps/rust/current/bin');
+  const userCargoDir = path.join(homeDir, '.cargo/bin');
 
   const priorityDirs = [
     scoopPnpmDir,
     scoopNodeDir,
+    scoopNodeLtsDir,
+    scoopCloudflaredDir,
     scoopShimsDir,
     scoopCargoDir,
     scoopPersistCargoDir,
@@ -38,8 +45,6 @@ export function refreshRuntimePaths() {
     process.env.PATH = [...priorityDirs, ...currentPaths].join(path.delimiter);
   }
 }
-
-refreshRuntimePaths();
 
 /**
  * Resilient picocolors loader with zero-dependency fallback for bootstrap scripts
@@ -143,16 +148,7 @@ export const CANONICAL_MODULES = [
   },
 ];
 
-/**
- * Safe file or folder deletion
- */
-export function safeRm(targetPath) {
-  try {
-    if (fs.existsSync(targetPath)) {
-      fs.rmSync(targetPath, { recursive: true, force: true });
-    }
-  } catch (_) {}
-}
+const MAX_BUFFER_CHARS = 200_000;
 
 /**
  * Ensure logs directory exists
@@ -174,6 +170,7 @@ export function formatDuration(ms) {
  * Run an async child process with duration measurement and cross-platform safety
  */
 export function runProcess(command, args = [], options = {}) {
+  refreshRuntimePaths();
   return new Promise((resolve) => {
     const startTime = Date.now();
     const cwd = options.cwd || rootDir;
@@ -190,8 +187,12 @@ export function runProcess(command, args = [], options = {}) {
     let stderrData = '';
 
     if (stdio === 'pipe') {
-      child.stdout?.on('data', (d) => { stdoutData += d.toString(); });
-      child.stderr?.on('data', (d) => { stderrData += d.toString(); });
+      child.stdout?.on('data', (d) => {
+        stdoutData = (stdoutData + d.toString()).slice(-MAX_BUFFER_CHARS);
+      });
+      child.stderr?.on('data', (d) => {
+        stderrData = (stderrData + d.toString()).slice(-MAX_BUFFER_CHARS);
+      });
     }
 
     child.on('close', (code) => {

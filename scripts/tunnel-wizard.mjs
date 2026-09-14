@@ -6,7 +6,7 @@
  * and coordinates secure Git Relay push to GitHub via VPS bare repo.
  */
 
-import { execSync, spawn } from 'node:child_process';
+import { execSync, spawn, spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import net from 'node:net';
 import path from 'node:path';
@@ -27,6 +27,23 @@ const TUNNEL_HOSTNAME = 'cdn.flowup.io.vn';
 const VPS_USER = 'root';
 const VPS_REPO_PATH = '/var/repo/automa-ecosystem.git';
 const PID_FILE = path.join(automaDir, 'cloudflared.pid');
+
+/**
+ * Validate branch argument against command injection and repository invariants
+ */
+export function validateBranch(branch) {
+  if (!branch || typeof branch !== 'string') {
+    throw new Error('Branch name is required.');
+  }
+  const clean = branch.trim();
+  if (!/^[a-zA-Z0-9_\-\.\/]+$/.test(clean) || clean.startsWith('-')) {
+    throw new Error(`Invalid branch name: "${clean}". Disallowed characters or flag prefix detected.`);
+  }
+  if (clean === 'main' || clean === 'origin/main' || clean.endsWith('/main')) {
+    throw new Error('Pushing directly to branch "main" is strictly FORBIDDEN by repository policy (AGENTS.md).');
+  }
+  return clean;
+}
 
 /**
  * Check if a TCP port is currently listening
@@ -144,23 +161,14 @@ export async function startTunnel(detached = true) {
   console.log(`  ${pc.cyan('➜')} Target: ${pc.bold(TUNNEL_HOSTNAME)} -> ${TUNNEL_HOST}:${TUNNEL_PORT}`);
 
   if (detached) {
-    if (process.platform === 'win32') {
-      const psCmd = `Start-Process -FilePath '${binPath}' -ArgumentList 'access tcp --hostname ${TUNNEL_HOSTNAME} --url ${TUNNEL_HOST}:${TUNNEL_PORT}' -WindowStyle Hidden -PassThru | Select-Object -ExpandProperty Id`;
-      try {
-        const pid = execSync(`powershell -NoProfile -Command "${psCmd}"`, { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
-        if (pid) {
-          fs.writeFileSync(PID_FILE, pid, 'utf-8');
-        }
-      } catch (_) {}
-    } else {
-      const child = spawn(binPath, ['access', 'tcp', '--hostname', TUNNEL_HOSTNAME, '--url', `${TUNNEL_HOST}:${TUNNEL_PORT}`], {
-        detached: true,
-        stdio: 'ignore',
-      });
-      child.unref();
-      if (child.pid) {
-        fs.writeFileSync(PID_FILE, child.pid.toString(), 'utf-8');
-      }
+    const child = spawn(binPath, ['access', 'tcp', '--hostname', TUNNEL_HOSTNAME, '--url', `${TUNNEL_HOST}:${TUNNEL_PORT}`], {
+      detached: true,
+      stdio: 'ignore',
+      windowsHide: true,
+    });
+    child.unref();
+    if (child.pid) {
+      fs.writeFileSync(PID_FILE, child.pid.toString(), 'utf-8');
     }
 
     const isReady = await waitForPort(TUNNEL_PORT, true, 8000);
@@ -270,7 +278,15 @@ export async function runDoctor() {
 /**
  * 1-Click Push via Relay (Self-healing: auto-starts tunnel if needed)
  */
-export async function pushRelay(branch = 'dev') {
+export async function pushRelay(rawBranch = 'dev') {
+  let branch;
+  try {
+    branch = validateBranch(rawBranch);
+  } catch (err) {
+    console.error(`\n  ${pc.red('✖')} ${err.message}\n`);
+    return false;
+  }
+
   console.log(`\n${pc.bold(pc.cyan(`🚀 Git Relay Push -> GitHub (${branch})...`))}\n`);
 
   // 1. Ensure cloudflared is ready
@@ -318,10 +334,10 @@ export async function pushRelay(branch = 'dev') {
   if (pushResult.success) {
     console.log(`\n  ${pc.green('✔')} Successfully pushed to GitHub via Relay! (${pushResult.duration})`);
 
-    // Update local tracking ref so git status reflects clean state
+    // Update local tracking ref so git status reflects clean state safely
     try {
       const headSha = execSync('git rev-parse HEAD', { cwd: rootDir, encoding: 'utf-8' }).trim();
-      execSync(`git update-ref refs/remotes/origin/${branch} ${headSha}`, { cwd: rootDir });
+      spawnSync('git', ['update-ref', `refs/remotes/origin/${branch}`, headSha], { cwd: rootDir });
     } catch (_) {}
 
     return true;

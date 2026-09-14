@@ -102,6 +102,30 @@
       }
     },
     {
+      "label": "⚙️ Automa: Ecosystem Setup (Full)",
+      "type": "shell",
+      "command": "node scripts/setup-ecosystem.mjs all",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "⚙️ Automa: Ecosystem Setup & Init (Wizard)",
+      "type": "shell",
+      "command": "node scripts/setup-ecosystem.mjs ${input:setupTarget}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true,
+        "clear": false
+      }
+    },
+    {
       "label": "🚇 Automa: Cloudflare Tunnel & Git Relay",
       "type": "shell",
       "command": "node scripts/tunnel-wizard.mjs",
@@ -124,6 +148,22 @@
         "focus": true,
         "clear": false
       }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "setupTarget",
+      "type": "pickString",
+      "description": "Setup cái gì? Khởi tạo phần nào?",
+      "options": [
+        { "value": "all", "label": "🚀 Full Setup (Submodules + PNPM + Rust/Cargo)" },
+        { "value": "rust", "label": "🦀 Rust & Cargo Setup (Scoop install rustup)" },
+        { "value": "submodules", "label": "📦 Submodules Only (git submodule update)" },
+        { "value": "pnpm", "label": "⚡ Dependencies Only (pnpm install)" },
+        { "value": "doctor", "label": "🩺 Doctor & Diagnostics (Node, PNPM, Git, Rust, Tunnel)" },
+        { "value": "cloudflared", "label": "🚇 Cloudflare Tunnel Setup" }
+      ],
+      "default": "all"
     }
   ]
 }

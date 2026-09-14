@@ -37,6 +37,7 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 .idea/
+.obsidian/
 *.suo
 *.user
 *.userosscache

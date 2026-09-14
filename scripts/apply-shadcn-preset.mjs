@@ -1,12 +1,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
-import './lib/utils.mjs';
+import { rootDir } from './lib/utils.mjs';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const ROOT_DIR = path.resolve(__dirname, '..');
+const ROOT_DIR = rootDir;
 
 // Canonical Preset Registry
 const PRESETS = {
@@ -99,9 +96,17 @@ function formatCssVariables(vars, indent = '  ') {
     .join('\n');
 }
 
-export function applyPreset(presetCode = 'b1buPAiSjA') {
+export function applyPreset(rawPresetCode = 'b1buPAiSjA') {
+  const cleanCode = (rawPresetCode || '').trim();
+  if (!/^[a-zA-Z0-9_-]+$/.test(cleanCode)) {
+    console.error(`❌ Invalid preset code format: "${cleanCode}". Disallowed characters detected.`);
+    return;
+  }
+  const presetCode = cleanCode;
+
   console.log('================================================================================');
-  console.log('🎨 AUTOMA SHADCN THEME PRESET ADAPTER');
+  console.log('🎨 SHADCN-VUE DESIGN SYSTEM PRESET & TOKEN INJECTOR');
+  console.log(`📂 Target UI Directory: ${path.join(ROOT_DIR, 'packages/automa-ui')}`);
   console.log(`📦 Applying Preset: [${presetCode}]`);
   console.log('================================================================================\n');
 
