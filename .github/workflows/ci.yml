@@ -39,11 +39,11 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Inject Pass Key
+        run: echo "export default function() { return '${{ secrets.AUTOMA_MASTER_KEY || 'default_ci_key' }}'; }" > automa-webe/src/utils/getPassKey.js
+
       - name: Lint
         run: pnpm run lint
-
-      - name: Inject Pass Key
-        run: echo "export default function() { return '${{ secrets.AUTOMA_MASTER_KEY }}'; }" > automa-webe/src/utils/getPassKey.js
 
       - name: Build
         run: pnpm run build
