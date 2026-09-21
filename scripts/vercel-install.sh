@@ -28,13 +28,22 @@ else
   echo "   'GH_PAT' in Vercel Project Settings -> Environment Variables."
 fi
 
-# 2. Initialize and update ONLY the automa-webe submodule
+# 2. Initialize and update ONLY the automa-webe submodule (Cache-resilient)
 echo "📦 Initializing & updating submodule: automa-webe..."
-if ! git submodule update --init --recursive automa-webe; then
-  echo "❌ Error: Failed to clone/update submodule 'automa-webe'."
-  echo "   Please verify that 'GH_PAT' has Read access to repository 'tuquet/automa-webe'."
-  exit 1
+
+# If automa-webe exists but lacks .git (e.g. from partial cache restoration), clean it first
+if [ -d "automa-webe" ] && [ ! -e "automa-webe/.git" ]; then
+  echo "⚠️ Detected non-git automa-webe directory from build cache, resetting..."
+  rm -rf automa-webe
 fi
+
+# Try submodule update with force; if it fails due to directory conflict, remove and retry
+if ! git submodule update --init --recursive --force automa-webe 2>/dev/null; then
+  echo "⚠️ Submodule update failed, attempting fresh clean clone..."
+  rm -rf automa-webe
+  git submodule update --init --recursive --force automa-webe
+fi
+
 echo "✔ Submodule 'automa-webe' ready at commit $(git -C automa-webe rev-parse --short HEAD)"
 
 # 3. Ensure pnpm is ready via Corepack or npm fallback
