@@ -33,7 +33,7 @@ jobs:
             target: aarch64-apple-darwin
             binary_name: automa-core
             asset_name: automa-core-macos-arm64.tar.gz
-          - os: macos-13
+          - os: macos-latest
             target: x86_64-apple-darwin
             binary_name: automa-core
             asset_name: automa-core-macos-x86_64.tar.gz
