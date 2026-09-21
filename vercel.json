@@ -3,10 +3,9 @@
   "framework": "vite",
   "buildCommand": "pnpm run vercel:build",
   "outputDirectory": "automa-webe/dist/studio",
-  "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!assets/).*)",
       "destination": "/index.html"
     }
   ],
