@@ -47,3 +47,5 @@ Thumbs.db
 automa-repo-clone/
 automa-obsidian/
 automa-bruno/
+.vercel
+.env*
