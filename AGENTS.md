@@ -25,3 +25,8 @@
 - **Strict ASCII Invariance:** All PowerShell and batch scripts in this repository MUST be strictly ASCII-encoded (no Vietnamese diacritics in code, comments, or output strings) to avoid Windows PowerShell 5.1 ANSI parsing issues.
 - **Reserved Characters:** Always quote strings containing reserved shell characters (such as `&`, `|`, `<`, `>`).
 - **Native Command Stderr Safety:** Always handle native CLI stderr streams safely when checking tool statuses.
+
+## 4. Web Studio Architecture & Monorepo Layout
+- **`apps/webe` Dual Role:** `apps/webe` is NOT just a Web Extension. It contains the complete **Automa Web Studio SPA & Reusable Web Component Ecosystem** in `apps/webe/src/studio`.
+- **Standalone Web SPA:** `pnpm --filter @automa/webe build:studio` builds `apps/webe/dist/studio`, which is deployable standalone to Web hosting (Vercel) via `pnpm deploy:studio`.
+- **Cross-Platform Mount Target:** The Web Studio flow canvas is embedded directly inside `@automa/desk` (Desktop OS app shell) and `vscode-automa` (VS Code webview pane via Host Bridge postMessage IPC).

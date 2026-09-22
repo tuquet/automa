@@ -38,6 +38,15 @@ Browse the Automa marketplace where you can share and download workflows with ot
 ## Automa Chrome Extension Builder
 Automa Chrome Extension Builder (Automa CEB for short) allows you to generate a standalone chrome extension based on Automa workflows. [Go to the documentation &#187;](https://docs.extension.automa.site/extension-builder)
 
+## Automa Web Studio SPA & Reusable Component Ecosystem (`src/studio`)
+Inside `apps/webe/src/studio`, Automa contains a complete, standalone **Web Studio Single Page Application (SPA)** and rich visual flow component engine:
+- **Visual Flow Canvas & Editors**: Powered by Vue 3.5, `@vue-flow/core`, CodeMirror 6, TipTap, and `@automa/ui`.
+- **Multi-Platform Deployment Targets**:
+  1. **Standalone Web SPA**: Built via `pnpm build:studio` into `dist/studio`, deployable to Vercel/Web hosting (`pnpm deploy:studio`).
+  2. **Tauri Desktop OS App (`@automa/desk`)**: Mounted directly in the native desktop app shell.
+  3. **VS Code Extension Webview (`vscode-automa`)**: Mounted inside VS Code webview panes via Host Bridge postMessage IPC (`setupHostBridgeReceiver`).
+  4. **Browser Extension (`@automa/webe`)**: Embedded in extension option/newtab pages.
+
 
 ## Project setup
 Before running the `yarn dev` or `yarn build` script, you need to create the `getPassKey.js` file in the `src/utils` directory.  Inside the file write

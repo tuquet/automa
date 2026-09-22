@@ -21,12 +21,9 @@
         "deploy:studio": "pnpm run build:studio && vercel deploy apps/webe/dist/studio --prod",
         "build:webview": "turbo run build:webview",
         "build:core": "cargo build --release --manifest-path apps/core/Cargo.toml",
-        "build:desk": "turbo run build --filter=@automa/desk",
         "dev": "node scripts/dev-orchestrator.mjs",
         "dev:all": "node scripts/dev-orchestrator.mjs --all",
         "dev:turbo": "turbo run dev",
-        "dev:vsce": "turbo run dev --filter=vscode-automa",
-        "dev:desk": "turbo run dev --filter=@automa/desk",
         "dev:source:runner": "turbo run dev:runner --filter=@automa/webe",
         "dev:source:studio": "turbo run dev:studio --filter=@automa/webe",
         "dev:core": "cargo watch -C apps/core -x run",
@@ -37,11 +34,8 @@
         "test:tier3": "node scripts/test-all.mjs --tier 3",
         "test:schema": "node scripts/enforce-strict-schema.mjs",
         "test:core": "cargo test --manifest-path apps/core/Cargo.toml",
-        "test:desk": "pnpm -F @automa/desk test:unit",
-        "test:vsce": "pnpm -F vscode-automa test",
         "test:e2e": "vitest run",
         "test:ui": "vitest --ui",
-        "test:coverage": "pnpm -F vscode-automa run test:coverage",
         "lint": "turbo run lint && node scripts/lint-style-debt.mjs",
         "lint:wizard": "node scripts/lint-wizard.mjs",
         "lint:style": "node scripts/lint-style-debt.mjs",
@@ -78,10 +72,5 @@
         "turbo": "^2.1.2",
         "vitest": "^4.1.10",
         "ws": "^8.21.3"
-    },
-    "lint-staged": {
-        "apps/vsce/**/*.{js,ts,json}": [
-            "npx @biomejs/biome check --write"
-        ]
     }
 }
