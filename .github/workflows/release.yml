@@ -54,8 +54,10 @@ jobs:
             "export default function (key = '') { return 'automa-secret-passkey-' + key; }" | Set-Content -Path "apps/webe/src/utils/getPassKey.js"
           }
 
-      - name: Build Web Assets (@automa/webe)
-        run: pnpm -F @automa/webe run build
+      - name: Build Web Assets (@automa/webe & dependencies)
+        run: |
+          pnpm -F @automa/types build
+          pnpm -F @automa/webe run build
 
       - name: Build Rust Core Engine
         run: cargo build --release --manifest-path apps/core/Cargo.toml
