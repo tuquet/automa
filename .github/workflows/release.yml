@@ -46,6 +46,14 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
+      - name: Inject Fallback Secrets & PassKey
+        shell: pwsh
+        run: |
+          if (-not (Test-Path "apps/webe/src/utils/getPassKey.js")) {
+            New-Item -ItemType Directory -Path "apps/webe/src/utils" -Force
+            "export default function (key = '') { return 'automa-secret-passkey-' + key; }" | Set-Content -Path "apps/webe/src/utils/getPassKey.js"
+          }
+
       - name: Build Web Assets (@automa/webe)
         run: pnpm -F @automa/webe run build
 
