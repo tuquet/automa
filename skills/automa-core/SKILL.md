@@ -5,7 +5,7 @@ description: Architecture, Axum REST/SSE/WS endpoints, OpenAPI utoipa annotation
 
 # Automa Core Rust Daemon (`automa-core`)
 
-Architecture, API standards, and system coordination guide for the `automa-core` submodule.
+Architecture, API standards, and system coordination guide for the `apps/core` application.
 
 ---
 
@@ -24,7 +24,7 @@ Architecture, API standards, and system coordination guide for the `automa-core`
 
 ## 2. 🛡️ Architectural Invariants
 
-- **Separation of Concerns**: Rust Core NEVER manipulates browser DOM directly. All DOM actions (`click`, `input`, `scroll`) are executed inside the browser context by `automa-webe/dist/cli-runner` to preserve native anti-bot fingerprinting.
+- **Separation of Concerns**: Rust Core NEVER manipulates browser DOM directly. All DOM actions (`click`, `input`, `scroll`) are executed inside the browser context by `apps/webe/dist/cli-runner` to preserve native anti-bot fingerprinting.
 - **RESTful Strictness**: Resource-oriented routes only. Action verbs in URLs are FORBIDDEN (use `POST /api/jobs` instead of `POST /api/jobs/submit`).
 - **OpenAPI v3 `utoipa` Rules**:
   - `operation_id`: Explicit `snake_case` (e.g. `submit_job`, `get_health`, `get_storage_tables`).
@@ -73,8 +73,8 @@ pub async fn submit_job(
 
 ## 4. 🔧 Verification & SDK Sync
 
-1. **Rust Check & Tests**: Run `cargo check` and `cargo test` in `automa-core/`.
-2. **Export OpenAPI Spec**: `cargo run --bin automa-core -- --export-openapi openapi.json`.
+1. **Rust Check & Tests**: Run `cargo test --manifest-path apps/core/Cargo.toml`.
+2. **Export OpenAPI Spec**: `cargo run --manifest-path apps/core/Cargo.toml --bin automa-core -- --export-openapi openapi.json`.
 3. **Synchronize Monorepo API SDK**: Run `pnpm run sync:api` at monorepo root.
 
 ---

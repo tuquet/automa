@@ -10,15 +10,15 @@
 
 | Vòng | Phân Hệ / Module Mục Tiêu | Thời Điểm | Trạng Thái | Số Lỗi Phát Hiện |
 | :--- | :--- | :--- | :--- | :--- |
-| **Vòng 1** | **`automa-webe/src/studio`** (Web Studio Canvas & Modals) | Khởi động ngay | ✅ Hoàn thành | 8 lỗi |
-| **Vòng 2** | **`automa-desk`** (Desktop Tauri App & Action Panels) | +10 phút | ✅ Hoàn thành | 8 lỗi |
-| **Vòng 3** | **`automa-vsce`** (VS Code Extension Views & Tree Providers) | +20 phút | ✅ Hoàn thành | 7 lỗi |
+| **Vòng 1** | **`apps/webe/src/studio`** (Web Studio Canvas & Modals) | Khởi động ngay | ✅ Hoàn thành | 8 lỗi |
+| **Vòng 2** | **`apps/desk`** (Desktop Tauri App & Action Panels) | +10 phút | ✅ Hoàn thành | 8 lỗi |
+| **Vòng 3** | **`apps/vsce`** (VS Code Extension Views & Tree Providers) | +20 phút | ✅ Hoàn thành | 7 lỗi |
 | **Vòng 4** | **`@automa/ui`** (Shared Design System & Virtualized Tables) | +30 phút | ✅ Hoàn thành | 6 lỗi |
 | **Vòng 5** | **Ecosystem Consistency** (Terminology & Button/Select Contracts) | +40 phút | ✅ Hoàn thành | 5 lỗi |
 
 ---
 
-## 🔍 VÒNG 1: Rà Soát Chi Tiết `automa-webe/src/studio`
+## 🔍 VÒNG 1: Rà Soát Chi Tiết `apps/webe/src/studio`
 
 ### 1. Trùng Lặp Hành Động (Duplicate Actions / CTAs)
 1. **[WorkflowLibraryModal.vue:124] Nút `Close` ở Footer bị thừa**:

@@ -5,9 +5,9 @@
 ## 🎯 1. MỤC TIÊU & PHẠM VI (SCOPE & OBJECTIVES)
 
 Menu **Storage** quản lý toàn bộ cơ sở dữ liệu nghiệp vụ, biến cấu hình toàn cục, mật mã kho bí mật (Vault Secrets), và cây tệp kịch bản lưu trữ của Automa Ecosystem:
-- **`automa-desk`**: Cung cấp giao diện quản trị 3 tab (`StorageView.vue`): **Tables** (Bảng dữ liệu SQLite), **Variables** (Biến toàn cục Public), **Credentials** (Mật mã mã hóa Zero-Leak Vault).
-- **`automa-vsce`**: Cung cấp sidebar panel `STORAGE` (`automa.storage`), standalone panel `TablePanel.ts` và webview `TableView.vue` với chế độ Visual Form Mode.
-- **`automa-vault`**: Thư mục workspace chứa các file kịch bản trên đĩa (`*.workflow.json`, `*.campaign.json`, `*.browser.json`).
+- **`apps/desk`**: Cung cấp giao diện quản trị 3 tab (`StorageView.vue`): **Tables** (Bảng dữ liệu SQLite), **Variables** (Biến toàn cục Public), **Credentials** (Mật mã mã hóa Zero-Leak Vault).
+- **`apps/vsce`**: Cung cấp sidebar panel `STORAGE` (`automa.storage`), standalone panel `TablePanel.ts` và webview `TableView.vue` với chế độ Visual Form Mode.
+- **`apps/vault`**: Thư mục workspace chứa các file kịch bản trên đĩa (`*.workflow.json`, `*.campaign.json`, `*.browser.json`).
 
 ---
 
@@ -74,7 +74,7 @@ Store [`useStorageStore`](../../packages/automa-ui/src/stores/useStorageStore.ts
 
 ## 🔒 6. CHUẨN MÃ HÓA BẢO MẬT KHO BÍ MẬT (VAULT CRYPTOGRAPHY)
 
-Chuẩn mã hóa cốt lõi được bảo đảm 100% trong `automa-core/src/core/crypto/`:
+Chuẩn mã hóa cốt lõi được bảo đảm 100% trong `apps/core/src/core/crypto/`:
 1. **Key & IV Derivation**: Thuật toán `EVP_BytesToKey` (MD5 hash Master Passphrase + 8-byte Salt ngẫu nhiên) sinh 32-byte Key và 16-byte IV.
 2. **AES-256-CBC Payload**: Mã hóa có padding `Pkcs7`, sinh chuỗi Base64 chuẩn `Salted__<salt><ciphertext>`.
 3. **HMAC-SHA256 Integrity Seal**: Tính chữ ký 64 hex bảo vệ chuỗi Base64.

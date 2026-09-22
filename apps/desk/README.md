@@ -58,7 +58,7 @@ Khi khởi chạy môi trường phát triển toàn bộ hệ sinh thái (`pnpm
 | :--- | :--- | :--- |
 | 🖥️ **Automa Desk Frontend** | **`http://localhost:1420`** | Giao diện Desktop Vite Dev Server (HMR, Vue DevTools). |
 | ⚙️ **Automa Core Daemon** | **`http://127.0.0.1:8765`** | Rust Backend Daemon (HTTP REST RESTful API). |
-| 🎨 **Web Studio Canvas Embed** | **`http://127.0.0.1:8765/studio/`** | Visual Workflow Canvas standalone phục vụ trực tiếp từ `automa-webe/dist/studio`. |
+| 🎨 **Web Studio Canvas Embed** | **`http://127.0.0.1:8765/studio/`** | Visual Workflow Canvas standalone phục vụ trực tiếp từ `apps/webe/dist/studio`. |
 | 📡 **Server-Sent Events (SSE)** | **`http://127.0.0.1:8765/api/v1/events`** | Luồng 1 chiều stream log thời gian thực (`task:log`) và tiến độ node (`JOB_PROGRESS`). |
 | ⚡ **WebSocket Control** | **`ws://127.0.0.1:8765/api/v1/ws`** | Kênh 2 chiều độ trễ thấp điều khiển: `PAUSE_JOB`, `RESUME_JOB`, `KILL_JOB`. |
 | 📑 **Swagger UI (OpenAPI Docs)** | **`http://127.0.0.1:8765/swagger-ui`** | Giao diện tài liệu tương tác OpenAPI v3 trực quan. |
@@ -74,10 +74,10 @@ Khi khởi chạy môi trường phát triển toàn bộ hệ sinh thái (`pnpm
    - Tất cả nút tương tác (Minimize, Maximize/Restore, Close, Theme Toggle, Command Palette) mang class `no-drag`.
    - Hỗ trợ Double-Click trên Titlebar để toggle Maximize (`appWindow.toggleMaximize()`).
 2. **Nhúng Reusable Web Studio (`dist/studio`)**:
-   - Nhúng trực tiếp bản build Web Studio Canvas từ `automa-webe` thông qua Iframe host bridge hai chiều an toàn.
-   - Tuyệt đối không sao chép hoặc duplicate mã nguồn canvas giữa các submodules.
+   - Nhúng trực tiếp bản build Web Studio Canvas từ `apps/webe` thông qua Iframe host bridge hai chiều an toàn.
+   - Tuyệt đối không sao chép hoặc duplicate mã nguồn canvas giữa các ứng dụng.
 3. **Tuân Thủ Máy Trạng Thái Nút Bấm (Event-Driven FSM)**:
-   - Toàn bộ nút bấm thực thi (`btn.workflow.run`, `btn.workflow.stop`, `btn.workflow.save`, `btn.workflow.lint`) tuân thủ máy trạng thái hữu hạn FSM theo [SRS Button Business Logic](../../docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md).
+   - Toàn bộ nút bấm thực thi (`btn.workflow.run`, `btn.workflow.stop`, `btn.workflow.save`, `btn.workflow.lint`) tuân thủ máy trạng thái hữu hạn FSM theo [SRS Button Business Logic](../../docs/srs/SRS_HORIZONTAL_BUTTONS.md).
    - Zero-Dummy UI: 100% nút bấm kết nối với OpenAPI handlers và hiển thị trạng thái loading / spinner rõ ràng.
 4. **Command Palette (`Ctrl+K` / `Cmd+K`)**:
    - Hộp thoại tìm kiếm mờ (Fuzzy Search) hỗ trợ điều hướng tức thì giữa các phân vùng (`Studio`, `Browsers`, `Storage`, `History`, `Settings`) và đổi Theme.
@@ -87,7 +87,7 @@ Khi khởi chạy môi trường phát triển toàn bộ hệ sinh thái (`pnpm
 ## 📁 Cấu Trúc Thư Mục Chuẩn Senior
 
 ```text
-automa-desk/
+apps/desk/
 ├── src/
 │   ├── app/                              # 1. Application Layer (Router, Global Styles, Root App)
 │   │   ├── App.vue                       # Mount MainAppLayout
@@ -186,7 +186,7 @@ cargo tauri build
 
 ## 📚 Tài Liệu Kỹ Thuật Liên Quan
 
-- ⚡ [**SRS Button Business Logic & Event-Driven Schema**](../../docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md)
+- ⚡ [**SRS Button Business Logic & Event-Driven Schema**](../../docs/srs/SRS_HORIZONTAL_BUTTONS.md)
 - 📘 [**Hướng Dẫn Tích Hợp & Triển Khai Automa Core OpenAPI**](../../docs/OPENAPI_INTEGRATION_GUIDE.md)
 - 🌐 [**Trung Tâm Tài Liệu Hệ Sinh Thái (Documentation Hub)**](../../docs/Home.md)
-- ⚙️ [**Automa Core (Rust Daemon README)**](../automa-core/README.md)
+- ⚙️ [**Automa Core (Rust Daemon README)**](../core/README.md)

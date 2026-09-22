@@ -5,7 +5,7 @@ description: Architecture, UI/UX, Panel systems (automa-vsce:panel), Custom Edit
 
 # Automa VS Code Extension (`automa-vsce`)
 
-Comprehensive architecture, UI/UX, and implementation guide for the `automa-vsce` submodule.
+Comprehensive architecture, UI/UX, and implementation guide for the `apps/vsce` application.
 
 ---
 

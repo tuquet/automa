@@ -5,14 +5,14 @@ description: Directory conventions, Campaign matrix schemas (*.campaign.json), a
 
 # Automa Storage Workspace (`automa-vault`)
 
-File layout conventions, Campaign matrix scheduling, and browser profile specifications for the `automa-vault` submodule.
+File layout conventions, Campaign matrix scheduling, and browser profile specifications for the `apps/vault` directory.
 
 ---
 
 ## 1. 🎯 Scope: Global Storage vs Storage Workspace
 
-- **Global Storage (Runtime Truth)**: SQLite database managed by `automa-core` (`Tables`, `Variables`, `Credentials`, `Browsers`, `Jobs`). All UI panels and runtimes consume state directly via `/api/v1/...` REST APIs.
-- **Storage Workspace (`automa-vault`)**: Disk directory tree used for Git version control and explicit export/import. **Zero Folder Scanning Invariant**: Runtimes and extensions MUST NOT use automatic folder scanning/globbing commands to discover state; all entities are managed through the SQLite database.
+- **Global Storage (Runtime Truth)**: SQLite database managed by `apps/core` (`Tables`, `Variables`, `Credentials`, `Browsers`, `Jobs`). All UI panels and runtimes consume state directly via `/api/v1/...` REST APIs.
+- **Storage Workspace (`apps/vault`)**: Disk directory tree used for Git version control and explicit export/import. **Zero Folder Scanning Invariant**: Runtimes and extensions MUST NOT use automatic folder scanning/globbing commands to discover state; all entities are managed through the SQLite database.
 
 ---
 
@@ -60,7 +60,7 @@ File layout conventions, Campaign matrix scheduling, and browser profile specifi
 ## 3. 💻 Flat List Directory Structure
 
 ```text
-automa-vault/
+apps/vault/
 ├── browsers/
 │   ├── chrome-profile-1.browser.json
 │   └── firefox-profile-2.browser.json

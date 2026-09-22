@@ -5,27 +5,27 @@ description: Architecture, Standalone Web Studio Canvas (dist/studio), Headless 
 
 # Automa Web Extension & Studio (`automa-webe`)
 
-Architecture and implementation guide for the `automa-webe` submodule.
+Architecture and implementation guide for the `apps/webe` application.
 
 ---
 
 ## 1. 🎯 Scope & Dual Build Targets
 
-`automa-webe` provides the core browser automation engine and visual workflow studio.
+`apps/webe` provides the core browser automation engine and visual workflow studio.
 
 ### 2 Reusable Build Artifacts:
 1. **Headless Execution Engine (`dist/cli-runner`)**:
    - Build command: `pnpm run build:runner` (`webpack.runner.config.js`).
-   - Sideloaded into headless/headful Chromium instances by `automa-core` to execute DOM automation blocks.
+   - Sideloaded into headless/headful Chromium instances by `apps/core` to execute DOM automation blocks.
 2. **Standalone Web Studio Canvas (`dist/studio`)**:
    - Build command: `pnpm run build:studio` (`webpack.studio.config.js`).
-   - Served by `automa-core` at `http://127.0.0.1:8765/studio/` and embedded into `automa-vsce` custom editors via `iframe` with two-way `postMessage` synchronization.
+   - Served by `apps/core` at `http://127.0.0.1:8765/studio/` and embedded into `apps/vsce` custom editors via `iframe` with two-way `postMessage` synchronization.
 
 ---
 
 ## 2. 🛡️ Architectural Invariants
 
-- **Zero Code Duplication**: Other submodules (`automa-core`, `automa-vsce`, `automa-desk`) MUST consume `dist/cli-runner` and `dist/studio`. Duplicating canvas/runner source code is FORBIDDEN.
+- **Zero Code Duplication**: Other applications (`apps/core`, `apps/vsce`, `apps/desk`) MUST consume `dist/cli-runner` and `dist/studio`. Duplicating canvas/runner source code is FORBIDDEN.
 - **Native Browser APIs**: Uses native `chrome.*` / `browser.*` through `src/lib/browser-compat.js` (aliased via Webpack; never use `webextension-polyfill` directly).
 - **MV3 Offscreen Resilience**:
   - Workflow execution in Chrome MV3 runs inside an Offscreen Document (`offscreen.html`).

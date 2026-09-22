@@ -10,7 +10,7 @@
 Trong quá trình phát triển hệ sinh thái **Automa Ecosystem**, các kỹ sư thường xuyên phải làm việc trong môi trường mạng văn phòng hoặc mạng doanh nghiệp có thiết lập tường lửa khắt khe (Skyhigh Web Gateway, Fortinet, CMC Global firewall):
 * **Chặn cổng SSH (Port 22)**: Không thể clone hoặc push qua SSH thông thường.
 * **Chặn hoặc kiểm duyệt giao thức Git (DLP/DPI)**: Soi tiêu đề gói tin chứa tên miền `github.com` và chủ động ngắt kết nối (TCP Reset).
-* **Đặc thù Monorepo có nhiều Git Submodules**: Dự án chứa 5 submodule độc lập (`automa-core`, `automa-webe`, `automa-vsce`, `automa-desk`, `automa-vault`). Nếu cấu hình proxy toàn cục (`--global`) sẽ làm hỏng kết nối của các dự án khác trên máy.
+* **Đặc thù mạng doanh nghiệp khắt khe**: Cấu hình proxy toàn cục (`--global`) sẽ làm hỏng kết nối của các dự án khác trên máy.
 
 👉 **Giải pháp hoàn hảo**: Thiết lập **Cloudflare SSH Tunnel kết hợp Git Relay qua Bare Repository trên VPS**, được tích hợp sẵn thành **VS Code Task 1-Click** ngay trong bộ công cụ của Automa Ecosystem.
 
@@ -45,7 +45,7 @@ sequenceDiagram
 ### Ưu điểm vượt trội:
 1. **Tuyệt đối ẩn danh với tường lửa nội bộ**: Lưu lượng đi ra ngoài chỉ là lưu lượng HTTPS/WebSocket tiêu chuẩn tới Cloudflare Edge. Tường lửa không thấy DNS `github.com`, không thấy IP GitHub, không thấy lệnh Git.
 2. **Không làm ô nhiễm máy tính**: Không cần bật proxy toàn hệ thống. Cấu hình hoàn toàn cục bộ hoặc theo phiên làm việc.
-3. **Tự động hóa khép kín (Self-Healing)**: Hệ thống tự động kiểm tra `cloudflared`, tự cài đặt qua Scoop nếu thiếu, tự bật ngầm tunnel và tự sync submodules trước khi push.
+3. **Tự động hóa khép kín (Self-Healing)**: Hệ thống tự động kiểm tra `cloudflared`, tự cài đặt qua Scoop nếu thiếu, tự bật ngầm tunnel và đẩy code trực tiếp.
 
 ---
 
@@ -73,7 +73,7 @@ Toàn bộ cơ chế đã được lập trình sẵn thành công cụ dòng l�
 
 | Tùy chọn | Chức năng |
 | :--- | :--- |
-| 🚀 **1-Click Push via Relay** | **Tự động từ A-Z**: Kiểm tra `cloudflared` (tự cài nếu thiếu) $\rightarrow$ Tự mở cổng 2222 $\rightarrow$ Sync con trỏ submodules $\rightarrow$ Đẩy code lên nhánh `dev` của GitHub. |
+| 🚀 **1-Click Push via Relay** | **Tự động từ A-Z**: Kiểm tra `cloudflared` (tự cài nếu thiếu) $\rightarrow$ Tự mở cổng 2222 $\rightarrow$ Đẩy code lên GitHub qua Relay. |
 | 🚇 **Start Tunnel Bridge** | Mở tiến trình `cloudflared access tcp` ngầm lắng nghe tại `127.0.0.1:2222`. |
 | 🛑 **Stop Tunnel Bridge** | Dừng tiến trình và giải phóng cổng `2222`. |
 | 🩺 **Doctor & Healthcheck** | Chẩn đoán toàn diện 4 tầng (Binary CLI $\rightarrow$ Port 2222 $\rightarrow$ SSH VPS $\rightarrow$ Quyền GitHub). |
@@ -105,13 +105,13 @@ pnpm run tunnel
 
 Tuân thủ nghiêm ngặt quy định tại [`.agents/AGENTS.md`](../.agents/AGENTS.md):
 
-1. **Quy tắc Zero Git Push to `main`**:
-   - Tất cả các tác vụ Relay Push **chỉ được phép đẩy vào nhánh `dev`**.
-   - Nhánh `main` được bảo vệ nghiêm ngặt, chỉ dành cho bản release chính thức do người quản trị phê duyệt.
-2. **Submodule Pointer Sync**:
-   - Khi chỉnh sửa bất kỳ submodule nào (`automa-core`, `automa-webe`, `automa-vsce`, `automa-desk`, `automa-vault`), kịch bản `push:relay` sẽ tự động kích hoạt `check-submodules.mjs --sync` để đảm bảo con trỏ commit ở root luôn khớp với HEAD của submodule.
+1. **Quy tắc An Toàn Nhánh (Branch Safety)**:
+   - Tất cả các tác vụ Relay Push theo mặc định được đẩy vào nhánh `dev` (hoặc nhánh chỉ định).
+   - Nhánh `main` được bảo vệ nghiêm ngặt, chỉ dành cho bản release chính thức.
+2. **Atomic Monorepo Push**:
+   - Toàn bộ thay đổi mã nguồn trên các ứng dụng (`apps/*`) và thư viện (`packages/*`) được đẩy nguyên khối (atomic) lên GitHub chỉ qua 1 lần push duy nhất.
 3. **Bảo mật Repository Visibility**:
-   - Đảm bảo repo gốc `tuquet/automa-ecosystem` và toàn bộ 5 submodule đều được đặt ở trạng thái **Private** trên GitHub để bảo vệ logic nghiệp vụ nội bộ.
+   - Đảm bảo repo `tuquet/automa-ecosystem` được đặt ở trạng thái **Private** trên GitHub để bảo vệ logic nghiệp vụ nội bộ.
 
 ---
 

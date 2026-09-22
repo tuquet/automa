@@ -38,7 +38,7 @@ mindmap
       Giai Ma Tren RAM Only
       Zero Decrypted Secrets On Disk/Logs
     (7. Engine Reusability)
-      automa-webe Xuat Dual Artifacts
+      apps/webe Xuat Dual Artifacts
       dist/cli-runner Headless Engine
       dist/studio Standalone Canvas
 ```
@@ -46,7 +46,7 @@ mindmap
 ### 💎 7 Nguyên Tắc Bất Biến (The 7 Golden Invariants):
 
 1. **Single Source of Truth & Zero Redundancy (Nguồn Chân Lý Duy Nhất)**:
-   - Toàn bộ đặc tả API được định nghĩa tại `automa-core` (Rust + `utoipa`) và xuất ra [`openapi.json`](../packages/automa-types/openapi.json).
+   - Toàn bộ đặc tả API được định nghĩa tại `apps/core` (Rust + `utoipa`) và xuất ra [`openapi.json`](../packages/automa-types/openapi.json).
    - Client tiêu thụ duy nhất qua SDK [`@automa/types/api`](../packages/automa-types/README.md).
    - **Tư duy**: Tuyệt đối không viết tài liệu sao chép lại schema của API dạng Markdown tĩnh (tránh Documentation Drift). Khám phá tương tác trực tiếp qua **Scalar API Server** (`:8767`).
 2. **Database-First State & Zero Folder Scanning (Dữ Liệu Tập Trung SQLite)**:
@@ -57,9 +57,9 @@ mindmap
    - Automa Core sử dụng binary Chromium độc lập được tải và duy trì riêng biệt (theo kiến trúc Playwright), loại trừ 100% version drift và cô lập phiên làm việc hoàn toàn.
 4. **Event-Driven UI Reactions (Kiến Trúc Phản Xạ Hướng Sự Kiện)**:
    - **Tư duy**: Chia tách ranh giới rõ ràng giữa **Điều khiển (Command)** và **Quan sát (Observation)**:
-     - **HTTP REST**: Gửi lệnh bất đồng bộ, trả về ngay lập tức `200 OK (job_id)` (Non-blocking).
-     - **SSE (`/api/v1/events`)**: Truyền phát luồng dữ liệu 1 chiều (Logs, Telemetry, Matrix Progress) để cập nhật phản xạ Pinia Store.
-     - **WebSocket (`/api/v1/ws`)**: Kênh 2 chiều độ trễ cực thấp để can thiệp trực tiếp (`PAUSE_JOB`, `RESUME_JOB`, `KILL_JOB`, live breakpoints).
+      - **HTTP REST**: Gửi lệnh bất đồng bộ, trả về ngay lập tức `200 OK (job_id)` (Non-blocking).
+      - **SSE (`/api/v1/events`)**: Truyền phát luồng dữ liệu 1 chiều (Logs, Telemetry, Matrix Progress) để cập nhật phản xạ Pinia Store.
+      - **WebSocket (`/api/v1/ws`)**: Kênh 2 chiều độ trễ cực thấp để can thiệp trực tiếp (`PAUSE_JOB`, `RESUME_JOB`, `KILL_JOB`, live breakpoints).
    - Nghiêm cấm sử dụng cơ chế Polling (thăm dò định kỳ) làm quá tải server.
 5. **Theme Variable Inversion & Pure Atomic UI (Đảo Ngược Biến Giao Diện)**:
    - **Tư duy**: Linh kiện giao diện nguyên tử không được chứa logic nhận biết theme (Dark/Light/VS Code).
@@ -68,7 +68,7 @@ mindmap
    - **Tư duy**: Dữ liệu nhạy cảm chỉ tồn tại dưới dạng mã hóa `HMAC-SHA256 + AES-256-CBC` khi lưu trữ.
    - Quá trình giải mã `{{secrets.key}}` chỉ diễn ra trên bộ nhớ RAM tại microsecond block thực thi, và bộ nhớ được xóa sạch ngay sau đó. Nghiêm cấm ghi log hoặc lưu trữ secret đã giải mã xuống đĩa.
 7. **Single Core Engine & Dual Reusable Artifacts (Một Động Cơ, Đa Nền Tảng)**:
-   - `automa-webe` đóng vai trò là Engine cốt lõi, đóng gói thành 2 artifacts tái sử dụng:
+   - `apps/webe` đóng vai trò là Engine cốt lõi, đóng gói thành 2 artifacts tái sử dụng:
      - `dist/cli-runner`: Headless Execution Engine tiêu thụ bởi Daemon Rust.
      - `dist/studio`: Standalone Web Canvas nhúng vào VS Code Webview và Desktop Tauri.
    - Không một dòng code thực thi hay canvas layout nào được phép sao chép thủ công (Zero Code Duplication).
@@ -101,7 +101,7 @@ mindmap
 - 🏛️ [**SRS Horizontal Feature Stores & Reactive Hub (`docs/srs/SRS_HORIZONTAL_FEATURE_STORES.md`)**](./srs/SRS_HORIZONTAL_FEATURE_STORES.md): Master architecture 6 Pinia Domain Stores theo mô hình 4 lớp (Primitive State, Entity Graph, Actions, SSE Mutations) và Ma trận Phản xạ Tức thì (Reactive Reflection Matrix).
 - 🎨 [**SRS Horizontal UI Components & Shadcn (`docs/srs/SRS_HORIZONTAL_UI_COMPONENTS.md`)**](./srs/SRS_HORIZONTAL_UI_COMPONENTS.md): Kiến trúc Design System 3 tầng phân lớp, Theme Variable Inversion đa nền tảng, 19 linh kiện atomic Shadcn-Vue, và quy chuẩn tự động hóa CLI (`sync:ui`, `add:ui`, `audit:ui`).
 
-### 📱 2. Đặc Tả Nghiệp Vụ Dọc Từng Màn Hình (Vertical Menu SRS)
+### 📱 2. Đặc TẢ Nghiệp Vụ Dọc Từng Màn Hình (Vertical Menu SRS)
 1. 🎨 [**Menu 1: Studio Canvas & Workflow Editor (`docs/srs/SRS_MENU_STUDIO.md`)**](./srs/SRS_MENU_STUDIO.md) - Soạn thảo đồ thị VueFlow, Smart Connect, Action Header, Run Modal, Dynamic Parameters, Lint diagnostics, và Live Debugger Console.
 2. 🌐 [**Menu 2: Browsers Fleet Management (`docs/srs/SRS_MENU_BROWSERS.md`)**](./srs/SRS_MENU_BROWSERS.md) - Quản lý Profile Anti-detect, Auto-detect Chrome/Brave/Edge, Quản lý phiên Chromium `startBrowser()`, Dừng khẩn cấp Kill-all.
 3. 🚀 [**Menu 3: Campaign Matrix Scheduler (`docs/srs/SRS_MENU_CAMPAIGN.md`)**](./srs/SRS_MENU_CAMPAIGN.md) - Ma trận Campaign Matrix Grid, điều phối chạy song song nhiều profile, phân bổ slots, theo dõi tiến độ thời gian thực `campaign_slot_progress`.
@@ -122,11 +122,11 @@ mindmap
 
 ## ⚡ TRỤ CỘT 3: HỆ THỐNG API TẬP TRUNG (THE UNIFIED API TRINITY)
 
-Dự án áp dụng triết lý **Single Source of Truth (SSOT)**: Toàn bộ API contracts được định nghĩa tại `automa-core` (Rust + `utoipa`) và xuất ra [`openapi.json`](../packages/automa-types/openapi.json). Thay vì lưu trữ hàng trăm file Markdown tĩnh dễ bị lỗi thời, hệ thống cung cấp 3 tầng phục vụ chuyên biệt:
+Dự án áp dụng triết lý **Single Source of Truth (SSOT)**: Toàn bộ API contracts được định nghĩa tại `apps/core` (Rust + `utoipa`) và xuất ra [`openapi.json`](../packages/automa-types/openapi.json). Thay vì lưu trữ hàng trăm file Markdown tĩnh dễ bị lỗi thời, hệ thống cung cấp 3 tầng phục vụ chuyên biệt:
 
 ```mermaid
 graph TD
-    Rust["🦀 automa-core (Rust + utoipa)"] -->|sync:api| Spec["📄 openapi.json (Single Source of Truth)"]
+    Rust["🦀 apps/core (Rust + utoipa)"] -->|sync:api| Spec["📄 openapi.json (Single Source of Truth)"]
     
     Spec -->|SDK Codegen| Tier1["💻 Tier 1: IDE & Compiler (@automa/types/api)<br/>- 100% Type-Safe TypeScript SDK<br/>- IntelliSense gợi ý mã tức thì trong VS Code"]
     Spec -->|Live Engine| Tier2["⚡ Tier 2: Interactive Explorer (Scalar :8767 & Bruno)<br/>- Live Scalar UI với Search Ctrl+K<br/>- Bruno Collection tự động kiểm thử API"]
@@ -142,18 +142,18 @@ graph TD
      pnpm run docs:api
      # Truy cập: http://localhost:8767
      ```
-   - **Bruno API Collection**: Chạy và kiểm thử trực tiếp các request tại thư mục `automa-bruno/`.
+   - **Bruno API Collection**: Chạy và kiểm thử trực tiếp các request tại thư mục `bruno/`.
 3. **Tier 3 (Architecture & Blueprints)**:
    - Đọc cẩm nang [`docs/OPENAPI_INTEGRATION_GUIDE.md`](./OPENAPI_INTEGRATION_GUIDE.md) để nắm rõ luồng SSE (`/api/v1/events`), WebSocket (`/api/v1/ws`) và mã hóa Vault.
 
 ---
 
-## 📦 SUBMODULES & PACKAGES REFERENCE
+## 📦 APPLICATIONS & PACKAGES REFERENCE
 
-1. 🦀 [**Automa Core (Rust Daemon)**](../automa-core/README.md) - Core engine xử lý logic, Axum REST/SSE/WS server, Browser management, SQLite DB.
-2. 🖥️ [**Automa Desktop App (Tauri v2)**](../automa-desk/README.md) - Ứng dụng Desktop độc lập Native OS tích hợp Pinia Domain Stores và Browser Waterfall.
-3. 🧩 [**Automa VS Code Extension**](../automa-vsce/README.md) - 3-Panel Sidebar (`automa.workspace`, `automa.browsers`, `automa.storage`), Custom Editors, và Live Debugger.
-4. 🌐 [**Automa Web Extension & Studio**](../automa-webe/README.md) - Standalone Web Studio (`dist/studio`) và Headless Runner (`dist/cli-runner`).
-5. 📂 [**Automa Vault**](../automa-vault/README.md) - Cấu trúc lưu trữ Local Vault, Campaigns, và Browsers.
+1. 🦀 [**Automa Core (Rust Daemon)**](../apps/core/README.md) - Core engine xử lý logic, Axum REST/SSE/WS server, Browser management, SQLite DB.
+2. 🖥️ [**Automa Desktop App (Tauri v2)**](../apps/desk/README.md) - Ứng dụng Desktop độc lập Native OS tích hợp Pinia Domain Stores và Browser Waterfall.
+3. 🧩 [**Automa VS Code Extension**](../apps/vsce/README.md) - 3-Panel Sidebar (`automa.workspace`, `automa.browsers`, `automa.storage`), Custom Editors, và Live Debugger.
+4. 🌐 [**Automa Web Extension & Studio**](../apps/webe/README.md) - Standalone Web Studio (`dist/studio`) và Headless Runner (`dist/cli-runner`).
+5. 📂 [**Automa Vault**](../apps/vault/README.md) - Cấu trúc lưu trữ Local Vault, Campaigns, và Browsers.
 6. 🎨 [**Automa UI SDK (`@automa/ui`)**](../packages/automa-ui/README.md) - Gói thư viện giao diện & trạng thái dùng chung (Shadcn-Vue Primitives, Theme Tokens).
 7. 📦 [**Automa Types & API SDK (`@automa/types`)**](../packages/automa-types/README.md) - Định nghĩa kiểu dữ liệu dùng chung và TypeScript SDK client sinh tự động từ OpenAPI.

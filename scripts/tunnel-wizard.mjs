@@ -357,7 +357,7 @@ async function runInteractiveMenu() {
   const action = await prompts.select({
     message: 'Chọn hành động với Cloudflare Tunnel / Git Relay:',
     options: [
-      { value: 'push', label: '🚀 1-Click Push via Relay', hint: 'Tự động mở tunnel, sync submodules và đẩy code lên GitHub' },
+      { value: 'push', label: '🚀 1-Click Push via Relay', hint: 'Tự động mở tunnel và đẩy code lên GitHub' },
       { value: 'start', label: '🚇 Start Tunnel Bridge', hint: 'Khởi chạy cloudflared access tcp lắng nghe tại 127.0.0.1:2222' },
       { value: 'stop', label: '🛑 Stop Tunnel Bridge', hint: 'Dừng tiến trình và giải phóng cổng 2222' },
       { value: 'status', label: '🩺 Doctor & Healthcheck', hint: 'Kiểm tra 4 tầng: Binary, Cổng 2222, SSH VPS, Quyền GitHub' },

@@ -15,7 +15,7 @@ Trình soạn thảo **`Campaign Matrix`** (`viewType: automa.campaignEditor`) l
 
 - **Kích hoạt khi**: Mở tệp `*.campaigns.json`
 - **Extension Host Controller**: [`CampaignEditorProvider.ts`](../../src/providers/CampaignEditorProvider.ts)
-- **Webview UI Engine**: [`CampaignMatrixView.vue`](../../webview-ui/src/views/CampaignMatrixView.vue)
+- **Webview UI Engine**: [`WebviewHtmlResolver.ts`](../../src/core/webview/WebviewHtmlResolver.ts)
 
 ---
 

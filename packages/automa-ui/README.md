@@ -3,9 +3,9 @@
 Chào mừng bạn đến với **`@automa/ui`**!
 
 Hãy tưởng tượng hệ sinh thái **Automa** giống như một hãng xe hơi cao cấp sản xuất 3 dòng xe khác nhau:
-- 🏎️ **Dòng xe Desktop**: Ứng dụng độc lập cài trên máy tính (`automa-desk`).
-- 🚗 **Dòng xe Web Extension**: Tiện ích chạy trên trình duyệt Chrome (`automa-webe`).
-- 🚙 **Dòng xe VS Code**: Tiện ích chạy trực tiếp trong trình soạn thảo VS Code (`automa-vsce`).
+- 🏎️ **Dòng xe Desktop**: Ứng dụng độc lập cài trên máy tính (`apps/desk`).
+- 🚗 **Dòng xe Web Extension**: Tiện ích chạy trên trình duyệt Chrome (`apps/webe`).
+- 🚙 **Dòng xe VS Code**: Tiện ích chạy trực tiếp trong trình soạn thảo VS Code (`apps/vsce`).
 
 **`@automa/ui`** chính là **khối động cơ, vô-lăng và bảng điều khiển thông minh chuẩn hóa dùng chung** cho cả 3 dòng xe đó:
 - Khi cần một chiếc vô-lăng (ví dụ: nút chọn trình duyệt, màn hình console xem log), cả 3 xe đều lắp chung một linh kiện hoàn hảo từ `@automa/ui`.

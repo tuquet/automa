@@ -42,13 +42,13 @@ const WIZARD_ACTIONS = [
   {
     value: 'sync',
     label: '🔄 5. Contracts & Sync',
-    hint: 'Đồng bộ OpenAPI spec, Bruno collection, TypeScript SDK và Submodules',
+    hint: 'Đồng bộ OpenAPI spec, Bruno collection và TypeScript SDK',
     script: 'scripts/sync-api.mjs',
   },
   {
     value: 'setup',
     label: '⚙️  6. Ecosystem Setup & Doctor',
-    hint: 'Khởi tạo Git submodules, pnpm install và kiểm tra sức khỏe môi trường',
+    hint: 'Cài đặt dependencies pnpm và kiểm tra sức khỏe môi trường',
     script: 'scripts/setup-ecosystem.mjs',
   },
   {

@@ -4,7 +4,7 @@ Chào mừng bạn đến với trung tâm tri thức và tài liệu (Knowledge
 
 Hệ thống tài liệu được quản trị theo mô hình **Tài liệu sống (Living Documentation & Single Source of Truth)** kết nối trực tiếp giữa **Ma Trận Đặc Tả 2 Chiều (2D Matrix SRS)**, **Cẩm Nang Kỹ Thuật (Engineering Guides)**, và **Hệ Thống API Tương Tác Hiện Đại (Scalar API Reference)**.
 
-> 🗂️ **Tra cứu nhanh toàn bộ danh mục Obsidian Base**: Xem tại [`_meta/All_Documents.base`](./_meta/All_Documents.base)
+> 🗂️ **Tra cứu nhanh toàn bộ mục lục tài liệu**: Xem tại [`docs/README.md`](./README.md)
 
 ---
 
@@ -108,7 +108,7 @@ mindmap
 
 ## ⚡ TRỤ CỘT 3: HỆ THỐNG API TẬP TRUNG (THE UNIFIED API TRINITY)
 
-Dự án áp dụng triết lý **Single Source of Truth (SSOT)**: Toàn bộ API contracts được định nghĩa tại `automa-core` (Rust + `utoipa`) và xuất ra [`openapi.json`](../packages/automa-types/openapi.json). Thay vì lưu trữ hàng trăm file Markdown tĩnh dễ bị lỗi thời, hệ thống cung cấp 3 tầng phục vụ chuyên biệt:
+Dự án áp dụng triết lý **Single Source of Truth (SSOT)**: Toàn bộ API contracts được định nghĩa tại `apps/core` (Rust + `utoipa`) và xuất ra [`openapi.json`](../packages/automa-types/openapi.json). Thay vì lưu trữ hàng trăm file Markdown tĩnh dễ bị lỗi thời, hệ thống cung cấp 3 tầng phục vụ chuyên biệt:
 
 1. **Tier 1 (Code-to-Code / Type-Safe SDK)**: 
    - Tiêu thụ trực tiếp từ package [`@automa/types/api`](../packages/automa-types/README.md).
@@ -119,18 +119,18 @@ Dự án áp dụng triết lý **Single Source of Truth (SSOT)**: Toàn bộ AP
      pnpm run docs:api
      # Truy cập: http://localhost:8767
      ```
-   - **Bruno API Collection**: Chạy và kiểm thử trực tiếp các request tại thư mục `automa-bruno/`.
+   - **Bruno API Collection**: Chạy và kiểm thử trực tiếp các request tại thư mục `bruno/`.
 3. **Tier 3 (Architecture & Blueprints)**:
    - Đọc cẩm nang [`docs/OPENAPI_INTEGRATION_GUIDE.md`](./OPENAPI_INTEGRATION_GUIDE.md) để nắm rõ luồng SSE (`/api/v1/events`), WebSocket (`/api/v1/ws`) và mã hóa Vault.
 
 ---
 
-## 📦 SUBMODULES & PACKAGES REFERENCE
+## 📦 APPLICATIONS & PACKAGES REFERENCE
 
-1. 🦀 [**Automa Core (Rust Daemon)**](../automa-core/README.md) - Core engine xử lý logic, Axum REST/SSE/WS server, Browser management, SQLite DB.
-2. 🖥️ [**Automa Desktop App (Tauri v2)**](../automa-desk/README.md) - Ứng dụng Desktop độc lập Native OS tích hợp Pinia Domain Stores và Browser Waterfall.
-3. 🧩 [**Automa VS Code Extension**](../automa-vsce/README.md) - 3-Panel Sidebar (`automa.workspace`, `automa.browsers`, `automa.storage`), Custom Editors, và Live Debugger.
-4. 🌐 [**Automa Web Extension & Studio**](../automa-webe/README.md) - Standalone Web Studio (`dist/studio`) và Headless Runner (`dist/cli-runner`).
-5. 📂 [**Automa Vault**](../automa-vault/README.md) - Cấu trúc lưu trữ Local Vault, Campaigns, và Browsers.
+1. 🦀 [**Automa Core (Rust Daemon)**](../apps/core/README.md) - Core engine xử lý logic, Axum REST/SSE/WS server, Browser management, SQLite DB.
+2. 🖥️ [**Automa Desktop App (Tauri v2)**](../apps/desk/README.md) - Ứng dụng Desktop độc lập Native OS tích hợp Pinia Domain Stores và Browser Waterfall.
+3. 🧩 [**Automa VS Code Extension**](../apps/vsce/README.md) - 3-Panel Sidebar (`automa.workspace`, `automa.browsers`, `automa.storage`), Custom Editors, và Live Debugger.
+4. 🌐 [**Automa Web Extension & Studio**](../apps/webe/README.md) - Standalone Web Studio (`dist/studio`) và Headless Runner (`dist/cli-runner`).
+5. 📂 [**Automa Vault**](../apps/vault/README.md) - Cấu trúc lưu trữ Local Vault, Campaigns, và Browsers.
 6. 🎨 [**Automa UI SDK (`@automa/ui`)**](../packages/automa-ui/README.md) - Gói thư viện giao diện & trạng thái dùng chung (Shadcn-Vue Primitives, Theme Tokens).
 7. 📦 [**Automa Types & API SDK (`@automa/types`)**](../packages/automa-types/README.md) - Định nghĩa kiểu dữ liệu dùng chung và TypeScript SDK client sinh tự động từ OpenAPI.

@@ -14,8 +14,8 @@ Kỹ năng này BẮT BUỘC KÍCH HOẠT bất cứ khi nào người dùng yê
 ## 2. Danh Mục Bảo Vệ Tuyệt Đối (PROTECTED WHITELIST - CẤM XÓA)
 Khi thực hiện dọn dẹp, AI Agent **TUYỆT ĐỐI KHÔNG ĐƯỢC XÓA** các tệp sau dù chúng nằm trong danh sách gitignore hoặc có vẻ là file tạm:
 
-1. **`automa-ext/src/utils/getPassKey.js`**: Khóa mã hóa bắt buộc để Webpack biên dịch được `automa-ext` và runner.
-2. **`.changeset/*.md`**: Lịch sử release phân tán của submodules, chỉ được tiêu thụ bởi lệnh release chính thức.
+1. **`apps/webe/src/utils/getPassKey.js`**: Khóa mã hóa bắt buộc để Webpack biên dịch được `apps/webe` và runner.
+2. **`.changeset/*.md`**: Lịch sử release phân tán của packages & apps, chỉ được tiêu thụ bởi lệnh release chính thức.
 3. **Các file cấu hình cốt lõi**: `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `turbo.json`, `Cargo.lock`, `Cargo.toml`, `.vscode/*`, `biome.json`.
 4. **Các tệp mã nguồn trong `src/`**: TUYỆT ĐỐI KHÔNG tự ý xóa nếu chưa dùng `grep_search` xác nhận không còn bất kỳ module nào import.
 
@@ -26,8 +26,8 @@ Khi thực hiện dọn dẹp, AI Agent **TUYỆT ĐỐI KHÔNG ĐƯỢC XÓA** 
 | Cấp độ | Định dạng tệp | Hành động |
 | :--- | :--- | :--- |
 | **Tier 1 (Rác Tuyệt Đối)** | `*.vsix` cũ, `openapi-ts-error-*.log`, `npm-debug.log*`, `Thumbs.db`, `.DS_Store`, `*.orig`, `*.bak`, `*.swp` | Xóa ngay không cần đối chiếu |
-| **Tier 2 (Rác Phiên Làm Việc)** | `automa-core/scratch/*`, `automa-vscode/scratch/*`, các script nháp tạm thời ở root | Xóa sạch sau khi phiên debug kết thúc |
-| **Tier 3 (Legacy Dead Assets)** | Các file HTML CDN cũ, thư viện không còn import trong `automa-vscode/assets/webview/libs/` | Dùng `grep_search` kiểm tra, nếu 0 reference thì xóa |
+| **Tier 2 (Rác Phiên Làm Việc)** | `apps/core/scratch/*`, `apps/vsce/scratch/*`, các script nháp tạm thời ở root | Xóa sạch sau khi phiên debug kết thúc |
+| **Tier 3 (Legacy Dead Assets)** | Các file HTML CDN cũ, thư viện không còn import trong `apps/vsce/assets/webview/libs/` | Dùng `grep_search` kiểm tra, nếu 0 reference thì xóa |
 
 ---
 

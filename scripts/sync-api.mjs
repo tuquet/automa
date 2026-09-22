@@ -85,7 +85,7 @@ async function resolveTarget() {
 }
 
 async function main() {
-  printWizardBanner('Contracts & Sync Wizard', 'Keep OpenAPI, TypeScript SDK and Submodules in sync');
+  printWizardBanner('Contracts & Sync Wizard', 'Keep OpenAPI, TypeScript SDK and Applications in sync');
 
   const target = await resolveTarget();
   console.log(`\n${pc.bold(pc.cyan(`Khởi chạy quy trình: ${target.label}`))}\n`);

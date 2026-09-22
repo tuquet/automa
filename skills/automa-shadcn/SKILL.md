@@ -11,7 +11,7 @@ Architecture, composition standards, theme inversion, dark mode synchronization,
 
 ## 1. 🏛️ 3-Layer Design System Architecture
 
-All user interface primitives and composite components are centralized in [`packages/automa-ui`](file:///c:/Users/pn.tund2/Documents/Repository/automa-ecosystem/packages/automa-ui).
+All user interface primitives and composite components are centralized in [`packages/automa-ui`](../../packages/automa-ui).
 
 ```mermaid
 flowchart TD
@@ -43,10 +43,10 @@ flowchart TD
         DomainModals["BrowsersModal.vue / StorageModal.vue / HistoryModal.vue / SettingsModal.vue"]
     end
 
-    subgraph Consumers ["Consumers (Submodules)"]
-        Desk["automa-desk (Tauri Desktop App)"]
-        VSCE["automa-vsce (VS Code Webview)"]
-        WebE["automa-webe (Web Studio Canvas - dist/studio)"]
+    subgraph Consumers ["Consumers (Applications)"]
+        Desk["apps/desk (Tauri Desktop App)"]
+        VSCE["apps/vsce (VS Code Webview)"]
+        WebE["apps/webe (Web Studio Canvas - dist/studio)"]
     end
 
     Layer0 --> Layer1 --> Layer2 --> Consumers
@@ -57,8 +57,8 @@ flowchart TD
 ## 2. 🛡️ Architectural Invariants
 
 ### Invariant 1: Zero Code Duplication
-- **Strict Monorepo Rule**: NEVER copy raw shadcn component files into submodules (`automa-webe`, `automa-desk`, `automa-vsce`).
-- All submodules consume `@automa/ui` as a workspace dependency (`@automa/ui: workspace:*`).
+- **Strict Monorepo Rule**: NEVER copy raw shadcn component files into application folders (`apps/webe`, `apps/desk`, `apps/vsce`).
+- All applications consume `@automa/ui` as a workspace dependency (`@automa/ui: workspace:*`).
 - To add a new component, run `pnpm run add:ui <name>` at root, and import from `@automa/ui`.
 
 ### Invariant 2: Theme Variable Inversion (Zero Hardcoded Colors)

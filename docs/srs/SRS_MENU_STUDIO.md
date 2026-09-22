@@ -5,9 +5,9 @@
 ## 🎯 1. MỤC TIÊU & PHẠM VI (SCOPE & OBJECTIVES)
 
 Menu **Studio** là trung tâm sáng tạo và điều khiển đồ thị kịch bản tự động hóa (Visual Workflow Editor) của Automa Ecosystem:
-- **`automa-webe:studio`**: Cung cấp Visual Canvas Engine thuần Web dựa trên VueFlow, xử lý kéo thả khối (Blocks), kết nối cạnh (Edges), cấu hình thông số và linting thời gian thực.
-- **`automa-desk`**: Nhúng Studio Canvas qua Iframe (`StudioCanvasEmbed.vue`), tích hợp thanh Action Header chuẩn (`StudioActionHeader.vue`), điều phối FSM thực thi kịch bản (`useStudioExecution.ts`), và hiển thị thanh Console Logs thời gian thực (`ExecutionConsole.vue`).
-- **`automa-vsce`**: Nhúng Studio Canvas qua Custom Text Editor Webview (`WorkflowEditorView.vue`) gắn với file `*.workflow.json`.
+- **`apps/webe:studio`**: Cung cấp Visual Canvas Engine thuần Web dựa trên VueFlow, xử lý kéo thả khối (Blocks), kết nối cạnh (Edges), cấu hình thông số và linting thời gian thực.
+- **`apps/desk`**: Nhúng Studio Canvas qua Iframe (`StudioCanvasEmbed.vue`), tích hợp thanh Action Header chuẩn (`StudioActionHeader.vue`), điều phối FSM thực thi kịch bản (`useStudioExecution.ts`), và hiển thị thanh Console Logs thời gian thực (`ExecutionConsole.vue`).
+- **`apps/vsce`**: Nhúng Studio Canvas qua Custom Text Editor Webview (`WorkflowEditorView.vue`) gắn với file `*.workflow.json`.
 
 ---
 
@@ -21,7 +21,7 @@ StudioView.vue
 │   ├── btn.workflow.lint (Kiểm tra lỗi AST)
 │   ├── select.workflow.browser (Chọn nhanh Browser Profile)
 │   └── btn.workflow.run / btn.workflow.stop (Chạy / Dừng FSM)
-├── StudioCanvasEmbed.vue (Center Graph Area - Iframe to automa-webe:studio)
+├── StudioCanvasEmbed.vue (Center Graph Area - Iframe to apps/webe:studio)
 │   ├── VueFlow Visual Canvas (WorkflowEditor.vue)
 │   │   ├── Custom Blocks (BlockBasic, BlockGroup, BlockLoop, etc.)
 │   │   └── Smart Connect & Output Handles
@@ -105,10 +105,10 @@ Menu Studio tương tác trực tiếp với 2 Domain Stores chính:
 sequenceDiagram
     autonumber
     actor User
-    participant Desk as automa-desk (Host)
+    participant Desk as apps/desk (Host)
     participant Bridge as useStudioBridge (postMessage)
-    participant Studio as automa-webe:studio (Canvas)
-    participant Core as automa-core (Daemon)
+    participant Studio as apps/webe:studio (Canvas)
+    participant Core as apps/core (Daemon)
     participant SSE as SSE Stream (/api/v1/events)
 
     User->>Desk: Click "Run Workflow" (btn.workflow.run)

@@ -39,9 +39,9 @@ flowchart TD
     end
 
     subgraph Consumers ["HỆ SINH THÁI TIÊU THỤ (CONSUMERS)"]
-        Desk["automa-desk (Desktop Tauri v2)"]
-        VSCE["automa-vsce (VS Code Extension Webview)"]
-        WebE["automa-webe (Web Extension Canvas)"]
+        Desk["apps/desk (Desktop Tauri v2)"]
+        VSCE["apps/vsce (VS Code Extension Webview)"]
+        WebE["apps/webe (Web Extension Canvas)"]
     end
 
     Layer0 --> Layer1 --> Layer2 --> Consumers

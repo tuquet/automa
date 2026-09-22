@@ -51,5 +51,5 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      # Note: Automatic changesets action has been removed in favor of Per-Submodule Changesets.
-      # Publishing happens per-submodule manually or through distinct release jobs.
+      # Note: Automatic changesets action has been removed in favor of Per-Package / Per-App Changesets.
+      # Publishing happens per package/app manually or through distinct release jobs.

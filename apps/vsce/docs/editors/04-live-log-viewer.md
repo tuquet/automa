@@ -13,8 +13,8 @@
 Trình xem log **`Live Log Viewer`** (`viewType: automa.logEditor`) là công cụ giám sát và phân tích quá trình thực thi kịch bản tự động hóa. Nó nhận luồng streaming thời gian thực qua Server-Sent Events (SSE) từ Rust Daemon hoặc đọc lại tệp log lịch sử `*automa-log.json`.
 
 - **Kích hoạt khi**: Chạy một Workflow/Campaign hoặc mở tệp `*automa-log.json`
-- **Extension Host Controller**: [`LogEditorProvider.ts`](../../src/providers/LogEditorProvider.ts)
-- **Webview UI Engine**: [`LiveLogView.vue`](../../webview-ui/src/views/LiveLogView.vue)
+- **Extension Host Controller**: [`LogEditorProvider.ts`](../../src/providers/LogEditorProvider.ts) & [`LiveLogPanel.ts`](../../src/panels/LiveLogPanel.ts)
+- **Webview UI Engine**: [`WebviewHtmlResolver.ts`](../../src/core/webview/WebviewHtmlResolver.ts)
 
 ---
 

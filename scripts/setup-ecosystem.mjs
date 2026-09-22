@@ -2,7 +2,7 @@
 
 /**
  * Automa Ecosystem - Workspace Setup Wizard
- * Initializes submodules, installs dependencies, and runs environment doctor diagnostics.
+ * Installs dependencies, sets up Rust tooling, and runs environment doctor diagnostics.
  * Resilient to clean repository state (can run before node_modules are installed).
  */
 
@@ -21,7 +21,6 @@ import {
 
 const args = process.argv.slice(2);
 const isAll = args.includes('all') || args.includes('--all');
-const isSubmodulesOnly = args.includes('submodules') || args.includes('--submodules');
 const isPnpmOnly = args.includes('pnpm') || args.includes('--pnpm');
 const isRustOnly = args.includes('rust') || args.includes('--rust');
 const isDoctor = args.includes('doctor') || args.includes('--doctor');
@@ -70,7 +69,7 @@ async function runDoctor() {
       },
     },
     {
-      name: 'Rust & Cargo (for automa-core)',
+      name: 'Rust & Cargo (for apps/core)',
       check: () => {
         try {
           refreshRuntimePaths();
@@ -124,7 +123,7 @@ async function installDependencies(totalSteps = 3, stepIndex = 2) {
 }
 
 async function setupRust(totalSteps = 3, stepIndex = 3) {
-  console.log(`\n${pc.cyan(`🦀 [${stepIndex}/${totalSteps}] Setting up Rust & Cargo (for automa-core)...`)}`);
+  console.log(`\n${pc.cyan(`🦀 [${stepIndex}/${totalSteps}] Setting up Rust & Cargo (for apps/core)...`)}`);
   refreshRuntimePaths();
 
   try {
@@ -166,7 +165,7 @@ async function setupRust(totalSteps = 3, stepIndex = 3) {
 }
 
 async function main() {
-  printWizardBanner('Ecosystem Setup & Initialization Wizard', 'Configure monorepo dependencies, submodules and environment');
+  printWizardBanner('Ecosystem Setup & Initialization Wizard', 'Configure monorepo dependencies, tooling and environment');
 
   let mode = 'all';
   if (isDoctor) mode = 'doctor';
@@ -180,7 +179,7 @@ async function main() {
         message: 'Setup cái gì? Bạn muốn thực hiện thao tác khởi tạo nào?',
         options: [
           { value: 'all', label: '🚀 Full Setup', hint: 'pnpm install + Rust & Cargo (Khuyến nghị)' },
-          { value: 'rust', label: '🦀 Rust & Cargo Setup', hint: 'Cài đặt rustup cho automa-core' },
+          { value: 'rust', label: '🦀 Rust & Cargo Setup', hint: 'Cài đặt rustup cho apps/core' },
           { value: 'pnpm', label: '⚡ Dependencies Only', hint: 'Chỉ cài đặt pnpm install cho toàn bộ monorepo' },
           { value: 'doctor', label: '🩺 Doctor & Diagnostics', hint: 'Kiểm tra phiên bản Node, pnpm, git, rust, cloudflared' },
           { value: 'cloudflared', label: '🚇 Cloudflare Tunnel Setup', hint: 'Cài đặt cloudflared và kiểm tra kết nối' },

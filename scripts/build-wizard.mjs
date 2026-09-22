@@ -20,7 +20,7 @@ const TARGETS = [
   {
     id: 'all',
     label: '📦 Tất cả Packages (Turborepo Full Build)',
-    hint: 'Biên dịch toàn bộ packages & submodules',
+    hint: 'Biên dịch toàn bộ packages & apps',
     cmd: 'pnpm',
     args: ['run', 'build'],
     cwd: rootDir,

@@ -2,17 +2,17 @@
 ## Event-Driven Button Business Logic & OpenAPI Prototype Schema
 
 **Document Version:** 1.0.0  
-**Target Submodules:** `automa-core`, `automa-desk`, `automa-vsce`, `automa-webe`, `packages/automa-types`  
+**Target Platforms:** `apps/core`, `apps/desk`, `apps/vsce`, `apps/webe`, `packages/automa-types`  
 **Architecture Paradigm:** Contract-First, Zero-Dummy UI, Event-Driven Architecture (EDA) via REST, WebSocket (`/api/v1/ws`), and SSE (`/api/v1/events`).
 
 ---
 
 ## 1. 🎯 Executive Summary & Purpose
 
-Tài liệu này đặc tả toàn bộ **Business Logic Prototype Schema** cho hệ thống nút bấm (Buttons / Action Triggers) trên toàn bộ hệ sinh thái Automa Ecosystem (`automa-desk`, `automa-vsce`, `automa-webe` Studio).
+Tài liệu này đặc tả toàn bộ **Business Logic Prototype Schema** cho hệ thống nút bấm (Buttons / Action Triggers) trên toàn bộ hệ sinh thái Automa Ecosystem (`apps/desk`, `apps/vsce`, `apps/webe` Studio).
 
 ### Mục tiêu chuẩn hóa:
-1. **Zero-Dummy UI**: 100% các nút bấm trên giao diện người dùng phải có handler thực thi hoàn chỉnh kết nối trực tiếp với backend `automa-core` thông qua OpenAPI v3 contracts (`@automa/types/api`).
+1. **Zero-Dummy UI**: 100% các nút bấm trên giao diện người dùng phải có handler thực thi hoàn chỉnh kết nối trực tiếp với backend `apps/core` thông qua OpenAPI v3 contracts (`@automa/types/api`).
 2. **Event-Driven Architecture (EDA)**: Nút bấm chỉ đóng vai trò **kích hoạt sự kiện (Event Dispatcher)**. Toàn bộ tiến trình thực thi, cập nhật trạng thái, hiển thị loading/spinner, tô màu tiến trình node trên canvas và cập nhật log đều phản ứng theo luồng sự kiện thời gian thực (SSE `/api/v1/events` hoặc WebSocket `/api/v1/ws`).
 3. **Deterministic State Machine**: Mỗi nút bấm tuân thủ một máy trạng thái hữu hạn (FSM) gồm các pha: `Idle` $\rightarrow$ `Validating` $\rightarrow$ `Dispatching` $\rightarrow$ `Executing/Streaming` $\rightarrow$ `Completed`/`Failed` $\rightarrow$ `Idle`.
 4. **Strict Type Safety**: Mọi payload gửi lên và phản hồi sự kiện đều ánh xạ 1:1 với OpenAPI Operation IDs và WebSocket message schemas.
@@ -444,7 +444,7 @@ export function useWorkflowRunButton(workflowId: string, workflowPath: string) {
 
 1. **Vị trí tài liệu**: `docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md`.
 2. **Cập nhật Types**: File `packages/automa-types/src/button.ts` kế thừa toàn bộ types từ tài liệu này.
-3. **Kiểm thử tự động**: Thêm các test case trong Vitest (`automa-vsce`, `automa-desk`) kiểm tra xem 100% `data-testid` của nút bấm có tồn tại và phản hồi chính xác theo event-driven FSM.
+3. **Kiểm thử tự động**: Thêm các test case trong Vitest (`apps/vsce`, `apps/desk`) kiểm tra xem 100% `data-testid` của nút bấm có tồn tại và phản hồi chính xác theo event-driven FSM.
 
 ---
 

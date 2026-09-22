@@ -33,11 +33,14 @@ export class WebviewHtmlResolver {
 	): string {
 		const candidatePaths = [
 			path.join(this.context.extensionPath || "", "dist", "studio"),
+			path.resolve(this.context.extensionPath || "", "../webe/dist/studio"),
 			path.resolve(
 				this.context.extensionPath || "",
 				"../automa-webe/dist/studio",
 			),
 			path.resolve(__dirname, "../../dist/studio"),
+			path.resolve(__dirname, "../../../apps/webe/dist/studio"),
+			path.resolve(__dirname, "../../../webe/dist/studio"),
 			path.resolve(__dirname, "../../../automa-webe/dist/studio"),
 		];
 

@@ -17,7 +17,7 @@ Trình soạn thảo **`Browser Profile Editor`** (`viewType: automa.browserEdit
 
 - **Kích hoạt khi**: Mở tệp `*.browser.json`
 - **Extension Host Controller**: [`BrowserEditorProvider.ts`](../../src/providers/BrowserEditorProvider.ts)
-- **Webview UI Engine**: [`BrowserManagerView.vue`](../../webview-ui/src/views/BrowserManagerView.vue) (Chế độ `isSingleEditor`)
+- **Webview UI Engine**: [`WebviewHtmlResolver.ts`](../../src/core/webview/WebviewHtmlResolver.ts) (Chế độ `isSingleEditor`)
 
 ---
 

@@ -4,7 +4,7 @@
 
 ## 🎯 1. TỔNG QUAN VÀ NGUYÊN TẮC THIẾT KẾ CỐT LÕI
 
-Tài liệu này là **Đặc tả Kỹ thuật Master (SRS)** cho toàn bộ các thành phần Select / Dropdown / Combobox trên khắp hệ sinh thái Automa (**`automa-desk`**, **`automa-vsce`**, **`automa-webe`**).
+Tài liệu này là **Đặc tả Kỹ thuật Master (SRS)** cho toàn bộ các thành phần Select / Dropdown / Combobox trên khắp hệ sinh thái Automa (**`apps/desk`**, **`apps/vsce`**, **`apps/webe`**).
 
 Mọi Select component trong hệ thống **BẮT BUỘC** tuân thủ 5 nguyên tắc bất biến:
 

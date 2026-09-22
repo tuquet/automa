@@ -5,9 +5,9 @@
 ## 🎯 1. MỤC TIÊU & PHẠM VI (SCOPE & OBJECTIVES)
 
 Menu **Settings** quản lý cấu hình toàn cục của hệ điều hành và thông số kết nối với Rust Daemon (`automa-core`) cho toàn bộ Automa Ecosystem:
-- **`automa-desk`**: Cung cấp giao diện cấu hình hệ thống (`SettingsView.vue`), quản lý địa chỉ cổng Daemon `:8765`, tự động khởi chạy Daemon cùng ứng dụng (Auto-start), thiết lập Master Passphrase, và quản lý Theme (Dark/Light/System).
-- **`automa-vsce`**: Đồng bộ cấu hình qua VS Code Settings (`automa.daemonPort`, `automa.storagePath`).
-- **`automa-core`**: Cung cấp endpoint cấu hình `/api/v1/settings` và kiểm tra sức khỏe `/api/v1/system/health`.
+- **`apps/desk`**: Cung cấp giao diện cấu hình hệ thống (`SettingsView.vue`), quản lý địa chỉ cổng Daemon `:8765`, tự động khởi chạy Daemon cùng ứng dụng (Auto-start), thiết lập Master Passphrase, và quản lý Theme (Dark/Light/System).
+- **`apps/vsce`**: Đồng bộ cấu hình qua VS Code Settings (`automa.daemonPort`, `automa.storagePath`).
+- **`apps/core`**: Cung cấp endpoint cấu hình `/api/v1/settings` và kiểm tra sức khỏe `/api/v1/system/health`.
 
 ---
 

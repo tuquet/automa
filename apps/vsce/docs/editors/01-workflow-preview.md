@@ -15,7 +15,7 @@ Trình soạn thảo tùy chỉnh **`Workflow Preview`** (`viewType: automa.work
 
 - **Kích hoạt khi**: Mở tệp `*.workflow.json` hoặc `*.package.json`
 - **Extension Host Controller**: [`WorkflowEditorProvider.ts`](../../src/providers/WorkflowEditorProvider.ts)
-- **Webview UI Engine**: [`WorkflowEditorView.vue`](../../webview-ui/src/views/WorkflowEditorView.vue)
+- **Webview UI Engine**: Canonical Automa Studio Canvas via [`WebviewHtmlResolver.ts`](../../src/core/webview/WebviewHtmlResolver.ts)
 
 ---
 

@@ -4,7 +4,7 @@
 
 ## 🎯 1. TỔNG QUAN VÀ NGUYÊN TẮC KIẾN TRÚC STORE
 
-Tài liệu này là **Đặc tả Kỹ thuật Master (SRS)** chuẩn hóa toàn bộ kiến trúc quản lý trạng thái (State Management) thông qua **Feature-Scoped Stores** trên toàn bộ hệ sinh thái Automa (**`automa-desk`**, **`automa-vsce`**, **`automa-webe`**).
+Tài liệu này là **Đặc tả Kỹ thuật Master (SRS)** chuẩn hóa toàn bộ kiến trúc quản lý trạng thái (State Management) thông qua **Feature-Scoped Stores** trên toàn bộ hệ sinh thái Automa (**`apps/desk`**, **`apps/vsce`**, **`apps/webe`**).
 
 Mục tiêu là thiết lập **Single Source of Truth** cho từng phân hệ nghiệp vụ, cho phép các nút bấm (`btn.*`), dropdowns (`select.*`) và views tự động phản xạ reactive tức thì theo luồng sự kiện thời gian thực từ Rust Daemon (`/api/v1/events` & `/api/v1/ws`).
 

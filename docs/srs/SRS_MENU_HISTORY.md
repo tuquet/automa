@@ -5,9 +5,9 @@
 ## 🎯 1. MỤC TIÊU & PHẠM VI (SCOPE & OBJECTIVES)
 
 Menu **History** cung cấp nhật ký thực thi chi tiết (Job Execution History) và kiểm toán hiệu năng (Telemetry Performance Audit) của toàn bộ các phiên chạy workflow trên Automa Ecosystem:
-- **`automa-desk`**: Cung cấp giao diện nhật ký toàn diện (`HistoryView.vue`), bộ lọc trạng thái, xem chi tiết từng bước log của job trong quá khứ, và tính toán thời gian chạy trung bình.
-- **`automa-vsce`**: Cung cấp webview nhật ký `LiveLogView.vue` và tích hợp Output Channel.
-- **`automa-core`**: Lưu trữ lịch sử thực thi vào bảng SQLite `job_history`.
+- **`apps/desk`**: Cung cấp giao diện nhật ký toàn diện (`HistoryView.vue`), bộ lọc trạng thái, xem chi tiết từng bước log của job trong quá khứ, và tính toán thời gian chạy trung bình.
+- **`apps/vsce`**: Cung cấp giao diện nhật ký và tích hợp Output Channel.
+- **`apps/core`**: Lưu trữ lịch sử thực thi vào bảng SQLite `job_history`.
 
 ---
 

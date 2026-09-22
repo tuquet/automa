@@ -5,7 +5,7 @@ description: Architecture, Desktop Ergonomics, Tauri v2 IPC, Vue 3.5 presentatio
 
 # Automa Desktop Application (`automa-desk`)
 
-Architecture and desktop ergonomics guide for the `automa-desk` submodule (Tauri v2 + Vue 3.5 + shadcn-vue).
+Architecture and desktop ergonomics guide for the `apps/desk` application (Tauri v2 + Vue 3.5 + shadcn-vue).
 
 ---
 
@@ -28,7 +28,7 @@ Architecture and desktop ergonomics guide for the `automa-desk` submodule (Tauri
                                | Domain Coordination
 +------------------------------v------------------------------+
 | 3. Domain & Service Layer (Rust Native & Core Daemon)        |
-|    - CoreCoordinator (Coordinates automa-core daemon :8765) |
+|    - CoreCoordinator (Coordinates apps/core daemon :8765)   |
 |    - TrayManager (System Tray Menu, Background Minimize)    |
 |    - Storage & Browser Manager Adapter                      |
 +-------------------------------------------------------------+

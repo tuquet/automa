@@ -13,7 +13,7 @@ make add-window-state
 ```
 
 The recipe adds the dependency and registers the plugin; no frontend code is needed. See
-[`recipes/window-state/README.md`](../recipes/window-state/README.md).
+[Tauri Window State Plugin](https://v2.tauri.app/plugin/window-state/).
 
 ## tauri-plugin-updater — Auto-Updates
 
@@ -23,9 +23,8 @@ Checks for and installs app updates from GitHub Releases.
 make add-updater
 ```
 
-The recipe adds both dependencies, registers the plugin, grants `updater:default`, and writes the
-`tauri.conf.json` config. It stops short of the signing keypair, which you must generate yourself —
-[`recipes/updater/README.md`](../recipes/updater/README.md) walks through generating it, where the
-public key goes, the CI secrets, and calling `check()` from the frontend.
+The plugin registers updater permissions in `tauri.conf.json`. See
+[Tauri Updater Plugin](https://v2.tauri.app/plugin/updater/) for configuring keypairs,
+CI secrets, and calling `check()` from the frontend.
 
-See [`recipes/README.md`](../recipes/README.md) for how recipes work and what else is available.
+See [Tauri Plugins Documentation](https://v2.tauri.app/plugin/) for more details.

@@ -19,8 +19,8 @@
 Panel **`BROWSERS`** (`view: automa.browsers`) là trung tâm quản lý toàn bộ thực thể trình duyệt (Browser instances) của người dùng trong hệ sinh thái Automa. Toàn bộ dữ liệu được quản lý **Database-First qua SQLite DB của Automa Core**, không quét hay phụ thuộc vào file trên ổ đĩa. Nó cung cấp giao diện quản lý đa tài khoản, cấu hình mạng (Proxy), dấu vân tay trình duyệt (User-Agent), và điều khiển vòng đời tiến trình duyệt web độc lập.
 
 - **Vị trí UI**: Primary Sidebar (`automa-activity-bar` ➔ `automa.browsers`)
-- **Extension Host Controller**: [`BrowsersWebviewProvider.ts`](../../src/providers/BrowsersWebviewProvider.ts)
-- **Webview UI Engine**: [`BrowserManagerView.vue`](../../webview-ui/src/views/BrowserManagerView.vue)
+- **Extension Host Controller**: [`BrowsersTreeDataProvider.ts`](../../src/providers/BrowsersTreeDataProvider.ts)
+- **Editor & Webview Engine**: [`BrowserEditorProvider.ts`](../../src/providers/BrowserEditorProvider.ts)
 
 ---
 

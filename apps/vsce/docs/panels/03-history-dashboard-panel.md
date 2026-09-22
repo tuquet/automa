@@ -16,8 +16,8 @@
 Panel **`HISTORY`** (`view: automa.dashboard`) cung cấp bảng điều khiển trung tâm (Dashboard) thời gian thực, giám sát các tiến trình tự động hóa đang hoạt động (Active Runners), hiển thị các chỉ số đo lường hiệu suất (Metrics) và truy xuất lịch sử thực thi kịch bản lưu trong cơ sở dữ liệu SQLite.
 
 - **Vị trí UI**: Primary Sidebar (`automa-activity-bar` ➔ `automa.dashboard`)
-- **Extension Host Provider**: [`DashboardWebviewProvider.ts`](../../src/providers/DashboardWebviewProvider.ts)
-- **Webview UI Engine**: [`DashboardView.vue`](../../webview-ui/src/views/DashboardView.vue)
+- **Extension Host Command Handler**: [`historyCommands.ts`](../../src/commands/historyCommands.ts)
+- **Live Log Panel Engine**: [`LiveLogPanel.ts`](../../src/panels/LiveLogPanel.ts)
 
 ---
 
@@ -40,7 +40,7 @@ Panel **`HISTORY`** (`view: automa.dashboard`) cung cấp bảng điều khiển
 - **FR-3.3 Chạy Nhanh Chiến Dịch (Run Campaign)**: Nút `Run` để kích hoạt chiến dịch ngay từ Dashboard.
 
 ### FR-4: Quản Lý Lịch Sử Thực Thi (Execution History)
-- **FR-4.1 Xem Chi Tiết Log**: Nhấp vào từng phiên chạy đã hoàn thành để mở trình xem log chi tiết ([`LiveLogView.vue`](../../webview-ui/src/views/LiveLogView.vue)).
+- **FR-4.1 Xem Chi Tiết Log**: Nhấp vào từng phiên chạy đã hoàn thành để mở trình xem log chi tiết ([`LiveLogPanel.ts`](../../src/panels/LiveLogPanel.ts)).
 - **FR-4.2 Xóa Lịch Sử**: Cho phép xóa từng bản ghi riêng lẻ hoặc xóa sạch toàn bộ lịch sử (`Clear History`).
 
 ---

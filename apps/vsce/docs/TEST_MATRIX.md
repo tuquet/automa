@@ -1,4 +1,4 @@
-> **Submodule**: [`automa-vsce`](../)  
+> **Application**: [`apps/vsce`](../)  
 > **Trạng thái kiểm thử**: ✅ **118/118 Tests Passed (26 Test Suites)**  
 > **Khung kiểm thử (Runner)**: [Vitest v4.1.10](https://vitest.dev/) & [Biome](https://biomejs.dev/)  
 > **Thời gian thực thi trung bình**: ~12.2 giây  
@@ -7,7 +7,7 @@
 
 ## 🧭 1. Tổng Quan Kiến Trúc Kiểm Thử 6 Tầng (6-Layer Testing Architecture)
 
-Bộ kiểm thử của `automa-vscode` được thiết kế chặt chẽ theo 6 tầng kiến trúc phân tách độc lập nhằm đảm bảo tính ổn định, phòng chống suy thoái logic (regression) và kiểm thử toàn diện từ Unit Level đến Headless Browser Webview:
+Bộ kiểm thử của `automa-vsce` được thiết kế chặt chẽ theo 6 tầng kiến trúc phân tách độc lập nhằm đảm bảo tính ổn định, phòng chống suy thoái logic (regression) và kiểm thử toàn diện từ Unit Level đến Headless Browser Webview:
 
 ```mermaid
 graph TD
@@ -98,7 +98,7 @@ Phụ trách quản lý vòng đời Daemon Rust nền, bộ lắng nghe SSE th�
 | [`TaskRunner.test.ts`](../src/test/core/TaskRunner.test.ts) | [`TaskRunner.ts`](../src/core/TaskRunner.ts) | `should execute workflow task successfully` | Điều phối nộp job và chờ nhận kết quả thành công. | Mock submitJob & SSE |
 | | | `should handle workflow task failure` | Bắt lỗi thực thi từ backend và chuyển tiếp cho giao diện người dùng. | Mock Error Flow |
 | | | `should support cancellation via AbortSignal` | Dừng theo dõi và gửi lệnh hủy job khi người dùng cancel. | Mock AbortSignal |
-| [`TaskUIService.test.ts`](../src/test/core/TaskUIService.test.ts) | [`TaskUIService.ts`](../src/core/TaskUIService.ts) | 6 test cases kiểm tra hiển thị StatusBar Item, Progress Notification và Modal Dialogs. | Đảm bảo UI VS Code phản hồi mượt mà trong quá trình chạy. | Mock VS Code Window API |
+| [`TaskUIService.test.ts`](../src/test/core/TaskUIService.test.ts) | [`TaskUIService.ts`](../src/core/ui/TaskUIService.ts) | 6 test cases kiểm tra hiển thị StatusBar Item, Progress Notification và Modal Dialogs. | Đảm bảo UI VS Code phản hồi mượt mà trong quá trình chạy. | Mock VS Code Window API |
 | [`Logger.test.ts`](../src/test/core/Logger.test.ts) | [`Logger.ts`](../src/core/Logger.ts) | 3 test cases kiểm tra ghi log OutputChannel theo các mức: `INFO`, `WARN`, `ERROR`. | Định dạng log chuẩn `[LEVEL] [TAG] Message` và tự dọn dẹp khi dispose. | Mock OutputChannel |
 | [`ExtensionApp.test.ts`](../src/test/core/ExtensionApp.test.ts) | [`ExtensionApp.ts`](../src/core/ExtensionApp.ts) | 5 test cases kiểm tra vòng đời Extension Singleton (`activate`, `deactivate`, welcome popup, sync config). | Đảm bảo dọn dẹp 100% tài nguyên và ngắt các daemon/listeners khi tắt VS Code. | Mock ExtensionContext |
 
@@ -111,7 +111,7 @@ Phụ trách hiển thị dữ liệu lên cây thư mục bên trái (Activity 
 | Test Suite File | Source Code Tương Ứng | Tên Test Case (`it`) | Mục Tiêu & Kịch Bản Kiểm Thử | Môi Trường Mock |
 | :--- | :--- | :--- | :--- | :--- |
 | [`StorageTreeDataProvider.test.ts`](../src/test/providers/StorageTreeDataProvider.test.ts) | [`StorageTreeDataProvider.ts`](../src/providers/StorageTreeDataProvider.ts) | 7 test cases kiểm tra render nhóm `Variables`, `Credentials`, `Tables`, CRUD actions và tự động refresh qua sự kiện `storage_changed`. | Đảm bảo dữ liệu storage hiển thị tức thì và chính xác theo database cục bộ. | Mock TreeItem & SDK Storage |
-| [`DashboardWebviewProvider.test.ts`](../src/test/providers/DashboardWebviewProvider.test.ts) | [`DashboardWebviewProvider.ts`](../src/providers/DashboardWebviewProvider.ts) | 7 test cases kiểm tra quét campaigns, nạp lịch sử qua `getJobHistory`, xóa lịch sử qua `clearAllJobHistory` / `deleteJobHistoryItem`, và diệt job đang chạy qua `killJob`. | Đảm bảo Dashboard Sidebar phản hồi sự kiện real-time và IPC an toàn. | Mock WebviewView & History API |
+| [`WorkspaceTreeDataProvider.test.ts`](../src/test/providers/WorkspaceTreeDataProvider.test.ts) | [`WorkspaceTreeDataProvider.ts`](../src/providers/WorkspaceTreeDataProvider.ts) | 7 test cases kiểm tra duyệt file workspace, cấu trúc cây thư mục và khởi tạo provider. | Đảm bảo Sidebar Workspace phản hồi sự kiện real-time và IPC an toàn. | Mock Workspace API |
 
 ---
 
@@ -121,8 +121,8 @@ Phụ trách các màn hình giao diện mở trực tiếp trên tab chính c�
 
 | Test Suite File | Source Code Tương Ứng | Tên Test Case (`it`) | Mục Tiêu & Kịch Bản Kiểm Thử | Môi Trường Mock |
 | :--- | :--- | :--- | :--- | :--- |
-| [`WorkflowPreviewEditorProvider.test.ts`](../src/test/providers/WorkflowPreviewEditorProvider.test.ts) | [`WorkflowPreviewEditorProvider.ts`](../src/providers/WorkflowPreviewEditorProvider.ts) | 3 test cases kiểm tra liên kết mở tệp `.workflow.json`, đồng bộ trạng thái chỉnh sửa hai chiều (TextDocument sync) và tiêm HTML template. | Đảm bảo Webview tải mượt mà không làm đứt gãy tính năng lưu của VS Code. | Mock CustomTextEditor |
-| [`CampaignPreviewEditorProvider.test.ts`](../src/test/providers/CampaignPreviewEditorProvider.test.ts) | [`CampaignPreviewEditorProvider.ts`](../src/providers/CampaignPreviewEditorProvider.ts) | 3 test cases kiểm tra render ma trận Campaign Matrix, parse workflows danh sách và xử lý IPC lệnh chạy thử nghiệm. | Đảm bảo hiển thị ma trận các tác vụ đồng thời chính xác. | Mock CustomTextEditor |
+| [`WorkflowEditorProvider.test.ts`](../src/test/providers/WorkflowEditorProvider.test.ts) | [`WorkflowEditorProvider.ts`](../src/providers/WorkflowEditorProvider.ts) | 3 test cases kiểm tra liên kết mở tệp `.workflow.json`, đồng bộ trạng thái chỉnh sửa hai chiều (TextDocument sync) và tiêm HTML template. | Đảm bảo Webview tải mượt mà không làm đứt gãy tính năng lưu của VS Code. | Mock CustomTextEditor |
+| [`CampaignEditorProvider.test.ts`](../src/test/providers/CampaignEditorProvider.test.ts) | [`CampaignEditorProvider.ts`](../src/providers/CampaignEditorProvider.ts) | 3 test cases kiểm tra render ma trận Campaign Matrix, parse workflows danh sách và xử lý IPC lệnh chạy thử nghiệm. | Đảm bảo hiển thị ma trận các tác vụ đồng thời chính xác. | Mock CustomTextEditor |
 | [`WelcomePanel.test.ts`](../src/test/panels/WelcomePanel.test.ts) | [`WelcomePanel.ts`](../src/panels/WelcomePanel.ts) | 4 test cases kiểm tra khởi tạo Singleton WebviewPanel, kích hoạt quick actions và xử lý giải phóng bộ nhớ khi đóng tab. | Đảm bảo panel không bị rò rỉ bộ nhớ (memory leak). | Mock WebviewPanel |
 
 ---
@@ -145,11 +145,11 @@ Phụ trách kiểm thử tự động toàn diện trên trình duyệt Chromiu
 
 | Test Suite File | Source Code Tương Ứng | Tên Test Case (`it`) | Mục Tiêu & Kịch Bản Kiểm Thử | Môi Trường Thực Thi |
 | :--- | :--- | :--- | :--- | :--- |
-| [`WebviewE2E.test.ts`](../src/test/webview/WebviewE2E.test.ts) | [`dist/webview/*.html`](../dist) | `workflow-preview.html - should render Vue app, parameters, and trigger IPC without runtime errors` | Khởi chạy ứng dụng Vue xem workflow, render form điền thông số parameters, bắt sự kiện gửi qua `acquireVsCodeApi().postMessage()`, xác nhận **0 lỗi console**. | Playwright Headless Chromium |
-| | | `package-preview.html - should render inputs/outputs/variables tabs with 0 console errors` | Render trọn vẹn 3 tab: Inputs, Outputs, Variables của Automa Package. | Playwright Headless Chromium |
-| | | `browser-preview.html - should render JSON configuration with CodeMirror and save via IPC` | Khởi chạy trình chỉnh sửa JSON CodeMirror cho cấu hình browser và kích hoạt lưu qua IPC. | Playwright Headless Chromium |
-| | | `log-editor.html - should render job logs, table, and variables tab without errors` | Render giao diện xem log thực thi thời gian thực, bảng dữ liệu kết quả và biến sinh ra. | Playwright Headless Chromium |
-| | | `campaign-preview.html - should render campaign workflows and CodeMirror configuration` | Render cấu hình ma trận Campaign workflows và code editor CodeMirror. | Playwright Headless Chromium |
+| [`extension.test.ts`](../src/test/e2e/extension.test.ts) | [`dist`](../dist) | `workflow-preview - should render Vue app, parameters, and trigger IPC without runtime errors` | Khởi chạy ứng dụng xem workflow, render form điền thông số parameters, bắt sự kiện gửi qua `acquireVsCodeApi().postMessage()`, xác nhận **0 lỗi console**. | Playwright Headless Chromium |
+| | | `package-preview - should render inputs/outputs/variables tabs with 0 console errors` | Render trọn vẹn 3 tab: Inputs, Outputs, Variables của Automa Package. | Playwright Headless Chromium |
+| | | `browser-preview - should render JSON configuration with CodeMirror and save via IPC` | Khởi chạy trình chỉnh sửa JSON CodeMirror cho cấu hình browser và kích hoạt lưu qua IPC. | Playwright Headless Chromium |
+| | | `log-editor - should render job logs, table, and variables tab without errors` | Render giao diện xem log thực thi thời gian thực, bảng dữ liệu kết quả và biến sinh ra. | Playwright Headless Chromium |
+| | | `campaign-preview - should render campaign workflows and CodeMirror configuration` | Render cấu hình ma trận Campaign workflows và code editor CodeMirror. | Playwright Headless Chromium |
 | [`daemon.e2e.test.ts`](../src/test/e2e/daemon.e2e.test.ts) | [`core/api/client`](../src/core/api/client) | 7 test cases kiểm tra tích hợp toàn diện trực tiếp với Daemon Backend thật (`getHealth`, `installBrowserBinary`, `killAllBrowsers`, `getJobHistory`, `getJobExecutionLogs`, `deleteJobHistoryItem`). | Đảm bảo tính tương thích tuyệt đối giữa client OpenAPI SDK và HTTP/SSE endpoints của Daemon. | Live/Mocked Local Daemon |
 
 ---
@@ -187,6 +187,6 @@ pnpm -F vscode-automa vitest run src/test/commands/storageCommands.test.ts
 
 ## 🔗 4. Liên Kết Tham Chiếu & Tài Liệu Liên Quan
 
-- [📖 Hub Tài Liệu Automa Ecosystem](../../docs/Home.md)
+- [📖 Hub Tài Liệu Automa Ecosystem](../../../docs/Home.md)
 - [📚 Danh Mục Tài Liệu VS Code Extension](README.md)
-- [🌐 Ma Trận Kiểm Thử Toàn Hệ Sinh Thái](../../docs/TEST_MATRIX.md)
+- [🌐 Ma Trận Kiểm Thử Toàn Hệ Sinh Thái](../../../docs/TEST_MATRIX.md)

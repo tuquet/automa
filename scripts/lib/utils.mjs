@@ -86,7 +86,7 @@ export async function getPrompts() {
 }
 
 /**
- * Canonical Submodules and Packages in Automa Monorepo
+ * Canonical Applications and Packages in Automa Monorepo
  */
 export const CANONICAL_MODULES = [
   {

@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="automa-vsce/assets/logo.png" width="128" height="128" alt="Automa Ecosystem Logo" />
+  <img src="apps/vsce/assets/logo.png" width="128" height="128" alt="Automa Ecosystem Logo" />
   <h1>Automa Ecosystem</h1>
   <p><strong>Nền tảng Orchestration Đa Trình Duyệt Chuẩn Doanh Nghiệp (Enterprise-Grade)</strong></p>
   
@@ -11,7 +11,7 @@
 
 <br/>
 
-Chào mừng đến với **Automa Ecosystem**. Phiên bản hiện tại là một hệ sinh thái mạnh mẽ được tái thiết kế với triết lý **Offline-First**, hoạt động hoàn toàn độc lập và không phụ thuộc vào các dịch vụ Cloud bên ngoài, mang lại khả năng quản lý dữ liệu an toàn và tự động hóa đa trình duyệt vượt trội.
+Chào mừng đến với **Automa Ecosystem**. Phiên bản hiện tại là một hệ sinh thái mạnh mẽ được tổ chức dưới dạng **Pure Monorepo** với triết lý **Offline-First**, hoạt động hoàn toàn độc lập và không phụ thuộc vào các dịch vụ Cloud bên ngoài, mang lại khả năng quản lý dữ liệu an toàn và tự động hóa đa trình duyệt vượt trội.
 
 Tầm nhìn của chúng tôi là chuyển đổi Automa từ một công cụ tự động hóa cá nhân trở thành một nền tảng điều phối (Orchestrator) toàn diện chạy trên mọi môi trường mà không cần cài đặt runtime phức tạp.
 
@@ -19,34 +19,37 @@ Tầm nhìn của chúng tôi là chuyển đổi Automa từ một công cụ t
 
 ## 🧭 Điều Hướng Dự Án (Project Directory & Navigation)
 
-Hệ sinh thái **Automa Ecosystem** được tổ chức theo cấu trúc Monorepo phân tách rõ ràng giữa **Core Engine**, **Extension Targets** và **Client GUI Platforms** theo bộ tứ chuẩn hóa 4 ký tự:
+Hệ sinh thái **Automa Ecosystem** được tổ chức theo cấu trúc Pure Monorepo phân tách rõ ràng giữa **Core Engine**, **Extension Targets** và **Client GUI Platforms** tập trung trong thư mục `apps/` theo bộ tứ chuẩn hóa 4 ký tự:
 
 ```text
 automa-ecosystem/
-├── automa-core/        # [Rust Core Engine]      - Daemon xử lý trung tâm (Axum, Tokio, CDP, SQLite)
-├── automa-webe/        # [Web Extensions]        - Extension MV3 (Chromium/Firefox, Silent Runner) [Tên cũ: automa-ext]
-├── automa-vsce/        # [VS Code Extensions]    - Thin-Client IDE Extension (Webview Canvas, TreeViews) [Tên cũ: automa-vscode]
-├── automa-desk/        # [Desktop Native App]    - Ứng dụng Desktop độc lập (Tauri v2 + Vue 3 Frontend)
-├── automa-vault/       # [Storage & Security]    - Kho lưu trữ Campaign, Profiles & Workflows
-└── packages/           # [Shared Workspaces]     - Shared UI SDK (@automa/ui), Types & Contracts (@automa/types)
+├── apps/
+│   ├── core/           # [Rust Core Engine]      - Daemon xử lý trung tâm (Axum, Tokio, CDP, SQLite)
+│   ├── desk/           # [Desktop Native App]    - Ứng dụng Desktop độc lập (Tauri v2 + Vue 3 Frontend)
+│   ├── vault/          # [Storage & Security]    - Kho lưu trữ Campaign, Profiles & Workflows
+│   ├── vsce/           # [VS Code Extensions]    - Thin-Client IDE Extension (Webview Canvas, TreeViews) [package: vscode-automa]
+│   └── webe/           # [Web Extensions]        - Extension MV3 & Web Studio [package: @automa/webe]
+├── packages/           # [Shared Workspaces]     - Shared UI SDK (@automa/ui), Types & Contracts (@automa/types)
+└── scripts/            # [Dev & Build Tools]     - Bộ công cụ CLI Orchestrator & Build Wizards
 ```
 
 > [!NOTE]
-> **Quy Chuẩn Định Danh 4 Ký Tự (4-Character App Code Standard):**
-> - 🦀 **`automa-core`**: Rust Core Engine Daemon
-> - 🌐 **`automa-webe`**: Web Extension MV3 *(đổi từ `automa-ext`)*
-> - 💻 **`automa-vsce`**: VS Code Extension IDE *(đổi từ `automa-vscode`)*
-> - 🖥️ **`automa-desk`**: Desktop Native OS App *(đổi từ `automa-tauri`)*
+> **Quy Chuẩn Định Danh 4 Ký Tự Trong `apps/` (4-Character App Code Standard):**
+> - 🦀 **`apps/core`**: Rust Core Engine Daemon
+> - 🌐 **`apps/webe`**: Web Extension MV3 & Web Studio *(package: `@automa/webe`)*
+> - 💻 **`apps/vsce`**: VS Code Extension IDE *(package: `vscode-automa`)*
+> - 🖥️ **`apps/desk`**: Desktop Native OS App *(package: `@automa/desk`)*
+> - 🗄️ **`apps/vault`**: Storage & Campaign Workspace
 
 ---
 
 ## 🏗️ Kiến Trúc Tổng Thể (System Architecture)
 
-Lõi **Rust Native Daemon** (`automa-core`) đóng vai trò trung tâm xử lý, phục vụ đồng thời cho 3 nền tảng Client (VS Code IDE, Desktop Native App, Web Extension):
+Lõi **Rust Native Daemon** (`apps/core`) đóng vai trò trung tâm xử lý, phục vụ đồng thời cho 3 nền tảng Client (`apps/vsce`, `apps/desk`, `apps/webe`):
 
 ```text
 ┌───────────────────────────────┐     ┌───────────────────────────────┐
-│   automa-vsce (VS Code Ext)   │     │   automa-desk (Desktop App)   │
+│     apps/vsce (VS Code Ext)   │     │    apps/desk (Desktop App)    │
 │   - Thin-Client IDE           │     │   - Cross-Platform Native OS  │
 │   - Visual Canvas Webview     │     │   - Standalone Studio GUI     │
 └───────────────┬───────────────┘     └───────────────┬───────────────┘
@@ -56,7 +59,7 @@ Lõi **Rust Native Daemon** (`automa-core`) đóng vai trò trung tâm xử lý,
                                    │
                                    ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│                     automa-core (Rust Core Daemon)                  │
+│                      apps/core (Rust Core Daemon)                   │
 │                                                                     │
 │  1. High-Performance API Server & Realtime Event Emitter (SSE)      │
 │  2. Campaign Orchestrator, SQLite Storage & AES Encryption          │
@@ -67,7 +70,7 @@ Lõi **Rust Native Daemon** (`automa-core`) đóng vai trò trung tâm xử lý,
                                    │
                                    ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│                     automa-webe (Web Extension)                     │
+│                      apps/webe (Web Extension)                      │
 │                                                                     │
 │  - Chromium / Chrome / Firefox MV3 Extension Runtime                │
 │  - Offscreen Document Workflow Engine & Silent Runner               │
@@ -76,37 +79,37 @@ Lõi **Rust Native Daemon** (`automa-core`) đóng vai trò trung tâm xử lý,
 
 ---
 
-## 📦 Chi Tiết Các Thành Phần Cốt Lõi (Core Packages)
+## 📦 Chi Tiết Các Thành Phần Cốt Lõi (Applications & Packages)
 
-### 1. 🦀 `automa-core` — *Rust Core Engine*
+### 1. 🦀 `apps/core` — *Rust Core Engine*
 Trái tim điều phối của toàn bộ hệ sinh thái. Hoạt động như một Native Daemon (viết bằng Rust Axum/Tokio).
 - **Trọng trách:** Xử lý đa luồng (high-concurrency), quản lý cơ sở dữ liệu SQLite cục bộ, mã hóa bảo mật AES, và điều khiển trực tiếp Chrome DevTools Protocol (CDP).
 - **Anti-Detection:** Quản lý khởi chạy trình duyệt thông qua cơ chế tàng hình cấp thấp và fingerprinting.
 
-### 2. 🌐 `automa-webe` *(Web Extension Engine)*
-Là Extension gốc Manifest V3 (fork độc lập cho Chromium & Firefox), đóng vai trò động cơ thực thi và cung cấp **2 bản build đầu ra (Build Outputs) tái sử dụng cho toàn hệ sinh thái**:
+### 2. 🌐 `apps/webe` *(Web Extension & Studio — `@automa/webe`)*
+Là Extension gốc Manifest V3 (hỗ trợ Chromium & Firefox), đóng vai trò động cơ thực thi và cung cấp **2 bản build đầu ra (Build Outputs) tái sử dụng cho toàn hệ sinh thái**:
 
 * ⚡ **1. Build Runner (`dist/cli-runner`) — *Headless Silent Engine*:**
   - **Lệnh đóng gói:** `pnpm run build:runner` (hoặc `webpack.runner.config.js`)
-  - **Mục đích tái sử dụng:** Bản build siêu gọn nhẹ, loại bỏ toàn bộ giao diện UI/CSS nặng để tối ưu hóa RAM & CPU. Được `automa-core` nạp trực tiếp vào các phiên Chromium Worker để chạy kịch bản ngầm (Headless/Stealth Execution).
+  - **Mục đích tái sử dụng:** Bản build siêu gọn nhẹ, loại bỏ toàn bộ giao diện UI/CSS nặng để tối ưu hóa RAM & CPU. Được `apps/core` nạp trực tiếp vào các phiên Chromium Worker để chạy kịch bản ngầm (Headless/Stealth Execution).
 * 🎨 **2. Build Studio Standalone (`dist/studio`) — *Visual Canvas Editor GUI*:**
   - **Lệnh đóng gói:** `pnpm run build:studio` (hoặc `webpack.studio.config.js`)
-  - **Mục đích tái sử dụng:** Bản build giao diện thiết kế kịch bản hoàn chỉnh (Vue 3, Vue Flow, Host Bridge). Được `automa-core` phục vụ trực tiếp qua Web Server tại `http://127.0.0.1:8765/studio/`, đồng thời có thể nhúng vào `automa-desk` (Tauri App), VS Code Webview (`automa-vsce`) hoặc Iframe độc lập.
+  - **Mục đích tái sử dụng:** Bản build giao diện thiết kế kịch bản hoàn chỉnh (Vue 3, Vue Flow, Host Bridge). Được `apps/core` phục vụ trực tiếp qua Web Server tại `http://127.0.0.1:8765/studio/`, đồng thời có thể nhúng vào `apps/desk` (Tauri App), VS Code Webview (`apps/vsce`) hoặc Iframe độc lập.
 
-### 3. 💻 `automa-vsce` *(automa-vscode)* — *VS Code Extensions*
+### 3. 💻 `apps/vsce` *(VS Code Extension — `vscode-automa`)*
 Extension tích hợp môi trường phát triển (IDE) chuyên nghiệp dành cho lập trình viên.
-- **Trọng trách:** Hoạt động dưới dạng **Thin Client**, giao tiếp trực tiếp với `automa-core` qua HTTP REST/SSE. Cung cấp Visual Canvas Editor (Vue Flow), Tree Views quản lý Workflows/Campaigns, và Live Diagnostics Linter.
+- **Trọng trách:** Hoạt động dưới dạng **Thin Client**, giao tiếp trực tiếp với `apps/core` qua HTTP REST/SSE. Cung cấp Visual Canvas Editor (Vue Flow), Tree Views quản lý Workflows/Campaigns, và Live Diagnostics Linter.
 
-### 4. 🖥️ `automa-desk` — *Desktop Native OS App*
+### 4. 🖥️ `apps/desk` *(Desktop Native OS App — `@automa/desk`)*
 Ứng dụng Desktop độc lập đa nền tảng (Windows, macOS, Linux) đóng gói qua **Tauri v2**.
 - **Trọng trách:** Mang lại trải nghiệm Standalone Studio độc lập và tốc độ native mà không cần cài đặt VS Code hay mở trình duyệt web.
 
-### 5. 🗄️ `automa-vault` — *Storage & Campaign Workspace*
+### 5. 🗄️ `apps/vault` — *Storage & Campaign Workspace*
 Quản lý cấu trúc thư mục, tệp cấu hình Campaigns và đối chiếu Workflow & Browser.
 - Mặc định: `~/.automa/core/` (Production) và `~/.automa/core-dev/` (Dev Sandbox).
 
 ### 6. 📁 `packages/` — *Shared Packages*
-Chứa các package dùng chung toàn hệ thống (Types, SDKs, Polyfills) được quản lý bởi Turborepo/pnpm workspaces.
+Chứa các package dùng chung toàn hệ thống (`@automa/ui`, `@automa/types`, polyfills) được quản lý bởi Turborepo/pnpm workspaces.
 
 ---
 
@@ -144,18 +147,18 @@ Dự án yêu cầu **Node.js** và **Rust Toolchain**. Để tiết kiệm dung
 ### 📦 Hướng Dẫn Cài Đặt & Khởi Chạy (Step-by-Step)
 
 ```bash
-# 1. Tải mã nguồn cùng toàn bộ submodules
-git clone --recursive https://github.com/tuquet/automa-ecosystem.git
+# 1. Tải mã nguồn Pure Monorepo (không cần flag submodules)
+git clone https://github.com/tuquet/automa-ecosystem.git
 cd automa-ecosystem
 
 # 2. Cài đặt các công cụ CLI cần thiết cho Rust (chỉ chạy 1 lần duy nhất)
 cargo install cargo-watch
 
-# 3. Cài đặt toàn bộ Node module và liên kết workspaces
+# 3. Cài đặt toàn bộ Node dependencies và liên kết workspaces
 pnpm install
 
-# 4. Kiểm tra tính toàn vẹn của các con trỏ Submodule
-node scripts/check-submodules.mjs
+# 4. Kiểm tra sức khỏe môi trường và thiết lập tự động (tùy chọn)
+pnpm run setup
 
 # 5. Đóng gói toàn bộ hệ sinh thái (Runner, Studio, Core, VSCE)
 pnpm run build
@@ -165,6 +168,7 @@ pnpm run dev          # Chạy toàn bộ hệ thống
 # hoặc chạy riêng từng thành phần:
 pnpm run dev:core     # Chạy Rust Core Daemon (với cargo-watch hot-reload)
 pnpm run dev:vsce     # Chạy VS Code Extension Studio
+pnpm run dev:desk     # Chạy Desktop Native App
 pnpm run dev:source:runner # Chạy Silent Web Extension Runner
 pnpm run dev:source:studio # Chạy Standalone Studio Canvas UI
 ```
@@ -175,8 +179,8 @@ pnpm run dev:source:studio # Chạy Standalone Studio Canvas UI
 # Chạy Unit Tests cho toàn bộ TypeScript/Node packages (Vitest)
 pnpm run test
 
-# Chạy Unit Tests cho Rust Core Engine (20 tests)
-pnpm run test:core    # (tương đương cargo test --manifest-path automa-core/Cargo.toml)
+# Chạy Unit Tests cho Rust Core Engine (55 tests)
+pnpm run test:core    # (tương đương cargo test --manifest-path apps/core/Cargo.toml)
 ```
 
 ---
@@ -187,21 +191,21 @@ Chiến lược phát triển dài hạn của Automa Ecosystem được chia l�
 
 - **Horizon 1 - Ổn định (Stabilize):** Tối ưu hóa MV3, hoàn thiện tính năng kill/stop Campaign, bổ sung Test Coverage và hạ tầng CI/CD.
 - **Horizon 2 - Mở rộng (Grow):** Xây dựng trang tài liệu trực tuyến, ra mắt **Workflow Hub** chia sẻ kịch bản cho cộng đồng.
-- **✅ Horizon 3 - Chuyển dịch lõi (Rust Core) [HOÀN THÀNH]:** Thay thế Node.js runtime bằng Native Rust Binary (`automa-core`), đạt được tốc độ xử lý siêu việt, tối ưu bộ nhớ triệt để và kiến trúc Thin Client.
+- **✅ Horizon 3 - Chuyển dịch lõi (Rust Core) [HOÀN THÀNH]:** Thay thế Node.js runtime bằng Native Rust Binary (`apps/core`), đạt được tốc độ xử lý siêu việt, tối ưu bộ nhớ triệt để và kiến trúc Thin Client.
 - **Horizon 4 - Nền tảng Doanh nghiệp (SaaS Platform):** Xây dựng Web Dashboard quản trị tập trung với cơ chế Cloud Sync thời gian thực (LWW), hỗ trợ cộng tác nhóm (Team Collaboration) và cung cấp Managed Cloud Runners.
 
-👉 **Xem chi tiết Lộ Trình Giao Diện (Frontend UI Roadmap) tại:** [ROADMAP.md](./ROADMAP.md)
+👉 **Xem chi tiết Lộ Trình & Hub Tài Liệu tại:** [docs/Home.md](./docs/Home.md)
 
 ---
 
 ## 📚 Hệ Thống Trí Thức (Knowledge Base)
 
-Kiến trúc tài liệu được thiết kế theo dạng **Phân tán (Decentralized Docs)** nhằm tránh tình trạng tài liệu lỗi thời. Mỗi thành phần (microservice/submodule) tự bảo trì tài liệu kỹ thuật và kiến trúc chuyên sâu ngay trong file `README.md` gốc của mình.
+Kiến trúc tài liệu được thiết kế theo dạng **Phân tán (Decentralized Docs)** nhằm tránh tình trạng tài liệu lỗi thời. Mỗi ứng dụng và gói thư viện (`apps/*`, `packages/*`) tự bảo trì tài liệu kỹ thuật và kiến trúc chuyên sâu ngay trong file `README.md` gốc của mình.
 
-👉 **Hãy xem tệp [docs/Home.md](./docs/Home.md) để lấy danh sách liên kết điều hướng đến tài liệu của từng submodule.**
+👉 **Hãy xem tệp [docs/Home.md](./docs/Home.md) để lấy danh sách liên kết điều hướng đến tài liệu của từng phân hệ.**
 
 ### Giao Tiếp API (Automa Bruno)
-Bộ tài liệu đặc tả OpenAPI 3.1.0 và REST/SSE Client (`automa-core-api.json`) tương tác với Rust Core Daemon được sử dụng thông qua phần mềm **Bruno**. Tích hợp qua Git Submodule tại thư mục `automa-bruno` và `bruno/`.
+Bộ tài liệu đặc tả OpenAPI 3.1.0 và REST/SSE Client (`automa-core-api.json`) tương tác với Rust Core Daemon được sử dụng thông qua phần mềm **Bruno** tại thư mục `bruno/`.
 
 ---
 

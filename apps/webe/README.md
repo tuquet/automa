@@ -49,14 +49,22 @@ export default function() {
 ```
 
 ```bash
-# Install dependencies
-pnpm install
+# From workspace root:
+pnpm -F @automa/webe dev
+pnpm -F @automa/webe build
+pnpm -F @automa/webe build:runner
+pnpm -F @automa/webe build:studio
 
+# Or from apps/webe directory:
 # Compiles and hot-reloads for development for the chrome browser
 pnpm dev
 
 # Compiles and minifies for production for the chrome browser
 pnpm build
+
+# Build standalone CLI runner & Studio artifacts
+pnpm build:runner
+pnpm build:studio
 
 # Create a zip file from the build folder
 pnpm build:zip
@@ -98,7 +106,7 @@ Thanks to everyone who has submitted issues, made suggestions, and generally hel
 
 ## 🏛️ KIẾN TRÚC `automa-webe:runner` VS `automa-webe:studio` (2 REUSABLE BUILD TARGETS)
 
-`automa-webe` cung cấp 2 gói artifact cốt lõi tái sử dụng cho toàn bộ hệ sinh thái (`automa-core`, `automa-vsce`, `automa-desk`):
+`apps/webe` (`@automa/webe`) cung cấp 2 gói artifact cốt lõi tái sử dụng cho toàn bộ hệ sinh thái (`apps/core`, `apps/vsce`, `apps/desk`):
 
 | Chiều So Sánh | `automa-webe:runner` (Headless Engine) | `automa-webe:studio` (Visual Canvas) |
 | :--- | :--- | :--- |
@@ -107,7 +115,7 @@ Thanks to everyone who has submitted issues, made suggestions, and generally hel
 | **Bản Chất Kỹ Thuật** | **Headless Browser Execution Engine**: Extension MV3 chạy ngầm trong Chromium (Headless/Headful) | **Standalone Web Canvas Application**: Ứng dụng Web SPA độc lập dựng trên Vue 3 & `@vue-flow/core` |
 | **Ngữ Cảnh Thực Thi** | Chạy trong Chrome Offscreen Document (`offscreen.html`) để thực thi 61 DOM automation block handlers | Phục vụ trực tiếp qua HTTP bởi Daemon tại `http://127.0.0.1:8765/studio/` hoặc nhúng qua iframe vào Custom Editor VS Code |
 | **Giao Thức Giao Tiếp** | Kết nối 1 chiều qua SSE (`/api/v1/internal/worker/events`) để nhận jobs và stream kết quả thực thi | Kết nối REST API (`/api/v1/...`) cho CRUD/Linting, SSE (`/api/events`) cho live logs, và 2-way postMessage Host Bridge |
-| **Quy Tắc Tái Sử Dụng** | `automa-core` sideload trực tiếp khi chạy jobs. Tuyệt đối không duplicate mã nguồn runner. | `automa-vsce` và `automa-desk` nhúng trực tiếp làm UI Canvas chính. Tuyệt đối không duplicate canvas. |
+| **Quy Tắc Tái Sử Dụng** | `apps/core` sideload trực tiếp khi chạy jobs. Tuyệt đối không duplicate mã nguồn runner. | `apps/vsce` và `apps/desk` nhúng trực tiếp làm UI Canvas chính. Tuyệt đối không duplicate canvas. |
 
 ---
 

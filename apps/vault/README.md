@@ -13,9 +13,9 @@
      - 📊 **Storage Tables**: Các bảng dữ liệu hai chiều (hàng & cột) để workflow đọc/ghi (`/api/storage/tables`).
      - 🔤 **Storage Variables**: Các biến toàn cục dùng chung (`/api/storage/variables`).
      - 🔑 **Storage Credentials**: Khóa API và tài khoản bảo mật được mã hóa AES-256 (`/api/storage/credentials`).
-   - Được quản lý tập trung bởi Rust Daemon (`automa-core`) qua cơ sở dữ liệu SQLite nhúng (`AutomaDb`).
+   - Được quản lý tập trung bởi Rust Daemon (`apps/core`) qua cơ sở dữ liệu SQLite nhúng (`AutomaDb`).
 
-2. **Storage Workspace (Tệp trên ổ cứng - Submodule `automa-vault`)**:
+2. **Storage Workspace (Tệp trên ổ cứng - Thư mục `apps/vault`)**:
    - Là thư mục tệp tin vật lý chứa các kịch bản `.workflow.json`, ma trận chiến dịch đa luồng `.campaigns.json`, và hồ sơ trình duyệt `.browser.json`.
 
 ---
@@ -26,7 +26,7 @@
 Kho tệp Workspace **BẮT BUỘC** duy trì cấu trúc thư mục nghiêm ngặt như sau. **TUYỆT ĐỐI KHÔNG** thay đổi vị trí lưu trữ gốc nếu không thông qua file config.
 
 ```text
-automa-vault/
+apps/vault/
 ├── workflows/        # Chứa các file *.automa.json (Logic)
 ├── campaigns/        # Chứa các file *.campaigns.json (Điều phối ma trận song song)
 ├── browsers/         # Chứa các file *.browser.json (Session Profile Trình duyệt)
@@ -53,7 +53,7 @@ Campaigns là trái tim của tính năng chạy song song. Một Campaign **B�
 
 | Thuật Ngữ Chuẩn (Canonical Term) | Thành Phần Code Đại Diện | Mô Tả Kỹ Thuật Ngắn Gọn |
 | :--- | :--- | :--- |
-| **Storage Workspace** | `automa-vault/` | Kho lưu trữ tệp cục bộ có cấu trúc phân cấp nghiêm ngặt, chứa các file kịch bản, cấu hình trình duyệt và chiến dịch. |
+| **Storage Workspace** | `apps/vault/` | Kho lưu trữ tệp cục bộ có cấu trúc phân cấp nghiêm ngặt, chứa các file kịch bản, cấu hình trình duyệt và chiến dịch. |
 | **Global Storage** | `/api/storage/*`, `AutomaDb` | Cơ sở dữ liệu nghiệp vụ Automa gồm Tables, Variables và Credentials lưu trữ an toàn trong SQLite. |
 | **Campaign Matrix** | `*.campaigns.json` | File cấu hình ma trận điều phối tự động hóa song song đa luồng, ánh xạ từng `browser_id` với danh sách `tasks` (workflow_id). |
 | **Browser Profile** | `*.browser.json` | File định nghĩa cấu hình độc lập của trình duyệt (proxy, user-agent, custom flags, chế độ headless, user data dir path). |
