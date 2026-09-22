@@ -1,0 +1,7 @@
+---
+"automa-vscode": minor
+---
+
+Scaffolded Browser Manager UI in Activity Bar.
+Implemented REST API consumption for launching and killing remote browsers via UI.
+Added full CRUD capabilities (Create, Update, Delete) to the Browser Manager UI using interactive prompts.\nRenamed Sidebar Panels to be shorter (e.g. Browsers, Dashboard, Runners).\nMigrated Browsers Manager from TreeView to a full Webview interface with inline HTML buttons for CRUD.\nMerged Workflows and Packages panels into a single WORKFLOWS & PACKAGES view to save screen space.\nMerged Active Runners and Browser Browsers into a single unified BROWSERS & RUNNERS Webview panel.\nMerged Global Storage, Workflows, and Packages into a single unified WORKSPACE TreeView panel.\nImplemented graceful TreeItem fallback states across all panels when Daemon is offline.\nMerged Campaign Dashboard and Execution History into a single unified DASHBOARD & HISTORY Webview panel.\nFixed false negative Daemon offline states at VS Code startup by broadcasting a global daemon_ready event.\nRenamed Webview panel titles to be shorter.\nAdded a new VS Code setting and command (Automa: Select Default Browser) to choose which browser browser to use when running workflows.\n

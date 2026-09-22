@@ -1,0 +1,17 @@
+# Execution Logs & Metadata
+.logs/
+.automa/
+*.log
+
+# Databases & Runtime State
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Temporary / Scratch Files
+scratch/
+
+# Operating System & IDE Files
+.vscode/
+.DS_Store
+Thumbs.db

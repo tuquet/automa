@@ -271,7 +271,7 @@ const TASKS = [
     color: pc.cyan,
     cmd: process.platform === 'win32' ? 'cargo.exe' : 'cargo',
     args: ['watch', '-x', 'run'],
-    cwd: path.join(rootDir, 'automa-core'),
+    cwd: path.join(rootDir, 'apps/core'),
     description: 'Rust Daemon on port 8765',
     url: 'http://127.0.0.1:8765/swagger-ui',
   },

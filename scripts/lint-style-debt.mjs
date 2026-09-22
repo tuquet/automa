@@ -11,11 +11,11 @@ import process from 'node:process';
 import { pc, rootDir } from './lib/utils.mjs';
 
 const TARGET_DIRS = [
-  'automa-webe/src/studio',
-  'automa-webe/src/components',
-  'automa-webe/src/assets/css',
-  'automa-vsce/webview-ui/src',
-  'automa-desk/src',
+  'apps/webe/src/studio',
+  'apps/webe/src/components',
+  'apps/webe/src/assets/css',
+  'apps/vsce/webview-ui/src',
+  'apps/desk/src',
   'packages/automa-ui/src',
 ];
 

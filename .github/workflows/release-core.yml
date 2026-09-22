@@ -20,7 +20,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     defaults:
       run:
-        working-directory: automa-core
+        working-directory: apps/core
     strategy:
       fail-fast: false
       matrix:
@@ -43,7 +43,7 @@ jobs:
       - name: Cache Cargo dependencies
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: automa-core
+          workspaces: apps/core
           key: ${{ matrix.target }}
 
       - name: Run Tests
@@ -74,9 +74,9 @@ jobs:
         with:
           name: ${{ matrix.asset_name }}
           path: |
-            automa-core/${{ matrix.asset_name }}
-            automa-core/${{ matrix.asset_name }}.sha256
-            automa-core/${{ matrix.direct_name }}
+            apps/core/${{ matrix.asset_name }}
+            apps/core/${{ matrix.asset_name }}.sha256
+            apps/core/${{ matrix.direct_name }}
           retention-days: 5
 
   release:

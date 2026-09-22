@@ -1,0 +1,181 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.9.0](https://github.com/fridzema/oxide-dock/compare/oxidedock-v0.8.1...oxidedock-v0.9.0) (2026-08-19)
+
+
+### Features
+
+* land IPC drift guard (roadmap phase 1a) ([67cfb77](https://github.com/fridzema/oxide-dock/commit/67cfb77cc357847c391d2cab3cd18e82c3f21072))
+* land recipe system (roadmap phase 1b) ([0cd666e](https://github.com/fridzema/oxide-dock/commit/0cd666e429a499f9818b88ed0910bc08a7a48cf4))
+* **recipes:** add insertion anchors and shared apply helpers ([5109393](https://github.com/fridzema/oxide-dock/commit/510939304d548a8c0849a1a2518f11b135358130))
+* **recipes:** add tray recipe ([66484a1](https://github.com/fridzema/oxide-dock/commit/66484a141b00604bba3ab6e48797ebfba704ae00))
+* **recipes:** add updater recipe ([3482451](https://github.com/fridzema/oxide-dock/commit/348245111333da834c8b59e0a091ab9d125b9364))
+* **recipes:** add window-state recipe ([895fed0](https://github.com/fridzema/oxide-dock/commit/895fed065e16701a5bf1644c1357a5f520ed7f06))
+
+
+### Bug Fixes
+
+* **ci:** cache Linux Tauri dependencies to stop apt timeouts ([#86](https://github.com/fridzema/oxide-dock/issues/86)) ([81aed9b](https://github.com/fridzema/oxide-dock/commit/81aed9b5e3901efb6f6b84f286f3b7d78a049a16))
+* **ci:** make the TypeScript type check actually check something ([159e373](https://github.com/fridzema/oxide-dock/commit/159e3733178a0c8fd887e94f6517ed452b9b9200))
+* **ci:** stop tauri-action v1 from blanking the release body ([#81](https://github.com/fridzema/oxide-dock/issues/81)) ([ffc2d2e](https://github.com/fridzema/oxide-dock/commit/ffc2d2eb946554045a06ab0a5e81c08cc53d8ce6))
+* **recipes:** check the tray anchor before renaming the setup binding ([77d7ce4](https://github.com/fridzema/oxide-dock/commit/77d7ce439348270bdb712a019a3e27d4f695cf1f))
+* **recipes:** never write unvalidated formatter output to tracked files ([6f89553](https://github.com/fridzema/oxide-dock/commit/6f8955327245fd2d42f3c7064cddbffc55b2378d))
+* **vscode:** enable Rust type pretty-printing in debug configs ([0a5d203](https://github.com/fridzema/oxide-dock/commit/0a5d20345b39a255ef453fbf7865e7d0ae68d8c1))
+* **vscode:** format with Biome and add Rust debug configuration ([5e75936](https://github.com/fridzema/oxide-dock/commit/5e75936a9f7f4723ede549e4ab61230d4e523101))
+* **vscode:** run rust-analyzer checks through clippy ([505108d](https://github.com/fridzema/oxide-dock/commit/505108d379827040a931e38404e9ff56c4cbbfef))
+
+## [0.8.1](https://github.com/fridzema/oxide-dock/compare/oxidedock-v0.8.0...oxidedock-v0.8.1) (2026-08-18)
+
+
+### Bug Fixes
+
+* **deps:** clear audit advisories and unblock dependabot npm PRs ([#76](https://github.com/fridzema/oxide-dock/issues/76)) ([e1d4d50](https://github.com/fridzema/oxide-dock/commit/e1d4d5093a41474d1de2ba9c67bbf1c07ce8ecb0))
+
+## [0.8.0](https://github.com/fridzema/oxide-dock/compare/oxidedock-v0.7.1...oxidedock-v0.8.0) (2026-07-03)
+
+
+### Bug Fixes
+
+* **deps:** refresh dependencies and clear audit advisories ([#64](https://github.com/fridzema/oxide-dock/issues/64)) ([e51203f](https://github.com/fridzema/oxide-dock/commit/e51203f37aa54634c78721d43726022a1def5bb4))
+* error display, notification await, coverage gate, and stale about info ([#57](https://github.com/fridzema/oxide-dock/issues/57)) ([3fd4231](https://github.com/fridzema/oxide-dock/commit/3fd4231cc60cf241facbba7c0f42d94b31eb28fe))
+
+## [0.7.1](https://github.com/fridzema/oxide-dock/compare/oxidedock-v0.7.0...oxidedock-v0.7.1) (2026-05-12)
+
+
+### Bug Fixes
+
+* **ci:** match release-please tag prefix + add workflow_dispatch ([#50](https://github.com/fridzema/oxide-dock/issues/50)) ([41bca5c](https://github.com/fridzema/oxide-dock/commit/41bca5c872ed09d3d720fa5d3a150ad08d82d7f6)), closes [#38](https://github.com/fridzema/oxide-dock/issues/38)
+
+## [0.7.0](https://github.com/fridzema/oxide-dock/compare/oxidedock-v0.6.0...oxidedock-v0.7.0) (2026-05-12)
+
+
+### Features
+
+* add filepath to file browser to reopen previous folder ([#35](https://github.com/fridzema/oxide-dock/issues/35)) ([fea3618](https://github.com/fridzema/oxide-dock/commit/fea3618f7df418b0dd13c7faf534b65f9064991f))
+
+
+### Bug Fixes
+
+* **ci:** attach build artifacts to release-please release ([#49](https://github.com/fridzema/oxide-dock/issues/49)) ([5da4339](https://github.com/fridzema/oxide-dock/commit/5da4339e5002bb0e13ccb8dc1fa64d133aa9c738)), closes [#38](https://github.com/fridzema/oxide-dock/issues/38)
+* **e2e:** force IPv4 + raise webServer timeout to 120s ([#46](https://github.com/fridzema/oxide-dock/issues/46)) ([accd02b](https://github.com/fridzema/oxide-dock/commit/accd02b6b1410b01d21b5b580fac7f60acd4c203)), closes [#36](https://github.com/fridzema/oxide-dock/issues/36)
+* fix hardcoded current version in bootstrap.sh ([#37](https://github.com/fridzema/oxide-dock/issues/37)) ([e51eab9](https://github.com/fridzema/oxide-dock/commit/e51eab908df2e6dabeb1cff077120ebf4dce6bc7))
+
+## [0.6.0](https://github.com/fridzema/oxide-dock/compare/oxidedock-v0.5.0...oxidedock-v0.6.0) (2026-04-21)
+
+
+### Bug Fixes
+
+* **ci:** stop caching node_modules (stale nested deps after lockfile change) ([#33](https://github.com/fridzema/oxide-dock/issues/33)) ([ca5b49f](https://github.com/fridzema/oxide-dock/commit/ca5b49ffd0c765a16754be604e1b1cf529696cd5))
+* **linux:** disable webkit2gtk DMA-BUF renderer to restore AppImage scroll ([#32](https://github.com/fridzema/oxide-dock/issues/32)) ([c5c3080](https://github.com/fridzema/oxide-dock/commit/c5c308058bcc08cc1b7c40d0bdee9de33f614c18))
+* **types:** add *.vue module shim for TS build ([#29](https://github.com/fridzema/oxide-dock/issues/29)) ([32fb487](https://github.com/fridzema/oxide-dock/commit/32fb487c2cfe71d1b933022db5e34c12ad6fd916)), closes [#26](https://github.com/fridzema/oxide-dock/issues/26)
+
+
+### Miscellaneous Chores
+
+* bump to 0.6.0 for v0.6.0 dep-refresh release ([74536af](https://github.com/fridzema/oxide-dock/commit/74536afd72589787c59bccedc9404b48676e94cf))
+
+## [0.5.0](https://github.com/fridzema/oxide-dock/compare/oxidedock-v0.4.0...oxidedock-v0.5.0) (2026-03-03)
+
+
+### Features
+
+* **bootstrap:** add version prompt and changelog reset ([3488e08](https://github.com/fridzema/oxide-dock/commit/3488e0879c96b5508dcfca5cdd20f8864b9bb282))
+* **bootstrap:** add version prompt and changelog reset ([2bc69ba](https://github.com/fridzema/oxide-dock/commit/2bc69ba28c956a828cc428081e68842472a282ba)), closes [#14](https://github.com/fridzema/oxide-dock/issues/14)
+
+## [0.4.0](https://github.com/fridzema/oxide-dock/compare/oxidedock-v0.3.1...oxidedock-v0.4.0) (2026-02-14)
+
+
+### Features
+
+* add make check and bootstrap targets for improved developer onboarding ([e618c82](https://github.com/fridzema/oxide-dock/commit/e618c82fed75e994526fc71086e8ea5b3266e2ca))
+* hardening infrastructure — correctness, security, CI/CD, quality, DX ([da01146](https://github.com/fridzema/oxide-dock/commit/da01146cd7492028d1b559fb42f413afeb961b92))
+
+
+### Bug Fixes
+
+* align release-please tags with release workflow trigger ([3185b20](https://github.com/fridzema/oxide-dock/commit/3185b20458938be0f952bcc6aa24d311416da2cf))
+* avoid mutating IPC response in FileDialogDemo ([9cddd78](https://github.com/fridzema/oxide-dock/commit/9cddd7895ad217193ca87636ae785e5496f5e346))
+* complete bootstrap rename for all hardcoded OxideDock references ([15042c0](https://github.com/fridzema/oxide-dock/commit/15042c00698cb444ffa7a31bb7af22480f6ade59))
+* prevent [object Object] in error log messages ([522f586](https://github.com/fridzema/oxide-dock/commit/522f5862b364156dc30645ecdba8b017e0d5d662))
+* prevent error logging recursion when Tauri runtime unavailable ([486272d](https://github.com/fridzema/oxide-dock/commit/486272d4cc3a27695213c4d557ddad11f6a38c4d))
+* **security:** remove custom read_text_file command that bypassed Tauri ACL ([2eea336](https://github.com/fridzema/oxide-dock/commit/2eea3365e76716c962849461ba21add1bc08489e))
+* **security:** remove unscoped fs:allow-stat, use content.length instead ([cd6e386](https://github.com/fridzema/oxide-dock/commit/cd6e3863911a0dcd5ef559e66c25308ba351012f))
+* update SECURITY.md supported versions to 0.x ([c7b271b](https://github.com/fridzema/oxide-dock/commit/c7b271b7fd4153a9a4a06131c07e35986f4d00b3))
+* use Tauri getVersion() API for dynamic version display ([4cf28e2](https://github.com/fridzema/oxide-dock/commit/4cf28e2549904bd0af4a4086776833bbe9f9a444))
+
+## [0.3.1](https://github.com/fridzema/oxide-dock/compare/oxidedock-v0.3.0...oxidedock-v0.3.1) (2026-02-13)
+
+
+### Bug Fixes
+
+* align Makefile coverage regex with CI ([5d711f8](https://github.com/fridzema/oxide-dock/commit/5d711f81d8e9c759af79a9397870969b262b71f1))
+* only install Apple Rust targets on macOS release runners ([0aaa664](https://github.com/fridzema/oxide-dock/commit/0aaa66479925b014be343bdf96547561bf7bac83))
+* use dynamic branch name from release-please output ([02e29e1](https://github.com/fridzema/oxide-dock/commit/02e29e1ee301d974f7e2c2b07f0d41255341ba4f))
+
+## [0.3.0](https://github.com/fridzema/oxide-dock/compare/oxidedock-v0.2.0...oxidedock-v0.3.0) (2026-02-13)
+
+### Features
+
+- **backend:** app error type + consistent command results ([12b0d03](https://github.com/fridzema/oxide-dock/commit/12b0d0310de5a7be81c640eda0bf8d96ffd1f6e6))
+- **ipc:** add typed invoke wrappers + shared types ([882220b](https://github.com/fridzema/oxide-dock/commit/882220b2f55520a00b00baf40fd8e71c9f62c092))
+- **logging:** tauri-plugin-log setup + frontend log forwarding ([74c8978](https://github.com/fridzema/oxide-dock/commit/74c89780f6c0b040dade56c21e113e9a7befc553))
+- production hardening & infrastructure ([448a898](https://github.com/fridzema/oxide-dock/commit/448a8982f8c9eeea081ba0101d22d1b3c1d6d0d2))
+- **sample:** open-file -&gt; read-text -&gt; display (safe path flow) ([f50b1fe](https://github.com/fridzema/oxide-dock/commit/f50b1fe29f1de9bbec3efac549a77df7aa337628))
+- **state:** managed AppState + async command example ([8e3f8e1](https://github.com/fridzema/oxide-dock/commit/8e3f8e14c09065edd0608682c0302612e3550eed))
+
+### Bug Fixes
+
+- harden bootstrap.sh against special characters in user input ([37e4f37](https://github.com/fridzema/oxide-dock/commit/37e4f3715d7cb6716e6a39329ca5cbf554cf322b))
+- pin Node and Bun versions in devcontainer config ([9f5c01f](https://github.com/fridzema/oxide-dock/commit/9f5c01f08b5d74645ba477e6dba5fb02148129d8))
+- **security:** tighten default capabilities & document escalation path ([0f7c285](https://github.com/fridzema/oxide-dock/commit/0f7c28545590c756433d01ca792e18c0cf0038d4))
+- standardize repo URLs to fridzema/oxide-dock ([7c25791](https://github.com/fridzema/oxide-dock/commit/7c257917fcd5740277357be48ae30f7db2d3972d))
+
+## [0.2.0](https://github.com/fridzema/oxide-dock/compare/oxidedock-v0.1.0...oxidedock-v0.2.0) (2026-02-13)
+
+### Features
+
+- 100% test coverage for Rust and Vue/TS ([8b4c5bf](https://github.com/fridzema/oxide-dock/commit/8b4c5bfb161145c73f956e359fc05a811a897ae8))
+- 100% test coverage for Rust and Vue/TS ([ba9aa04](https://github.com/fridzema/oxide-dock/commit/ba9aa04496cb087ff58352a9acb250eac7509d88))
+
+### Bug Fixes
+
+- update release-please workflow to keep Cargo.lock in sync ([3d33fb6](https://github.com/fridzema/oxide-dock/commit/3d33fb62154f16769733ef34b803c693d0ee2f55))
+
+## [Unreleased]
+
+### Fixed
+
+- Bundle identifier changed from `.app` to `.desktop` to avoid macOS conflicts
+- Correct GitHub repo URL in SystemInfoDemo component
+- Vue Router version (v4 → v5) and branding doc path in README
+- Remove placeholder `authors` and unused `serde_json` from Cargo.toml
+- Window minimum size constraints (600x400) to prevent layout breakage
+- Default Content Security Policy for production security
+- Rust error handling — `run()` returns Result, no more panics
+- Accessibility: input labels, status roles, counter button aria-labels
+- CI formatting gate no longer broken
+
+### Added
+
+- 404 catch-all route with NotFound page
+- Global Vue error handler and unhandled promise rejection listener
+- `greet_checked` Rust command demonstrating `Result<T, E>` pattern
+- Theme-color meta tags for light/dark system theming
+- E2E tests in CI pipeline
+- Coverage thresholds enforcement
+- Rust release profile optimizations (LTO, single codegen unit, strip)
+
+### Removed
+
+- Dead `HelloWorld.vue` component (was test-only)
+- Empty `src/assets/` directory
+
+### Changed
+
+- CI: split fast checks (PRs) from full builds (main only)
+- `make rust-audit` now checks for cargo-audit before running

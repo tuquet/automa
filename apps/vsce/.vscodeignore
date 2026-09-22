@@ -1,0 +1,12 @@
+.vscode/
+.turbo/
+src/
+tests/
+out/
+scratch/
+tsconfig.json
+biome.json
+.gitignore
+*.ts
+!*.d.ts
+task.md

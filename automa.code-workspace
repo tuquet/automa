@@ -5,24 +5,24 @@
       "path": "."
     },
     {
-      "name": "automa-core",
-      "path": "automa-core"
+      "name": "core",
+      "path": "apps/core"
     },
     {
-      "name": "automa-webe",
-      "path": "automa-webe"
+      "name": "webe",
+      "path": "apps/webe"
     },
     {
-      "name": "automa-vsce",
-      "path": "automa-vsce"
+      "name": "vsce",
+      "path": "apps/vsce"
     },
     {
-      "name": "automa-desk",
-      "path": "automa-desk"
+      "name": "desk",
+      "path": "apps/desk"
     },
     {
-      "name": "automa-vault",
-      "path": "automa-vault"
+      "name": "vault",
+      "path": "apps/vault"
     }
   ],
   "settings": {

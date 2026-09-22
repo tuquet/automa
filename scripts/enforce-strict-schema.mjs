@@ -10,7 +10,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { pc, rootDir } from './lib/utils.mjs';
 
-const API_DIR = path.join(rootDir, 'automa-core/src/api/handlers');
+const API_DIR = path.join(rootDir, 'apps/core/src/api/handlers');
 
 function lintSchemaFiles() {
   let hasError = false;

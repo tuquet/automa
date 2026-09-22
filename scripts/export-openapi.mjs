@@ -31,7 +31,7 @@ export async function getOpenApiSpec() {
   // 2. Try to export directly from automa-core via cargo
   try {
     console.log(`${pc.yellow('⚡')} Automa Core is not running live. Exporting OpenAPI spec directly from Rust source...`);
-    execSync(`cargo run --manifest-path automa-core/Cargo.toml --quiet -- --export-openapi ${OPENAPI_SPEC}`, {
+    execSync(`cargo run --manifest-path apps/core/Cargo.toml --quiet -- --export-openapi ${OPENAPI_SPEC}`, {
       cwd: rootDir,
       stdio: ['pipe', 'pipe', 'pipe'],
     });

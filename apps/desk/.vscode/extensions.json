@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "vue.volar",
+    "biomejs.biome",
+    "dbaeumer.vscode-eslint",
+    "rust-lang.rust-analyzer",
+    "vadimcn.vscode-lldb",
+    "bradlc.vscode-tailwindcss",
+    "tauri-apps.tauri-vscode"
+  ]
+}

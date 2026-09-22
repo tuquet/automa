@@ -1,0 +1,46 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "🖥️ Dev: Automa Desk (Vite Server)",
+      "type": "shell",
+      "isBackground": true,
+      "command": "pnpm run dev",
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": { "regexp": "^$" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "VITE",
+          "endsPattern": "ready in"
+        }
+      }
+    },
+    {
+      "label": "📦 Build: Automa Desk (Vue TSC & Vite)",
+      "type": "shell",
+      "command": "pnpm run build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "🧪 Test: Automa Desk (Unit Vitest)",
+      "type": "shell",
+      "command": "pnpm run test:unit",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "🦀 Check: Tauri Rust Backend",
+      "type": "shell",
+      "command": "cargo check --manifest-path src-tauri/Cargo.toml",
+      "problemMatcher": []
+    }
+  ]
+}

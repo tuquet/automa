@@ -1,7 +1,5 @@
 packages:
-  - 'automa-vsce'
-  - 'automa-webe'
-  - 'automa-desk'
+  - 'apps/*'
   - 'packages/*'
 allowBuilds:
   core-js: true

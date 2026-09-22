@@ -1,0 +1,929 @@
+{
+  "name": "vscode-automa",
+  "private": true,
+  "publisher": "tuquet",
+  "displayName": "Automa Core Toolkit",
+  "description": "VS Code integration for the Automa Ecosystem (Core & Studio)",
+  "version": "1.0.3",
+  "icon": "assets/logo.png",
+  "engines": {
+    "node": ">=18.0.0",
+    "vscode": "^1.85.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tuquet/automa-vscode.git"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "menus": {
+      "explorer/context": [
+        {
+          "submenu": "automa.explorerSubmenu",
+          "when": "resourceExtname == .json",
+          "group": "automa@1"
+        },
+        {
+          "command": "automa.copyEscapedPath",
+          "when": "resourceScheme == 'file'",
+          "group": "4_search@2"
+        }
+      ],
+      "automa.explorerSubmenu": [
+        {
+          "command": "automa.runWorkflow",
+          "when": "resourceExtname == .json",
+          "group": "1_run@1"
+        },
+        {
+          "command": "automa.importWorkflowToDb",
+          "when": "resourceExtname == .json",
+          "group": "1_run@2"
+        },
+        {
+          "command": "automa.runCampaign",
+          "when": "resourceExtname == .json",
+          "group": "1_run@3"
+        },
+        {
+          "command": "automa.lintCheck",
+          "when": "resourceExtname == .json",
+          "group": "2_tools@2"
+        }
+      ],
+      "editor/title/run": [
+        {
+          "command": "automa.runWorkflow",
+          "when": "resourceFilename =~ /.*\\.(workflow|package|automa)\\.json$/ || activeCustomEditorId == 'automa.workflowEditor'",
+          "group": "navigation"
+        },
+        {
+          "command": "automa.runCampaign",
+          "when": "resourceFilename =~ /.*\\.campaigns?\\.json$/ || activeCustomEditorId == 'automa.campaignEditor'",
+          "group": "navigation"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "automa.openInStudio",
+          "when": "resourceFilename =~ /.*\\.(workflow|package|automa)\\.json$/ || activeCustomEditorId == 'automa.workflowEditor'",
+          "group": "navigation"
+        },
+        {
+          "command": "automa.showWorkflowSource",
+          "when": "activeCustomEditorId == 'automa.workflowEditor'",
+          "group": "navigation"
+        },
+        {
+          "command": "automa.showWorkflowPreview",
+          "when": "resourceFilename =~ /.*\\.(workflow|package|automa)\\.json$/ && activeCustomEditorId != 'automa.workflowEditor'",
+          "group": "navigation"
+        },
+        {
+          "command": "automa.showCampaignSource",
+          "when": "activeCustomEditorId == 'automa.campaignEditor'",
+          "group": "navigation"
+        },
+        {
+          "command": "automa.showCampaignPreview",
+          "when": "resourceExtname == .json && resourceFilename =~ /.*\\.campaigns?\\.json$/ && activeCustomEditorId != 'automa.campaignEditor'",
+          "group": "navigation"
+        },
+        {
+          "command": "automa.showLogSource",
+          "when": "activeCustomEditorId == 'automa.logEditor'",
+          "group": "navigation"
+        },
+        {
+          "command": "automa.showLogPreview",
+          "when": "resourceFilename =~ /automa-log.json/ && activeCustomEditorId != 'automa.logEditor'",
+          "group": "navigation"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "automa.showWorkflowPreview",
+          "when": "resourceFilename =~ /.*\\.(workflow|package|automa)\\.json$/ && activeCustomEditorId != 'automa.workflowEditor'",
+          "group": "navigation"
+        },
+        {
+          "command": "automa.showCampaignPreview",
+          "when": "resourceExtname == .json && resourceFilename =~ /.*\\.campaigns?\\.json$/ && activeCustomEditorId != 'automa.campaignEditor'",
+          "group": "navigation"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "automa.showLiveLog",
+          "when": "view == automa.workspace || view == automa.storage",
+          "group": "navigation"
+        },
+        {
+          "command": "automa.createBrowser",
+          "when": "view == automa.browsers",
+          "group": "navigation@0"
+        },
+        {
+          "command": "automa.importBrowsersFromCsv",
+          "when": "view == automa.browsers",
+          "group": "navigation@1"
+        },
+        {
+          "command": "automa.refreshBrowsers",
+          "when": "view == automa.browsers",
+          "group": "navigation@2"
+        },
+        {
+          "command": "automa.killAllBrowsers",
+          "when": "view == automa.browsers",
+          "group": "navigation@3"
+        },
+        {
+          "command": "automa.createWorkflow",
+          "when": "view == automa.workspace",
+          "group": "navigation@0"
+        },
+        {
+          "command": "automa.importWorkflowToDb",
+          "when": "view == automa.workspace",
+          "group": "navigation@1"
+        },
+        {
+          "command": "automa.createCampaign",
+          "when": "view == automa.workspace",
+          "group": "navigation@2"
+        },
+        {
+          "command": "automa.createPackage",
+          "when": "view == automa.workspace",
+          "group": "navigation@3"
+        },
+        {
+          "command": "automa.refreshWorkspace",
+          "when": "view == automa.workspace",
+          "group": "navigation@4"
+        },
+        {
+          "command": "automa.addCredential",
+          "when": "view == automa.storage",
+          "group": "navigation@1"
+        },
+        {
+          "command": "automa.addVariable",
+          "when": "view == automa.storage",
+          "group": "navigation@2"
+        },
+        {
+          "command": "automa.addTable",
+          "when": "view == automa.storage",
+          "group": "navigation@3"
+        },
+        {
+          "command": "automa.exportStorageBackup",
+          "when": "view == automa.storage",
+          "group": "navigation@4"
+        },
+        {
+          "command": "automa.importBackup",
+          "when": "view == automa.storage",
+          "group": "navigation@5"
+        },
+        {
+          "command": "automa.refreshStorage",
+          "when": "view == automa.storage",
+          "group": "navigation@6"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "automa.runWorkflow",
+          "when": "viewItem == automaFileItem-automa.workflows || viewItem == automaFileItem-automa.packages",
+          "group": "inline@1"
+        },
+        {
+          "command": "automa.runWorkflow",
+          "when": "viewItem == automaFileItem-automa.workflows || viewItem == automaFileItem-automa.packages",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "automa.showWorkflowPreview",
+          "when": "viewItem == automaFileItem-automa.workflows || viewItem == automaFileItem-automa.packages",
+          "group": "inline@2"
+        },
+        {
+          "command": "automa.showWorkflowPreview",
+          "when": "viewItem == automaFileItem-automa.workflows || viewItem == automaFileItem-automa.packages",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "automa.showWorkflowSource",
+          "when": "viewItem == automaFileItem-automa.workflows || viewItem == automaFileItem-automa.packages",
+          "group": "2_open@1"
+        },
+        {
+          "command": "automa.exportWorkflowToFile",
+          "when": "viewItem == automaFileItem-automa.workflows || viewItem == automaFileItem-automa.packages",
+          "group": "3_export@1"
+        },
+        {
+          "command": "automa.deleteWorkflow",
+          "when": "viewItem == automaFileItem-automa.workflows || viewItem == automaFileItem-automa.packages",
+          "group": "inline@3"
+        },
+        {
+          "command": "automa.deleteWorkflow",
+          "when": "viewItem == automaFileItem-automa.workflows || viewItem == automaFileItem-automa.packages",
+          "group": "9_delete@1"
+        },
+        {
+          "command": "automa.runCampaign",
+          "when": "viewItem == automaFileItem-automa.campaigns",
+          "group": "inline@1"
+        },
+        {
+          "command": "automa.runCampaign",
+          "when": "viewItem == automaFileItem-automa.campaigns",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "automa.showCampaignPreview",
+          "when": "viewItem == automaFileItem-automa.campaigns",
+          "group": "inline@2"
+        },
+        {
+          "command": "automa.showCampaignPreview",
+          "when": "viewItem == automaFileItem-automa.campaigns",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "automa.showCampaignSource",
+          "when": "viewItem == automaFileItem-automa.campaigns",
+          "group": "2_open@1"
+        },
+        {
+          "command": "automa.deleteCampaign",
+          "when": "viewItem == automaFileItem-automa.campaigns",
+          "group": "inline@3"
+        },
+        {
+          "command": "automa.deleteCampaign",
+          "when": "viewItem == automaFileItem-automa.campaigns",
+          "group": "9_delete@1"
+        },
+        {
+          "command": "automa.createWorkflow",
+          "when": "viewItem == Root_Workflows",
+          "group": "inline@1"
+        },
+        {
+          "command": "automa.importWorkflowToDb",
+          "when": "viewItem == Root_Workflows",
+          "group": "inline@2"
+        },
+        {
+          "command": "automa.createCampaign",
+          "when": "viewItem == Root_Campaigns",
+          "group": "inline@1"
+        },
+        {
+          "command": "automa.importCampaignToDb",
+          "when": "viewItem == Root_Campaigns",
+          "group": "inline@2"
+        },
+        {
+          "command": "automa.createPackage",
+          "when": "viewItem == Root_Packages",
+          "group": "inline"
+        },
+        {
+          "command": "automa.deleteStorageItem",
+          "when": "view == automa.storage && (viewItem == Variable || viewItem == Credential || viewItem == Table)",
+          "group": "inline"
+        },
+        {
+          "command": "automa.addCredential",
+          "when": "view == automa.storage && viewItem == Category-Secrets",
+          "group": "inline"
+        },
+        {
+          "command": "automa.addVariable",
+          "when": "view == automa.storage && viewItem == Category-Variables",
+          "group": "inline"
+        },
+        {
+          "command": "automa.addTable",
+          "when": "view == automa.storage && viewItem == Category-Tables",
+          "group": "inline"
+        },
+        {
+          "command": "automa.openTable",
+          "when": "view == automa.storage && viewItem == Table",
+          "group": "inline@1"
+        },
+        {
+          "command": "automa.launchBrowser",
+          "when": "view == automa.browsers && viewItem == automaBrowserItem-offline",
+          "group": "inline@1"
+        },
+        {
+          "command": "automa.stopBrowser",
+          "when": "view == automa.browsers && viewItem == automaBrowserItem-online",
+          "group": "inline@1"
+        },
+        {
+          "command": "automa.executeWorkflowOnBrowser",
+          "when": "view == automa.browsers && viewItem == automaBrowserItem-online",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "automa.sideloadExtension",
+          "when": "view == automa.browsers",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "automa.editBrowser",
+          "when": "view == automa.browsers",
+          "group": "2_edit@1"
+        },
+        {
+          "command": "automa.deleteBrowser",
+          "when": "view == automa.browsers && viewItem == automaBrowserItem-offline",
+          "group": "inline@2"
+        },
+        {
+          "command": "automa.deleteBrowser",
+          "when": "view == automa.browsers && viewItem == automaBrowserItem-offline",
+          "group": "9_delete@1"
+        },
+        {
+          "command": "automa.killBrowser",
+          "when": "view == automa.browsers && viewItem == automaBrowserItem-online",
+          "group": "9_delete@1"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "automa.deleteWorkflow",
+        "key": "delete",
+        "mac": "backspace",
+        "when": "focusedView == 'automa.workspace' && (viewItem == 'automaFileItem-automa.workflows' || viewItem == 'automaFileItem-automa.packages')"
+      },
+      {
+        "command": "automa.deleteCampaign",
+        "key": "delete",
+        "mac": "backspace",
+        "when": "focusedView == 'automa.workspace' && viewItem == 'automaFileItem-automa.campaigns'"
+      }
+    ],
+    "submenus": [
+      {
+        "id": "automa.explorerSubmenu",
+        "label": "Automa Toolkit"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "automa-activity-bar",
+          "title": "Automa Ecosystem",
+          "icon": "resources/automa-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "automa-activity-bar": [
+        {
+          "id": "automa.workspace",
+          "name": "AUTOMATIONS",
+          "icon": "$(play-circle)",
+          "contextualTitle": "Automa Automations"
+        },
+        {
+          "id": "automa.browsers",
+          "name": "BROWSERS",
+          "icon": "$(globe)",
+          "contextualTitle": "Automa Browsers"
+        },
+        {
+          "id": "automa.storage",
+          "name": "STORAGE",
+          "icon": "$(database)",
+          "contextualTitle": "Automa Storage"
+        }
+      ]
+    },
+    "languages": [
+      {
+        "id": "json",
+        "extensions": [
+          ".workflow.json",
+          ".package.json",
+          ".automa-var.json",
+          ".automa-table.json",
+          ".automa-rows.json",
+          ".automa-cred.json",
+          ".automa-folder.json",
+          ".campaigns.json"
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "automa.copyEscapedPath",
+        "title": "Copy Path (/)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.showWorkflowSource",
+        "title": "Show Workflow Source",
+        "icon": "$(code)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.showWorkflowPreview",
+        "title": "Preview Workflow",
+        "icon": "$(preview)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.showCampaignSource",
+        "title": "Show Campaign Source",
+        "icon": "$(code)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.showCampaignPreview",
+        "title": "Preview Campaign",
+        "icon": "$(preview)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.runWorkflow",
+        "title": "Run Workflow",
+        "icon": "$(play)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.runCampaign",
+        "title": "Run Campaign",
+        "icon": "$(play)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.lintCheck",
+        "title": "Lint Check Workflow",
+        "icon": "$(checklist)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.showLogSource",
+        "title": "Show Source",
+        "icon": "$(code)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.showLogPreview",
+        "title": "Open Preview",
+        "icon": "$(preview)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.openInStudio",
+        "title": "Open in Studio",
+        "icon": "$(link-external)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.createWorkflow",
+        "title": "Create Workflow",
+        "icon": "$(new-file)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.importWorkflowToDb",
+        "title": "Import Workflow / Package to Database (*.json)",
+        "icon": "$(cloud-upload)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.importBackup",
+        "title": "Restore Full Backup (JSON)",
+        "icon": "$(history)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.exportWorkflowToFile",
+        "title": "Export Workflow to File (*.automa.json)",
+        "icon": "$(cloud-download)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.createPackage",
+        "title": "Create Package",
+        "icon": "$(package)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.createCampaign",
+        "title": "Create Campaign",
+        "icon": "$(rocket)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.importCampaignToDb",
+        "title": "Import Campaign to Database (*.campaign.json)",
+        "icon": "$(cloud-upload)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.deleteWorkflow",
+        "title": "Delete Workflow",
+        "icon": "$(trash)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.deleteCampaign",
+        "title": "Delete Campaign",
+        "icon": "$(trash)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.createBrowser",
+        "title": "Create Browser",
+        "icon": "$(add)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.refreshWorkspace",
+        "title": "Refresh Workspace",
+        "icon": "$(refresh)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.refreshBrowsers",
+        "title": "Refresh Browsers",
+        "icon": "$(refresh)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.refreshStorage",
+        "title": "Refresh Storage",
+        "icon": "$(refresh)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.clearHistory",
+        "title": "Clear History",
+        "icon": "$(trash)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.killRunner",
+        "title": "Kill Runner",
+        "icon": "$(close)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.killAllBrowsers",
+        "title": "Kill All Browser Sessions",
+        "icon": "$(debug-stop)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.startDaemon",
+        "title": "Start Core Daemon",
+        "icon": "$(play)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.toggleDaemon",
+        "title": "Toggle Core Daemon",
+        "icon": "$(pulse)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.storage.encryptSecret",
+        "title": "Automa: Encrypt Secret",
+        "category": "Automa Storage"
+      },
+      {
+        "command": "automa.showLiveLog",
+        "title": "Live Log",
+        "icon": "$(output)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.addVariable",
+        "title": "Add Variable",
+        "icon": "$(add)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.addCredential",
+        "title": "Add Credential",
+        "icon": "$(key)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.addTable",
+        "title": "Add Table",
+        "icon": "$(list-flat)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.openTable",
+        "title": "Open Table",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.deleteStorageItem",
+        "title": "Delete",
+        "icon": "$(trash)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.selectDefaultBrowser",
+        "title": "Select Default Browser",
+        "category": "Automa Run"
+      },
+      {
+        "command": "automa.importBrowsersFromCsv",
+        "title": "Import Browsers from CSV",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.sideloadExtension",
+        "title": "Sideload Extension",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.executeWorkflowOnBrowser",
+        "title": "Execute Workflow on Browser",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.launchBrowser",
+        "title": "Launch Browser",
+        "icon": "$(play)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.stopBrowser",
+        "title": "Stop Browser",
+        "icon": "$(debug-stop)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.killBrowser",
+        "title": "Kill Browser",
+        "icon": "$(debug-stop)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.editBrowser",
+        "title": "Edit Browser",
+        "icon": "$(edit)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.deleteBrowser",
+        "title": "Delete Browser",
+        "icon": "$(trash)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.openDaemonMenu",
+        "title": "Open Daemon Control Menu",
+        "icon": "$(server)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.showJobHistory",
+        "title": "View Execution History",
+        "icon": "$(history)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.exportStorageBackup",
+        "title": "Export Storage Backup (JSON)",
+        "icon": "$(cloud-download)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.installBrowser",
+        "title": "Install Isolated Chromium",
+        "icon": "$(cloud-download)",
+        "category": "Automa"
+      },
+      {
+        "command": "automa.stopCampaign",
+        "title": "Stop Campaign",
+        "icon": "$(debug-stop)",
+        "category": "Automa"
+      }
+    ],
+    "customEditors": [
+      {
+        "viewType": "automa.logEditor",
+        "displayName": "Automa Execution Log",
+        "selector": [
+          {
+            "filenamePattern": "*.automa-log.json"
+          }
+        ]
+      },
+      {
+        "viewType": "automa.workflowEditor",
+        "displayName": "Automa Workflow Editor",
+        "selector": [
+          {
+            "filenamePattern": "*.workflow.json"
+          },
+          {
+            "filenamePattern": "*.package.json"
+          },
+          {
+            "filenamePattern": "*.automa.json"
+          }
+        ]
+      },
+      {
+        "viewType": "automa.campaignEditor",
+        "displayName": "Campaign Editor",
+        "selector": [
+          {
+            "filenamePattern": "*.campaign.json"
+          },
+          {
+            "filenamePattern": "*.campaigns.json"
+          }
+        ]
+      },
+      {
+        "viewType": "automa.browserEditor",
+        "displayName": "Automa Browser Editor",
+        "selector": [
+          {
+            "filenamePattern": "*.browser.json"
+          }
+        ]
+      }
+    ],
+    "jsonValidation": [
+      {
+        "fileMatch": [
+          "*.workflow.json",
+          "*.package.json"
+        ],
+        "url": "./schemas/workflow.schema.json"
+      },
+      {
+        "fileMatch": [
+          "*.campaign.json",
+          "*.campaigns.json"
+        ],
+        "url": "./schemas/campaign.schema.json"
+      },
+      {
+        "fileMatch": [
+          "*.browser.json"
+        ],
+        "url": "./schemas/browser.schema.json"
+      }
+    ],
+    "configuration": [
+      {
+        "title": "Automa: Workflow Execution & Core",
+        "properties": {
+          "automa.preview.defaultOnClick": {
+            "type": "boolean",
+            "default": true,
+            "description": "Set Automa Workflow/Package Preview as the default editor when clicking on *.workflow.json or *.package.json files."
+          },
+          "automa.run.defaultBrowser": {
+            "type": "string",
+            "default": "daemon_worker",
+            "description": "Default Browser ID to use when running workflows from the UI."
+          },
+          "automa.run.useDefaultParameters": {
+            "type": "boolean",
+            "default": false,
+            "description": "Skip interactive prompts for workflow trigger parameters and always use default values."
+          },
+          "automa.run.headless": {
+            "type": "boolean",
+            "default": false,
+            "description": "Run the browser in headless mode."
+          },
+          "automa.run.closeBrowserOnFinish": {
+            "type": "boolean",
+            "default": true,
+            "description": "Automatically close the browser when the workflow finishes."
+          },
+          "automa.run.debug": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable verbose debug logging for execution."
+          },
+          "automa.run.campaignGridSystem": {
+            "type": "boolean",
+            "default": true,
+            "description": "Enable Grid System to automatically allocate and position browser windows when running Automa Campaign."
+          },
+          "automa.core.port": {
+            "type": "number",
+            "default": 8765,
+            "description": "Base port for the Automa Core background server. The extension will automatically connect to this port."
+          },
+          "automa.encryptionPassphrase": {
+            "type": "string",
+            "default": "",
+            "description": "Passphrase used to encrypt credentials in the Automa Global Storage."
+          }
+        }
+      },
+      {
+        "title": "Automa: Environment & Logs",
+        "properties": {
+          "automa.run.globalVariables": {
+            "type": "object",
+            "default": {},
+            "description": "Global variables (JSON object) appended to the workflow run parameters.",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    ],
+    "viewsWelcome": [
+      {
+        "view": "automa.workspace",
+        "contents": "No files found in workspace.\n[$(new-file) Create Workflow](command:automa.createWorkflow)\n[$(rocket) Create Campaign](command:automa.createCampaign)\n[$(refresh) Refresh](command:automa.refreshWorkspace)"
+      },
+      {
+        "view": "automa.browsers",
+        "contents": "No browsers found.\n[$(add) Create Browser](command:automa.createBrowser)\n[$(refresh) Refresh](command:automa.refreshBrowsers)"
+      },
+      {
+        "view": "automa.storage",
+        "contents": "Automa Global Storage (Secrets, Variables, Tables).\n[$(refresh) Refresh Storage](command:automa.refreshStorage)"
+      }
+    ]
+  },
+  "scripts": {
+    "generate:api": "pnpm -F @automa/types run generate:api",
+    "build": "tsup",
+    "dev": "pnpm run watch",
+    "vscode:prepublish": "tsup",
+    "compile": "tsup",
+    "watch": "tsup --watch",
+    "lint": "tsc --noEmit && biome check",
+    "lint:fix": "biome check --write",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist out *.vsix .turbo",
+    "package": "pnpm run test && npx vsce package --no-dependencies -o automa-vscode.vsix",
+    "package:dev": "cross-env VSIX_ENV=dev npx vsce package --no-dependencies -o automa-vscode-dev.vsix",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "pnpm run compile-tests && pnpm run compile && pnpm run lint",
+    "check": "biome check --write",
+    "test": "vitest run",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@automa/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.5",
+    "@changesets/cli": "^3.0.0",
+    "@hey-api/client-fetch": "^0.13.1",
+    "@hey-api/openapi-ts": "^0.99.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.80.0",
+    "@types/vscode-webview": "^1.57.5",
+    "@vitest/coverage-v8": "^4.1.10",
+    "@vitest/ui": "^4.1.10",
+    "@vscode/test-electron": "^3.1.0",
+    "cross-env": "^7.0.3",
+    "glob": "^13.0.6",
+    "mocha": "^11.8.0",
+    "playwright": "^1.62.1",
+    "rimraf": "^5.0.5",
+    "tsup": "^8.0.2",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  }
+}

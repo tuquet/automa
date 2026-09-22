@@ -211,8 +211,8 @@ export function applyPreset(rawPresetCode = 'b1buPAiSjA') {
     console.log('  ✔ Updated tokens.css successfully.');
   }
 
-  // 2. Target 2: automa-webe/src/assets/css/tailwind.css
-  const webeTailwindPath = path.join(ROOT_DIR, 'automa-webe/src/assets/css/tailwind.css');
+  // 2. Target 2: apps/webe/src/assets/css/tailwind.css
+  const webeTailwindPath = path.join(ROOT_DIR, 'apps/webe/src/assets/css/tailwind.css');
   if (fs.existsSync(webeTailwindPath)) {
     console.log(`📝 Updating Web Studio Tailwind Styles: ${path.relative(ROOT_DIR, webeTailwindPath)}`);
     let content = fs.readFileSync(webeTailwindPath, 'utf8');

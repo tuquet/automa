@@ -17,26 +17,26 @@
         "build:studio": "turbo run build:studio",
         "vercel:install": "bash scripts/vercel-install.sh",
         "vercel:build": "pnpm -F @automa/types build && pnpm -F @automa/ui build && turbo run build:studio",
-        "vercel:ignore": "git diff --quiet HEAD^ HEAD automa-webe/ packages/automa-ui/ packages/automa-types/ scripts/vercel-install.sh vercel.json pnpm-workspace.yaml package.json",
-        "deploy:studio": "pnpm run build:studio && vercel deploy automa-webe/dist/studio --prod",
+        "vercel:ignore": "git diff --quiet HEAD^ HEAD apps/webe/ packages/automa-ui/ packages/automa-types/ scripts/vercel-install.sh vercel.json pnpm-workspace.yaml package.json",
+        "deploy:studio": "pnpm run build:studio && vercel deploy apps/webe/dist/studio --prod",
         "build:webview": "turbo run build:webview",
-        "build:core": "cargo build --release --manifest-path automa-core/Cargo.toml",
+        "build:core": "cargo build --release --manifest-path apps/core/Cargo.toml",
         "build:desk": "turbo run build --filter=@automa/desk",
         "dev": "node scripts/dev-orchestrator.mjs",
         "dev:all": "node scripts/dev-orchestrator.mjs --all",
         "dev:turbo": "turbo run dev",
         "dev:vsce": "turbo run dev --filter=vscode-automa",
         "dev:desk": "turbo run dev --filter=@automa/desk",
-        "dev:source:runner": "turbo run dev:runner --filter=automa",
-        "dev:source:studio": "turbo run dev:studio --filter=automa",
-        "dev:core": "cargo watch -C automa-core -x run",
+        "dev:source:runner": "turbo run dev:runner --filter=@automa/webe",
+        "dev:source:studio": "turbo run dev:studio --filter=@automa/webe",
+        "dev:core": "cargo watch -C apps/core -x run",
         "dev:docs": "node scripts/serve-docs.mjs",
         "test": "node scripts/test-all.mjs",
         "test:tier1": "node scripts/test-all.mjs --tier 1",
         "test:tier2": "node scripts/test-all.mjs --tier 2",
         "test:tier3": "node scripts/test-all.mjs --tier 3",
         "test:schema": "node scripts/enforce-strict-schema.mjs",
-        "test:core": "cargo test --manifest-path automa-core/Cargo.toml",
+        "test:core": "cargo test --manifest-path apps/core/Cargo.toml",
         "test:desk": "pnpm -F @automa/desk test:unit",
         "test:vsce": "pnpm -F vscode-automa test",
         "test:e2e": "vitest run",
@@ -80,7 +80,7 @@
         "ws": "^8.21.3"
     },
     "lint-staged": {
-        "automa-vsce/**/*.{js,ts,json}": [
+        "apps/vsce/**/*.{js,ts,json}": [
             "npx @biomejs/biome check --write"
         ]
     }

@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
   "buildCommand": "pnpm run vercel:build",
-  "outputDirectory": "automa-webe/dist/studio",
+  "outputDirectory": "apps/webe/dist/studio",
   "rewrites": [
     {
       "source": "/((?!assets/).*)",

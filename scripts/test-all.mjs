@@ -24,7 +24,7 @@ const SUITES = [
     hint: 'Cargo unit & integration tests trong automa-core',
     cmd: 'cargo',
     args: ['test'],
-    cwd: path.join(rootDir, 'automa-core'),
+    cwd: path.join(rootDir, 'apps/core'),
   },
   {
     id: 'vsce',

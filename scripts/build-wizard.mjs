@@ -30,7 +30,7 @@ const TARGETS = [
     label: '🦀 Automa Core (Rust Cargo Release)',
     hint: 'Biên dịch daemon engine automa-core (release mode)',
     cmd: 'cargo',
-    args: ['build', '--release', '--manifest-path', 'automa-core/Cargo.toml'],
+    args: ['build', '--release', '--manifest-path', 'apps/core/Cargo.toml'],
     cwd: rootDir,
   },
   {

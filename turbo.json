@@ -13,7 +13,7 @@
       "outputs": ["dist/studio/**"]
     },
     "build:core": {
-      "outputs": ["automa-core/target/release/automa-core*"]
+      "outputs": ["apps/core/target/release/automa-core*"]
     },
     "build:webview": {
       "outputs": ["dist/webview/**", "webview-ui/dist/**"]

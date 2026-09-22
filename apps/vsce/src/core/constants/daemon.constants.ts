@@ -1,0 +1,12 @@
+/**
+ * Daemon network and process configuration constants
+ */
+export const DAEMON_CONSTANTS = {
+	DEFAULT_PORT: 8765,
+	DEFAULT_HOST: "127.0.0.1",
+	DEFAULT_BASE_URL: "http://127.0.0.1:8765",
+	HEALTH_CHECK_TIMEOUT_MS: 2000,
+	SPAWN_HEALTH_CHECK_RETRIES: 20,
+	SPAWN_HEALTH_CHECK_DELAY_MS: 500,
+	RESTART_BACKOFF_MS: 3000,
+} as const;

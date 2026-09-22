@@ -39,7 +39,7 @@ jobs:
 
       - name: Inject Pass Key
         run: |
-          cat << 'EOF' > automa-webe/src/utils/getPassKey.js
+          cat << 'EOF' > apps/webe/src/utils/getPassKey.js
           export default function getPassKey() {
             return process.env.AUTOMA_MASTER_KEY || 'automa-master-passphrase-default';
           }

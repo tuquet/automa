@@ -48,14 +48,14 @@ importers:
         specifier: ^8.21.3
         version: 8.21.3
 
-  automa-desk:
+  apps/desk:
     dependencies:
       '@automa/types':
         specifier: workspace:*
-        version: link:../packages/automa-types
+        version: link:../../packages/automa-types
       '@automa/ui':
         specifier: workspace:*
-        version: link:../packages/automa-ui
+        version: link:../../packages/automa-ui
       '@tanstack/vue-table':
         specifier: ^8.21.2
         version: 8.21.3(vue@3.5.41(typescript@6.0.3))
@@ -101,7 +101,7 @@ importers:
     devDependencies:
       '@biomejs/biome':
         specifier: ^2.5.8
-        version: 2.5.10
+        version: 2.5.14
       '@commitlint/cli':
         specifier: ^21.2.2
         version: 21.2.2(@types/node@26.2.0)(conventional-commits-parser@7.1.2)(typescript@6.0.3)
@@ -172,11 +172,11 @@ importers:
         specifier: ^3.3.10
         version: 3.3.11(typescript@6.0.3)
 
-  automa-vsce:
+  apps/vsce:
     dependencies:
       '@automa/types':
         specifier: workspace:*
-        version: link:../packages/automa-types
+        version: link:../../packages/automa-types
     devDependencies:
       '@biomejs/biome':
         specifier: 2.5.5
@@ -236,14 +236,14 @@ importers:
         specifier: ^4.1.10
         version: 4.1.10(@opentelemetry/api@1.9.1)(@types/node@18.19.130)(@vitest/coverage-v8@4.1.10)(@vitest/ui@4.1.10)(happy-dom@20.11.2)(jsdom@30.0.1)(vite@8.2.1(@types/node@18.19.130)(esbuild@0.27.7)(jiti@2.7.0)(stylus@0.57.0)(terser@5.49.2)(tsx@4.23.12)(yaml@2.9.0))
 
-  automa-webe:
+  apps/webe:
     dependencies:
       '@automa/types':
         specifier: workspace:*
-        version: link:../packages/automa-types
+        version: link:../../packages/automa-types
       '@automa/ui':
         specifier: workspace:*
-        version: link:../packages/automa-ui
+        version: link:../../packages/automa-ui
       '@codemirror/autocomplete':
         specifier: ^6.9.0
         version: 6.20.3
@@ -462,7 +462,7 @@ importers:
         version: 4.1.0(vue@3.5.41(typescript@7.0.2))
       webextension-polyfill:
         specifier: workspace:*
-        version: link:../packages/webextension-polyfill
+        version: link:../../packages/webextension-polyfill
       xlsx:
         specifier: https://cdn.sheetjs.com/xlsx-0.19.1/xlsx-0.19.1.tgz
         version: https://cdn.sheetjs.com/xlsx-0.19.1/xlsx-0.19.1.tgz
@@ -15516,7 +15516,7 @@ snapshots:
 
   ora@8.2.0:
     dependencies:
-      chalk: 5.3.0
+      chalk: 5.6.2
       cli-cursor: 5.0.0
       cli-spinners: 2.9.2
       is-interactive: 2.0.0

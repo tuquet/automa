@@ -1,0 +1,89 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "🧩 Dev: Watch Extension Host",
+      "type": "shell",
+      "command": "pnpm run watch",
+      "isBackground": true,
+      "presentation": {
+        "panel": "dedicated",
+        "clear": false
+      },
+      "problemMatcher": {
+        "owner": "tsup",
+        "pattern": {
+          "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "severity": 4,
+          "message": 5
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*Build start.*$",
+          "endsPattern": "^.*(Build success|Build failed|Error:).*$"
+        }
+      }
+    },
+    {
+      "label": "🎨 Dev: Watch Webviews (Vite)",
+      "type": "shell",
+      "command": "pnpm run watch:webview",
+      "isBackground": true,
+      "presentation": {
+        "panel": "dedicated",
+        "clear": false
+      },
+      "problemMatcher": {
+        "owner": "vite",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*(building|transforming).*$",
+          "endsPattern": "^.*(built in|modules transformed|error during build|failed).*$"
+        }
+      }
+    },
+    {
+      "label": "📦 Build: VS Code Extension",
+      "type": "shell",
+      "command": "pnpm run build",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "📦 Package: VSIX Distribution",
+      "type": "shell",
+      "command": "pnpm run package",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "🧪 Test: VS Code Extension (E2E & Unit)",
+      "type": "shell",
+      "command": "pnpm run test",
+      "problemMatcher": [],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "panel": "dedicated"
+      }
+    }
+  ]
+}
+

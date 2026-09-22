@@ -8,6 +8,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const rootDir = path.resolve(__dirname, '../..');
 export const automaDir = path.join(rootDir, '.automa');
 export const logsDir = path.join(automaDir, 'logs');
+export const appsDir = path.join(rootDir, 'apps');
 export const packagesDir = path.join(rootDir, 'packages');
 
 export const homeDir = process.env.USERPROFILE || process.env.HOME || '';
@@ -90,45 +91,45 @@ export async function getPrompts() {
 export const CANONICAL_MODULES = [
   {
     id: 'core',
-    name: 'automa-core',
-    type: 'submodule',
+    name: 'apps/core',
+    type: 'app',
     lang: 'Rust',
     description: 'Rust Daemon Engine & REST API (port :8765)',
-    path: path.join(rootDir, 'automa-core'),
+    path: path.join(appsDir, 'core'),
     port: 8765,
   },
   {
     id: 'webe',
-    name: 'automa-webe',
-    type: 'submodule',
+    name: '@automa/webe',
+    type: 'app',
     lang: 'Vue / TS',
     description: 'Web Extension, Studio Canvas & CLI Runner',
-    path: path.join(rootDir, 'automa-webe'),
+    path: path.join(appsDir, 'webe'),
   },
   {
     id: 'vsce',
-    name: 'automa-vsce',
-    type: 'submodule',
+    name: 'vscode-automa',
+    type: 'app',
     lang: 'TypeScript',
     description: 'VS Code Extension & Webview Panes',
-    path: path.join(rootDir, 'automa-vsce'),
+    path: path.join(appsDir, 'vsce'),
   },
   {
     id: 'desk',
-    name: 'automa-desk',
-    type: 'submodule',
+    name: '@automa/desk',
+    type: 'app',
     lang: 'Tauri v2 / Vue',
     description: 'Desktop OS App (Tauri v2, port :1420)',
-    path: path.join(rootDir, 'automa-desk'),
+    path: path.join(appsDir, 'desk'),
     port: 1420,
   },
   {
     id: 'vault',
-    name: 'automa-vault',
-    type: 'submodule',
+    name: 'apps/vault',
+    type: 'app',
     lang: 'JSON Schema',
     description: 'Workspace Scenarios, Anti-detect Profiles & Fleets',
-    path: path.join(rootDir, 'automa-vault'),
+    path: path.join(appsDir, 'vault'),
   },
   {
     id: 'ui',
@@ -143,8 +144,16 @@ export const CANONICAL_MODULES = [
     name: '@automa/types',
     type: 'package',
     lang: 'TypeScript',
-    description: 'Canonical Types, DTOs & Generated OpenAPI SDK',
+    description: 'Typed OpenAPI Client SDK',
     path: path.join(packagesDir, 'automa-types'),
+  },
+  {
+    id: 'polyfill',
+    name: 'webextension-polyfill',
+    type: 'package',
+    lang: 'JavaScript',
+    description: 'WebExtension & VS Code compatibility polyfill',
+    path: path.join(packagesDir, 'webextension-polyfill'),
   },
 ];
 

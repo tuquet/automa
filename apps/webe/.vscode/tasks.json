@@ -1,0 +1,89 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "🎨 Dev: Watch Studio Canvas",
+      "type": "shell",
+      "command": "pnpm run dev:studio",
+      "isBackground": true,
+      "presentation": {
+        "panel": "dedicated",
+        "clear": false
+      },
+      "problemMatcher": {
+        "owner": "webpack-studio",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*(building|compiling).*$",
+          "endsPattern": "^.*(compiled successfully|compiled with|Failed to compile|compiled).*$"
+        }
+      }
+    },
+    {
+      "label": "📦 Build: Studio Standalone",
+      "type": "shell",
+      "command": "pnpm run build:studio",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "⚡ Dev: Watch CLI Runner",
+      "type": "shell",
+      "command": "pnpm run dev:runner",
+      "isBackground": true,
+      "presentation": {
+        "panel": "dedicated",
+        "clear": false
+      },
+      "problemMatcher": {
+        "owner": "webpack-runner",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*(building|compiling).*$",
+          "endsPattern": "^.*(compiled successfully|compiled with|Failed to compile|compiled).*$"
+        }
+      }
+    },
+    {
+      "label": "📦 Build: CLI Runner",
+      "type": "shell",
+      "command": "pnpm run build:runner",
+      "problemMatcher": [],
+      "group": "build",
+      "presentation": {
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "🌐 Open: Studio in Browser",
+      "type": "shell",
+      "windows": {
+        "command": "cmd /c start http://127.0.0.1:8765/studio/"
+      },
+      "osx": {
+        "command": "open http://127.0.0.1:8765/studio/"
+      },
+      "linux": {
+        "command": "xdg-open http://127.0.0.1:8765/studio/"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "never",
+        "panel": "dedicated"
+      }
+    }
+  ]
+}
+

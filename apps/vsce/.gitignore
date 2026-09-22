@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Bundles & Build Outputs
+dist/
+out/
+
+# VS Code Packaging & Testing
+*.vsix
+.vscode-test/
+*.tsbuildinfo
+
+# Testing & Coverage
+coverage/
+
+# Turborepo & Cache
+.turbo/
+.eslintcache
+
+# Local Databases & Logs
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.log
+
+# Temporary / Scratch Files
+scratch/
+
+# Operating System & IDE Files
+.DS_Store
+Thumbs.db
