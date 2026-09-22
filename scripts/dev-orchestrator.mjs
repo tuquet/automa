@@ -35,7 +35,7 @@ const SENTRY_DSN = process.env.SENTRY_DSN || '';
 Sentry.init({
   dsn: SENTRY_DSN || undefined,
   environment: process.env.NODE_ENV || 'development',
-  release: 'automa-ecosystem@dev',
+  release: 'tuquet-automa@dev',
   tracesSampleRate: 1.0,
 });
 

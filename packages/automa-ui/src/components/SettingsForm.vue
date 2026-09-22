@@ -4,10 +4,7 @@ import { getAppSettings, patchAppSettings } from '@automa/types/api'
 import { Check, Cpu, Globe, LayoutGrid, RefreshCw, Save, Sliders } from 'lucide-vue-next'
 import { computed, onMounted, reactive, ref } from 'vue'
 import AutomaButton from './AutomaButton.vue'
-import { Badge } from './ui/badge'
-import { Input } from './ui/input'
-import { Switch } from './ui/switch'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
+import { Badge, Input, Switch, Tabs, TabsContent, TabsList, TabsTrigger } from './ui'
 
 export interface SettingsFormProps {
   initialSettings?: AppSettings | null
@@ -251,10 +248,10 @@ onMounted(() => {
         <h2 class="text-base font-semibold tracking-tight text-foreground">Core Engine Settings</h2>
       </div>
       <div class="flex items-center gap-2">
-        <Badge v-if="isDirty" variant="warning" class="text-xs px-2 py-0.5 font-medium">
+        <Badge v-if="isDirty" variant="secondary" class="border-amber-500/30 bg-amber-500/10 text-amber-500 text-xs px-2 py-0.5 font-medium">
           Unsaved
         </Badge>
-        <Badge v-else-if="saveSuccess" variant="success" class="text-xs px-2 py-0.5 font-medium flex items-center gap-1">
+        <Badge v-else-if="saveSuccess" variant="secondary" class="border-emerald-500/30 bg-emerald-500/10 text-emerald-500 text-xs px-2 py-0.5 font-medium flex items-center gap-1">
           <Check class="size-3.5" /> Saved
         </Badge>
       </div>

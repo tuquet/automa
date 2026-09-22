@@ -8,8 +8,7 @@ export * from './components'
 export * from './constants'
 // TanStack Query & Mutation Hooks (Server State)
 export * from './hooks'
-// Core Utilities (cn, class-variance-authority, tailwind-merge)
-export * from './lib/utils'
+// Core Utilities (re-exported via components/ui from @tuquet/vue-ui)
 // Plugin & SSE Auto-Invalidation
 export * from './plugin'
 // 6 Pinia Domain Stores (Client & FSM State)

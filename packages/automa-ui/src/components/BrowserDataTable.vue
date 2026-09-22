@@ -12,6 +12,7 @@ import {
 import { useBrowserStore } from '../stores'
 import AutomaButton from './AutomaButton.vue'
 import ConfirmationModal from './ConfirmationModal.vue'
+import { cn } from '../lib/utils'
 import { Badge, Button, Checkbox } from './ui'
 import VirtualDataTable from './VirtualDataTable.vue'
 
@@ -142,14 +143,14 @@ const columns: ColumnDef<BrowserResponse>[] = [
             h(Checkbox, {
               checked: table.getIsAllPageRowsSelected(),
               indeterminate: table.getIsSomePageRowsSelected(),
-              'onUpdate:checked': (val: boolean) => table.toggleAllPageRowsSelected(!!val),
+              'onUpdate:checked': (val: boolean | 'indeterminate') => table.toggleAllPageRowsSelected(!!val),
               'aria-label': 'Select all rows',
               class: 'translate-y-[2px]',
             }),
           cell: ({ row }: CellContext<BrowserResponse, unknown>) =>
             h(Checkbox, {
               checked: row.getIsSelected(),
-              'onUpdate:checked': (val: boolean) => row.toggleSelected(!!val),
+              'onUpdate:checked': (val: boolean | 'indeterminate') => row.toggleSelected(!!val),
               'aria-label': 'Select row',
               class: 'translate-y-[2px]',
               onClick: (e: MouseEvent) => e.stopPropagation(),
@@ -168,8 +169,11 @@ const columns: ColumnDef<BrowserResponse>[] = [
       return h(
         Badge,
         {
-          variant: isOnline ? 'success' : 'secondary',
-          class: 'gap-1.5 font-mono text-xs uppercase tracking-wider',
+          variant: isOnline ? 'outline' : 'secondary',
+          class: cn(
+            'gap-1.5 font-mono text-xs uppercase tracking-wider',
+            isOnline ? 'border-emerald-500/40 text-emerald-500' : ''
+          ),
         },
         () => [
           h('span', {
@@ -255,7 +259,7 @@ const columns: ColumnDef<BrowserResponse>[] = [
                 AutomaButton,
                 {
                   id: 'btn.browser.stop',
-                  size: 'xs',
+                  size: 'sm',
                   variant: 'outline',
                   class: 'border-amber-500/40 text-amber-500 hover:bg-amber-500/10',
                   title: 'Stop Browser Process',
@@ -266,8 +270,8 @@ const columns: ColumnDef<BrowserResponse>[] = [
               )
             : h(AutomaButton, {
                 id: 'btn.browser.launch',
-                size: 'xs',
-                variant: 'primary',
+                size: 'sm',
+                variant: 'default',
                 title: 'Launch',
                 disabled: isPending,
                 onClick: () => onLaunch(b.id),
@@ -279,7 +283,7 @@ const columns: ColumnDef<BrowserResponse>[] = [
             {
               id: 'btn.browser.delete',
               variant: 'ghost',
-              size: 'icon-xs',
+              size: 'icon-sm',
               iconOnly: true,
               class:
                 'text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-70 hover:opacity-100 transition-opacity',
@@ -371,7 +375,7 @@ const columns: ColumnDef<BrowserResponse>[] = [
 
         <!-- Create Browser Button -->
         <Button
-          variant="primary"
+          variant="default"
           size="sm"
           data-testid="btn-create-browser"
           title="Create Browser"

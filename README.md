@@ -22,7 +22,7 @@ Tầm nhìn của chúng tôi là chuyển đổi Automa từ một công cụ t
 Hệ sinh thái **Automa Ecosystem** được tổ chức theo cấu trúc Pure Monorepo phân tách rõ ràng giữa **Core Engine**, **Extension Targets** và **Client GUI Platforms** tập trung trong thư mục `apps/` theo bộ tứ chuẩn hóa 4 ký tự:
 
 ```text
-automa-ecosystem/
+tuquet-automa/
 ├── apps/
 │   ├── core/           # [Rust Core Engine]      - Daemon xử lý trung tâm (Axum, Tokio, CDP, SQLite)
 │   ├── desk/           # [Desktop Native App]    - Ứng dụng Desktop độc lập (Tauri v2 + Vue 3 Frontend)
@@ -148,8 +148,8 @@ Dự án yêu cầu **Node.js** và **Rust Toolchain**. Để tiết kiệm dung
 
 ```bash
 # 1. Tải mã nguồn Pure Monorepo (không cần flag submodules)
-git clone https://github.com/tuquet/automa-ecosystem.git
-cd automa-ecosystem
+git clone https://github.com/tuquet/tuquet-automa.git
+cd tuquet-automa
 
 # 2. Cài đặt các công cụ CLI cần thiết cho Rust (chỉ chạy 1 lần duy nhất)
 cargo install cargo-watch

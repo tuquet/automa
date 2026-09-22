@@ -26,7 +26,6 @@ import {
   TableEmpty,
   TableHead,
   TableHeader,
-  TablePagination,
   TableRow,
 } from './ui'
 

@@ -13,7 +13,7 @@ Automa Studio là ứng dụng thuần Web UI (Single Page Application - SPA) vi
   - `@automa/types` (`packages/automa-types`)
   - `@automa/ui` (`packages/automa-ui`)
 - **Quản lý mã nguồn**:
-  - Repo monorepo: `tuquet/automa-ecosystem` (Chứa toàn bộ `apps/` và `packages/`, không còn Git submodules).
+  - Repo monorepo: `tuquet/tuquet-automa` (Chứa toàn bộ `apps/` và `packages/`, không còn Git submodules).
 - **Vercel Project**: `automa-studio` (Team: `tuquets-projects`)
 - **Live URL**: `https://studio-lyart-one-86.vercel.app` (hoặc `automa-studio.vercel.app`)
 

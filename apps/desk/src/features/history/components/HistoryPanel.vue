@@ -110,7 +110,7 @@ async function handleRerun(item: JobHistoryItem) {
 
 function getStatusVariant(status: string): NonNullable<BadgeVariants['variant']> {
   const s = status.toLowerCase()
-  if (s === 'completed' || s === 'success') return 'success'
+  if (s === 'completed' || s === 'success') return 'outline'
   if (s === 'running' || s === 'executing' || s === 'dispatching') return 'secondary'
   if (s === 'failed' || s === 'error') return 'destructive'
   return 'outline'

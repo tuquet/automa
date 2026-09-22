@@ -26,7 +26,7 @@ import {
 import { computed, ref } from 'vue'
 import { cn } from '../lib/utils'
 import ConfirmationModal from './ConfirmationModal.vue'
-import { Button, type ButtonVariants } from './ui/button'
+import { Button, type ButtonVariants } from './ui'
 
 defineOptions({
   name: 'AutomaButton',
@@ -142,7 +142,7 @@ function handleConfirmAction() {
   <Button
     v-bind="$attrs"
     :variant="variant"
-    :size="iconOnly ? (size === 'xs' ? 'icon-xs' : size === 'sm' ? 'icon-sm' : 'icon') : size"
+    :size="iconOnly ? (size === 'icon-sm' || size === 'sm' ? 'icon-sm' : 'icon') : size"
     :disabled="disabled || isBusy"
     :title="effectiveTooltip"
     :data-testid="schema?.presentation.dataTestId || props.id.replace(/\./g, '-')"
@@ -158,7 +158,7 @@ function handleConfirmAction() {
     <Loader2
       v-if="isBusy"
       class="animate-spin shrink-0"
-      :class="size === 'xs' ? 'w-3 h-3' : 'w-3.5 h-3.5'"
+      :class="size === 'icon-sm' || size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5'"
       data-testid="button-spinner"
     />
 
@@ -166,14 +166,14 @@ function handleConfirmAction() {
     <Check
       v-else-if="internalFsmState === 'COMPLETED'"
       class="shrink-0 text-white"
-      :class="size === 'xs' ? 'w-3 h-3' : 'w-3.5 h-3.5'"
+      :class="size === 'icon-sm' || size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5'"
     />
 
     <!-- Failed Icon -->
     <AlertCircle
       v-else-if="internalFsmState === 'FAILED'"
       class="shrink-0 text-white"
-      :class="size === 'xs' ? 'w-3 h-3' : 'w-3.5 h-3.5'"
+      :class="size === 'icon-sm' || size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5'"
     />
 
     <!-- Standard Icon (only when no custom default slot is provided) -->
@@ -182,7 +182,7 @@ function handleConfirmAction() {
       v-else-if="iconComponent && !$slots.default"
       class="shrink-0 transition-transform active:scale-95"
       :class="[
-        size === 'xs' ? 'w-3 h-3' : 'w-3.5 h-3.5',
+        size === 'icon-sm' || size === 'sm' ? 'w-3 h-3' : 'w-3.5 h-3.5',
         props.id.includes('.run') || props.id.includes('.launch')
           ? 'text-emerald-600 dark:text-emerald-400'
           : '',

@@ -113,7 +113,7 @@ defineExpose({
       <div class="flex items-center gap-2">
         <AutomaButton
           id="btn.browser.kill_all"
-          size="xs"
+          size="sm"
           variant="destructive"
           title="Kill all browsers"
           @click="handleKillAll"

@@ -1,20 +1,26 @@
-export * from './accordion'
-export * from './alert-dialog'
-export * from './avatar'
-export * from './badge'
-export * from './button'
-export * from './card'
-export * from './checkbox'
-export * from './dialog'
-export * from './dropdown-menu'
-export * from './input'
-export * from './popover'
-export * from './scroll-area'
-export * from './select'
-export * from './separator'
-export * from './sheet'
-export * from './skeleton'
-export * from './switch'
-export * from './table'
-export * from './tabs'
-export * from './tooltip'
+// Re-export all enterprise Shadcn-Vue UI primitives from published @tuquet/vue-ui & @tuquet/vue-table packages
+export * from '@tuquet/vue-ui'
+export {
+  DataTable,
+  DataTableCardView,
+  DataTableColumnHeader,
+  DataTableColumnHeaderMenu,
+  DataTableDateRangeFilter,
+  DataTableFacetedFilter,
+  DataTableFilterBuilder,
+  DataTableFloatingBar,
+  DataTableNumberRangeFilter,
+  DataTablePagination,
+  DataTableRowActions,
+  DataTableSavedViews,
+  DataTableSelectFilter,
+  DataTableTextFilter,
+  DataTableToolbar,
+  DataTableViewOptions,
+  EditableCell,
+  RemoteCombobox,
+  StockTickerCell,
+  useDataTable,
+  useDynamicFilters,
+  useRemoteInfiniteSelect,
+} from '@tuquet/vue-table'

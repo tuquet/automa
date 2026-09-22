@@ -1,5 +1,5 @@
 {
-    "$schema": "https://raw.githubusercontent.com/tuquet/automa-ecosystem/main/schemas/campaign.schema.json",
+    "$schema": "https://raw.githubusercontent.com/tuquet/tuquet-automa/main/schemas/campaign.schema.json",
     "campaign_id": "flt_aBcD1eFgH2iJkL3mN",
     "name": "Search campaign",
     "description": "Test search campaign",

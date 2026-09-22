@@ -25,7 +25,7 @@ const TUNNEL_HOST = '127.0.0.1';
 const TUNNEL_PORT = 2222;
 const TUNNEL_HOSTNAME = 'cdn.flowup.io.vn';
 const VPS_USER = 'root';
-const VPS_REPO_PATH = '/var/repo/automa-ecosystem.git';
+const VPS_REPO_PATH = '/var/repo/tuquet-automa.git';
 const PID_FILE = path.join(automaDir, 'cloudflared.pid');
 
 /**
@@ -256,7 +256,7 @@ export async function runDoctor() {
   let t4Pass = false;
   if (t3Pass) {
     try {
-      const out = execSync(`ssh -o BatchMode=yes -p ${TUNNEL_PORT} ${VPS_USER}@${TUNNEL_HOST} "git ls-remote git@github.com:tuquet/automa-ecosystem.git refs/heads/dev"`, {
+      const out = execSync(`ssh -o BatchMode=yes -p ${TUNNEL_PORT} ${VPS_USER}@${TUNNEL_HOST} "git ls-remote git@github.com:tuquet/tuquet-automa.git refs/heads/dev"`, {
         encoding: 'utf-8',
         stdio: ['pipe', 'pipe', 'pipe'],
       });

@@ -189,7 +189,13 @@ export function runProcess(command, args = [], options = {}) {
       cwd,
       stdio,
       shell: true,
-      env: { ...process.env, FORCE_COLOR: '1', ...options.env },
+      env: {
+        ...process.env,
+        FORCE_COLOR: '1',
+        COREPACK_ENABLE_STRICT: '0',
+        COREPACK_ENABLE_AUTO_PIN: '0',
+        ...options.env,
+      },
     });
 
     let stdoutData = '';

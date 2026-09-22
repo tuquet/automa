@@ -135,7 +135,7 @@ async function openExternalUrl(url: string) {
             </div>
             <Button
               variant="ghost"
-              size="icon-xs"
+              size="icon-sm"
               data-testid="btn-copy-rest-url"
               class="shrink-0 text-muted-foreground hover:text-foreground cursor-pointer"
               :title="copied ? 'Copied!' : 'Copy REST URL'"
@@ -148,7 +148,7 @@ async function openExternalUrl(url: string) {
 
           <!-- Web Studio Mount -->
           <div class="flex items-center justify-between p-2 rounded-lg bg-muted/40 border border-border/60 hover:border-border transition">
-            <div class="flex items-center gap-2 min-w-0">
+            <div class="flex items-center gap-2 min-w-0 pr-2">
               <Globe class="size-3.5 text-primary shrink-0" />
               <div class="min-w-0">
                 <p class="text-xs text-muted-foreground font-medium">Web Studio</p>
@@ -157,7 +157,7 @@ async function openExternalUrl(url: string) {
             </div>
             <Button
               variant="ghost"
-              size="icon-xs"
+              size="icon-sm"
               data-testid="btn-open-studio-external"
               class="shrink-0 text-muted-foreground hover:text-foreground cursor-pointer"
               title="Open Web Studio in External Browser"
@@ -216,7 +216,7 @@ async function openExternalUrl(url: string) {
       <div class="pt-2 border-t border-border flex items-center justify-between gap-2">
         <Button
           variant="outline"
-          size="xs"
+          size="sm"
           data-testid="btn-ping-core"
           class="flex-1 gap-1.5 h-7 text-xs border-border cursor-pointer"
           :disabled="isChecking"
@@ -228,7 +228,7 @@ async function openExternalUrl(url: string) {
 
         <Button
           variant="secondary"
-          size="xs"
+          size="sm"
           data-testid="btn-open-api-docs"
           class="flex-1 gap-1.5 h-7 text-xs cursor-pointer"
           title="Open Swagger OpenAPI Documentation"

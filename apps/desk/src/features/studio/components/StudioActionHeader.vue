@@ -257,7 +257,7 @@ onUnmounted(() => {
       <AutomaButton
         :id="isRunning ? 'btn.workflow.stop' : 'btn.workflow.run'"
         size="sm"
-        :variant="isRunning ? 'destructive' : 'primary'"
+        :variant="isRunning ? 'destructive' : 'default'"
         @click="triggerRunOrStop"
       >
         <template v-if="isRunning">

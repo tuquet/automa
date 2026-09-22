@@ -115,14 +115,14 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
             h(Checkbox, {
               checked: table.getIsAllPageRowsSelected(),
               indeterminate: table.getIsSomePageRowsSelected(),
-              'onUpdate:checked': (val: boolean) => table.toggleAllPageRowsSelected(!!val),
+              'onUpdate:checked': (val: boolean | 'indeterminate') => table.toggleAllPageRowsSelected(!!val),
               'aria-label': 'Select all rows',
               class: 'translate-y-[2px]',
             }),
           cell: ({ row }: CellContext<WorkflowStorageItem, unknown>) =>
             h(Checkbox, {
               checked: row.getIsSelected(),
-              'onUpdate:checked': (val: boolean) => row.toggleSelected(!!val),
+              'onUpdate:checked': (val: boolean | 'indeterminate') => row.toggleSelected(!!val),
               'aria-label': 'Select row',
               class: 'translate-y-[2px]',
               onClick: (e: MouseEvent) => e.stopPropagation(),
@@ -229,8 +229,8 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
           // Run Button
           h(AutomaButton, {
             id: 'btn.workflow.run',
-            size: 'xs',
-            variant: 'primary',
+            size: 'sm',
+            variant: 'default',
             title: 'Run Workflow via automa-core',
             onClick: () => emit('run-workflow', wf),
           }),
@@ -240,7 +240,7 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
             Button,
             {
               variant: 'ghost',
-              size: 'icon-xs',
+              size: 'icon-sm',
               class: 'text-muted-foreground hover:text-foreground',
               title: 'Export JSON',
               onClick: () => emit('export-workflow', wf),
@@ -253,7 +253,7 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
             Button,
             {
               variant: 'ghost',
-              size: 'icon-xs',
+              size: 'icon-sm',
               class:
                 'text-muted-foreground hover:text-destructive hover:bg-destructive/10 opacity-70 hover:opacity-100 transition-opacity',
               title: 'Delete',
@@ -355,7 +355,7 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
 
         <!-- Create Workflow Button -->
         <Button
-          variant="primary"
+          variant="default"
           size="sm"
           data-testid="btn-create-workflow"
           title="Create"

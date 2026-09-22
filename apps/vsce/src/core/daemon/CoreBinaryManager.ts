@@ -145,7 +145,7 @@ export const CoreBinaryManager = {
 	},
 
 	async downloadBinary(destPath: string, binaryName: string): Promise<void> {
-		const repoUrl = "tuquet/automa-ecosystem";
+		const repoUrl = "tuquet/tuquet-automa";
 		const downloadUrl = `https://github.com/${repoUrl}/releases/latest/download/${binaryName}`;
 
 		return vscode.window.withProgress(

@@ -48,7 +48,7 @@ const emit = defineEmits<{
     <!-- Run / Execute Button -->
     <AutomaButton
       :id="runButtonId"
-      size="xs"
+      size="sm"
       variant="ghost"
       icon-only
       :disabled="disabled"
@@ -61,7 +61,7 @@ const emit = defineEmits<{
     <AutomaButton
       v-if="showPreview"
       :id="previewButtonId"
-      size="xs"
+      size="sm"
       variant="ghost"
       icon-only
       :disabled="disabled"
@@ -73,7 +73,7 @@ const emit = defineEmits<{
     <AutomaButton
       v-if="showSource"
       :id="sourceButtonId"
-      size="xs"
+      size="sm"
       variant="ghost"
       icon-only
       :disabled="disabled"
@@ -85,7 +85,7 @@ const emit = defineEmits<{
     <AutomaButton
       v-if="showDelete"
       :id="deleteButtonId"
-      size="xs"
+      size="sm"
       variant="ghost"
       icon-only
       :disabled="disabled"

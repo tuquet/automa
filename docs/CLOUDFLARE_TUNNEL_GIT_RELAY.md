@@ -24,8 +24,8 @@ sequenceDiagram
     actor Dev as 👨‍💻 Kỹ sư (Local PC)
     participant CF_Local as 🚇 cloudflared (127.0.0.1:2222)
     participant CF_Edge as ☁️ Cloudflare Edge (cdn.flowup.io.vn)
-    participant VPS as 🖥️ Cloud VPS (/var/repo/automa-ecosystem.git)
-    participant GitHub as 🐙 GitHub (tuquet/automa-ecosystem)
+    participant VPS as 🖥️ Cloud VPS (/var/repo/tuquet-automa.git)
+    participant GitHub as 🐙 GitHub (tuquet/tuquet-automa)
 
     Note over Dev,CF_Local: Giai đoạn 1: Mở cổng Tunnel cục bộ
     Dev->>CF_Local: Khởi chạy Task "🚇 Start Tunnel Bridge"
@@ -37,7 +37,7 @@ sequenceDiagram
     CF_Local->>CF_Edge: Gói tin SSH được mã hóa trong WebSocket HTTPS
     CF_Edge->>VPS: Giải nén gói tin đưa vào SSH Daemon (Port 22/8443)
     VPS->>VPS: Nhận commit vào Bare Repo & kích hoạt hooks/post-receive
-    VPS->>GitHub: git push git@github.com:tuquet/automa-ecosystem.git dev
+    VPS->>GitHub: git push git@github.com:tuquet/tuquet-automa.git dev
     GitHub-->>VPS: Phản hồi thành công
     VPS-->>Dev: ✅ [THANH CONG] Code da nam an toan tren GitHub!
 ```
@@ -56,7 +56,7 @@ sequenceDiagram
 | **Domain** | Cloudflare Dashboard | Tên miền riêng (ví dụ `flowup.io.vn`), trỏ Nameserver về Cloudflare. |
 | **DNS CNAME** | DNS Records | `cdn.flowup.io.vn` trỏ về `<Tunnel-UUID>.cfargotunnel.com` (bật 🟠 Proxied). |
 | **Cloudflare Tunnel** | Zero Trust Dashboard | Route Public Hostname: `cdn.flowup.io.vn` $\rightarrow$ Service `SSH` $\rightarrow$ `localhost:22`. |
-| **VPS Origin Server** | Linux VPS | Cài đặt `cloudflared` làm service ngầm; Cấu hình Bare Repo tại `/var/repo/automa-ecosystem.git`. |
+| **VPS Origin Server** | Linux VPS | Cài đặt `cloudflared` làm service ngầm; Cấu hình Bare Repo tại `/var/repo/tuquet-automa.git`. |
 | **Deploy Key / SSH** | GitHub & VPS | Public Key của VPS được cấp quyền ghi (*Write access*) trên GitHub. |
 | **Local Client** | Máy tính cá nhân | Cài `cloudflared` qua Scoop; Mở cổng `127.0.0.1:2222`. |
 
@@ -111,7 +111,7 @@ Tuân thủ nghiêm ngặt quy định tại [`.agents/AGENTS.md`](../.agents/AG
 2. **Atomic Monorepo Push**:
    - Toàn bộ thay đổi mã nguồn trên các ứng dụng (`apps/*`) và thư viện (`packages/*`) được đẩy nguyên khối (atomic) lên GitHub chỉ qua 1 lần push duy nhất.
 3. **Bảo mật Repository Visibility**:
-   - Đảm bảo repo `tuquet/automa-ecosystem` được đặt ở trạng thái **Private** trên GitHub để bảo vệ logic nghiệp vụ nội bộ.
+   - Đảm bảo repo `tuquet/tuquet-automa` được đặt ở trạng thái **Private** trên GitHub để bảo vệ logic nghiệp vụ nội bộ.
 
 ---
 
