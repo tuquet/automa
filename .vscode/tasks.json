@@ -2,6 +2,61 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "🌐 Network: Test Proxy Connection",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File ./scripts/network/test_network.ps1",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      }
+    },
+    {
+      "label": "🔧 Network: Configure Git Proxy",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File ./scripts/network/configure_git_proxy.ps1",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      }
+    },
+    {
+      "label": "🛑 Network: Stop SOCKS5 Proxy",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File ./scripts/network/stop_proxy.ps1",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      }
+    },
+    {
+      "label": "🚀 Git Push (via Proxy)",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File ./scripts/network/ensure_proxy.ps1 git push",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      }
+    },
+    {
+      "label": "📥 Git Pull (via Proxy)",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File ./scripts/network/ensure_proxy.ps1 git pull",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true
+      }
+    },
+    {
       "label": "build:core",
       "type": "shell",
       "command": "cargo build --manifest-path automa-core/Cargo.toml",
@@ -124,37 +179,13 @@
         "focus": true,
         "clear": false
       }
-    },
-    {
-      "label": "🚇 Automa: Cloudflare Tunnel & Git Relay",
-      "type": "shell",
-      "command": "node scripts/tunnel-wizard.mjs",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "focus": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "🚀 Automa: 1-Click Git Push via Relay",
-      "type": "shell",
-      "command": "node scripts/tunnel-wizard.mjs push",
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "focus": true,
-        "clear": false
-      }
     }
   ],
   "inputs": [
     {
       "id": "setupTarget",
       "type": "pickString",
-      "description": "Setup cái gì? Khởi tạo phần nào?",
+      "description": "Setup cai gi? Khoi tao phan nao?",
       "options": [
         { "value": "all", "label": "🚀 Full Setup (PNPM + Rust/Cargo)" },
         { "value": "rust", "label": "🦀 Rust & Cargo Setup (Scoop install rustup)" },
