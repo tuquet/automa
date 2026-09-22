@@ -321,11 +321,6 @@ export async function pushRelay(rawBranch = 'dev') {
     return false;
   }
 
-  // 4. Sync Submodule Pointers
-  console.log(`  ${pc.cyan('➜')} Checking submodule pointer alignment...`);
-  try {
-    execSync('node scripts/check-submodules.mjs --sync', { cwd: rootDir, stdio: 'inherit' });
-  } catch (_) {}
 
   // 5. Execute git push relay <branch>
   console.log(`\n  ${pc.bold(pc.cyan(`➜ Executing: git push relay ${branch}`))}\n`);

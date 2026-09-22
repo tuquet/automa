@@ -111,16 +111,6 @@ async function runDoctor() {
   console.log('');
 }
 
-async function updateSubmodules(totalSteps = 3, stepIndex = 1) {
-  console.log(`\n${pc.cyan(`📦 [${stepIndex}/${totalSteps}] Initializing and updating Git Submodules...`)}`);
-  const res = await runProcess('git', ['submodule', 'update', '--init', '--recursive'], { cwd: rootDir });
-  if (res.success) {
-    console.log(`${pc.green('✔')} Git Submodules initialized successfully (${res.duration})`);
-  } else {
-    console.error(`${pc.red('✘')} Failed to initialize Git Submodules.`);
-    process.exit(1);
-  }
-}
 
 async function installDependencies(totalSteps = 3, stepIndex = 2) {
   console.log(`\n${pc.cyan(`⚡ [${stepIndex}/${totalSteps}] Installing Monorepo dependencies via pnpm...`)}`);
@@ -180,7 +170,6 @@ async function main() {
 
   let mode = 'all';
   if (isDoctor) mode = 'doctor';
-  else if (isSubmodulesOnly) mode = 'submodules';
   else if (isPnpmOnly) mode = 'pnpm';
   else if (isRustOnly) mode = 'rust';
   else if (isAll) mode = 'all';
@@ -190,12 +179,11 @@ async function main() {
       const choice = await p.select({
         message: 'Setup cái gì? Bạn muốn thực hiện thao tác khởi tạo nào?',
         options: [
-          { value: 'all', label: '🚀 Full Setup', hint: 'Submodules + pnpm install + Rust & Cargo (Khuyến nghị)' },
-          { value: 'rust', label: '🦀 Rust & Cargo Setup', hint: 'Cài đặt rustup qua Scoop cho automa-core' },
-          { value: 'submodules', label: '📦 Submodules Only', hint: 'Chỉ cập nhật git submodule update --init --recursive' },
+          { value: 'all', label: '🚀 Full Setup', hint: 'pnpm install + Rust & Cargo (Khuyến nghị)' },
+          { value: 'rust', label: '🦀 Rust & Cargo Setup', hint: 'Cài đặt rustup cho automa-core' },
           { value: 'pnpm', label: '⚡ Dependencies Only', hint: 'Chỉ cài đặt pnpm install cho toàn bộ monorepo' },
           { value: 'doctor', label: '🩺 Doctor & Diagnostics', hint: 'Kiểm tra phiên bản Node, pnpm, git, rust, cloudflared' },
-          { value: 'cloudflared', label: '🚇 Cloudflare Tunnel Setup', hint: 'Cài đặt cloudflared qua Scoop và kiểm tra kết nối' },
+          { value: 'cloudflared', label: '🚇 Cloudflare Tunnel Setup', hint: 'Cài đặt cloudflared và kiểm tra kết nối' },
         ],
       });
 
@@ -215,17 +203,14 @@ async function main() {
     await runDoctor();
   } else if (mode === 'cloudflared') {
     await runProcess('node', ['scripts/tunnel-wizard.mjs', 'setup'], { cwd: rootDir });
-  } else if (mode === 'submodules') {
-    await updateSubmodules(1, 1);
   } else if (mode === 'pnpm') {
     await installDependencies(1, 1);
   } else if (mode === 'rust') {
     await setupRust(1, 1);
     await runDoctor();
   } else {
-    await updateSubmodules(3, 1);
-    await installDependencies(3, 2);
-    await setupRust(3, 3);
+    await installDependencies(2, 1);
+    await setupRust(2, 2);
     await runDoctor();
   }
 

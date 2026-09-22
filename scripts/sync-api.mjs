@@ -40,14 +40,6 @@ const SYNC_TARGETS = [
     ],
   },
   {
-    id: 'submodules',
-    label: '📐 Đồng bộ Git Submodule Pointers',
-    hint: 'Kiểm tra commit pointer drift và tự động git add vào root',
-    steps: [
-      { name: 'Sync Submodule Pointers', cmd: 'node', args: ['scripts/check-submodules.mjs', '--sync'] },
-    ],
-  },
-  {
     id: 'ui',
     label: '🎨 Đồng bộ Shadcn-Vue UI Primitives',
     hint: 'Tải và chuẩn hóa 19 components Shadcn vào @automa/ui',

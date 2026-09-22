@@ -15,36 +15,8 @@ echo "📂 Working directory: $(pwd)"
 echo "Node runtime: $(node --version 2>/dev/null || echo 'Unknown')"
 echo "================================================================"
 
-# 1. Resolve GitHub Token for Private Submodules
-TOKEN="${GH_PAT:-${GITHUB_TOKEN:-${VERCEL_GIT_TOKEN:-${GITHUB_ACCESS_TOKEN}}}}"
-
-if [ -n "$TOKEN" ]; then
-  echo "🔑 Setting up Git authentication using GitHub Token..."
-  git config --global url."https://${TOKEN}@github.com/".insteadOf "https://github.com/"
-  echo "✔ GitHub credentials configured successfully."
-else
-  echo "⚠️ Notice: No GH_PAT or GITHUB_TOKEN environment variable detected."
-  echo "   If submodule cloning fails with authentication error, please set"
-  echo "   'GH_PAT' in Vercel Project Settings -> Environment Variables."
-fi
-
-# 2. Initialize and update ONLY the automa-webe submodule (Cache-resilient)
-echo "📦 Initializing & updating submodule: automa-webe..."
-
-# If automa-webe exists but lacks .git (e.g. from partial cache restoration), clean it first
-if [ -d "automa-webe" ] && [ ! -e "automa-webe/.git" ]; then
-  echo "⚠️ Detected non-git automa-webe directory from build cache, resetting..."
-  rm -rf automa-webe
-fi
-
-# Try submodule update with force; if it fails due to directory conflict, remove and retry
-if ! git submodule update --init --recursive --force automa-webe 2>/dev/null; then
-  echo "⚠️ Submodule update failed, attempting fresh clean clone..."
-  rm -rf automa-webe
-  git submodule update --init --recursive --force automa-webe
-fi
-
-echo "✔ Submodule 'automa-webe' ready at commit $(git -C automa-webe rev-parse --short HEAD)"
+# 1. Pure Monorepo: All code is already checked out natively by Vercel
+echo "✔ Monorepo source directories present: automa-webe, packages/automa-types, packages/automa-ui."
 
 # 3. Ensure pnpm is ready via Corepack or npm fallback
 echo "⚡ Preparing package manager (pnpm)..."
