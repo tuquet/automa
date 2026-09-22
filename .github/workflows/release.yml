@@ -57,6 +57,7 @@ jobs:
       - name: Build Web Assets (@automa/webe & dependencies)
         run: |
           pnpm -F @automa/types build
+          pnpm -F @automa/ui build
           pnpm -F @automa/webe run build
 
       - name: Build Rust Core Engine
