@@ -144,31 +144,40 @@ Dự án yêu cầu **Node.js** và **Rust Toolchain**. Để tiết kiệm dung
 
 ---
 
-### 📦 Hướng Dẫn Cài Đặt & Khởi Chạy (Step-by-Step)
+### 🚀 Hướng Dẫn Cài Đặt Qua Scoop (Cho Người Dùng / Production)
+
+```powershell
+# 1. Thêm Scoop Bucket chính thức của Tuquet
+scoop bucket add tuquet https://github.com/tuquet/scoop-bucket
+
+# 2. Cài đặt Tuquet Automa CLI Engine
+scoop install automa
+
+# 3. Khởi chạy hệ thống (Daemon + Web Studio)
+automa start
+
+# 4. Cập nhật lên bản mới nhất bất kỳ lúc nào
+scoop update automa
+```
+
+---
+
+### 💻 Hướng Dẫn Phát Triển Cho Lập Trình Viên (Developer Monorepo Setup)
 
 ```bash
-# 1. Tải mã nguồn Pure Monorepo (không cần flag submodules)
+# 1. Clone repository
 git clone https://github.com/tuquet/tuquet-automa.git
 cd tuquet-automa
 
-# 2. Cài đặt các công cụ CLI cần thiết cho Rust (chỉ chạy 1 lần duy nhất)
-cargo install cargo-watch
-
-# 3. Cài đặt toàn bộ Node dependencies và liên kết workspaces
+# 2. Cài đặt dependencies
 pnpm install
 
-# 4. Kiểm tra sức khỏe môi trường và thiết lập tự động (tùy chọn)
-pnpm run setup
-
-# 5. Đóng gói toàn bộ hệ sinh thái (Runner, Studio, Core, VSCE)
+# 3. Biên dịch bản sản phẩm (Build @automa/webe & apps/core)
 pnpm run build
 
-# 6. Khởi chạy môi trường phát triển (Dev Mode)
+# 4. Chạy môi trường phát triển (Dev Mode)
 pnpm run dev          # Chạy toàn bộ hệ thống
-# hoặc chạy riêng từng thành phần:
 pnpm run dev:core     # Chạy Rust Core Daemon (với cargo-watch hot-reload)
-pnpm run dev:vsce     # Chạy VS Code Extension Studio
-pnpm run dev:desk     # Chạy Desktop Native App
 pnpm run dev:source:runner # Chạy Silent Web Extension Runner
 pnpm run dev:source:studio # Chạy Standalone Studio Canvas UI
 ```

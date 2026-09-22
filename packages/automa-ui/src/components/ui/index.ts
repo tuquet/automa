@@ -1,5 +1,5 @@
 // Re-export all enterprise Shadcn-Vue UI primitives from published @tuquet/vue-ui & @tuquet/vue-table packages
-export * from '@tuquet/vue-ui'
+
 export {
   DataTable,
   DataTableCardView,
@@ -24,3 +24,4 @@ export {
   useDynamicFilters,
   useRemoteInfiniteSelect,
 } from '@tuquet/vue-table'
+export * from '@tuquet/vue-ui'

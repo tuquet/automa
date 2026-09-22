@@ -9,10 +9,10 @@ import {
   useStartBrowserMutation,
   useStopBrowserMutation,
 } from '../hooks'
+import { cn } from '../lib/utils'
 import { useBrowserStore } from '../stores'
 import AutomaButton from './AutomaButton.vue'
 import ConfirmationModal from './ConfirmationModal.vue'
-import { cn } from '../lib/utils'
 import { Badge, Button, Checkbox } from './ui'
 import VirtualDataTable from './VirtualDataTable.vue'
 
@@ -143,7 +143,8 @@ const columns: ColumnDef<BrowserResponse>[] = [
             h(Checkbox, {
               checked: table.getIsAllPageRowsSelected(),
               indeterminate: table.getIsSomePageRowsSelected(),
-              'onUpdate:checked': (val: boolean | 'indeterminate') => table.toggleAllPageRowsSelected(!!val),
+              'onUpdate:checked': (val: boolean | 'indeterminate') =>
+                table.toggleAllPageRowsSelected(!!val),
               'aria-label': 'Select all rows',
               class: 'translate-y-[2px]',
             }),
@@ -172,7 +173,7 @@ const columns: ColumnDef<BrowserResponse>[] = [
           variant: isOnline ? 'outline' : 'secondary',
           class: cn(
             'gap-1.5 font-mono text-xs uppercase tracking-wider',
-            isOnline ? 'border-emerald-500/40 text-emerald-500' : ''
+            isOnline ? 'border-emerald-500/40 text-emerald-500' : '',
           ),
         },
         () => [

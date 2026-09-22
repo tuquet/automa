@@ -115,7 +115,8 @@ const columns: ColumnDef<WorkflowStorageItem>[] = [
             h(Checkbox, {
               checked: table.getIsAllPageRowsSelected(),
               indeterminate: table.getIsSomePageRowsSelected(),
-              'onUpdate:checked': (val: boolean | 'indeterminate') => table.toggleAllPageRowsSelected(!!val),
+              'onUpdate:checked': (val: boolean | 'indeterminate') =>
+                table.toggleAllPageRowsSelected(!!val),
               'aria-label': 'Select all rows',
               class: 'translate-y-[2px]',
             }),
