@@ -127,15 +127,17 @@ window.addEventListener('message', (e) => {
 
 ---
 
-## 5. 🛠️ CLI Registry Tooling (`packages/ui`)
+## 5. 🛠️ Upstream Component Origin & Synchronization (`@tuquet/vue-ui`)
 
-```bash
-# Add New Component from Shadcn-Vue Registry
-pnpm run add:ui <component_name>
+All foundational Shadcn-Vue primitives in `@automa/ui` originate from the enterprise component library [`@tuquet/vue-ui`](../../../tuquet-lib/packages/vue-ui) standardized on **Reka UI**.
 
-# Full Registry Parity Sync
-pnpm run sync:ui
+When adding or syncing new Shadcn-Vue primitives, manage them directly in `tuquet-lib`:
 
-# Structural Parity Audit
-pnpm run audit:ui
+```powershell
+# In tuquet-lib root:
+$env:NODE_OPTIONS = "--use-system-ca"
+pnpm --filter @tuquet/vue-ui exec shadcn-vue add <component_name> -y -o -c packages/vue-ui
 ```
+
+Then consume via `@tuquet/vue-ui` in `@automa/ui`.
+
