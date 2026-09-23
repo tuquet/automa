@@ -1,87 +1,98 @@
-# 📖 Hướng Dẫn Sử Dụng Tuquet Automa Web Studio (`apps/webe`)
+# 📖 Hướng Dẫn Sử Dụng Tuquet Automa Web Studio Standalone (`apps/webe/src/studio`)
 
-Tài liệu hướng dẫn chi tiết dành cho người dùng về kiến trúc giao diện, danh sách các màn hình chức năng trong **Web Studio (`apps/webe`)**, nhóm công cụ sơ đồ khối và quy trình thiết kế kịch bản tự động hóa.
+Tài liệu hướng dẫn chi tiết dành cho người dùng về kiến trúc giao diện OS Standalone Studio, danh sách các màn hình chức năng, nhóm công cụ sơ đồ khối và quy trình thiết kế kịch bản tự động hóa trên môi trường Desktop OS.
 
 ---
 
-## 🔌 1. Cơ Chế Liên Kết Backend Engine (`apps/core`) & Web Studio (`apps/webe`)
+## 🔌 1. Kiến Trúc Liên Kết Rust Core Daemon (`apps/core`) & OS Web Studio (`apps/webe/src/studio`)
 
-Tuquet Automa hoạt động theo mô hình **Hybrid Architecture**:
-* **Rust Core Daemon (`apps/core`)**: Rust Engine chạy ngầm dưới dạng Daemon dịch vụ tại `http://127.0.0.1:3000`. Nhiệm vụ:
-  * Quản lý tiến trình trình duyệt (Chrome/Edge/Brave) qua CDP (Chrome DevTools Protocol).
-  * Xử lý lưu trữ SQLite local / Supabase Cloud.
-  * Thực thi kịch bản tốc độ cao và I/O hệ thống.
-* **Web Studio App (`apps/webe`)**: Web App & MV3 Chrome Extension đóng vai trò Giao diện trực quan. Nhiệm vụ:
-  * Cung cấp giao diện thiết kế kịch bản sơ đồ khối (Visual Flowchart Editor).
-  * Kết nối 2 chiều với `apps/core` qua **WebSocket (`/ws`)** và **REST API (`/api/v1`)**.
-  * Bắt sự kiện DOM trên trình duyệt và tự động tạo khối (Smart Recording).
+Automa Web Studio Standalone được thiết kế để chạy trực tiếp trên hệ điều hành (Native OS Mode), được nhúng và phục vụ trực tiếp bởi Daemon Rust (`apps/core`) tại địa chỉ:
+
+$$\text{URL}: \mathtt{http://127.0.0.1:3000/studio/}$$
 
 ```mermaid
 flowchart LR
-    STUDIO["Web Studio App (apps/webe)"] <-->|"REST API / WebSocket (/ws)"| DAEMON["Rust Core Daemon (apps/core @ 127.0.0.1:3000)"]
-    EXT["MV3 Extension Engine"] <-->|"Local WS Bridge"| DAEMON
-    DAEMON --> CDP["CDP Browser Controller"]
-    DAEMON --> DB[("SQLite / Supabase Storage")]
+    subgraph CoreEngine["apps/core (Rust Daemon @ 127.0.0.1:3000)"]
+        ServeStatic["/studio/ -> Native Hosted Static Assets"]
+        RestAPI["REST API (/api/v1/jobs, /storage, /lint, /browsers)"]
+        SSEStream["SSE Real-time Log Stream (/api/v1/events)"]
+        CDPController["CDP Browser Orchestrator (Chrome/Edge/Brave)"]
+        SQLiteDB[("SQLite Database & apps/vault File Engine")]
+    end
+
+    subgraph OSStudio["OS Standalone Web Studio (apps/webe/src/studio)"]
+        CanvasUI["StudioApp.vue (VueFlow Canvas Editor)"]
+        HeaderNav["StudioHeader.vue (Quick Actions & Status)"]
+        StorageModal["UnifiedStorageModal.vue (Tables & Secrets)"]
+        LibraryModal["WorkflowLibraryModal.vue (Vault File Explorer)"]
+        BrowserModal["BrowsersQuickModal.vue (CDP Process Manager)"]
+    end
+
+    CanvasUI <-->|"Contract-First Typed SDK (@automa/types/api)"| RestAPI
+    CanvasUI <-->|"Real-time Logs & Progress"| SSEStream
+    RestAPI --> CDPController
+    RestAPI --> SQLiteDB
 ```
+
+* **Contract-First Type Safety**: Toàn bộ giao tiếp giữa Studio UI và Rust Core được định kiểu an toàn 100% qua SDK Client `@automa/types/api`.
+* **Zero Extension Dependency**: Chạy hoàn toàn độc lập mà không cần môi trường Chrome Extension.
 
 ---
 
-## 🖥️ 2. Danh Sách Màn Hình Chức Năng Chi Tiết Trong Web Studio (`apps/webe/src/newtab/pages`)
+## 🖥️ 2. Danh Sách Màn Hình & Thành Phần Giao Diện Trong OS Studio (`apps/webe/src/studio/`)
 
-Tất cả các màn hình dưới đây nằm hoàn toàn trong ứng dụng **Web Studio (`apps/webe`)**:
+Tất cả các thành phần màn hình bên dưới thuộc về phiên bản **OS Standalone Web Studio (`apps/webe/src/studio`)**:
 
-### 2.1 Màn hình Dashboard Kịch bản (`apps/webe/src/newtab/pages/Workflows.vue`)
-* **Chức năng**: Màn hình trang chủ quản lý danh sách toàn bộ kịch bản tự động hóa (Workflows).
-* **Thao tác chính**:
-  * Tạo kịch bản mới (New Workflow).
-  * Import / Export kịch bản dưới dạng file `.json`.
-  * Lọc và tìm kiếm kịch bản theo Thẻ (Tags).
-  * Bật/tắt công tắc kích hoạt tự động chạy (Active / Inactive).
+### 2.1 Main Studio Workspace Canvas (`apps/webe/src/studio/StudioApp.vue`)
+* **Chức năng**: Màn hình làm việc chính thiết kế sơ đồ khối tự động hóa (Visual Flowchart Editor).
+* **Các vùng thành phần**:
+  * **Top Header Bar ([`StudioHeader.vue`](components/StudioHeader.vue))**:
+    * Hiển thị tên file/kịch bản đang mở, đường dẫn tệp vault (`.workflow.json`).
+    * Trạng thái kết nối Rust Daemon ([`StudioCoreStatus.vue`](../components/newtab/workflow/StudioCoreStatus.vue)).
+    * Các nút hành động: **Run** (`Ctrl+Enter`), **Save** (`Ctrl+S`), **Pause/Resume/Stop Job**, **New Workflow**, **Export JSON**.
+    * Đếm số lượng cảnh báo Linter thời gian thực (Live AST Lint).
+  * **Resizable Sidebar (Bên trái)**:
+    * **Block Palette**: Danh sách hơn 50+ khối công cụ sơ đồ khối.
+    * **Block Form Editor**: Bảng tùy chỉnh thuộc tính chi tiết của khối đang chọn.
+  * **VueFlow Canvas Area (Ở giữa)**:
+    * Khung trực quan hóa sơ đồ khối kéo-thả.
+    * Thanh công cụ Canvas: **Undo** (`Ctrl+Z`), **Redo** (`Ctrl+Y`), **Auto-Align** (Tự động căn chỉnh nút sơ đồ).
 
-### 2.2 Màn hình Visual Canvas Editor (`apps/webe/src/newtab/pages/workflows/[id].vue`)
-* **Chức năng**: Màn hình trung tâm thiết kế sơ đồ khối tự động hóa bằng thao tác kéo-thả.
-* **Các thành phần giao diện chính**:
-  * **Block Palette (Sidebar bên trái)**: Danh sách 50+ khối công cụ được phân theo 6 nhóm chức năng.
-  * **Drawflow Canvas (Khung vẽ ở giữa)**: Nơi kéo khối vào, nối đường liên kết (Connections) từ điểm Đuôi (Output) của khối này sang Đầu (Input) của khối khác.
-  * **Block Inspector (Panel bên phải)**: Chỉnh sửa thông số chi tiết của khối đang chọn (VD: URL, Selector CSS, Nội dung text, Thời gian delay).
-  * **Studio Status Bar (Thanh trạng thái kết nối)**: Hiển thị kết nối `ONLINE / OFFLINE` với Rust Core Daemon (`apps/core` tại `127.0.0.1:3000`).
-  * **Toolbar Controls**: Nút Run (Chạy thử), Pause (Tạm dừng), Debug từng bước, Đặt mốc Breakpoint.
+### 2.2 Modal Thư Viện Kịch Bản Vault Explorer ([`WorkflowLibraryModal.vue`](components/WorkflowLibraryModal.vue))
+* **Chức năng**: Trình duyệt và quản lý danh sách file kịch bản lưu trên đĩa cá nhân (`apps/vault/*.workflow.json`).
+* **Tính năng**:
+  * Tìm kiếm tệp kịch bản theo tên hoặc từ khóa.
+  * Tải trực tiếp kịch bản từ đĩa cứng lên Canvas để chỉnh sửa.
+  * Tạo mới hoặc xóa file kịch bản khỏi Vault.
 
-### 2.3 Màn hình Trình ghi Tự động (`apps/webe/src/newtab/pages/Recording.vue`)
-* **Chức năng**: Tự động tạo kịch bản dựa trên thao tác thực tế của người dùng.
-* **Cách sử dụng**: Nhấp "Start Recording" -> Mở trang web -> Thao tác tự nhiên (Click, điền chữ, cuộn trang) -> Web Studio tự động phân tích DOM và tạo ra sơ đồ khối tương ứng trên Canvas.
+### 2.3 Modal Quản Lý Storage & Dữ Liệu Tập Trung ([`UnifiedStorageModal.vue`](components/UnifiedStorageModal.vue))
+* **Chức năng**: Trung tâm quản lý dữ liệu lưu trữ offline/cloud.
+* **Các Tab màn hình con**:
+  * **Storage Tables Tab ([`StorageTablesTab.vue`](components/StorageTablesTab.vue))**: Tạo bảng dữ liệu mẫu, xem và phân trang các dòng dữ liệu bóc tách được.
+  * **Storage Secrets Tab ([`StorageSecretsTab.vue`](components/StorageSecretsTab.vue))**: Quản lý Biến toàn cục (Variables) và Khóa mật mã AES-256 (Credentials/API Keys).
 
-### 2.4 Màn hình Nhật ký Execution Logs & Data Viewer (`apps/webe/src/newtab/pages/logs/[id].vue`)
-* **Chức năng**: Kiểm tra kết quả chi tiết của từng lần thực thi kịch bản.
-* **Bao gồm**:
-  * **Step Timings**: Thời gian thực thi chính xác tính theo mili-giây của từng khối.
-  * **Data Viewer Table**: Bảng dữ liệu đã bóc tách/cào được (Hỗ trợ xuất file CSV, Excel, JSON).
-  * **Variable State**: Trạng thái và giá trị các biến toàn cục tại thời điểm chạy.
-  * **Error Stacktrace**: Báo lỗi chi tiết vị trí khối bị hỏng nếu kịch bản gặp sự cố.
+### 2.4 Modal Quản Lý Trình Duyệt CDP ([`BrowsersQuickModal.vue`](components/BrowsersQuickModal.vue))
+* **Chức năng**: Quản lý và theo dõi các tiến trình trình duyệt CDP do Rust Core điều khiển.
+* **Tính năng**:
+  * Hiển thị danh sách các cửa sổ trình duyệt Chrome/Edge/Brave đang mở.
+  * Nút khẩn cấp **Kill All Browsers**: Giải phóng tức thì toàn bộ tiến trình trình duyệt ngầm trên OS.
 
-### 2.5 Màn hình Quản lý Lưu trữ Data (`apps/webe/src/newtab/pages/Storage.vue` & `pages/storage/Tables.vue`)
-* **Chức năng**: Quản lý cơ sở dữ liệu phụ trợ cho các kịch bản trong Studio.
-* **Bao gồm**:
-  * **Tables (Bảng dữ liệu)**: Tạo các bảng dữ liệu mẫu để điền form tự động hoặc chứa dữ liệu thu thập được.
-  * **Variables (Biến toàn cục)**: Khởi tạo các biến dùng chung giữa nhiều kịch bản.
-  * **Credentials (Mật khẩu & Token)**: Quản lý mã hóa an toàn các API Key, mật khẩu tài khoản.
+### 2.5 Modal Cấu Hình Khởi Chạy Kịch Bản ([`RunWorkflowModal.vue`](components/RunWorkflowModal.vue))
+* **Chức năng**: Thiết lập tham số trước khi bấm chạy kịch bản thực tế trên OS.
+* **Tùy chọn**:
+  * Chọn chế độ hiển thị: **Headed** (Mở trình duyệt thực) hoặc **Headless** (Chạy ẩn).
+  * Chọn loại trình duyệt target: Chrome, Edge, Brave.
+  * Truyền danh sách biến đầu vào (Input Parameters).
 
-### 2.6 Màn hình Lập lịch Chạy Tự động (`apps/webe/src/newtab/pages/ScheduledWorkflow.vue`)
-* **Chức năng**: Cấu hình hẹn giờ và lịch trình chạy tự động ngầm cho các kịch bản.
-* **Chế độ**: Lặp lại định kỳ (mỗi N phút/giờ), Hẹn giờ mốc cố định trong ngày, hoặc dạng biểu thức Cron.
-
-### 2.7 Màn hình Cài đặt Hệ thống Studio (`apps/webe/src/newtab/pages/Settings.vue`)
-* **Chức năng**: Quản lý cấu hình chung cho ứng dụng Web Studio.
-* **Bao gồm**:
-  * Cấu hình URL địa chỉ kết nối `apps/core` Rust Daemon (Mặc định `http://127.0.0.1:3000`).
-  * Tùy chỉnh phím tắt thao tác nhanh (Shortcuts).
-  * Sao lưu & Khôi phục dữ liệu Web Studio (Backup / Restore).
+### 2.6 Modal Cài Đặt Nhanh Kịch Bản ([`WorkflowQuickSettings.vue`](components/WorkflowQuickSettings.vue))
+* **Chức năng**: Tùy chỉnh cài đặt riêng cho kịch bản đang mở.
+* **Tùy chọn**: Đổi biểu tượng (Icon), Tên, Mô tả, Cấu hình hành vi khi gặp lỗi (OnError fallback / Notification).
 
 ---
 
 ## 🧩 3. Chi Tiết Các Nhóm Công Cụ (Block Palette Tool Groups)
 
-Trong màn hình **Visual Canvas Editor (`workflows/[id].vue`)**, các khối công cụ được chia làm **6 Nhóm chính**:
+Trong màn hình Canvas Studio (`StudioApp.vue`), danh sách khối công cụ kéo-thả được chia làm **6 Nhóm chính**:
 
 | Nhóm Công Cụ | Tên Tiếng Anh | Khối Công Cụ Tiêu Biểu | Chức Năng |
 | :--- | :--- | :--- | :--- |
@@ -94,13 +105,17 @@ Trong màn hình **Visual Canvas Editor (`workflows/[id].vue`)**, các khối c�
 
 ---
 
-## 🛠️ 4. Quy Trình 4 Bước Tạo Workflow Đầu Tiên Trên Web Studio
+## 🛠️ 4. Quy Trình 4 Bước Thiết Kế Kịch Bản Trên OS Studio
 
-1. **Kết nối Engine**: Khởi động Daemon `apps/core` (lệnh `automa`). Trạng thái kết nối trên Web Studio báo màu **Xanh (Online)**.
-2. **Tạo kịch bản mới**: Tại màn Dashboard (`Workflows.vue`) -> Nhấp **New Workflow** -> Nhập tên kịch bản.
-3. **Thiết kế trên Canvas (`workflows/[id].vue`)**:
-   * Kéo khối **New Tab** vào Canvas -> Nhập URL mục tiêu (VD: `https://example.com`).
-   * Kéo khối **Click Element** -> Dùng công cụ Selector Picker trỏ vào nút bấm trên trang.
-   * Kéo khối **Get Text** -> Trỏ vào vùng thông tin cần bóc tách -> Gán cột lưu vào Table.
-   * Nối đường liên kết (Connections) giữa các khối theo thứ tự thực thi.
-4. **Thực thi & Tải dữ liệu**: Nhấp nút **Run Workflow** -> Kiểm tra trình duyệt chạy và mở màn **Execution Logs (`logs/[id].vue`)** để tải file CSV kết quả.
+1. **Khởi động Daemon & Mở Studio**:
+   * Khởi chạy Rust Core: `automa` (Daemon mở tại `http://127.0.0.1:3000`).
+   * Mở trình duyệt truy cập: `http://127.0.0.1:3000/studio/`. Trạng thái kết nối hiển thị **Core Daemon Connected (Xanh)**.
+2. **Tạo kịch bản mới**: Nhấp nút **New Workflow** trên Header (`StudioHeader.vue`) -> Nhập tên file kịch bản.
+3. **Thiết kế sơ đồ khối trên Canvas (`StudioApp.vue`)**:
+   * Kéo khối **New Tab** từ Sidebar bên trái vào Canvas -> Nhập URL mục tiêu (VD: `https://example.com`).
+   * Kéo khối **Click Element** -> Nhập Selector CSS của nút bấm.
+   * Kéo khối **Get Text** -> Nhập Selector nội dung cần lấy -> Chọn cột lưu vào Storage Table.
+   * Nối đường liên kết từ Output khối này sang Input khối kế tiếp.
+4. **Thực thi & Xuất Dữ Liệu**:
+   * Nhấp nút **Run** (`Ctrl+Enter`) -> Cửa sổ trình duyệt thực tế mở ra tự động thao tác.
+   * Mở **Storage Explorer** (`UnifiedStorageModal.vue`) -> Xem dữ liệu trong Table và tải về file CSV.
