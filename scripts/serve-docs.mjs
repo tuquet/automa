@@ -11,7 +11,7 @@ import path from 'node:path';
 import process from 'node:process';
 import { pc, rootDir } from './lib/utils.mjs';
 
-const openApiPath = path.join(rootDir, 'packages', 'automa-types', 'openapi.json');
+const openApiPath = path.join(rootDir, 'packages', 'types', 'openapi.json');
 const PORT = process.env.PORT || 8767;
 
 // Connected SSE clients for live reload

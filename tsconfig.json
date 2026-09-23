@@ -9,8 +9,8 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "paths": {
-      "@automa/types": ["./packages/automa-types/src/index.ts"],
-      "@automa/types/*": ["./packages/automa-types/src/*"]
+      "@automa/types": ["./packages/types/src/index.ts"],
+      "@automa/types/*": ["./packages/types/src/*"]
     }
   },
   "include": [

@@ -48,8 +48,8 @@ mindmap
 ### 💎 7 Nguyên Tắc Bất Biến (The 7 Golden Invariants):
 
 1. **Single Source of Truth & Zero Redundancy (Nguồn Chân Lý Duy Nhất)**:
-   - Toàn bộ đặc tả API được định nghĩa tại `automa-core` (Rust + `utoipa`) và xuất ra [`openapi.json`](../packages/automa-types/openapi.json).
-   - Client tiêu thụ duy nhất qua SDK [`@automa/types/api`](../packages/automa-types/README.md).
+   - Toàn bộ đặc tả API được định nghĩa tại `automa-core` (Rust + `utoipa`) và xuất ra [`openapi.json`](../packages/types/openapi.json).
+   - Client tiêu thụ duy nhất qua SDK [`@automa/types/api`](../packages/types/README.md).
    - **Tư duy**: Tuyệt đối không viết tài liệu sao chép lại schema của API dạng Markdown tĩnh (tránh Documentation Drift). Khám phá tương tác trực tiếp qua **Scalar API Server** (`:8767`).
 2. **Database-First State & Zero Folder Scanning (Dữ Liệu Tập Trung SQLite)**:
    - **Tư duy**: Quét thư mục tìm file JSON (`*.workflow.json`, `*.browser.json`) là phương pháp phản mô hình (anti-pattern) gây nghẽn I/O và xung đột trạng thái.
@@ -108,10 +108,10 @@ mindmap
 
 ## ⚡ TRỤ CỘT 3: HỆ THỐNG API TẬP TRUNG (THE UNIFIED API TRINITY)
 
-Dự án áp dụng triết lý **Single Source of Truth (SSOT)**: Toàn bộ API contracts được định nghĩa tại `apps/core` (Rust + `utoipa`) và xuất ra [`openapi.json`](../packages/automa-types/openapi.json). Thay vì lưu trữ hàng trăm file Markdown tĩnh dễ bị lỗi thời, hệ thống cung cấp 3 tầng phục vụ chuyên biệt:
+Dự án áp dụng triết lý **Single Source of Truth (SSOT)**: Toàn bộ API contracts được định nghĩa tại `apps/core` (Rust + `utoipa`) và xuất ra [`openapi.json`](../packages/types/openapi.json). Thay vì lưu trữ hàng trăm file Markdown tĩnh dễ bị lỗi thời, hệ thống cung cấp 3 tầng phục vụ chuyên biệt:
 
 1. **Tier 1 (Code-to-Code / Type-Safe SDK)**: 
-   - Tiêu thụ trực tiếp từ package [`@automa/types/api`](../packages/automa-types/README.md).
+   - Tiêu thụ trực tiếp từ package [`@automa/types/api`](../packages/types/README.md).
    - Cung cấp 100% type safety, auto-completion, và zero-fetch syntax.
 2. **Tier 2 (Interactive Live Explorer & Testing)**:
    - **Scalar API Reference**: Khởi chạy tài liệu tương tác với hot reload trên trình duyệt:
@@ -132,5 +132,5 @@ Dự án áp dụng triết lý **Single Source of Truth (SSOT)**: Toàn bộ AP
 3. 🧩 [**Automa VS Code Extension**](../apps/vsce/README.md) - 3-Panel Sidebar (`automa.workspace`, `automa.browsers`, `automa.storage`), Custom Editors, và Live Debugger.
 4. 🌐 [**Automa Web Extension & Studio**](../apps/webe/README.md) - Standalone Web Studio (`dist/studio`) và Headless Runner (`dist/cli-runner`).
 5. 📂 [**Automa Vault**](../apps/vault/README.md) - Cấu trúc lưu trữ Local Vault, Campaigns, và Browsers.
-6. 🎨 [**Automa UI SDK (`@automa/ui`)**](../packages/automa-ui/README.md) - Gói thư viện giao diện & trạng thái dùng chung (Shadcn-Vue Primitives, Theme Tokens).
-7. 📦 [**Automa Types & API SDK (`@automa/types`)**](../packages/automa-types/README.md) - Định nghĩa kiểu dữ liệu dùng chung và TypeScript SDK client sinh tự động từ OpenAPI.
+6. 🎨 [**Automa UI SDK (`@automa/ui`)**](../packages/ui/README.md) - Gói thư viện giao diện & trạng thái dùng chung (Shadcn-Vue Primitives, Theme Tokens).
+7. 📦 [**Automa Types & API SDK (`@automa/types`)**](../packages/types/README.md) - Định nghĩa kiểu dữ liệu dùng chung và TypeScript SDK client sinh tự động từ OpenAPI.

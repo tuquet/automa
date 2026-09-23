@@ -106,7 +106,7 @@ export function applyPreset(rawPresetCode = 'b1buPAiSjA') {
 
   console.log('================================================================================');
   console.log('🎨 SHADCN-VUE DESIGN SYSTEM PRESET & TOKEN INJECTOR');
-  console.log(`📂 Target UI Directory: ${path.join(ROOT_DIR, 'packages/automa-ui')}`);
+  console.log(`📂 Target UI Directory: ${path.join(ROOT_DIR, 'packages/ui')}`);
   console.log(`📦 Applying Preset: [${presetCode}]`);
   console.log('================================================================================\n');
 
@@ -125,8 +125,8 @@ export function applyPreset(rawPresetCode = 'b1buPAiSjA') {
     preset = PRESETS.b1buPAiSjA;
   }
 
-  // 1. Target 1: packages/automa-ui/src/styles/tokens.css
-  const tokensPath = path.join(ROOT_DIR, 'packages/automa-ui/src/styles/tokens.css');
+  // 1. Target 1: packages/ui/src/styles/tokens.css
+  const tokensPath = path.join(ROOT_DIR, 'packages/ui/src/styles/tokens.css');
   if (fs.existsSync(tokensPath)) {
     console.log(`📝 Updating Core Design Tokens: ${path.relative(ROOT_DIR, tokensPath)}`);
     let content = fs.readFileSync(tokensPath, 'utf8');

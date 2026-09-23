@@ -112,7 +112,7 @@ export const CANONICAL_MODULES = [
     type: 'package',
     lang: 'Vue 3 / Shadcn',
     description: 'Atomic Shadcn-Vue UI Design System',
-    path: path.join(packagesDir, 'automa-ui'),
+    path: path.join(packagesDir, 'ui'),
   },
   {
     id: 'types',
@@ -120,7 +120,7 @@ export const CANONICAL_MODULES = [
     type: 'package',
     lang: 'TypeScript',
     description: 'Typed OpenAPI Client SDK',
-    path: path.join(packagesDir, 'automa-types'),
+    path: path.join(packagesDir, 'types'),
   },
   {
     id: 'polyfill',

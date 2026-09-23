@@ -8,7 +8,7 @@ import { pc, rootDir } from './lib/utils.mjs';
 const __filename = fileURLToPath(import.meta.url);
 
 const OPENAPI_URL = 'http://127.0.0.1:8765/api-docs/openapi.json';
-const OPENAPI_SPEC = path.join(rootDir, 'packages', 'automa-types', 'openapi.json');
+const OPENAPI_SPEC = path.join(rootDir, 'packages', 'types', 'openapi.json');
 
 export async function getOpenApiSpec() {
   // 1. Try to fetch from live running automa-core
@@ -46,7 +46,7 @@ export async function getOpenApiSpec() {
 
   // 3. Fallback to existing cached spec
   if (fs.existsSync(OPENAPI_SPEC)) {
-    console.log(`${pc.green('✔')} Using cached OpenAPI spec from packages/automa-types/openapi.json`);
+    console.log(`${pc.green('✔')} Using cached OpenAPI spec from packages/types/openapi.json`);
     return JSON.parse(fs.readFileSync(OPENAPI_SPEC, 'utf-8'));
   }
 

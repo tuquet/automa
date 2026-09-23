@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { rootDir } from './lib/utils.mjs'
 
-const UI_DIR = path.join(rootDir, 'packages/automa-ui/src/components/ui')
+const UI_DIR = path.join(rootDir, 'packages/ui/src/components/ui')
 
 async function runReverseAudit() {
   console.log('================================================================================')

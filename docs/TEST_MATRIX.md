@@ -41,7 +41,7 @@ graph TD
 | **`apps/core`** | Cargo Test (In-Memory SQLite) | **55 tests** | ✅ **Passed** | [📄 apps/core README](../apps/core/README.md) | `cargo test --manifest-path apps/core/Cargo.toml --lib` |
 | **`apps/desk`** | Vitest v4 + Istanbul | **38 tests / 6 suites** | ✅ **Passed** | [📄 apps/desk README](../apps/desk/README.md) | `pnpm -F @automa/desk test:unit` |
 | **`apps/webe`** | Webpack 5 + ESLint | **Studio & Silent Runner** | ✅ **Passed** | [📄 apps/webe README](../apps/webe/README.md) | `pnpm -F @automa/webe build:studio` |
-| **`@automa/types`** | TypeScript Compiler (`tsc`) | **OpenAPI Typed SDK** | ✅ **Passed** | [📄 automa-types README](../packages/automa-types/README.md) | `pnpm -F @automa/types build` |
+| **`@automa/types`** | TypeScript Compiler (`tsc`) | **OpenAPI Typed SDK** | ✅ **Passed** | [📄 types README](../packages/types/README.md) | `pnpm -F @automa/types build` |
 | **Root E2E Suite** | Vitest E2E + Typed SDK (Port 8766) | **Integration Suites** | ✅ **Passed** | [📄 tests/e2e Directory](../tests/e2e) | `pnpm test` / `node scripts/test-all.mjs` |
 
 ---

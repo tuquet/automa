@@ -67,7 +67,7 @@ const selectedBrowser = ref('default')
 ## 📁 CẤU TRÚC GÓI
 
 ```
-packages/automa-ui/
+packages/ui/
 ├── src/
 │   ├── stores/        # 🍍 6 Pinia Domain Stores (Workflow, Browser, Execution, Storage, Campaign, Settings)
 │   ├── hooks/         # 🌐 TanStack Query Hooks (Tự động cache & fetch dữ liệu)

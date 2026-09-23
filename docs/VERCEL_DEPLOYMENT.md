@@ -10,8 +10,8 @@ Automa Studio là ứng dụng thuần Web UI (Single Page Application - SPA) vi
 
 - **Đầu ra bản dựng tĩnh**: Nằm tại `apps/webe/dist/studio/` (`index.html` và `assets/*`).
 - **Phụ thuộc nội bộ trong Monorepo**: 
-  - `@automa/types` (`packages/automa-types`)
-  - `@automa/ui` (`packages/automa-ui`)
+  - `@automa/types` (`packages/types`)
+  - `@automa/ui` (`packages/ui`)
 - **Quản lý mã nguồn**:
   - Repo monorepo: `tuquet/tuquet-automa` (Chứa toàn bộ `apps/` và `packages/`, không còn Git submodules).
 - **Vercel Project**: `automa-studio` (Team: `tuquets-projects`)
@@ -38,7 +38,7 @@ Script cài đặt tự động được Vercel thực thi trước khi build:
 ### C. Các Scripts trong `package.json`
 - `"vercel:install"`: Chạy `bash scripts/vercel-install.sh`.
 - `"vercel:build"`: Chạy `pnpm -F @automa/types build && pnpm -F @automa/ui build && turbo run build:studio`.
-- `"vercel:ignore"`: Kiểm tra thay đổi commit (`git diff --quiet HEAD^ HEAD apps/webe/ packages/automa-ui/ packages/automa-types/ scripts/vercel-install.sh vercel.json pnpm-workspace.yaml package.json`). Trả về exit code `0` nếu không có thay đổi để hủy build không cần thiết, tiết kiệm build minutes.
+- `"vercel:ignore"`: Kiểm tra thay đổi commit (`git diff --quiet HEAD^ HEAD apps/webe/ packages/ui/ packages/types/ scripts/vercel-install.sh vercel.json pnpm-workspace.yaml package.json`). Trả về exit code `0` nếu không có thay đổi để hủy build không cần thiết, tiết kiệm build minutes.
 - `"deploy:studio"`: Lệnh One-Click Deploy thủ công từ terminal (`pnpm run build:studio && vercel deploy apps/webe/dist/studio --prod`).
 
 ---
@@ -61,7 +61,7 @@ Dự án đã được liên kết với project `automa-studio` trên team `tuq
 4. **Git -> Ignored Build Step (Tối ưu tài nguyên)**:
    - Chọn **Custom**:
      ```bash
-     git diff --quiet HEAD^ HEAD apps/webe packages/automa-ui packages/automa-types pnpm-workspace.yaml package.json
+     git diff --quiet HEAD^ HEAD apps/webe packages/ui packages/types pnpm-workspace.yaml package.json
      ```
 
 ---

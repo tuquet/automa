@@ -2,7 +2,7 @@
 @source "../../components";
 @source "../../newtab";
 @source "../..";
-@source "../../../packages/automa-ui/src";
+@source "../../../packages/ui/src";
 
 @custom-variant dark (&:where(.dark, .dark *, [data-theme='dark'], [data-theme='dark'] *, .vscode-dark, .vscode-dark *));
 

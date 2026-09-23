@@ -109,7 +109,7 @@ async function resolveSuites() {
       { value: 'tier3', label: '📐 Tier 3: Strict Schema Validator', hint: 'Kiểm tra OpenAPI schema không tải máy' },
       { value: 'core', label: '🦀 Chỉ kiểm thử Automa Core (Cargo test)', hint: 'automa-core Rust tests' },
       { value: 'webe', label: '🌐 Chỉ kiểm thử Automa Webe (Vitest)', hint: 'apps/webe extension & studio tests' },
-      { value: 'ui', label: '🎨 Chỉ kiểm thử Automa UI (Vitest)', hint: 'packages/automa-ui component tests' },
+      { value: 'ui', label: '🎨 Chỉ kiểm thử Automa UI (Vitest)', hint: 'packages/ui component tests' },
     ],
   });
 

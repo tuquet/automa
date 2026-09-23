@@ -33,7 +33,7 @@ Trong hệ sinh thái Automa Ecosystem, `automa-studio` đóng vai trò là **UI
 ### 2.1. Nguyên tắc Single Source of Truth
 Hệ sinh thái áp dụng kiến trúc **Contract-First**:
 1. `apps/core` (Rust Axum Backend) định nghĩa OpenAPI v3 Schema và Annotations (`#[utoipa::path(...)]`).
-2. Mã nguồn OpenAPI được xuất tĩnh thành `packages/automa-types/openapi.json`.
+2. Mã nguồn OpenAPI được xuất tĩnh thành `packages/types/openapi.json`.
 3. `@hey-api/openapi-ts` tự động sinh ra TypeScript Client SDK và DTO interfaces tại package `@automa/types/api`.
 4. `apps/webe/src/studio` tiêu thụ các hàm API Client trực tiếp từ `@automa/types/api` qua giao thức PNPM Workspace (`"@automa/types": "workspace:*"`).
 
@@ -47,7 +47,7 @@ graph TD
     subgraph RustCore [apps/core (Rust Backend)]
         RustHandlers["Rust Route Handlers<br/>(jobs.rs, vault.rs, storage.rs, lint.rs)"]
         UtoipaDoc["ApiDoc (Utoipa OpenAPI v3)"]
-        ExportCLI["automa-core --export-openapi<br/>-> packages/automa-types/openapi.json"]
+        ExportCLI["automa-core --export-openapi<br/>-> packages/types/openapi.json"]
         RustHandlers --> UtoipaDoc
         UtoipaDoc --> ExportCLI
     end

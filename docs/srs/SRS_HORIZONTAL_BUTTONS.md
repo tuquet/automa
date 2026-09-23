@@ -2,7 +2,7 @@
 ## Event-Driven Button Business Logic & OpenAPI Prototype Schema
 
 **Document Version:** 1.0.0  
-**Target Platforms:** `apps/core`, `apps/desk`, `apps/vsce`, `apps/webe`, `packages/automa-types`  
+**Target Platforms:** `apps/core`, `apps/desk`, `apps/vsce`, `apps/webe`, `packages/types`  
 **Architecture Paradigm:** Contract-First, Zero-Dummy UI, Event-Driven Architecture (EDA) via REST, WebSocket (`/api/v1/ws`), and SSE (`/api/v1/events`).
 
 ---
@@ -443,7 +443,7 @@ export function useWorkflowRunButton(workflowId: string, workflowPath: string) {
 ## 8. 📌 Tích Hợp Vào Monorepo & Quy Trình Phát Triển
 
 1. **Vị trí tài liệu**: `docs/SRS_BUTTON_BUSINESS_LOGIC_EVENT_DRIVEN.md`.
-2. **Cập nhật Types**: File `packages/automa-types/src/button.ts` kế thừa toàn bộ types từ tài liệu này.
+2. **Cập nhật Types**: File `packages/types/src/button.ts` kế thừa toàn bộ types từ tài liệu này.
 3. **Kiểm thử tự động**: Thêm các test case trong Vitest (`apps/vsce`, `apps/desk`) kiểm tra xem 100% `data-testid` của nút bấm có tồn tại và phản hồi chính xác theo event-driven FSM.
 
 ---

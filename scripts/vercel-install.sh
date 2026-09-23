@@ -16,7 +16,7 @@ echo "Node runtime: $(node --version 2>/dev/null || echo 'Unknown')"
 echo "================================================================"
 
 # 1. Pure Monorepo: All code is already checked out natively by Vercel
-echo "✔ Monorepo source directories present: apps/webe, packages/automa-types, packages/automa-ui."
+echo "✔ Monorepo source directories present: apps/webe, packages/types, packages/ui."
 
 # 3. Ensure pnpm is ready via Corepack or npm fallback
 echo "⚡ Preparing package manager (pnpm)..."

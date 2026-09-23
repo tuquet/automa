@@ -67,7 +67,7 @@ BrowsersView.vue (hoặc BrowserManagerView.vue trong VS Code)
 
 ## 🍍 5. QUẢN LÝ TRẠNG THÁI PINIA STORE LIÊN QUAN (`useBrowserStore`)
 
-Store [`useBrowserStore`](../../packages/automa-ui/src/stores/useBrowserStore.ts) quản lý toàn bộ dữ liệu nghiệp vụ của menu Browsers:
+Store [`useBrowserStore`](../../packages/ui/src/stores/useBrowserStore.ts) quản lý toàn bộ dữ liệu nghiệp vụ của menu Browsers:
 - `browsers`: Mảng danh sách profile lấy từ SQLite (`BrowserResponse[]`).
 - `selectedBrowserId`: ID profile được chọn làm đích thực thi.
 - `onlineBrowserIds`: Danh sách ID các phiên đang chạy thực tế trong RAM.

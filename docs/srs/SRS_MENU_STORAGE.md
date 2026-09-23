@@ -62,7 +62,7 @@ StorageView.vue (hoặc TableView.vue trong VS Code)
 
 ## 🍍 5. QUẢN LÝ TRẠNG THÁI PINIA STORE LIÊN QUAN (`useStorageStore`)
 
-Store [`useStorageStore`](../../packages/automa-ui/src/stores/useStorageStore.ts) quản lý toàn bộ dữ liệu của menu Storage:
+Store [`useStorageStore`](../../packages/ui/src/stores/useStorageStore.ts) quản lý toàn bộ dữ liệu của menu Storage:
 - `tables`: Mảng danh sách bảng SQLite (`StorageTable[]`).
 - `activeTableId`: ID bảng đang được mở xem.
 - `activeTableRows`: Mảng bản ghi dữ liệu động của bảng hiện tại.

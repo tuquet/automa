@@ -45,7 +45,7 @@ const LINT_TARGETS = [
   {
     id: 'ui',
     label: '🎨 Chỉ Lint Packages UI (@automa/ui)',
-    hint: 'Kiểm tra components trong packages/automa-ui',
+    hint: 'Kiểm tra components trong packages/ui',
     steps: [
       { name: 'UI Lint', cmd: 'pnpm', args: ['-F', '@automa/ui', 'run', 'lint'] },
     ],

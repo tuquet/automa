@@ -6,6 +6,7 @@
       "outputs": ["dist/**", "out/**"]
     },
     "build:runner": {
+      "dependsOn": ["^build"],
       "outputs": ["dist/cli-runner/**", "build-zip/runner.zip"]
     },
     "build:studio": {

@@ -2,7 +2,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { rootDir } from './lib/utils.mjs'
 
-const UI_TARGET_DIR = path.join(rootDir, 'packages/automa-ui/src/components/ui')
+const UI_TARGET_DIR = path.join(rootDir, 'packages/ui/src/components/ui')
 
 // Core official components to sync into @automa/ui
 const DEFAULT_COMPONENTS = [

@@ -23,8 +23,8 @@ tuquet-automa/
 │   ├── core/           # [Rust Core Engine]  - Axum Daemon, CDP Orchestrator, SQLite & Supabase Adapters
 │   └── webe/           # [Extension & Studio]- MV3 Chrome Extension Runner & Vue 3 Visual Flow Canvas
 ├── packages/
-│   ├── automa-types/   # OpenAPI Specifications & Shared TypeScript Types
-│   ├── automa-ui/      # Enterprise Shadcn Vue UI Primitive Components
+│   ├── types/          # OpenAPI Specifications & Shared TypeScript Types
+│   ├── ui/             # Enterprise Shadcn Vue UI Primitive Components
 │   └── webextension-polyfill/
 └── docs/               # Technical Architecture & Deployment Guides
 ```

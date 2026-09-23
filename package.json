@@ -17,7 +17,7 @@
         "build:studio": "turbo run build:studio",
         "vercel:install": "bash scripts/vercel-install.sh",
         "vercel:build": "pnpm -F @automa/types build && pnpm -F @automa/ui build && turbo run build:studio",
-        "vercel:ignore": "git diff --quiet HEAD^ HEAD apps/webe/ packages/automa-ui/ packages/automa-types/ scripts/vercel-install.sh vercel.json pnpm-workspace.yaml package.json",
+        "vercel:ignore": "git diff --quiet HEAD^ HEAD apps/webe/ packages/ui/ packages/types/ scripts/vercel-install.sh vercel.json pnpm-workspace.yaml package.json",
         "deploy:studio": "pnpm run build:studio && vercel deploy apps/webe/dist/studio --prod",
         "build:webview": "turbo run build:webview",
         "build:core": "cargo build --release --manifest-path apps/core/Cargo.toml",

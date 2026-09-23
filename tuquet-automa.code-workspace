@@ -13,12 +13,12 @@
       "path": "apps/webe"
     },
     {
-      "name": "automa-ui",
-      "path": "packages/automa-ui"
+      "name": "ui",
+      "path": "packages/ui"
     },
     {
-      "name": "automa-types",
-      "path": "packages/automa-types"
+      "name": "types",
+      "path": "packages/types"
     }
   ],
   "settings": {

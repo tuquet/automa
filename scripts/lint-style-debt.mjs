@@ -14,7 +14,7 @@ const TARGET_DIRS = [
   'apps/webe/src/studio',
   'apps/webe/src/components',
   'apps/webe/src/assets/css',
-  'packages/automa-ui/src',
+  'packages/ui/src',
 ];
 
 const EXTENSIONS = ['.vue', '.css', '.ts', '.html'];

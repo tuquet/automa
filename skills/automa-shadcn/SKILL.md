@@ -11,7 +11,7 @@ Architecture, composition standards, theme inversion, dark mode synchronization,
 
 ## 1. 🏛️ 3-Layer Design System Architecture
 
-All user interface primitives and composite components are centralized in [`packages/automa-ui`](../../packages/automa-ui).
+All user interface primitives and composite components are centralized in [`packages/ui`](../../packages/ui).
 
 ```mermaid
 flowchart TD
@@ -25,7 +25,7 @@ flowchart TD
         --destructive / --destructive-foreground"]
     end
 
-    subgraph Layer1 ["Layer 1: Pure Shadcn-Vue Primitives (packages/automa-ui/src/components/ui/)"]
+    subgraph Layer1 ["Layer 1: Pure Shadcn-Vue Primitives (packages/ui/src/components/ui/)"]
         Button["Button.vue"]
         Badge["Badge.vue"]
         Dialog["Dialog.vue / DialogContent.vue"]
@@ -134,7 +134,7 @@ When the user toggles dark mode in Host (via Titlebar, Settings Modal, or `Ctrl+
 
 ---
 
-## 4. 🛠️ CLI Registry Tooling (`packages/automa-ui`)
+## 4. 🛠️ CLI Registry Tooling (`packages/ui`)
 
 Manage the Shadcn-Vue component catalog via Root CLI scripts:
 
@@ -146,8 +146,8 @@ pnpm run add:ui slider
 pnpm run add:ui accordion avatar
 ```
 - Fetches the component template from the official `shadcn-vue` registry.
-- Places files in `packages/automa-ui/src/components/ui/<component_name>/`.
-- Automatically rebuilds `packages/automa-ui/src/components/ui/index.ts` barrel export.
+- Places files in `packages/ui/src/components/ui/<component_name>/`.
+- Automatically rebuilds `packages/ui/src/components/ui/index.ts` barrel export.
 
 ### 2. Full Registry Parity Sync
 ```bash
