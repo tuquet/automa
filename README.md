@@ -123,6 +123,7 @@ pnpm run dev:core     # Run Rust Core with cargo-watch hot reload
 
 ## 📚 Documentation & Contributing
 
+- 🎨 **[WEB_STUDIO_USER_GUIDE.md](docs/WEB_STUDIO_USER_GUIDE.md)**: End-User manual covering Web Studio screens, tool groups, and step-by-step workflow creation.
 - 📖 **[CONTRIBUTING.md](CONTRIBUTING.md)**: Developer guide, coding standards, and PR guidelines.
 - 📐 **[WEBE_CHROME_EXTENSION_RUST_ARCHITECTURE.md](docs/WEBE_CHROME_EXTENSION_RUST_ARCHITECTURE.md)**: Deep-dive architecture of Chrome Extension + Rust OS Hybrid Automation.
 - 🔒 **[SECURITY.md](SECURITY.md)**: Security policy and vulnerability disclosure process.
