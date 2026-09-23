@@ -18,6 +18,7 @@ import {
 import { useVirtualizer } from '@tanstack/vue-virtual'
 import { ArrowDown, ArrowUp, ArrowUpDown, Loader2, Search } from 'lucide-vue-next'
 import { computed, ref, watch } from 'vue'
+import TablePagination from './TablePagination.vue'
 import {
   Input,
   Table,

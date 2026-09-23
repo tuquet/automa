@@ -18,14 +18,14 @@ Architecture and implementation guide for the `apps/webe` application.
    - Build command: `pnpm run build:runner` (`webpack.runner.config.js`).
    - Sideloaded into headless/headful Chromium instances by `apps/core` to execute DOM automation blocks.
 2. **Standalone Web Studio Canvas (`dist/studio`)**:
-   - Build command: `pnpm run build:studio` (`webpack.studio.config.js`).
-   - Served by `apps/core` at `http://127.0.0.1:8765/studio/` and embedded into `apps/vsce` custom editors via `iframe` with two-way `postMessage` synchronization.
+   - Build command: `pnpm run build:studio` (`vite.studio.config.mjs`).
+   - Served by `apps/core` at `http://127.0.0.1:8765/studio/` as a full standalone SPA.
 
 ---
 
 ## 2. 🛡️ Architectural Invariants
 
-- **Zero Code Duplication**: Other applications (`apps/core`, `apps/vsce`, `apps/desk`) MUST consume `dist/cli-runner` and `dist/studio`. Duplicating canvas/runner source code is FORBIDDEN.
+- **Zero Code Duplication**: Backend daemons (`apps/core`) MUST consume `dist/cli-runner` and `dist/studio`. Duplicating canvas/runner source code is FORBIDDEN.
 - **Native Browser APIs**: Uses native `chrome.*` / `browser.*` through `src/lib/browser-compat.js` (aliased via Webpack; never use `webextension-polyfill` directly).
 - **MV3 Offscreen Resilience**:
   - Workflow execution in Chrome MV3 runs inside an Offscreen Document (`offscreen.html`).

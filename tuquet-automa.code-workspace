@@ -13,16 +13,12 @@
       "path": "apps/webe"
     },
     {
-      "name": "vsce",
-      "path": "apps/vsce"
+      "name": "automa-ui",
+      "path": "packages/automa-ui"
     },
     {
-      "name": "desk",
-      "path": "apps/desk"
-    },
-    {
-      "name": "vault",
-      "path": "apps/vault"
+      "name": "automa-types",
+      "path": "packages/automa-types"
     }
   ],
   "settings": {

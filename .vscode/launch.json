@@ -5,25 +5,13 @@
       "name": "🦀 Debug: Automa Core (Rust Daemon)",
       "type": "lldb",
       "request": "launch",
-      "program": "${workspaceFolder}/automa-core/target/debug/automa-core${command:extension.vscode-lldb.executableSuffix}",
+      "program": "${workspaceFolder}/apps/core/target/debug/automa-core${command:extension.vscode-lldb.executableSuffix}",
       "args": [
         "--port",
         "8765"
       ],
-      "cwd": "${workspaceFolder}/automa-core",
+      "cwd": "${workspaceFolder}/apps/core",
       "preLaunchTask": "build:core"
-    },
-    {
-      "name": "🧩 Debug: VS Code Extension Host",
-      "type": "extensionHost",
-      "request": "launch",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}/automa-vsce"
-      ],
-      "outFiles": [
-        "${workspaceFolder}/automa-vsce/dist/**/*.js"
-      ],
-      "preLaunchTask": "build:vsce"
     }
   ]
 }

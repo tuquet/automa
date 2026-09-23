@@ -50,22 +50,6 @@ const TARGETS = [
     cwd: rootDir,
   },
   {
-    id: 'vsce',
-    label: '🧩 Automa VSCE (VS Code Extension)',
-    hint: 'Biên dịch TypeScript và đóng gói VSIX cho VS Code',
-    cmd: 'pnpm',
-    args: ['-F', 'vscode-automa', 'run', 'build'],
-    cwd: rootDir,
-  },
-  {
-    id: 'desk',
-    label: '🖥️  Automa Desk (Tauri v2 Desktop App)',
-    hint: 'Biên dịch ứng dụng Desktop OS (Vue 3.5 + Tauri)',
-    cmd: 'pnpm',
-    args: ['run', 'build:desk'],
-    cwd: rootDir,
-  },
-  {
     id: 'types',
     label: '🏷️  Automa Types (@automa/types DTOs & Contracts)',
     hint: 'Biên dịch TypeScript definitions & schemas',

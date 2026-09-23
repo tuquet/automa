@@ -26,8 +26,8 @@ Khi thực hiện dọn dẹp, AI Agent **TUYỆT ĐỐI KHÔNG ĐƯỢC XÓA** 
 | Cấp độ | Định dạng tệp | Hành động |
 | :--- | :--- | :--- |
 | **Tier 1 (Rác Tuyệt Đối)** | `*.vsix` cũ, `openapi-ts-error-*.log`, `npm-debug.log*`, `Thumbs.db`, `.DS_Store`, `*.orig`, `*.bak`, `*.swp` | Xóa ngay không cần đối chiếu |
-| **Tier 2 (Rác Phiên Làm Việc)** | `apps/core/scratch/*`, `apps/vsce/scratch/*`, các script nháp tạm thời ở root | Xóa sạch sau khi phiên debug kết thúc |
-| **Tier 3 (Legacy Dead Assets)** | Các file HTML CDN cũ, thư viện không còn import trong `apps/vsce/assets/webview/libs/` | Dùng `grep_search` kiểm tra, nếu 0 reference thì xóa |
+| **Tier 2 (Rác Phiên Làm Việc)** | `apps/core/scratch/*`, `apps/webe/scratch/*`, các script nháp tạm thời ở root | Xóa sạch sau khi phiên debug kết thúc |
+| **Tier 3 (Legacy Dead Assets)** | Các file HTML CDN cũ, thư viện không còn import trong `apps/webe/src/assets/` | Dùng `grep_search` kiểm tra, nếu 0 reference thì xóa |
 
 ---
 

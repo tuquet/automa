@@ -39,15 +39,15 @@ describe('@automa/ui - Shadcn UI Atomic Primitives & Utilities', () => {
     expect(defaultBtn).toContain('inline-flex')
     expect(defaultBtn).toContain('bg-primary')
 
-    const primaryBtn = buttonVariants({ variant: 'primary', size: 'sm' })
-    expect(primaryBtn).toContain('bg-primary')
-    expect(primaryBtn).toContain('h-7')
+    const smBtn = buttonVariants({ variant: 'default', size: 'sm' })
+    expect(smBtn).toContain('bg-primary')
+    expect(smBtn).toContain('px-3')
 
     const destructiveBtn = buttonVariants({ variant: 'destructive', size: 'default' })
     expect(destructiveBtn).toContain('destructive')
 
     const iconBtn = buttonVariants({ size: 'icon' })
-    expect(iconBtn).toContain('size-8')
+    expect(iconBtn).toContain('h-10')
   })
 
   it('badgeVariants generates correct class names for badge variants', () => {
@@ -55,11 +55,11 @@ describe('@automa/ui - Shadcn UI Atomic Primitives & Utilities', () => {
     expect(defaultBadge).toContain('inline-flex')
     expect(defaultBadge).toContain('bg-primary')
 
-    const successBadge = badgeVariants({ variant: 'success' })
-    expect(successBadge).toContain('emerald')
+    const secondaryBadge = badgeVariants({ variant: 'secondary' })
+    expect(secondaryBadge).toContain('bg-secondary')
 
-    const warningBadge = badgeVariants({ variant: 'warning' })
-    expect(warningBadge).toContain('amber')
+    const destructiveBadge = badgeVariants({ variant: 'destructive' })
+    expect(destructiveBadge).toContain('destructive')
   })
 
   it('sheetVariants generates correct positioning classes for sides', () => {

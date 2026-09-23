@@ -14,8 +14,6 @@ const TARGET_DIRS = [
   'apps/webe/src/studio',
   'apps/webe/src/components',
   'apps/webe/src/assets/css',
-  'apps/vsce/webview-ui/src',
-  'apps/desk/src',
   'packages/automa-ui/src',
 ];
 

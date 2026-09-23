@@ -27,9 +27,8 @@ export default defineConfig({
 		},
 		include: ["tests/**/*.test.ts"],
 		exclude: [
-			"automa-vsce/**",
-			"automa-webe/**",
-			"automa-desk/**",
+			"apps/**",
+			"packages/**",
 			"node_modules/**",
 			".vscode-test/**",
 			"out/**",

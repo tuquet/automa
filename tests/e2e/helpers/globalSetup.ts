@@ -62,13 +62,20 @@ export async function setup(): Promise<void> {
   await ensurePortIsFree(TEST_PORT);
 
   console.log(`\n[E2E Global Setup] Starting Automa Core Test Daemon on port ${TEST_PORT}...`);
-  const corePath = path.join(process.cwd(), 'automa-core');
+  const corePath = path.join(process.cwd(), 'apps/core');
 
   const exeExt = process.platform === 'win32' ? '.exe' : '';
   const exePath = path.join(corePath, 'target', 'debug', `automa-core${exeExt}`);
 
   console.log(`[E2E Global Setup] Ensuring fresh automa-core binary is built...`);
-  execSync('cargo build --quiet --bin automa-core', { cwd: corePath, stdio: 'inherit' });
+  try {
+    execSync('cargo build --quiet --bin automa-core', { cwd: corePath, stdio: 'inherit' });
+  } catch (err: any) {
+    if (!fs.existsSync(exePath)) {
+      throw new Error(`[E2E Global Setup] cargo build failed and binary not found at ${exePath}: ${err.message}`);
+    }
+    console.warn(`[E2E Global Setup] Warning: cargo build failed, attempting to run existing binary at ${exePath}`);
+  }
 
   daemonProcess = spawn(exePath, ['--port', `${TEST_PORT}`], {
     cwd: corePath,

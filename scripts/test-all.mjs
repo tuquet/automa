@@ -27,21 +27,21 @@ const SUITES = [
     cwd: path.join(rootDir, 'apps/core'),
   },
   {
-    id: 'vsce',
+    id: 'webe',
     tier: 1,
-    name: 'Automa VSCE Extension & Webview (Vitest)',
-    hint: 'Providers, Commands, Webview IPC unit tests',
+    name: 'Automa Web Extension & Studio (Vitest)',
+    hint: 'Studio composables, route sync, canvas & AST tests',
     cmd: 'pnpm',
-    args: ['-F', 'vscode-automa', 'test'],
+    args: ['-F', '@automa/webe', 'test'],
     cwd: rootDir,
   },
   {
-    id: 'desk',
+    id: 'ui',
     tier: 1,
-    name: 'Automa Desktop OS App (Tauri v2 + Vue 3.5)',
-    hint: 'Desktop pinia stores, composables & components unit tests',
+    name: 'Automa UI Design System (@automa/ui Vitest)',
+    hint: 'Virtual table, shadcn primitives & domain store tests',
     cmd: 'pnpm',
-    args: ['-F', '@automa/desk', 'run', 'test:unit'],
+    args: ['-F', '@automa/ui', 'test'],
     cwd: rootDir,
   },
   {
@@ -79,8 +79,8 @@ if (isList) {
 
 async function resolveSuites() {
   if (args.includes('--core')) return SUITES.filter((s) => s.id === 'core');
-  if (args.includes('--vsce')) return SUITES.filter((s) => s.id === 'vsce');
-  if (args.includes('--desk')) return SUITES.filter((s) => s.id === 'desk');
+  if (args.includes('--webe') || args.includes('--vsce') || args.includes('--desk')) return SUITES.filter((s) => s.id === 'webe');
+  if (args.includes('--ui')) return SUITES.filter((s) => s.id === 'ui');
   if (args.includes('--e2e')) return SUITES.filter((s) => s.id === 'e2e');
   if (args.includes('--schema')) return SUITES.filter((s) => s.id === 'schema');
 
@@ -103,13 +103,13 @@ async function resolveSuites() {
   const choice = await p.select({
     message: 'Test cái gì? Test tầng nào trong 4 tầng kiểm thử?',
     options: [
-      { value: 'all', label: '🧪 Tất cả Suites (Tier 1 - 3 Toàn Diện)', hint: 'Chạy toàn bộ 5 test suites' },
-      { value: 'tier1', label: '⚡ Tier 1: Unit Tests (Nhanh, RAM < 500MB)', hint: 'Rust Core + VSCE + Desk' },
+      { value: 'all', label: '🧪 Tất cả Suites (Tier 1 - 3 Toàn Diện)', hint: 'Chạy toàn bộ test suites' },
+      { value: 'tier1', label: '⚡ Tier 1: Unit Tests (Nhanh, RAM < 500MB)', hint: 'Rust Core + Webe + UI' },
       { value: 'tier2', label: '🌐 Tier 2: E2E Integration API Tests', hint: 'Kiểm thử blackbox SDK chống daemon' },
       { value: 'tier3', label: '📐 Tier 3: Strict Schema Validator', hint: 'Kiểm tra OpenAPI schema không tải máy' },
       { value: 'core', label: '🦀 Chỉ kiểm thử Automa Core (Cargo test)', hint: 'automa-core Rust tests' },
-      { value: 'vsce', label: '🧩 Chỉ kiểm thử Automa VSCE (Vitest)', hint: 'vscode-automa extension tests' },
-      { value: 'desk', label: '🖥️  Chỉ kiểm thử Automa Desk (Vitest)', hint: 'automa-desk desktop tests' },
+      { value: 'webe', label: '🌐 Chỉ kiểm thử Automa Webe (Vitest)', hint: 'apps/webe extension & studio tests' },
+      { value: 'ui', label: '🎨 Chỉ kiểm thử Automa UI (Vitest)', hint: 'packages/automa-ui component tests' },
     ],
   });
 
@@ -122,8 +122,8 @@ async function resolveSuites() {
   if (choice === 'tier2') return SUITES.filter((s) => s.tier === 2);
   if (choice === 'tier3') return SUITES.filter((s) => s.tier === 3);
   if (choice === 'core') return SUITES.filter((s) => s.id === 'core');
-  if (choice === 'vsce') return SUITES.filter((s) => s.id === 'vsce');
-  if (choice === 'desk') return SUITES.filter((s) => s.id === 'desk');
+  if (choice === 'webe') return SUITES.filter((s) => s.id === 'webe');
+  if (choice === 'ui') return SUITES.filter((s) => s.id === 'ui');
   return SUITES;
 }
 

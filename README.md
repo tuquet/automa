@@ -93,23 +93,12 @@ Là Extension gốc Manifest V3 (hỗ trợ Chromium & Firefox), đóng vai trò
   - **Lệnh đóng gói:** `pnpm run build:runner` (hoặc `webpack.runner.config.js`)
   - **Mục đích tái sử dụng:** Bản build siêu gọn nhẹ, loại bỏ toàn bộ giao diện UI/CSS nặng để tối ưu hóa RAM & CPU. Được `apps/core` nạp trực tiếp vào các phiên Chromium Worker để chạy kịch bản ngầm (Headless/Stealth Execution).
 * 🎨 **2. Build Studio Standalone (`dist/studio`) — *Visual Canvas Editor GUI*:**
-  - **Lệnh đóng gói:** `pnpm run build:studio` (hoặc `webpack.studio.config.js`)
-  - **Mục đích tái sử dụng:** Bản build giao diện thiết kế kịch bản hoàn chỉnh (Vue 3, Vue Flow, Host Bridge). Được `apps/core` phục vụ trực tiếp qua Web Server tại `http://127.0.0.1:8765/studio/`, đồng thời có thể nhúng vào `apps/desk` (Tauri App), VS Code Webview (`apps/vsce`) hoặc Iframe độc lập.
+  - **Lệnh đóng gói:** `pnpm run build:studio` (hoặc `vite.studio.config.mjs`)
+  - **Mục đích tái sử dụng:** Bản build giao diện thiết kế kịch bản hoàn chỉnh (Vue 3, Vue Flow, Host Bridge). Được `apps/core` phục vụ trực tiếp qua Web Server tại `http://127.0.0.1:8765/studio/` hoặc chạy độc lập.
 
-### 3. 💻 `apps/vsce` *(VS Code Extension — `vscode-automa`)*
-Extension tích hợp môi trường phát triển (IDE) chuyên nghiệp dành cho lập trình viên.
-- **Trọng trách:** Hoạt động dưới dạng **Thin Client**, giao tiếp trực tiếp với `apps/core` qua HTTP REST/SSE. Cung cấp Visual Canvas Editor (Vue Flow), Tree Views quản lý Workflows/Campaigns, và Live Diagnostics Linter.
-
-### 4. 🖥️ `apps/desk` *(Desktop Native OS App — `@automa/desk`)*
-Ứng dụng Desktop độc lập đa nền tảng (Windows, macOS, Linux) đóng gói qua **Tauri v2**.
-- **Trọng trách:** Mang lại trải nghiệm Standalone Studio độc lập và tốc độ native mà không cần cài đặt VS Code hay mở trình duyệt web.
-
-### 5. 🗄️ `apps/vault` — *Storage & Campaign Workspace*
-Quản lý cấu trúc thư mục, tệp cấu hình Campaigns và đối chiếu Workflow & Browser.
-- Mặc định: `~/.automa/core/` (Production) và `~/.automa/core-dev/` (Dev Sandbox).
-
-### 6. 📁 `packages/` — *Shared Packages*
+### 3. 📁 `packages/` — *Shared Packages*
 Chứa các package dùng chung toàn hệ thống (`@automa/ui`, `@automa/types`, polyfills) được quản lý bởi Turborepo/pnpm workspaces.
+
 
 ---
 

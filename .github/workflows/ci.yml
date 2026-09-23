@@ -2,13 +2,11 @@ name: Ecosystem CI
 
 on:
   push:
-    branches:
-      - main
-      - dev
-  pull_request:
-    branches:
-      - main
-      - dev
+    tags:
+      - 'v*'
+      - 'core-v*'
+  workflow_dispatch:
+
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

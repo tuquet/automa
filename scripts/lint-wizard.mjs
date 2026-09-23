@@ -35,27 +35,11 @@ const LINT_TARGETS = [
     ],
   },
   {
-    id: 'vsce',
-    label: '🧩 Chỉ Lint Automa VSCE (VS Code Extension)',
-    hint: 'Chạy Biome check cho automa-vsce',
-    steps: [
-      { name: 'VSCE Lint', cmd: 'pnpm', args: ['-F', 'vscode-automa', 'run', 'lint'] },
-    ],
-  },
-  {
-    id: 'desk',
-    label: '🖥️  Chỉ Lint Automa Desk (Desktop Tauri App)',
-    hint: 'Chạy Biome check cho automa-desk',
-    steps: [
-      { name: 'Desk Lint', cmd: 'pnpm', args: ['-F', '@automa/desk', 'run', 'lint'] },
-    ],
-  },
-  {
     id: 'webe',
     label: '🌐 Chỉ Lint Automa Webe (Extension & Studio)',
-    hint: 'Chạy linter cho automa-webe',
+    hint: 'Chạy linter cho apps/webe',
     steps: [
-      { name: 'Webe Lint', cmd: 'pnpm', args: ['-F', 'automa', 'run', 'lint'] },
+      { name: 'Webe Lint', cmd: 'pnpm', args: ['-F', '@automa/webe', 'run', 'lint'] },
     ],
   },
   {

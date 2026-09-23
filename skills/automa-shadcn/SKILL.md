@@ -44,8 +44,6 @@ flowchart TD
     end
 
     subgraph Consumers ["Consumers (Applications)"]
-        Desk["apps/desk (Tauri Desktop App)"]
-        VSCE["apps/vsce (VS Code Webview)"]
         WebE["apps/webe (Web Studio Canvas - dist/studio)"]
     end
 
@@ -57,7 +55,7 @@ flowchart TD
 ## 2. 🛡️ Architectural Invariants
 
 ### Invariant 1: Zero Code Duplication
-- **Strict Monorepo Rule**: NEVER copy raw shadcn component files into application folders (`apps/webe`, `apps/desk`, `apps/vsce`).
+- **Strict Monorepo Rule**: NEVER copy raw shadcn component files into application folders (`apps/webe`).
 - All applications consume `@automa/ui` as a workspace dependency (`@automa/ui: workspace:*`).
 - To add a new component, run `pnpm run add:ui <name>` at root, and import from `@automa/ui`.
 

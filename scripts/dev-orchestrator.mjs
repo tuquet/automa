@@ -276,39 +276,16 @@ const TASKS = [
     url: 'http://127.0.0.1:8765/swagger-ui',
   },
   {
-    id: 'vsce',
-    name: 'VSCE',
-    label: '🧩 Automa VSCE',
-    hint: 'VS Code Extension TS compiler + Webview Watcher',
-    color: pc.green,
-    cmd: process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
-    args: ['-F', 'vscode-automa', 'run', 'watch'],
-    cwd: rootDir,
-    description: 'VS Code Extension TS & Webview Watcher',
-  },
-  {
     id: 'studio',
     name: 'STUDIO',
     label: '🎨 Automa Studio',
     hint: 'Vue Flow Standalone Canvas Editor (:8765/studio)',
     color: pc.magenta,
     cmd: process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
-    args: ['-F', 'automa', 'run', 'dev:studio'],
+    args: ['-F', '@automa/webe', 'run', 'dev:studio'],
     cwd: rootDir,
     description: 'Automa Studio Standalone Canvas',
     url: 'http://127.0.0.1:8765/studio/',
-  },
-  {
-    id: 'desk',
-    name: 'DESK',
-    label: '🖥️  Automa Desk',
-    hint: 'Tauri v2 + Vue 3.5 Desktop Application (port :1420)',
-    color: pc.blue,
-    cmd: process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
-    args: ['-F', '@automa/desk', 'run', 'dev'],
-    cwd: rootDir,
-    description: 'Automa Desk Tauri v2 Companion App',
-    url: 'http://localhost:1420',
   },
   {
     id: 'runner',
@@ -317,7 +294,7 @@ const TASKS = [
     hint: 'Headless CLI Runner build watcher',
     color: pc.yellow,
     cmd: process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
-    args: ['-F', 'automa', 'run', 'dev:runner'],
+    args: ['-F', '@automa/webe', 'run', 'dev:runner'],
     cwd: rootDir,
     description: 'Automa CLI Runner Watcher',
   },
@@ -347,7 +324,7 @@ function loadSavedSelection() {
   } catch (_) {
     // Ignore corrupt state
   }
-  return ['core', 'vsce']; // Default fallback
+  return ['core', 'studio']; // Default fallback
 }
 
 function saveSelection(selectedIds) {
@@ -381,8 +358,10 @@ async function resolveSelectedTasks() {
     if (isAll) return TASKS.map((t) => t.id);
     if (isLast) return loadSavedSelection();
     if (isCore) return ['core'];
-    if (isDesk) return ['core', 'desk'];
-    if (isVsce) return ['core', 'vsce'];
+    if (isDesk || isVsce) {
+      console.warn(pc.yellow('⚠️  apps/desk and apps/vsce were deprecated and consolidated into apps/webe Studio.'));
+      return ['core', 'studio'];
+    }
     if (isStudio) return ['core', 'studio'];
     if (isRunner) return ['core', 'runner'];
     if (isDocs) return ['docs'];

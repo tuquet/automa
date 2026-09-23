@@ -59,7 +59,7 @@
     {
       "label": "build:core",
       "type": "shell",
-      "command": "cargo build --manifest-path automa-core/Cargo.toml",
+      "command": "cargo build --manifest-path apps/core/Cargo.toml",
       "problemMatcher": ["$rustc"],
       "presentation": {
         "reveal": "silent",
@@ -67,10 +67,10 @@
       }
     },
     {
-      "label": "build:vsce",
+      "label": "build:studio",
       "type": "shell",
-      "command": "pnpm -F vscode-automa run build",
-      "problemMatcher": ["$tsup"],
+      "command": "pnpm run build:studio",
+      "problemMatcher": [],
       "presentation": {
         "reveal": "silent",
         "panel": "shared"

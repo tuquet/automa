@@ -6,6 +6,7 @@ export { default as ExecutionConsoleDrawer } from './ExecutionConsoleDrawer.vue'
 export { default as ItemActionToolbar } from './ItemActionToolbar.vue'
 export { default as RemoteVirtualSelect } from './RemoteVirtualSelect.vue'
 export { default as SettingsForm, type SettingsFormProps } from './SettingsForm.vue'
+export { default as TablePagination } from './TablePagination.vue'
 // Atomic Shadcn UI Primitives
 export * from './ui'
 export { default as VirtualDataTable } from './VirtualDataTable.vue'
