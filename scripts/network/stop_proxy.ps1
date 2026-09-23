@@ -1,13 +1,21 @@
 # ==============================================================================
 # Script: scripts/network/stop_proxy.ps1
-# Purpose: Stops local proxy processes (cloudflared & ssh socks).
+# Purpose: Stops local proxy processes (cloudflared & ssh socks on ports 2222 & 1080).
 # Usage:   .\scripts\network\stop_proxy.ps1
 # Encoding: Strict ASCII
 # ==============================================================================
 
-Write-Host "[*] Stopping Cloudflare Bridge and SSH SOCKS5 Proxy..." -ForegroundColor Yellow
+$ErrorActionPreference = 'SilentlyContinue'
 
-Get-Process -Name "cloudflared" -ErrorAction SilentlyContinue | Stop-Process -Force
-Get-Process -Name "ssh" -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -like "*1080*" } | Stop-Process -Force
-
-Write-Host "[OK] Proxy processes stopped." -ForegroundColor Green
+Write-Host "Stopping background proxy daemons..." -ForegroundColor Yellow
+$ports = @(2222, 1080)
+foreach ($port in $ports) {
+    $connections = Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue
+    if ($connections) {
+        foreach ($conn in $connections) {
+            Stop-Process -Id $conn.OwningProcess -Force -ErrorAction SilentlyContinue
+        }
+        Write-Host "[+] Port $port is released." -ForegroundColor Green
+    }
+}
+Write-Host "[OK] Proxy daemons stopped." -ForegroundColor Green
