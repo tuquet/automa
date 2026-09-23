@@ -59,7 +59,7 @@ flowchart TD
 
 ---
 
-## 🚀 User Quick Start (Scoop CLI)
+## 🚀 User & CLI Quick Start
 
 The easiest way to install and manage Tuquet Automa on Windows is via **Scoop**:
 
@@ -70,10 +70,22 @@ scoop bucket add tuquet https://github.com/tuquet/scoop-bucket
 # 2. Install Tuquet Automa Engine
 scoop install automa
 
-# 3. Launch System (Daemon + Web Studio)
-automa start
+# 3. Explore CLI commands & help options (-h / --help)
+automa -h
 
-# 4. Auto-update anytime
+# 4. Start Automa Core Daemon Server
+automa server -p 3000
+
+# 5. Check local daemon health & status
+automa status
+
+# 6. Launch developer browser extension setup
+automa setup-ext
+
+# 7. Export OpenAPI specification
+automa export-openapi -o openapi.json
+
+# 8. Auto-update anytime via Scoop
 scoop update automa
 ```
 
