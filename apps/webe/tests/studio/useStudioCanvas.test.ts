@@ -1,7 +1,7 @@
 import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ref } from 'vue';
-import { GraphLayoutService } from '../../src/services/graphLayout.service';
+import { GraphLayoutService } from '../../src/service/graphLayout.service';
 import { useStudioCanvas } from '../../src/studio/composables/useStudioCanvas';
 import { useStudioStore } from '../../src/studio/stores/useStudioStore';
 

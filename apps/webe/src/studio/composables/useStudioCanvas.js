@@ -4,7 +4,7 @@ import { customAlphabet } from 'nanoid';
 import cloneDeep from 'lodash.clonedeep';
 import DroppedNode from '@/utils/editor/DroppedNode';
 import EditorCommands from '@/utils/editor/EditorCommands';
-import { GraphLayoutService } from '@/services/graphLayout.service';
+import { GraphLayoutService } from '@/service/graphLayout.service';
 import { useStudioStore } from '../stores/useStudioStore';
 
 const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvwxyz', 7);
