@@ -1,78 +1,87 @@
-# 📖 Hướng Dẫn Sử Dụng Tuquet Automa Web Studio & Engine
+# 📖 Hướng Dẫn Sử Dụng Tuquet Automa Web Studio (`apps/webe`)
 
-Tài liệu hướng dẫn chi tiết dành cho người dùng về kiến trúc giao diện, các màn hình chức năng, nhóm công cụ sơ đồ khối và quy trình tạo kịch bản tự động hóa từ cơ bản đến nâng cao.
+Tài liệu hướng dẫn chi tiết dành cho người dùng về kiến trúc giao diện, danh sách các màn hình chức năng trong **Web Studio (`apps/webe`)**, nhóm công cụ sơ đồ khối và quy trình thiết kế kịch bản tự động hóa.
 
 ---
 
-## 🔌 1. Cơ Chế Liên Kết Backend - Frontend (Rust Core <-> Web Studio)
+## 🔌 1. Cơ Chế Liên Kết Backend Engine (`apps/core`) & Web Studio (`apps/webe`)
 
 Tuquet Automa hoạt động theo mô hình **Hybrid Architecture**:
-* **Backend Engine (`apps/core`)**: Rust Engine chạy ngầm dưới dạng Daemon tại `http://127.0.0.1:3000`. Nhiệm vụ:
+* **Rust Core Daemon (`apps/core`)**: Rust Engine chạy ngầm dưới dạng Daemon dịch vụ tại `http://127.0.0.1:3000`. Nhiệm vụ:
   * Quản lý tiến trình trình duyệt (Chrome/Edge/Brave) qua CDP (Chrome DevTools Protocol).
-  * Lưu trữ dữ liệu SQLite local / Supabase Cloud.
-  * Xử lý I/O hệ thống, bóc tách dữ liệu và chạy kịch bản tốc độ cao.
-* **Frontend (`apps/webe`)**: Web Studio UI & Chrome Extension (Manifest V3). Nhiệm vụ:
-  * Giao diện thiết kế kịch bản trực quan (Visual Canvas Editor).
-  * Kết nối 2 chiều với Rust Core qua **WebSocket (`/ws`)** và **REST API (`/api/v1`)**.
+  * Xử lý lưu trữ SQLite local / Supabase Cloud.
+  * Thực thi kịch bản tốc độ cao và I/O hệ thống.
+* **Web Studio App (`apps/webe`)**: Web App & MV3 Chrome Extension đóng vai trò Giao diện trực quan. Nhiệm vụ:
+  * Cung cấp giao diện thiết kế kịch bản sơ đồ khối (Visual Flowchart Editor).
+  * Kết nối 2 chiều với `apps/core` qua **WebSocket (`/ws`)** và **REST API (`/api/v1`)**.
   * Bắt sự kiện DOM trên trình duyệt và tự động tạo khối (Smart Recording).
 
 ```mermaid
 flowchart LR
-    STUDIO["Web Studio UI (Vue 3 Canvas)"] <-->|"REST API / WebSocket (/ws)"| DAEMON["Rust Core Daemon (127.0.0.1:3000)"]
-    EXT["Chrome Extension (DOM Injection)"] <-->|"Local WS Bridge"| DAEMON
+    STUDIO["Web Studio App (apps/webe)"] <-->|"REST API / WebSocket (/ws)"| DAEMON["Rust Core Daemon (apps/core @ 127.0.0.1:3000)"]
+    EXT["MV3 Extension Engine"] <-->|"Local WS Bridge"| DAEMON
     DAEMON --> CDP["CDP Browser Controller"]
     DAEMON --> DB[("SQLite / Supabase Storage")]
 ```
 
 ---
 
-## 🖥️ 2. Danh Sách Màn Hình Chức Năng (Screen Inventory)
+## 🖥️ 2. Danh Sách Màn Hình Chức Năng Chi Tiết Trong Web Studio (`apps/webe/src/newtab/pages`)
 
-### 2.1 Màn hình Dashboard Kịch bản (`Workflows Overview`)
-* **Chức năng**: Nơi quản lý toàn bộ các kịch bản tự động hóa đã tạo.
+Tất cả các màn hình dưới đây nằm hoàn toàn trong ứng dụng **Web Studio (`apps/webe`)**:
+
+### 2.1 Màn hình Dashboard Kịch bản (`apps/webe/src/newtab/pages/Workflows.vue`)
+* **Chức năng**: Màn hình trang chủ quản lý danh sách toàn bộ kịch bản tự động hóa (Workflows).
 * **Thao tác chính**:
   * Tạo kịch bản mới (New Workflow).
-  * Import / Export kịch bản dạng file `.json`.
-  * Tìm kiếm, phân loại kịch bản theo Thẻ (Tags).
-  * Bật/Tắt công tắc kích hoạt tự động (Active / Inactive).
+  * Import / Export kịch bản dưới dạng file `.json`.
+  * Lọc và tìm kiếm kịch bản theo Thẻ (Tags).
+  * Bật/tắt công tắc kích hoạt tự động chạy (Active / Inactive).
 
-### 2.2 Màn hình Visual Workflow Studio (Visual Canvas Editor)
-* **Chức năng**: Màn hình trung tâm để kéo-thả và thiết kế sơ đồ khối tự động hóa.
-* **Bố cục giao diện**:
-  * **Thanh Công cụ bên trái (Block Palette)**: Danh sách 50+ khối công cụ chia theo 6 nhóm chức năng.
-  * **Khung vẽ Sơ đồ (Canvas Editor)**: Nơi kéo các khối vào, nối đường liên kết (Connections) từ điểm Đuôi (Output) của khối này sang Đầu (Input) của khối khác.
-  * **Bảng Thuộc tính bên phải (Block Inspector)**: Chỉnh sửa thông số chi tiết của khối đang chọn (VD: URL, Selector CSS, Nội dung text, Thời gian delay).
-  * **Thanh Trạng thái Engine (Status Bar)**: Hiển thị kết nối `ONLINE / OFFLINE` với Rust Core Daemon (`127.0.0.1:3000`).
-  * **Nút Điều khiển (Toolbar Controls)**: Chạy thử kịch bản (Run), Tạm dừng (Pause), Đặt điểm dừng (Breakpoint), Debug từng bước.
+### 2.2 Màn hình Visual Canvas Editor (`apps/webe/src/newtab/pages/workflows/[id].vue`)
+* **Chức năng**: Màn hình trung tâm thiết kế sơ đồ khối tự động hóa bằng thao tác kéo-thả.
+* **Các thành phần giao diện chính**:
+  * **Block Palette (Sidebar bên trái)**: Danh sách 50+ khối công cụ được phân theo 6 nhóm chức năng.
+  * **Drawflow Canvas (Khung vẽ ở giữa)**: Nơi kéo khối vào, nối đường liên kết (Connections) từ điểm Đuôi (Output) của khối này sang Đầu (Input) của khối khác.
+  * **Block Inspector (Panel bên phải)**: Chỉnh sửa thông số chi tiết của khối đang chọn (VD: URL, Selector CSS, Nội dung text, Thời gian delay).
+  * **Studio Status Bar (Thanh trạng thái kết nối)**: Hiển thị kết nối `ONLINE / OFFLINE` với Rust Core Daemon (`apps/core` tại `127.0.0.1:3000`).
+  * **Toolbar Controls**: Nút Run (Chạy thử), Pause (Tạm dừng), Debug từng bước, Đặt mốc Breakpoint.
 
-### 2.3 Màn hình Trình ghi Tự động (Smart Web Recorder)
-* **Chức năng**: Giúp người dùng không cần gõ code hay kéo khối thủ công.
-* **Cách dùng**: Nhấp "Start Recording" -> Mở trang web mong muốn -> Thao tác tự nhiên (Click, gõ chữ, cuộn trang) -> Hệ thống tự động phân tích DOM và sinh ra sơ đồ khối tương ứng trên Studio Canvas.
+### 2.3 Màn hình Trình ghi Tự động (`apps/webe/src/newtab/pages/Recording.vue`)
+* **Chức năng**: Tự động tạo kịch bản dựa trên thao tác thực tế của người dùng.
+* **Cách sử dụng**: Nhấp "Start Recording" -> Mở trang web -> Thao tác tự nhiên (Click, điền chữ, cuộn trang) -> Web Studio tự động phân tích DOM và tạo ra sơ đồ khối tương ứng trên Canvas.
 
-### 2.4 Màn hình Nhật ký Lịch sử & Bóc tách Dữ liệu (Execution Logs & Data Viewer)
-* **Chức năng**: Xem lại chi tiết từng lần chạy kịch bản.
-* **Chi tiết thông tin**:
-  * **Step Timeline**: Thời gian chạy chính xác của từng khối.
-  * **Extracted Data Table**: Bảng dữ liệu cào/bóc tách được (có thể xuất ra CSV / Excel / JSON).
-  * **Variable State**: Giá trị các biến toàn cục tại thời điểm chạy.
-  * **Error Stacktrace**: Báo lỗi chi tiết nếu có khối bị hỏng (VD: không tìm thấy Selector).
-
-### 2.5 Màn hình Quản lý Lưu trữ (Storage, Tables & Credentials)
-* **Chức năng**: Quản lý kho dữ liệu phụ trợ cho kịch bản.
+### 2.4 Màn hình Nhật ký Execution Logs & Data Viewer (`apps/webe/src/newtab/pages/logs/[id].vue`)
+* **Chức năng**: Kiểm tra kết quả chi tiết của từng lần thực thi kịch bản.
 * **Bao gồm**:
-  * **Tables (Bảng dữ liệu)**: Tạo các cột dữ liệu mẫu để điền form tự động hoặc chứa dữ liệu thu thập được.
-  * **Variables (Biến toàn cục)**: Khởi tạo các biến dùng chung giữa nhiều workflow.
-  * **Credentials (Mật khẩu & Token)**: Lưu trữ mã hóa khóa API Key, mật khẩu tài khoản an toàn.
+  * **Step Timings**: Thời gian thực thi chính xác tính theo mili-giây của từng khối.
+  * **Data Viewer Table**: Bảng dữ liệu đã bóc tách/cào được (Hỗ trợ xuất file CSV, Excel, JSON).
+  * **Variable State**: Trạng thái và giá trị các biến toàn cục tại thời điểm chạy.
+  * **Error Stacktrace**: Báo lỗi chi tiết vị trí khối bị hỏng nếu kịch bản gặp sự cố.
 
-### 2.6 Màn hình Lịch trình Chạy Tự động (Schedules & Cronjob)
-* **Chức năng**: Đặt lịch cho kịch bản tự động chạy ngầm.
-* **Chế độ hẹn giờ**: Hẹn giờ theo định kỳ (mỗi N phút/giờ), Theo mốc thời gian cố định trong ngày, hoặc dạng biểu thức Cron.
+### 2.5 Màn hình Quản lý Lưu trữ Data (`apps/webe/src/newtab/pages/Storage.vue` & `pages/storage/Tables.vue`)
+* **Chức năng**: Quản lý cơ sở dữ liệu phụ trợ cho các kịch bản trong Studio.
+* **Bao gồm**:
+  * **Tables (Bảng dữ liệu)**: Tạo các bảng dữ liệu mẫu để điền form tự động hoặc chứa dữ liệu thu thập được.
+  * **Variables (Biến toàn cục)**: Khởi tạo các biến dùng chung giữa nhiều kịch bản.
+  * **Credentials (Mật khẩu & Token)**: Quản lý mã hóa an toàn các API Key, mật khẩu tài khoản.
+
+### 2.6 Màn hình Lập lịch Chạy Tự động (`apps/webe/src/newtab/pages/ScheduledWorkflow.vue`)
+* **Chức năng**: Cấu hình hẹn giờ và lịch trình chạy tự động ngầm cho các kịch bản.
+* **Chế độ**: Lặp lại định kỳ (mỗi N phút/giờ), Hẹn giờ mốc cố định trong ngày, hoặc dạng biểu thức Cron.
+
+### 2.7 Màn hình Cài đặt Hệ thống Studio (`apps/webe/src/newtab/pages/Settings.vue`)
+* **Chức năng**: Quản lý cấu hình chung cho ứng dụng Web Studio.
+* **Bao gồm**:
+  * Cấu hình URL địa chỉ kết nối `apps/core` Rust Daemon (Mặc định `http://127.0.0.1:3000`).
+  * Tùy chỉnh phím tắt thao tác nhanh (Shortcuts).
+  * Sao lưu & Khôi phục dữ liệu Web Studio (Backup / Restore).
 
 ---
 
 ## 🧩 3. Chi Tiết Các Nhóm Công Cụ (Block Palette Tool Groups)
 
-Trong màn hình **Visual Workflow Studio Canvas**, các khối được chia làm **6 Nhóm công cụ chính**:
+Trong màn hình **Visual Canvas Editor (`workflows/[id].vue`)**, các khối công cụ được chia làm **6 Nhóm chính**:
 
 | Nhóm Công Cụ | Tên Tiếng Anh | Khối Công Cụ Tiêu Biểu | Chức Năng |
 | :--- | :--- | :--- | :--- |
@@ -85,13 +94,13 @@ Trong màn hình **Visual Workflow Studio Canvas**, các khối được chia l�
 
 ---
 
-## 🛠️ 4. Quy Trình 4 Bước Tạo Workflow Đầu Tiên (Step-by-Step Guide)
+## 🛠️ 4. Quy Trình 4 Bước Tạo Workflow Đầu Tiên Trên Web Studio
 
-1. **Khởi động Engine**: Chạy lệnh `automa` trên Terminal (hoặc chạy file `automa.exe`). Biểu tượng trạng thái kết nối trên Web Studio đổi sang màu **Xanh (Online)**.
-2. **Tạo kịch bản mới**: Vào màn Dashboard -> Nhấp **New Workflow** -> Đặt tên cho kịch bản.
-3. **Thiết kế sơ đồ khối**:
+1. **Kết nối Engine**: Khởi động Daemon `apps/core` (lệnh `automa`). Trạng thái kết nối trên Web Studio báo màu **Xanh (Online)**.
+2. **Tạo kịch bản mới**: Tại màn Dashboard (`Workflows.vue`) -> Nhấp **New Workflow** -> Nhập tên kịch bản.
+3. **Thiết kế trên Canvas (`workflows/[id].vue`)**:
    * Kéo khối **New Tab** vào Canvas -> Nhập URL mục tiêu (VD: `https://example.com`).
-   * Kéo khối **Click Element** -> Dùng công cụ chọn phần tử (CSS Selector Picker) trỏ vào nút bấm trên trang.
-   * Kéo khối **Get Text** -> Trỏ vào vùng thông tin cần cào -> Gán cột lưu vào Table.
-   * Nối các dây nối (Connections) giữa các khối theo đúng thứ tự thực thi.
-4. **Chạy & Kiểm tra kết quả**: Nhấp nút **Run Workflow** -> Theo dõi tiến trình chạy thực tế trên trình duyệt và mở màn **Execution Logs** để tải file CSV kết quả.
+   * Kéo khối **Click Element** -> Dùng công cụ Selector Picker trỏ vào nút bấm trên trang.
+   * Kéo khối **Get Text** -> Trỏ vào vùng thông tin cần bóc tách -> Gán cột lưu vào Table.
+   * Nối đường liên kết (Connections) giữa các khối theo thứ tự thực thi.
+4. **Thực thi & Tải dữ liệu**: Nhấp nút **Run Workflow** -> Kiểm tra trình duyệt chạy và mở màn **Execution Logs (`logs/[id].vue`)** để tải file CSV kết quả.
