@@ -16,9 +16,6 @@
     "build:core": {
       "outputs": ["apps/core/target/release/automa-core*"]
     },
-    "build:webview": {
-      "outputs": ["dist/webview/**", "webview-ui/dist/**"]
-    },
     "lint": {
       "dependsOn": ["^build"]
     },

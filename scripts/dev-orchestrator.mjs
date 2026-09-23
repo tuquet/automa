@@ -164,7 +164,7 @@ function captureSentryDiagnostic(taskName, level, rawMessage) {
   let category = 'Runtime Exception';
   if (/panic/i.test(clean)) category = 'Rust Panic';
   else if (/TypeError|ReferenceError|SyntaxError/i.test(clean)) category = 'JavaScript Exception';
-  else if (/EADDRINUSE|address already in use/i.test(clean)) category = 'Port Collision (:8765/:1420/:5173)';
+  else if (/EADDRINUSE|address already in use/i.test(clean)) category = 'Port Collision (:8765/:5173/:8767)';
   else if (/Module not found|Cannot find module/i.test(clean)) category = 'Module Resolution';
   else if (/TS\d{4}|typecheck/i.test(clean)) category = 'TypeScript Compiler Diagnostic';
   else if (/build failed|compilation failed/i.test(clean)) category = 'Build / Compiler Failure';
@@ -344,8 +344,6 @@ const isDryRun = args.includes('--dry-run');
 const isAll = args.includes('--all');
 const isLast = args.includes('--last');
 const isCore = args.includes('--core');
-const isDesk = args.includes('--desk');
-const isVsce = args.includes('--vsce');
 const isStudio = args.includes('--studio');
 const isRunner = args.includes('--runner');
 const isDocs = args.includes('--docs');
@@ -358,10 +356,6 @@ async function resolveSelectedTasks() {
     if (isAll) return TASKS.map((t) => t.id);
     if (isLast) return loadSavedSelection();
     if (isCore) return ['core'];
-    if (isDesk || isVsce) {
-      console.warn(pc.yellow('⚠️  apps/desk and apps/vsce were deprecated and consolidated into apps/webe Studio.'));
-      return ['core', 'studio'];
-    }
     if (isStudio) return ['core', 'studio'];
     if (isRunner) return ['core', 'runner'];
     if (isDocs) return ['docs'];

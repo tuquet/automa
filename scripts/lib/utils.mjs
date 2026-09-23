@@ -127,7 +127,7 @@ export const CANONICAL_MODULES = [
     name: 'webextension-polyfill',
     type: 'package',
     lang: 'JavaScript',
-    description: 'WebExtension & VS Code compatibility polyfill',
+    description: 'WebExtension browser compatibility polyfill',
     path: path.join(packagesDir, 'webextension-polyfill'),
   },
 ];

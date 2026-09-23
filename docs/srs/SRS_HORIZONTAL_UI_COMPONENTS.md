@@ -56,38 +56,22 @@ flowchart TD
 * **Nghiêm cấm tuyệt đối**: Hardcode mã màu hex hoặc viết class ad-hoc `bg-[var(--automa-...)]` trực tiếp trong template Vue của linh kiện.
 * Mọi sự thích ứng đa nền tảng (VS Code 100+ themes, Desktop Dark/Light, Web Extension) được giải quyết triệt để tại tầng **CSS Variables** trong file [`packages/ui/src/styles/tokens.css`](../../packages/ui/src/styles/tokens.css).
 
-### Invariant 2: Tự Động Hóa 100% (Zero Manual Component Copying)
-* Không copy hoặc sửa tay các linh kiện nguyên tử từ upstream.
-* Mọi thao tác tải mới hoặc đồng bộ linh kiện phải thông qua **Script Đồng Bộ Chính Thức** [`scripts/sync-shadcn-components.mjs`](../../scripts/sync-shadcn-components.mjs).
+### Invariant 2: Quản Trị Linh Kiện Nội Bộ (Internal Component Ownership)
+* Toàn bộ 19 linh kiện nguyên tử đã được chuẩn hóa và thuộc quyền sở hữu trực tiếp của `@automa/ui`.
+* Trong giai đoạn bảo trì, các linh kiện được duy trì và mở rộng trực tiếp tại `packages/ui/src/components/ui/` kết hợp cùng tokens OKLCH tại `packages/ui/src/tokens.css`.
 
 ### Invariant 3: Không Lưu Trữ Duplicate Mirror Trong Source Control
 * Thư mục bản nháp hoặc mirror thô (`upstream-shadcn/`) không được phép commit vào repository.
-* Tính toàn vẹn của mã nguồn được bảo đảm thông qua lệnh **Đối Chiếu Ngược (Live Reverse Audit)** `pnpm run audit:ui`.
+* Tính toàn vẹn của mã nguồn được bảo đảm thông qua linter kiến trúc và `pnpm run lint`.
 
 ---
 
 ## 🛠️ 3. TẬP LỆNH QUẢN TRỊ DESIGN SYSTEM (CLI TOOLING)
 
-Hệ thống cung cấp 3 lệnh chuẩn hóa tại root `package.json`:
-
-### 1. Đồng Bộ Toàn Bộ Bộ Linh Kiện Cốt Lõi (`sync:ui`)
-```bash
-pnpm run sync:ui
-```
-* **Mô tả**: Tự động kết nối tới Registry chính thức của Shadcn-Vue, tải và cập nhật toàn bộ 19 linh kiện cốt lõi, chuẩn hóa đường dẫn import và tái sinh barrel export `src/components/ui/index.ts`.
-
-### 2. Tải Thêm Linh Kiện Mới Từ Registry (`add:ui`)
-```bash
-pnpm run add:ui <component_name_1> <component_name_2>
-# Ví dụ: pnpm run add:ui slider pin-input command
-```
-* **Mô tả**: Tự động bổ sung linh kiện mới vào `src/components/ui/<component_name>/` và re-export ra SDK package.
-
-### 3. Đối Chiếu Ngược Toàn Diện (Live Reverse Audit) (`audit:ui`)
-```bash
-pnpm run audit:ui
-```
-* **Mô tả**: Thực hiện quét ngược trực tiếp từng file local với bản gốc trên Registry HTTP của Shadcn-Vue, kiểm tra tỷ lệ khớp cấu trúc (Structural Parity) và phát hiện bất kỳ sai lệch nào.
+Hệ thống cung cấp các lệnh chuẩn hóa tại root `package.json`:
+* `pnpm run build`: Biên dịch toàn bộ thư viện UI và types.
+* `pnpm run lint`: Kiểm tra Biome, ESLint và quét Style Technical Debt (`scripts/lint-style-debt.mjs`).
+* `pnpm run test`: Chạy toàn bộ Vitest suite cho `@automa/ui`.
 
 ---
 

@@ -39,14 +39,6 @@ const SYNC_TARGETS = [
       { name: 'Export OpenAPI Spec', cmd: 'node', args: ['scripts/export-openapi.mjs'] },
     ],
   },
-  {
-    id: 'ui',
-    label: '🎨 Đồng bộ Shadcn-Vue UI Primitives',
-    hint: 'Tải và chuẩn hóa 19 components Shadcn vào @automa/ui',
-    steps: [
-      { name: 'Sync Shadcn UI', cmd: 'node', args: ['scripts/sync-shadcn-components.mjs'] },
-    ],
-  },
 ];
 
 const args = process.argv.slice(2);

@@ -79,7 +79,7 @@ if (isList) {
 
 async function resolveSuites() {
   if (args.includes('--core')) return SUITES.filter((s) => s.id === 'core');
-  if (args.includes('--webe') || args.includes('--vsce') || args.includes('--desk')) return SUITES.filter((s) => s.id === 'webe');
+  if (args.includes('--webe')) return SUITES.filter((s) => s.id === 'webe');
   if (args.includes('--ui')) return SUITES.filter((s) => s.id === 'ui');
   if (args.includes('--e2e')) return SUITES.filter((s) => s.id === 'e2e');
   if (args.includes('--schema')) return SUITES.filter((s) => s.id === 'schema');
