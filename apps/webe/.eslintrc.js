@@ -31,8 +31,9 @@ module.exports = {
   // check if imports actually resolve
   settings: {
     'import/resolver': {
-      webpack: {
-        config: './webpack.config.js',
+      node: {
+        extensions: ['.js', '.jsx', '.vue', '.json'],
+        paths: ['./src'],
       },
     },
     'import/ignore': ['@automa/types', 'node_modules'],
@@ -43,6 +44,8 @@ module.exports = {
     __IS_RUNNER__: true,
   },
   rules: {
+    'import/no-unresolved': 'off',
+    'import/extensions': 'off',
     camelcase: 'off',
     'no-await-in-loop': 'off',
     'no-alert': 'off',
@@ -61,13 +64,7 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
-    'import/extensions': [
-      'error',
-      'always',
-      {
-        js: 'never',
-      },
-    ],
+    'import/extensions': 'off',
     // disallow reassignment of function parameters
     // disallow parameter object manipulation except for specific exclusions
     'no-param-reassign': 'off',

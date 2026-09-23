@@ -1,6 +1,6 @@
-import { cacheApi, fetchApi } from '@/utils/api';
 import { defineStore } from 'pinia';
 import browser from 'webextension-polyfill';
+import { cacheApi, fetchApi } from '@/utils/api';
 
 export const useUserStore = defineStore('user', {
   state: () => ({

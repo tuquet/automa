@@ -89,11 +89,11 @@
   </div>
 </template>
 <script setup>
-import UiInput from '@/components/ui/UiInput.vue';
-import UiSelect from '@/components/ui/UiSelect.vue';
 import { reactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import VueSlider from 'vue-slider-component';
+import UiSelect from '@/components/ui/UiSelect.vue';
+import UiInput from '@/components/ui/UiInput.vue';
 import 'vue-slider-component/theme/default.css';
 import EditAutocomplete from './EditAutocomplete.vue';
 

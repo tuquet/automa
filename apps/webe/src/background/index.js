@@ -1,3 +1,5 @@
+import automa from '@business';
+import browser from 'webextension-polyfill';
 import { IS_FIREFOX } from '@/common/utils/constant';
 import BrowserAPIEventHandler from '@/service/browser-api/BrowserAPIEventHandler';
 import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
@@ -13,8 +15,6 @@ import { MessageListener } from '@/utils/message';
 // import { getDocumentCtx } from '@/content/handleSelector';
 import { automaRefDataStr } from '@/workflowEngine/helper';
 
-import automa from '@business';
-import browser from 'webextension-polyfill';
 import { registerWorkflowTrigger } from '../utils/workflowTrigger';
 import BackgroundEventsListeners from './BackgroundEventsListeners';
 import BackgroundOffscreen from './BackgroundOffscreen';

@@ -33,8 +33,8 @@
 
 <script setup>
 import { computed, onMounted, onUnmounted } from 'vue';
-import { useAutomaCoreHealth } from '@/composable/useAutomaCoreHealth';
 import { useToast } from 'vue-toastification';
+import { useAutomaCoreHealth } from '@/composable/useAutomaCoreHealth';
 
 const { state, checkHealth, initEventStream, closeEventStream } =
   useAutomaCoreHealth();

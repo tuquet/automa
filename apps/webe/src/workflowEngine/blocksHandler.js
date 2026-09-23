@@ -1,5 +1,5 @@
-import { toCamelCase } from '@/utils/helper';
 import customHandlers from '@business/blocks/backgroundHandler';
+import { toCamelCase } from '@/utils/helper';
 
 const handlerModules = import.meta.glob('./blocksHandler/*.js', {
   eager: true,

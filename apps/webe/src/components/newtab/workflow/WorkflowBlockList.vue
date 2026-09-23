@@ -104,8 +104,8 @@
   </ui-expand>
 </template>
 <script setup>
-import { getBlocks } from '@/utils/getSharedData';
 import { useI18n } from 'vue-i18n';
+import { getBlocks } from '@/utils/getSharedData';
 
 defineProps({
   category: {

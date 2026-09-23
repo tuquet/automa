@@ -1,7 +1,7 @@
+import { nanoid } from 'nanoid';
 import { isWhitespace, parseJSON } from '@/utils/helper';
 import decryptFlow, { getWorkflowPass } from '@/utils/decryptFlow';
 import convertWorkflowData from '@/utils/convertWorkflowData';
-import { nanoid } from 'nanoid';
 import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
 import WorkflowEngine from '../WorkflowEngine';
 

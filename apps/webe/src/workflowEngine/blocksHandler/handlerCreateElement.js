@@ -1,5 +1,5 @@
-import { MessageListener } from '@/utils/message';
 import { customAlphabet } from 'nanoid/non-secure';
+import { MessageListener } from '@/utils/message';
 import { automaRefDataStr, checkCSPAndInject } from '../helper';
 
 const nanoid = customAlphabet('1234567890abcdef', 5);

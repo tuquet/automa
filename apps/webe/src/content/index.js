@@ -1,10 +1,10 @@
-import findSelector from '@/lib/findSelector';
-import { isXPath, toCamelCase } from '@/utils/helper';
-import { sendMessage } from '@/utils/message';
 import automa from '@business';
 import cloneDeep from 'lodash.clonedeep';
 import { nanoid } from 'nanoid';
 import browser from 'webextension-polyfill';
+import { sendMessage } from '@/utils/message';
+import { isXPath, toCamelCase } from '@/utils/helper';
+import findSelector from '@/lib/findSelector';
 import blocksHandler from './blocksHandler';
 import initCommandPalette from './commandPalette';
 import handleSelector, {

@@ -83,6 +83,10 @@
   </ui-card>
 </template>
 <script setup>
+import { onMounted, reactive, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useToast } from 'vue-toastification';
+import browser from 'webextension-polyfill';
 import SharedWysiwyg from '@/components/newtab/shared/SharedWysiwyg.vue';
 import { useSharedWorkflowStore } from '@/stores/sharedWorkflow';
 import { useUserStore } from '@/stores/user';
@@ -90,10 +94,6 @@ import { fetchApi } from '@/utils/api';
 import { debounce, parseJSON } from '@/utils/helper';
 import { workflowCategories } from '@/utils/shared';
 import { convertWorkflow } from '@/utils/workflowData';
-import { onMounted, reactive, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useToast } from 'vue-toastification';
-import browser from 'webextension-polyfill';
 
 const props = defineProps({
   workflow: {

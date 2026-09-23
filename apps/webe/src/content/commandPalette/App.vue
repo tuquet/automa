@@ -173,11 +173,6 @@
   </div>
 </template>
 <script setup>
-import ParameterInputValue from '@/components/newtab/workflow/edit/Parameter/ParameterInputValue.vue';
-import ParameterJsonValue from '@/components/newtab/workflow/edit/Parameter/ParameterJsonValue.vue';
-import RendererWorkflowService from '@/service/renderer/RendererWorkflowService';
-import { debounce, parseJSON } from '@/utils/helper';
-import { sendMessage } from '@/utils/message';
 import workflowParameters from '@business/parameters';
 import cloneDeep from 'lodash.clonedeep';
 import {
@@ -191,6 +186,11 @@ import {
   watch,
 } from 'vue';
 import browser from 'webextension-polyfill';
+import ParameterInputValue from '@/components/newtab/workflow/edit/Parameter/ParameterInputValue.vue';
+import ParameterJsonValue from '@/components/newtab/workflow/edit/Parameter/ParameterJsonValue.vue';
+import RendererWorkflowService from '@/service/renderer/RendererWorkflowService';
+import { debounce, parseJSON } from '@/utils/helper';
+import { sendMessage } from '@/utils/message';
 
 const paramsList = {
   string: {

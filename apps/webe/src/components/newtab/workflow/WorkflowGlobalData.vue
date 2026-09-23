@@ -110,9 +110,9 @@
 </template>
 <script setup>
 import { ref, watch, defineAsyncComponent, onMounted } from 'vue';
+import { useToast } from 'vue-toastification';
 import { debounce } from '@/utils/helper';
 import { fetchStorageVariables } from '@/studio/services/storage.service';
-import { useToast } from 'vue-toastification';
 
 const SharedCodemirror = defineAsyncComponent(() =>
   import('@/components/newtab/shared/SharedCodemirror.vue')

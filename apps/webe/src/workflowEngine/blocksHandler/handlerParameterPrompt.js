@@ -1,7 +1,7 @@
+import { nanoid } from 'nanoid/non-secure';
 import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
 import { sleep } from '@/utils/helper';
 import { MessageListener } from '@/utils/message';
-import { nanoid } from 'nanoid/non-secure';
 import renderString from '../templating/renderString';
 
 function getInputtedParams(promptId, ms = 10000) {

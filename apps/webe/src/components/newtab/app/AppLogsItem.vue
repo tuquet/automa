@@ -69,6 +69,7 @@
 import { shallowReactive, shallowRef, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { deleteJobHistoryItem, getJobExecutionLogs } from '@automa/types/api';
 import dbLogs from '@/db/logs';
 import dayjs from '@/lib/dayjs';
 import { useWorkflowStore } from '@/stores/workflow';
@@ -76,7 +77,6 @@ import { countDuration, convertArrObjTo2DArr } from '@/utils/helper';
 import LogsTable from '@/components/newtab/logs/LogsTable.vue';
 import LogsHistory from '@/components/newtab/logs/LogsHistory.vue';
 import LogsVariables from '@/components/newtab/logs/LogsVariables.vue';
-import { deleteJobHistoryItem, getJobExecutionLogs } from '@automa/types/api';
 
 const props = defineProps({
   logId: {

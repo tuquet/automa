@@ -1,6 +1,6 @@
+import cloneDeep from 'lodash.clonedeep';
 import { parseJSON } from '@/utils/helper';
 import { conditionBuilder } from '@/utils/shared';
-import cloneDeep from 'lodash.clonedeep';
 import renderString from '../templating/renderString';
 
 const isBoolStr = (str) => {

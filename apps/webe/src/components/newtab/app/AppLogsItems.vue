@@ -139,6 +139,11 @@
 <script setup>
 import { shallowReactive, ref, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import {
+  getJobHistory,
+  deleteJobHistoryItem,
+  clearAllJobHistory,
+} from '@automa/types/api';
 import { useDialog } from '@/composable/dialog';
 import dbLogs from '@/db/logs';
 import { useWorkflowStore } from '@/stores/workflow';
@@ -147,11 +152,6 @@ import { useLiveQuery } from '@/composable/liveQuery';
 import LogsFilters from '@/components/newtab/logs/LogsFilters.vue';
 import LogsDataViewer from '@/components/newtab/logs/LogsDataViewer.vue';
 import SharedLogsTable from '@/components/newtab/shared/SharedLogsTable.vue';
-import {
-  getJobHistory,
-  deleteJobHistoryItem,
-  clearAllJobHistory,
-} from '@automa/types/api';
 
 const props = defineProps({
   workflowId: {

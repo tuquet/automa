@@ -80,13 +80,13 @@
   </div>
 </template>
 <script setup>
-import { useHasPermissions } from '@/composable/hasPermissions';
-import { useStore } from '@/stores/main';
 import cloneDeep from 'lodash.clonedeep';
 import { nanoid } from 'nanoid/non-secure';
 import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import browser from 'webextension-polyfill';
+import { useStore } from '@/stores/main';
+import { useHasPermissions } from '@/composable/hasPermissions';
 import EditAutocomplete from './EditAutocomplete.vue';
 
 const props = defineProps({

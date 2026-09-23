@@ -1,8 +1,8 @@
 import browser from 'webextension-polyfill';
-import { initElementSelector } from '@/newtab/utils/elementSelector';
 import dayjs from 'dayjs';
-import dbStorage from '@/db/storage';
 import cronParser from 'cron-parser';
+import { initElementSelector } from '@/newtab/utils/elementSelector';
+import dbStorage from '@/db/storage';
 import BackgroundUtils from './BackgroundUtils';
 import BackgroundWorkflowTriggers from './BackgroundWorkflowTriggers';
 

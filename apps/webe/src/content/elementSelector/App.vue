@@ -151,12 +151,6 @@
   />
 </template>
 <script setup>
-import SelectorElementsDetail from '@/components/content/selector/SelectorElementsDetail.vue';
-import SelectorQuery from '@/components/content/selector/SelectorQuery.vue';
-import SharedElementSelector from '@/components/content/shared/SharedElementSelector.vue';
-import findSelector from '@/lib/findSelector';
-import FindElement from '@/utils/FindElement';
-import { debounce } from '@/utils/helper';
 import {
   inject,
   onBeforeUnmount,
@@ -167,6 +161,12 @@ import {
   watch,
 } from 'vue';
 import browser from 'webextension-polyfill';
+import SelectorElementsDetail from '@/components/content/selector/SelectorElementsDetail.vue';
+import SelectorQuery from '@/components/content/selector/SelectorQuery.vue';
+import SharedElementSelector from '@/components/content/shared/SharedElementSelector.vue';
+import findSelector from '@/lib/findSelector';
+import FindElement from '@/utils/FindElement';
+import { debounce } from '@/utils/helper';
 import { getElementRect } from '../utils';
 import getSelectorOptions from './getSelectorOptions';
 

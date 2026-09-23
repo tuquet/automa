@@ -1,5 +1,5 @@
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
 import { nanoid } from 'nanoid';
+import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
 
 export default async function ({ data, id }) {
   const hasPermission = await BrowserAPIService.permissions.contains({

@@ -22,12 +22,12 @@
   </div>
 </template>
 <script setup>
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import SharedCard from '@/components/newtab/shared/SharedCard.vue';
 import RendererWorkflowService from '@/service/renderer/RendererWorkflowService';
 import { useSharedWorkflowStore } from '@/stores/sharedWorkflow';
 import { arraySorter } from '@/utils/helper';
-import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 

@@ -116,10 +116,10 @@
   </div>
 </template>
 <script setup>
-import { useDialog } from '@/composable/dialog';
-import { usePackageStore } from '@/stores/package';
 import { computed, inject, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useDialog } from '@/composable/dialog';
+import { usePackageStore } from '@/stores/package';
 
 defineEmits(['close']);
 

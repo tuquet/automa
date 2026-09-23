@@ -122,12 +122,12 @@
   </block-base>
 </template>
 <script setup>
-import { useBlockValidation } from '@/composable/blockValidation';
-import { useComponentId } from '@/composable/componentId';
-import { useEditorBlock } from '@/composable/editorBlock';
 import { Handle, Position } from '@vue-flow/core';
 import { computed, shallowReactive } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { useBlockValidation } from '@/composable/blockValidation';
+import { useComponentId } from '@/composable/componentId';
+import { useEditorBlock } from '@/composable/editorBlock';
 import BlockBase from './BlockBase.vue';
 
 const props = defineProps({

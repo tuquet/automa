@@ -71,6 +71,13 @@
   </div>
 </template>
 <script setup>
+import automa from '@business';
+import { useHead } from '@vueuse/head';
+import { compare } from 'compare-versions';
+import { reactive, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import browser from 'webextension-polyfill';
 import iconChrome from '@/assets/svg/logo.svg';
 import iconFirefox from '@/assets/svg/logoFirefox.svg';
 import AppLogs from '@/components/newtab/app/AppLogs.vue';
@@ -93,13 +100,6 @@ import { getUserWorkflows } from '@/utils/api';
 import dataMigration from '@/utils/dataMigration';
 import { MessageListener } from '@/utils/message';
 import { getWorkflowPermissions } from '@/utils/workflowData';
-import automa from '@business';
-import { useHead } from '@vueuse/head';
-import { compare } from 'compare-versions';
-import { reactive, ref, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
-import browser from 'webextension-polyfill';
 
 const iconElement = document.createElement('link');
 iconElement.rel = 'icon';

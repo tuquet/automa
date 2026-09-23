@@ -295,6 +295,27 @@
   </ui-modal>
 </template>
 <script setup>
+import { useHead } from '@vueuse/head';
+import dagre from 'dagre';
+import defu from 'defu';
+import cloneDeep from 'lodash.clonedeep';
+import { customAlphabet } from 'nanoid';
+import {
+  computed,
+  markRaw,
+  onBeforeUnmount,
+  onDeactivated,
+  onMounted,
+  provide,
+  reactive,
+  ref,
+  shallowRef,
+  watch,
+} from 'vue';
+import { useI18n } from 'vue-i18n';
+import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import browser from 'webextension-polyfill';
 import PackageDetails from '@/components/newtab/package/PackageDetails.vue';
 import PackageSettings from '@/components/newtab/package/PackageSettings.vue';
 import SharedPermissionsModal from '@/components/newtab/shared/SharedPermissionsModal.vue';
@@ -339,27 +360,6 @@ import { excludeGroupBlocks } from '@/utils/shared';
 import { getWorkflowPermissions } from '@/utils/workflowData';
 import { registerWorkflowTrigger } from '@/utils/workflowTrigger';
 import functions from '@/workflowEngine/templating/templatingFunctions';
-import { useHead } from '@vueuse/head';
-import dagre from 'dagre';
-import defu from 'defu';
-import cloneDeep from 'lodash.clonedeep';
-import { customAlphabet } from 'nanoid';
-import {
-  computed,
-  markRaw,
-  onBeforeUnmount,
-  onDeactivated,
-  onMounted,
-  provide,
-  reactive,
-  ref,
-  shallowRef,
-  watch,
-} from 'vue';
-import { useI18n } from 'vue-i18n';
-import { onBeforeRouteLeave, useRoute, useRouter } from 'vue-router';
-import { useToast } from 'vue-toastification';
-import browser from 'webextension-polyfill';
 
 const blocks = getBlocks();
 

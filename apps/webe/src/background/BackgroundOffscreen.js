@@ -1,8 +1,8 @@
 /* eslint-disable class-methods-use-this */
+import Browser from 'webextension-polyfill';
 import { IS_FIREFOX } from '@/common/utils/constant';
 import { sleep } from '@/utils/helper';
 import { MessageListener } from '@/utils/message';
-import Browser from 'webextension-polyfill';
 
 const OFFSCREEN_URL = Browser.runtime.getURL('/offscreen.html');
 

@@ -122,16 +122,16 @@
   </div>
 </template>
 <script setup>
+import automa from '@business';
+import workflowParameters from '@business/parameters';
+import { computed, onMounted, ref } from 'vue';
+import browser from 'webextension-polyfill';
 import ParameterCheckboxValue from '@/components/newtab/workflow/edit/Parameter/ParameterCheckboxValue.vue';
 import ParameterInputValue from '@/components/newtab/workflow/edit/Parameter/ParameterInputValue.vue';
 import ParameterJsonValue from '@/components/newtab/workflow/edit/Parameter/ParameterJsonValue.vue';
 import { useTheme } from '@/composable/theme';
 import dayjs from '@/lib/dayjs';
 import { parseJSON } from '@/utils/helper';
-import automa from '@business';
-import workflowParameters from '@business/parameters';
-import { computed, onMounted, ref } from 'vue';
-import browser from 'webextension-polyfill';
 
 const paramsList = {
   string: {

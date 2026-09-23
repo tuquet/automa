@@ -181,6 +181,10 @@
   </div>
 </template>
 <script setup>
+import automa from '@business';
+import { computed, onMounted, shallowReactive, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import browser from 'webextension-polyfill';
 import BackgroundUtils from '@/background/BackgroundUtils';
 import HomeTeamWorkflows from '@/components/popup/home/HomeTeamWorkflows.vue';
 import HomeWorkflowCard from '@/components/popup/home/HomeWorkflowCard.vue';
@@ -194,10 +198,6 @@ import { useTeamWorkflowStore } from '@/stores/teamWorkflow';
 import { useUserStore } from '@/stores/user';
 import { useWorkflowStore } from '@/stores/workflow';
 import { arraySorter, parseJSON } from '@/utils/helper';
-import automa from '@business';
-import { computed, onMounted, shallowReactive, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
-import browser from 'webextension-polyfill';
 
 const isMV2 = browser.runtime.getManifest().manifest_version === 2;
 

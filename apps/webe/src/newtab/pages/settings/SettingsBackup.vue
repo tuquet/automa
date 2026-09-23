@@ -205,15 +205,6 @@
   </ui-modal>
 </template>
 <script setup>
-import SettingsCloudBackup from '@/components/newtab/settings/SettingsCloudBackup.vue';
-import { useDialog } from '@/composable/dialog';
-import { useHasPermissions } from '@/composable/hasPermissions';
-import dbStorage from '@/db/storage';
-import { readableCron } from '@/lib/cronstrue';
-import { useUserStore } from '@/stores/user';
-import { useWorkflowStore } from '@/stores/workflow';
-import { getUserWorkflows } from '@/utils/api';
-import { fileSaver, openFilePicker, parseJSON } from '@/utils/helper';
 import cronParser from 'cron-parser';
 import AES from 'crypto-js/aes';
 import encUtf8 from 'crypto-js/enc-utf8';
@@ -223,6 +214,15 @@ import { onMounted, reactive, toRaw } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'vue-toastification';
 import browser from 'webextension-polyfill';
+import SettingsCloudBackup from '@/components/newtab/settings/SettingsCloudBackup.vue';
+import { useDialog } from '@/composable/dialog';
+import { useHasPermissions } from '@/composable/hasPermissions';
+import dbStorage from '@/db/storage';
+import { readableCron } from '@/lib/cronstrue';
+import { useUserStore } from '@/stores/user';
+import { useWorkflowStore } from '@/stores/workflow';
+import { getUserWorkflows } from '@/utils/api';
+import { fileSaver, openFilePicker, parseJSON } from '@/utils/helper';
 
 const BACKUP_SCHEDULES = {
   '0 8 * * *': 'Every day',

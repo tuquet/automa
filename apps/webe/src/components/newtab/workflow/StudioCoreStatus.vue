@@ -120,9 +120,9 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { useToast } from 'vue-toastification';
 import { useAutomaCoreHealth } from '@/composable/useAutomaCoreHealth';
 import { fetchSystemMetrics } from '@/studio/services/storage.service';
-import { useToast } from 'vue-toastification';
 
 const { state, checkHealth, initEventStream, closeEventStream } =
   useAutomaCoreHealth();

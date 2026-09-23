@@ -1,9 +1,9 @@
-import { objectHasKey, parseJSON } from '@/utils/helper';
-import { sendMessage } from '@/utils/message';
 import { openDB } from 'idb';
 import deepmerge from 'lodash.merge';
 import { nanoid } from 'nanoid';
 import browser from 'webextension-polyfill';
+import { sendMessage } from '@/utils/message';
+import { objectHasKey, parseJSON } from '@/utils/helper';
 
 function initWebListener() {
   const listeners = {};

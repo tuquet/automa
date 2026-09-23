@@ -66,8 +66,8 @@
   </ui-card>
 </template>
 <script setup>
-import dayjs from '@/lib/dayjs';
 import { shallowReactive } from 'vue';
+import dayjs from '@/lib/dayjs';
 
 const props = defineProps({
   disabled: Boolean,

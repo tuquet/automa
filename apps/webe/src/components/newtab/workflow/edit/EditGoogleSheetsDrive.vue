@@ -68,11 +68,11 @@
   </edit-google-sheets>
 </template>
 <script setup>
-import { useStore } from '@/stores/main';
-import { openGDrivePickerPopup } from '@/utils/openGDriveFilePicker';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'vue-toastification';
 import browser from 'webextension-polyfill';
+import { openGDrivePickerPopup } from '@/utils/openGDriveFilePicker';
+import { useStore } from '@/stores/main';
 import EditGoogleSheets from './EditGoogleSheets.vue';
 
 const props = defineProps({

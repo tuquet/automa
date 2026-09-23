@@ -154,21 +154,21 @@
 </template>
 
 <script setup>
-import UiFileInput from '@/components/ui/UiFileInput.vue';
-import UiInput from '@/components/ui/UiInput.vue';
-import UiPaginatedSelect from '@/components/ui/UiPaginatedSelect.vue';
-import { useWorkflowStore } from '@/stores/workflow';
-import {
-  getAPFlowList,
-  getAPWorkflowDetail,
-  postUploadFile,
-} from '@/utils/getAIPoweredInfo';
 import cloneDeep from 'lodash.clonedeep';
 import secrets from 'secrets';
 import { computed, shallowReactive, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import browser from 'webextension-polyfill';
+import {
+  getAPFlowList,
+  getAPWorkflowDetail,
+  postUploadFile,
+} from '@/utils/getAIPoweredInfo';
+import { useWorkflowStore } from '@/stores/workflow';
+import UiPaginatedSelect from '@/components/ui/UiPaginatedSelect.vue';
+import UiInput from '@/components/ui/UiInput.vue';
+import UiFileInput from '@/components/ui/UiFileInput.vue';
 import InsertWorkflowData from './InsertWorkflowData.vue';
 
 const toast = useToast();

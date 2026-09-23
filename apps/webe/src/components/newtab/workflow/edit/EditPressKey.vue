@@ -85,11 +85,11 @@
   </div>
 </template>
 <script setup>
+import { onBeforeUnmount, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import SharedElSelectorActions from '@/components/newtab/shared/SharedElSelectorActions.vue';
 import { keyDefinitions } from '@/utils/USKeyboardLayout';
 import { recordPressedKey } from '@/utils/recordKeys';
-import { onBeforeUnmount, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
 import EditAutocomplete from './EditAutocomplete.vue';
 
 const props = defineProps({

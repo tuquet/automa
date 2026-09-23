@@ -1,16 +1,16 @@
-import { fetchApi } from '@/utils/api';
-import firstWorkflows from '@/utils/firstWorkflows';
-import { tasks } from '@/utils/shared';
-import {
-  cleanWorkflowTriggers,
-  registerWorkflowTrigger,
-} from '@/utils/workflowTrigger';
 import dayjs from 'dayjs';
 import defu from 'defu';
 import deepmerge from 'lodash.merge';
 import { nanoid } from 'nanoid';
 import { defineStore } from 'pinia';
 import browser from 'webextension-polyfill';
+import {
+  cleanWorkflowTriggers,
+  registerWorkflowTrigger,
+} from '@/utils/workflowTrigger';
+import { tasks } from '@/utils/shared';
+import firstWorkflows from '@/utils/firstWorkflows';
+import { fetchApi } from '@/utils/api';
 import { useUserStore } from './user';
 
 const defaultWorkflow = (data = null, options = {}) => {

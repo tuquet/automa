@@ -330,6 +330,11 @@
   </ui-modal>
 </template>
 <script setup>
+import { computed, reactive } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import browser from 'webextension-polyfill';
 import WorkflowShareTeam from '@/components/newtab/workflow/WorkflowShareTeam.vue';
 import { useDialog } from '@/composable/dialog';
 import { useGroupTooltip } from '@/composable/groupTooltip';
@@ -348,11 +353,6 @@ import { tagColors } from '@/utils/shared';
 import getTriggerText from '@/utils/triggerText';
 import { convertWorkflow, exportWorkflow } from '@/utils/workflowData';
 import { registerWorkflowTrigger } from '@/utils/workflowTrigger';
-import { computed, reactive } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
-import { useToast } from 'vue-toastification';
-import browser from 'webextension-polyfill';
 
 const props = defineProps({
   isDataChanged: {

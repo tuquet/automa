@@ -172,13 +172,13 @@
   </div>
 </template>
 <script setup>
-import getFile, { readFileAsBase64 } from '@/utils/getFile';
 import Papa from 'papaparse';
 import { defineAsyncComponent, inject, ref, shallowReactive, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useToast } from 'vue-toastification';
 import browser from 'webextension-polyfill';
 import { read as readXlsx, utils as utilsXlsx } from 'xlsx';
+import getFile, { readFileAsBase64 } from '@/utils/getFile';
 import EditAutocomplete from './EditAutocomplete.vue';
 
 const SharedCodemirror = defineAsyncComponent(() =>

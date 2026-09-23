@@ -84,8 +84,8 @@
   </div>
 </template>
 <script setup>
-import { excludeGroupBlocks } from '@/utils/shared';
 import { inject, ref } from 'vue';
+import { excludeGroupBlocks } from '@/utils/shared';
 
 const props = defineProps({
   contentClass: {

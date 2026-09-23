@@ -30,9 +30,9 @@
   </ui-card>
 </template>
 <script setup>
-import dayjs from '@/lib/dayjs';
 import { computed, onMounted, shallowReactive } from 'vue';
 import browser from 'webextension-polyfill';
+import dayjs from '@/lib/dayjs';
 
 const modalTypes = {
   testimonial: {

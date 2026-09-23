@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash.clonedeep';
 import dbStorage from '@/db/storage';
 import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
 import {
@@ -7,7 +8,6 @@ import {
   sleep,
   toCamelCase,
 } from '@/utils/helper';
-import cloneDeep from 'lodash.clonedeep';
 import { convertData, waitTabLoaded } from './helper';
 import templating from './templating';
 import renderString from './templating/renderString';

@@ -149,6 +149,12 @@
   </ui-modal>
 </template>
 <script setup>
+import { useHead } from '@vueuse/head';
+import { computed, onMounted, reactive, shallowRef, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
+import browser from 'webextension-polyfill';
 import WorkflowEditor from '@/components/newtab/workflow/WorkflowEditor.vue';
 import WorkflowShare from '@/components/newtab/workflow/WorkflowShare.vue';
 import { useDialog } from '@/composable/dialog';
@@ -157,12 +163,6 @@ import { useSharedWorkflowStore } from '@/stores/sharedWorkflow';
 import { useWorkflowStore } from '@/stores/workflow';
 import { fetchApi } from '@/utils/api';
 import convertWorkflowData from '@/utils/convertWorkflowData';
-import { useHead } from '@vueuse/head';
-import { computed, onMounted, reactive, shallowRef, watch } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRoute, useRouter } from 'vue-router';
-import { useToast } from 'vue-toastification';
-import browser from 'webextension-polyfill';
 
 useGroupTooltip();
 

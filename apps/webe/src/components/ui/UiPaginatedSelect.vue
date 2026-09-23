@@ -88,8 +88,8 @@
 </template>
 
 <script setup>
-import { useComponentId } from '@/composable/componentId';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { useComponentId } from '@/composable/componentId';
 
 defineOptions({ name: 'UiPaginatedSelect' });
 

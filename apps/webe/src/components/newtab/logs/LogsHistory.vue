@@ -293,10 +293,6 @@
 </template>
 <script setup>
 /* eslint-disable no-use-before-define */
-import dayjs from '@/lib/dayjs';
-import { getBlocks } from '@/utils/getSharedData';
-import { countDuration, fileSaver } from '@/utils/helper';
-import { dataExportTypes, messageHasReferences } from '@/utils/shared';
 import objectPath from 'object-path';
 import Papa from 'papaparse';
 import {
@@ -306,6 +302,10 @@ import {
   shallowRef,
 } from 'vue';
 import { useI18n } from 'vue-i18n';
+import dayjs from '@/lib/dayjs';
+import { getBlocks } from '@/utils/getSharedData';
+import { countDuration, fileSaver } from '@/utils/helper';
+import { dataExportTypes, messageHasReferences } from '@/utils/shared';
 
 const SharedCodemirror = defineAsyncComponent(() =>
   import('@/components/newtab/shared/SharedCodemirror.vue')

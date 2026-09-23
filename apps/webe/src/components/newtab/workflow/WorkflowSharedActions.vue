@@ -92,10 +92,10 @@
   </ui-modal>
 </template>
 <script setup>
-import WorkflowShare from '@/components/newtab/workflow/WorkflowShare.vue';
-import { useGroupTooltip } from '@/composable/groupTooltip';
 import { shallowReactive } from 'vue';
 import { useI18n } from 'vue-i18n';
+import WorkflowShare from '@/components/newtab/workflow/WorkflowShare.vue';
+import { useGroupTooltip } from '@/composable/groupTooltip';
 
 const props = defineProps({
   workflow: {
