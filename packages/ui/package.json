@@ -33,6 +33,11 @@
       "import": "./dist/components/ui/index.js",
       "default": "./dist/components/ui/index.js"
     },
+    "./domain": {
+      "types": "./dist/components/domain/index.d.ts",
+      "import": "./dist/components/domain/index.js",
+      "default": "./dist/components/domain/index.js"
+    },
     "./utils": {
       "types": "./dist/lib/utils.d.ts",
       "import": "./dist/lib/utils.js",

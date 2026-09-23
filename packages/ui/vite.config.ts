@@ -24,6 +24,7 @@ export default defineConfig({
         'stores/index': resolve(__dirname, 'src/stores/index.ts'),
         'hooks/index': resolve(__dirname, 'src/hooks/index.ts'),
         'components/index': resolve(__dirname, 'src/components/index.ts'),
+        'components/domain/index': resolve(__dirname, 'src/components/domain/index.ts'),
         'plugin/index': resolve(__dirname, 'src/plugin/index.ts'),
       },
       formats: ['es'],

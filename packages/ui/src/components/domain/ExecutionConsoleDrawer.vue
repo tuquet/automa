@@ -2,7 +2,7 @@
 import { useVirtualizer } from '@tanstack/vue-virtual'
 import { ArrowDownToLine, Search, Terminal, Trash2, X } from 'lucide-vue-next'
 import { computed, nextTick, ref, watch } from 'vue'
-import { useExecutionStore } from '../stores/useExecutionStore'
+import { useExecutionStore } from '../../stores/useExecutionStore'
 
 defineOptions({
   name: 'ExecutionConsoleDrawer',

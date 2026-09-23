@@ -3,8 +3,8 @@ import type { AppSettings } from '@automa/types/api'
 import { getAppSettings, patchAppSettings } from '@automa/types/api'
 import { Check, Cpu, Globe, LayoutGrid, RefreshCw, Save, Sliders } from 'lucide-vue-next'
 import { computed, onMounted, reactive, ref } from 'vue'
+import { Badge, Input, Switch, Tabs, TabsContent, TabsList, TabsTrigger } from '../ui'
 import AutomaButton from './AutomaButton.vue'
-import { Badge, Input, Switch, Tabs, TabsContent, TabsList, TabsTrigger } from './ui'
 
 export interface SettingsFormProps {
   initialSettings?: AppSettings | null

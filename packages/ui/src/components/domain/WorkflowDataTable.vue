@@ -12,10 +12,10 @@ import {
   Upload,
 } from 'lucide-vue-next'
 import { computed, h, ref } from 'vue'
-import { useDeleteWorkflowMutation, useWorkflowsQuery } from '../hooks'
+import { useDeleteWorkflowMutation, useWorkflowsQuery } from '../../hooks'
+import { Badge, Button, Checkbox } from '../ui'
+import VirtualDataTable from '../VirtualDataTable.vue'
 import AutomaButton from './AutomaButton.vue'
-import { Badge, Button, Checkbox } from './ui'
-import VirtualDataTable from './VirtualDataTable.vue'
 
 defineOptions({
   name: 'WorkflowDataTable',

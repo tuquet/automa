@@ -8,13 +8,13 @@ import {
   useDeleteBrowserMutation,
   useStartBrowserMutation,
   useStopBrowserMutation,
-} from '../hooks'
-import { cn } from '../lib/utils'
-import { useBrowserStore } from '../stores'
+} from '../../hooks'
+import { cn } from '../../lib/utils'
+import { useBrowserStore } from '../../stores'
+import { Badge, Button, Checkbox } from '../ui'
+import VirtualDataTable from '../VirtualDataTable.vue'
 import AutomaButton from './AutomaButton.vue'
 import ConfirmationModal from './ConfirmationModal.vue'
-import { Badge, Button, Checkbox } from './ui'
-import VirtualDataTable from './VirtualDataTable.vue'
 
 defineOptions({
   name: 'BrowserDataTable',

@@ -1,14 +1,9 @@
-// Composite Automa Domain Components
-export { default as AutomaButton } from './AutomaButton.vue'
-export { default as BrowserDataTable } from './BrowserDataTable.vue'
-export { default as ConfirmationModal } from './ConfirmationModal.vue'
-export { default as ExecutionConsoleDrawer } from './ExecutionConsoleDrawer.vue'
-export { default as ItemActionToolbar } from './ItemActionToolbar.vue'
-export { default as RemoteVirtualSelect } from './RemoteVirtualSelect.vue'
-export { default as SettingsForm, type SettingsFormProps } from './SettingsForm.vue'
-export { default as TablePagination } from './TablePagination.vue'
 // Atomic Shadcn UI Primitives
+
+// Composite Automa Domain Components
+export * from './domain'
+export { default as TablePagination } from './TablePagination.vue'
 export * from './ui'
+// Generic Virtualized UI Helpers
 export { default as VirtualDataTable } from './VirtualDataTable.vue'
 export { default as VirtualScrollList } from './VirtualScrollList.vue'
-export { default as WorkflowDataTable } from './WorkflowDataTable.vue'

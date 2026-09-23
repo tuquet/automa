@@ -24,9 +24,9 @@ import {
   ZapOff,
 } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
-import { cn } from '../lib/utils'
+import { cn } from '../../lib/utils'
+import { Button, type ButtonVariants } from '../ui'
 import ConfirmationModal from './ConfirmationModal.vue'
-import { Button, type ButtonVariants } from './ui'
 
 defineOptions({
   name: 'AutomaButton',

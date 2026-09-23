@@ -19,8 +19,8 @@ import {
   useStorageTablesQuery,
   useStorageVariablesQuery,
   useWorkflowsQuery,
-} from '../hooks'
-import { useBrowserStore, useStorageStore } from '../stores'
+} from '../../hooks'
+import { useBrowserStore, useStorageStore } from '../../stores'
 
 defineOptions({
   name: 'RemoteVirtualSelect',
