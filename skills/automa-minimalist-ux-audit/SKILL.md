@@ -1,11 +1,11 @@
 ---
 name: automa-minimalist-ux-audit
-description: Product Designer & UX Writer standards for rigorous Minimalism UI/UX audits, elimination of redundant actions/CTAs, text audit and microcopy optimization (1-3 words max), visual noise reduction in data tables, and streamlined component layouts (Header -> Toolbar -> Content/Table -> Footer) across automa-webe, automa-desk, and automa-vsce. Activate when reviewing UI designs, modals/dialogs, data tables, toolbars, or refactoring frontend interfaces.
+description: Product Designer & UX Writer standards for rigorous Minimalism UI/UX audits, elimination of redundant actions/CTAs, text audit and microcopy optimization (1-3 words max), visual noise reduction in data tables, and streamlined component layouts (Header -> Toolbar -> Content/Table -> Footer) across automa-webe Studio and @automa/ui primitives. Activate when reviewing UI designs, modals/dialogs, data tables, toolbars, or refactoring frontend interfaces.
 ---
 
 # Automa Minimalist UI/UX Audit & Review Standard (`automa-minimalist-ux-audit`)
 
-A strict, pragmatic Product Design and UX Writing framework dedicated to **Radical Minimalism**, **Action De-duplication**, **Microcopy Density**, and **Visual Noise Reduction** across all Automa UI surfaces (`automa-webe`, `automa-desk`, `automa-vsce`).
+A strict, pragmatic Product Design and UX Writing framework dedicated to **Radical Minimalism**, **Action De-duplication**, **Microcopy Density**, and **Visual Noise Reduction** across all Automa UI surfaces (`apps/webe/src/studio` and `packages/ui`).
 
 ---
 

@@ -43,3 +43,8 @@ description: Quy tắc bắt buộc cho AI khi sinh mã (generate) JSON workflow
 ## 9. Auth/Cookies Bypass & Anti-Detection
 - **Browsers**: **BẮT BUỘC ƯU TIÊN SỬ DỤNG** `--browser <ID>` khi chạy CLI thay vì block giải captcha. Trình duyệt **CHẮC CHẮN SẼ** nạp thư mục `User Data Dir` chứa Cookies cũ, bypass Login.
 - **Headless Detection**: **BẮT BUỘC ĐẢM BẢO SỬ DỤNG** cờ `--headless=new` (không phải `--headless`) để giả lập đầy đủ pipeline render đồ họa, giúp fingerprint qua mặt Cloudflare.
+
+## 10. Node ID & Handle Invariants for VueFlow
+- **Node ID**: Mỗi block node **BẮT BUỘC SỬ DỤNG** ID dạng Nanoid duy nhất (tránh đặt tên thô sơ `n1`, `node_1`).
+- **Handles & Edges**: Dây nối **BẮT BUỘC KHAI BÁO** đầy đủ `sourceHandle` và `targetHandle` khớp với định nghĩa cổng của từng loại block.
+- **Workflow Schema**: Tham chiếu kiểu dữ liệu chuẩn từ `@automa/types` ([`packages/types`](../../packages/types)).

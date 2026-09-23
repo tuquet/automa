@@ -15,7 +15,7 @@ Architecture and implementation guide for the `apps/webe` application.
 
 ### 2 Reusable Build Artifacts:
 1. **Headless Execution Engine (`dist/cli-runner`)**:
-   - Build command: `pnpm run build:runner` (`webpack.runner.config.js`).
+   - Build command: `pnpm run build:runner` (`vite.runner.config.mjs`).
    - Sideloaded into headless/headful Chromium instances by `apps/core` to execute DOM automation blocks.
 2. **Standalone Web Studio Canvas (`dist/studio`)**:
    - Build command: `pnpm run build:studio` (`vite.studio.config.mjs`).
@@ -26,13 +26,14 @@ Architecture and implementation guide for the `apps/webe` application.
 ## 2. 🛡️ Architectural Invariants
 
 - **Zero Code Duplication**: Backend daemons (`apps/core`) MUST consume `dist/cli-runner` and `dist/studio`. Duplicating canvas/runner source code is FORBIDDEN.
-- **Native Browser APIs**: Uses native `chrome.*` / `browser.*` through `src/lib/browser-compat.js` (aliased via Webpack; never use `webextension-polyfill` directly).
+- **Workspace Dependencies**: Web Studio and Runner consume `@automa/ui` (`packages/ui`) and `@automa/types` (`packages/types`) via PNPM workspace dependencies.
+- **Native Browser APIs**: Uses native `chrome.*` / `browser.*` through `src/lib/browser-compat.js` (aliased via Vite in `vite.runner.config.mjs` and `vite.studio.config.mjs`; never use `webextension-polyfill` directly).
 - **MV3 Offscreen Resilience**:
   - Workflow execution in Chrome MV3 runs inside an Offscreen Document (`offscreen.html`).
   - Message dispatchers MUST implement retry-with-backoff (min 5 attempts, 300ms interval) to handle browser startup races on `about:blank`.
 - **Idempotent Background Worker**:
   - Guard SSE connection loops with singleton flags (`isWorkerDaemonInitialized`) to prevent duplicate task execution.
-- **Static Imports in Hot Paths**: Dynamic `await import(...)` in service worker entry points is FORBIDDEN to prevent Webpack chunk loading latency.
+- **Static Imports in Hot Paths**: Dynamic `await import(...)` in service worker entry points is FORBIDDEN to prevent chunk loading latency.
 
 ---
 

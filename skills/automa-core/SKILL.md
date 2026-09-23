@@ -74,7 +74,7 @@ pub async fn submit_job(
 ## 4. 🔧 Verification & SDK Sync
 
 1. **Rust Check & Tests**: Run `cargo test --manifest-path apps/core/Cargo.toml`.
-2. **Export OpenAPI Spec**: `cargo run --manifest-path apps/core/Cargo.toml --bin automa-core -- --export-openapi openapi.json`.
+2. **Export OpenAPI Spec**: `cargo run --manifest-path apps/core/Cargo.toml --bin automa-core -- --export-openapi packages/types/openapi.json`.
 3. **Synchronize Monorepo API SDK**: Run `pnpm run sync:api` at monorepo root.
 
 ---

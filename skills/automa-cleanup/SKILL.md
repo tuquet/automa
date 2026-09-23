@@ -14,7 +14,7 @@ Kỹ năng này BẮT BUỘC KÍCH HOẠT bất cứ khi nào người dùng yê
 ## 2. Danh Mục Bảo Vệ Tuyệt Đối (PROTECTED WHITELIST - CẤM XÓA)
 Khi thực hiện dọn dẹp, AI Agent **TUYỆT ĐỐI KHÔNG ĐƯỢC XÓA** các tệp sau dù chúng nằm trong danh sách gitignore hoặc có vẻ là file tạm:
 
-1. **`apps/webe/src/utils/getPassKey.js`**: Khóa mã hóa bắt buộc để Webpack biên dịch được `apps/webe` và runner.
+1. **`apps/webe/src/utils/getPassKey.js`**: Khóa mã hóa bắt buộc để Vite biên dịch được `apps/webe` và runner.
 2. **`.changeset/*.md`**: Lịch sử release phân tán của packages & apps, chỉ được tiêu thụ bởi lệnh release chính thức.
 3. **Các file cấu hình cốt lõi**: `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `turbo.json`, `Cargo.lock`, `Cargo.toml`, `.vscode/*`, `biome.json`.
 4. **Các tệp mã nguồn trong `src/`**: TUYỆT ĐỐI KHÔNG tự ý xóa nếu chưa dùng `grep_search` xác nhận không còn bất kỳ module nào import.
@@ -51,4 +51,4 @@ Liệt kê chi tiết danh sách file dự kiến xóa kèm dung lượng ước
    ```bash
    node scripts/test-all.mjs
    ```
-3. Xác nhận toàn bộ 3 test suites (`Rust Core`, `VS Code Vitest`, `OpenAPI Linter`) đều đạt `[✔ PASSED]` trước khi hoàn thành công việc.
+3. Xác nhận các test suites chính (`Webe Vitest`, `UI Vitest`, `OpenAPI Strict Linter`) đều đạt `[✔ PASSED]` trước khi hoàn thành công việc.

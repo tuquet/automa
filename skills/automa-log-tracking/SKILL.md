@@ -19,10 +19,10 @@ Diagnostic protocols for tracing real-time execution logs under `.automa/logs/`.
 ## 2. 🛡️ Service Prefix Index
 
 - `[CORE]`: Rust Core Daemon (`automa-core` Axum server on port `8765`).
-- `[DESK]`: Desktop Native App (`automa-desk` Tauri v2).
-- `[VSCE]`: VS Code Extension (`automa-vsce` Extension host).
-- `[STUDIO]` / `[RUNNER]`: Web Extension engine (`automa-webe`).
-- `[DOCS]`: Scalar OpenAPI documentation server.
+- `[STUDIO]`: Web Studio Standalone (`apps/webe` Vite dev server on port `5173`).
+- `[RUNNER]`: Web Extension headless runner (`apps/webe` Vite build watch).
+- `[DOCS]`: Scalar OpenAPI documentation server (`http://127.0.0.1:8767`).
+- `[DESK]` / `[VSCE]`: Host shells (Desktop Tauri v2 / VS Code Extension webview).
 
 ---
 

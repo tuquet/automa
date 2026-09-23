@@ -77,6 +77,7 @@ apps/vault/
 
 ---
 
-## 4. 🔧 Verification
+## 4. 🔧 Verification & Types Reference
 
-- Validate schemas using JSON Schema intellisense in VS Code or via `node scripts/enforce-strict-schema.mjs`.
+- **TypeScript DTOs**: Imported from `@automa/types` ([`packages/types`](../../packages/types)).
+- **Schema Validation**: Validate schemas via `node scripts/enforce-strict-schema.mjs`.
