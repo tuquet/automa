@@ -2,7 +2,7 @@
   <h1>Tuquet Automa Engine</h1>
   <p><strong>High-Performance Browser Automation & OS Orchestration Engine</strong></p>
 
-  [![Scoop Bucket](https://img.shields.io/badge/Scoop-tuquet%2Fscoop--bucket-blue.svg)](https://github.com/tuquet/scoop-bucket)
+  [![Scoop Bucket](https://img.shields.io/badge/Scoop-tuquet%2Ftuquet--scoop--bucket-blue.svg)](https://github.com/tuquet/tuquet-scoop-bucket)
   [![GitHub Release](https://img.shields.io/github/v/release/tuquet/tuquet-automa?color=brightgreen)](https://github.com/tuquet/tuquet-automa/releases)
   [![Rust](https://img.shields.io/badge/Rust-Axum%2FTokio-orange.svg)](https://www.rust-lang.org/)
   [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18.x-brightgreen.svg)](https://nodejs.org/)
@@ -68,7 +68,7 @@ If you use [Scoop](https://scoop.sh/):
 
 ```powershell
 # 1. Add the official Tuquet Scoop bucket
-scoop bucket add tuquet https://github.com/tuquet/scoop-bucket
+scoop bucket add tuquet https://github.com/tuquet/tuquet-scoop-bucket
 
 # 2. Install Automa Engine
 scoop install automa
