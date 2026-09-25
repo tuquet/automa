@@ -41,8 +41,8 @@ flowchart TD
 
 | Giai Đoạn | Tên Giai Đoạn | Trọng Tâm | Trạng Thái |
 | :--- | :--- | :--- | :---: |
-| **Giai đoạn 1** | **Core Base & Foundation Hardening** | Chuẩn hóa toàn bộ nền móng: UI Primitives, Remote Table, Rust Engine Core, Schema RBAC trên Supabase, Proxy hạ tầng. | 🔥 **TRỌNG TÂM HIỆN TẠI** |
-| **Giai đoạn 2** | **Cloud Integration & SaaS Sync** | Kết nối `automa` lên `tuquet-cloud` qua Supabase Adapter; ra mắt Web Dashboard quản trị SaaS; mở rộng components. | ⏳ Sắp thực hiện |
+| **Giai đoạn 1** | **Core Base & Foundation Hardening** | Chuẩn hóa toàn bộ nền móng: UI Primitives, Remote Table, Rust Engine Core, Schema RBAC trên Supabase, Proxy hạ tầng. | ✅ **100% HOÀN THÀNH** |
+| **Giai đoạn 2** | **Cloud Integration & SaaS Sync** | Kết nối `automa` lên `tuquet-cloud` qua Supabase Adapter; ra mắt Web Dashboard quản trị SaaS; mở rộng components. | 🔥 **ĐANG TRIỂN KHAI** |
 | **Giai đoạn 3** | **AI Agentic Automation & Distributed Grid** | AI Vision Autonomous Agent, CDP Selector tự phục hồi; điều phối hạm đội bot phân tán; thanh toán theo mức sử dụng. | 🔮 Tương lai |
 
 ---

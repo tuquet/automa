@@ -7,4 +7,5 @@ export * from './ws.js';
 export * from './button.js';
 export * from './select.js';
 export * from './store.js';
+export * from './cloud.js';
 export * from './api/index.js';
