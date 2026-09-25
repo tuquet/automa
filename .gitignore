@@ -49,3 +49,6 @@ automa-obsidian/
 automa-bruno/
 .vercel
 .env*
+
+# Local OS / Proxy Scripts (Managed at Global User Level)
+scripts/network/

@@ -40,8 +40,7 @@ flowchart TD
 ## 📅 2. Tổng Quan Lộ Trình 3 Giai Đoạn
 
 | Giai Đoạn | Tên Giai Đoạn | Trọng Tâm | Trạng Thái |
-| :--- | :--- | :--- | :---: |
-| **Giai đoạn 1** | **Core Base & Foundation Hardening** | Chuẩn hóa toàn bộ nền móng: UI Primitives, Remote Table, Rust Engine Core, Schema RBAC trên Supabase, Proxy hạ tầng. | ✅ **100% HOÀN THÀNH** |
+| **Giai đoạn 1** | **Core Base & Foundation Hardening** | Chuẩn hóa toàn bộ nền móng: UI Primitives, Remote Table, Rust Engine Core, Schema RBAC trên Supabase, Dev Tooling. | ✅ **100% HOÀN THÀNH** |
 | **Giai đoạn 2** | **Cloud Integration & SaaS Sync** | Kết nối `automa` lên `tuquet-cloud` qua Supabase Adapter; ra mắt Web Dashboard quản trị SaaS; mở rộng components. | 🔥 **ĐANG TRIỂN KHAI** |
 | **Giai đoạn 3** | **AI Agentic Automation & Distributed Grid** | AI Vision Autonomous Agent, CDP Selector tự phục hồi; điều phối hạm đội bot phân tán; thanh toán theo mức sử dụng. | 🔮 Tương lai |
 
@@ -83,7 +82,7 @@ flowchart TD
 - [x] **Quản Trị Trình Duyệt (Chromium Isolation):**
   - [x] Tải và quản lý binary Chromium độc lập theo kiến trúc Playwright (không quét hay chiếm quyền trình duyệt cá nhân của máy).
 - [x] **Phân Phối Ứng Dụng:** Đóng gói Scoop bucket (`automa.json`) và pre-built binary GitHub Releases.
-- [x] **Rust Core Toolchain:** Cấu hình và kích hoạt thành công toolchain GNU (`stable-x86_64-pc-windows-gnu`) cùng Scoop MinGW GCC và proxy SOCKS5, `cargo check` biên dịch thành công 100% `apps/core` (Finished dev profile in 2m 18s).
+- [x] **Rust Core Toolchain:** Cấu hình và kích hoạt thành công toolchain GNU (`stable-x86_64-pc-windows-gnu`) cùng Scoop MinGW GCC, `cargo check` biên dịch thành công 100% `apps/core` (Finished dev profile in 2m 18s).
 - [ ] **[Next Tasks - Core Base Focus]**:
   - [ ] **Local Daemon End-to-End Test:** Chạy kiểm thử tương tác thực tế giữa Axum Daemon (`127.0.0.1:8765`), Scalar API Server (`:8767`), và Web Studio Canvas (`apps/webe`).
   - [ ] **Shadcn Consumption Alignment:** Đảm bảo `apps/webe` tiêu thụ trực tiếp các linh kiện từ `@tuquet/vue-ui` và `@tuquet/vue-table` thay vì định nghĩa trùng lặp.
@@ -113,17 +112,12 @@ flowchart TD
 
 ---
 
-### 🌐 Workstream 1.4: Hạ Tầng Mạng, Proxy & Dev Tooling
-*Trách nhiệm: Đảm bảo môi trường làm việc thông suốt trong mọi điều kiện mạng bị chặn/tường lửa.*
+### 🛠️ Workstream 1.4: Dev Tooling & Chuẩn Hóa Môi Trường Làm Việc
+*Trách nhiệm: Đảm bảo môi trường phát triển và không gian làm việc nhất quán, chuẩn hóa.*
 
-- [x] **Bộ Scripts Mạng Chuẩn Hóa (`scripts/network/`):**
-  - [x] `configure_git_proxy.ps1`: Cấu hình repo local dùng proxy SOCKS5 (`127.0.0.1:1080`).
-  - [x] `ensure_proxy.ps1` & `ensure_proxy.bat`: Tự phục hồi Cloudflare Tunnel (`2222`) và SSH SOCKS5 (`1080`).
-  - [x] `stop_proxy.ps1` & `test_network.ps1`: Giải phóng cổng và chẩn đoán trạng thái kết nối.
-  - [x] Áp dụng nhất quán 100% trên `tuquet-lib`, `tuquet-automa`, `tuquet-cloud`, `scoop-bucket`, và `lotte-ecosystem`.
 - [x] **Chuẩn Hóa VS Code Workspace:**
   - [x] Cấu hình `"search.useIgnoreFiles": false` và danh sách loại trừ artifact trong `.vscode/settings.json`.
-  - [x] Tích hợp 5 tác vụ Network & Git Proxy tiêu chuẩn trong `.vscode/tasks.json`.
+  - [x] Tích hợp build and test tasks tiêu chuẩn trong `.vscode/tasks.json`.
 
 ---
 
