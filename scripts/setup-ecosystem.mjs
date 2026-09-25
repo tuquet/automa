@@ -80,23 +80,6 @@ async function runDoctor() {
         }
       },
     },
-    {
-      name: 'Cloudflare Tunnel CLI (cloudflared)',
-      check: () => {
-        try {
-          const userProfile = process.env.USERPROFILE || '';
-          const p1 = `${userProfile}/scoop/apps/cloudflared/current/cloudflared.exe`;
-          const p2 = `${userProfile}/scoop/shims/cloudflared.exe`;
-          if (fs.existsSync(p1) || fs.existsSync(p2)) {
-            return { pass: true, info: 'Installed via Scoop' };
-          }
-          const version = execSync('cloudflared --version', { encoding: 'utf-8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
-          return { pass: true, info: version };
-        } catch (_) {
-          return { pass: false, info: 'cloudflared not found (run pnpm run tunnel:setup).' };
-        }
-      },
-    },
   ];
 
   for (const c of checks) {
@@ -181,8 +164,7 @@ async function main() {
           { value: 'all', label: '🚀 Full Setup', hint: 'pnpm install + Rust & Cargo (Khuyến nghị)' },
           { value: 'rust', label: '🦀 Rust & Cargo Setup', hint: 'Cài đặt rustup cho apps/core' },
           { value: 'pnpm', label: '⚡ Dependencies Only', hint: 'Chỉ cài đặt pnpm install cho toàn bộ monorepo' },
-          { value: 'doctor', label: '🩺 Doctor & Diagnostics', hint: 'Kiểm tra phiên bản Node, pnpm, git, rust, cloudflared' },
-          { value: 'cloudflared', label: '🚇 Cloudflare Tunnel Setup', hint: 'Cài đặt cloudflared và kiểm tra kết nối' },
+          { value: 'doctor', label: '🩺 Doctor & Diagnostics', hint: 'Kiểm tra phiên bản Node, pnpm, git, rust' },
         ],
       });
 
@@ -200,8 +182,6 @@ async function main() {
   const start = Date.now();
   if (mode === 'doctor') {
     await runDoctor();
-  } else if (mode === 'cloudflared') {
-    await runProcess('node', ['scripts/tunnel-wizard.mjs', 'setup'], { cwd: rootDir });
   } else if (mode === 'pnpm') {
     await installDependencies(1, 1);
   } else if (mode === 'rust') {

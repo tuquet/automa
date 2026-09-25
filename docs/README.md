@@ -114,7 +114,6 @@ mindmap
 ## 📘 TRỤ CỘT 2: CẨM NANG KỸ THUẬT & QUY CHUẨN KỸ SƯ (ENGINEERING GUIDES)
 
 - 📘 [**OpenAPI Integration & Developer Guide (`docs/OPENAPI_INTEGRATION_GUIDE.md`)**](./OPENAPI_INTEGRATION_GUIDE.md): Cẩm nang lập trình kết nối Backend Axum Daemon bằng Typed SDK `@automa/types/api`, xử lý lỗi `ApiErrorResponse`, và 4 bộ Recipes luồng nghiệp vụ thực tế.
-- 🚇 [**Cloudflare SSH Tunnel & Git Relay Guide (`docs/CLOUDFLARE_TUNNEL_GIT_RELAY.md`)**](./CLOUDFLARE_TUNNEL_GIT_RELAY.md): Cẩm nang thiết lập hạ tầng mạng ngầm, tự động kết nối Cloudflare SSH Tunnel (`127.0.0.1:2222`) và quy trình Git Relay 1-Click an toàn vượt tường lửa.
 - 🛡️ [**Minimalist UI/UX Audit Log (`docs/MINIMALIST_UX_AUDIT_LOG.md`)**](./MINIMALIST_UX_AUDIT_LOG.md): Báo cáo kiểm toán giao diện 5 vòng định kỳ, quy tắc Rule of 1–3 Words, tối giản hóa Visual Noise và loại bỏ trùng lặp CTA.
 - 🧪 [**Ma Trận Kiểm Thử Toàn Hệ Sinh Thái (`docs/TEST_MATRIX.md`)**](./TEST_MATRIX.md): Báo cáo kim tự tháp kiểm thử 4 tầng toàn diện (Unit, E2E Vitest, Schema Linter, Unified Runner).
 

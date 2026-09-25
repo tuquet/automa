@@ -13,14 +13,13 @@ export const packagesDir = path.join(rootDir, 'packages');
 
 export const homeDir = process.env.USERPROFILE || process.env.HOME || '';
 
-// Process-Scoped Runtime Path Priority for Scoop (Node.js LTS & Current, pnpm, rustup/cargo, cloudflared)
+// Process-Scoped Runtime Path Priority for Scoop (Node.js LTS & Current, pnpm, rustup/cargo)
 export function refreshRuntimePaths() {
   if (process.platform !== 'win32' || !homeDir) return;
 
   const scoopPnpmDir = path.join(homeDir, 'scoop/apps/pnpm/current');
   const scoopNodeDir = path.join(homeDir, 'scoop/apps/nodejs/current');
   const scoopNodeLtsDir = path.join(homeDir, 'scoop/apps/nodejs-lts/current');
-  const scoopCloudflaredDir = path.join(homeDir, 'scoop/apps/cloudflared/current');
   const scoopShimsDir = path.join(homeDir, 'scoop/shims');
   const scoopCargoDir = path.join(homeDir, 'scoop/apps/rustup/current/.cargo/bin');
   const scoopPersistCargoDir = path.join(homeDir, 'scoop/persist/rustup/.cargo/bin');
@@ -31,7 +30,6 @@ export function refreshRuntimePaths() {
     scoopPnpmDir,
     scoopNodeDir,
     scoopNodeLtsDir,
-    scoopCloudflaredDir,
     scoopShimsDir,
     scoopCargoDir,
     scoopPersistCargoDir,

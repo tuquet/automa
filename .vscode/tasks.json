@@ -135,8 +135,7 @@
         { "value": "all", "label": "🚀 Full Setup (PNPM + Rust/Cargo)" },
         { "value": "rust", "label": "🦀 Rust & Cargo Setup (Scoop install rustup)" },
         { "value": "pnpm", "label": "⚡ Dependencies Only (pnpm install)" },
-        { "value": "doctor", "label": "🩺 Doctor & Diagnostics (Node, PNPM, Git, Rust, Tunnel)" },
-        { "value": "cloudflared", "label": "🚇 Cloudflare Tunnel Setup" }
+        { "value": "doctor", "label": "🩺 Doctor & Diagnostics (Node, PNPM, Git, Rust)" }
       ],
       "default": "all"
     }
