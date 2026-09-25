@@ -15,6 +15,19 @@ Welcome to **Tuquet Automa**, an open-source, high-performance browser automatio
 
 ---
 
+## ⚡ Why Tuquet Automa?
+
+Modern web automation requires a delicate balance between ease of use, execution speed, and account safety. Tuquet Automa solves this with a hybrid architecture:
+
+| Automation Challenge | The Tuquet Automa Solution | Business Outcome |
+| :--- | :--- | :--- |
+| **Complex Automation Coding**<br/>Traditional tools require software engineers to write and maintain brittle automation scripts. | **Visual Node-Graph Web Studio**<br/>Intuitive drag-and-drop workflow canvas allows non-technical operators to build and test automation flows visually. | **10x Faster Workflow Creation**<br/>Empower operations teams to build and modify automations without engineering bottlenecks. |
+| **High Memory & Fragile Node Daemons**<br/>Running multiple Electron or Node.js browser runners exhausts workstation CPU and memory. | **Lightweight Rust Native Engine**<br/>Native Axum daemon compiled directly for Windows/Linux with near-zero memory footprint and raw CDP speed. | **Maximum Workstation Density**<br/>Run multiple concurrent automation tasks smoothly on standard hardware. |
+| **Browser Fingerprint & Identity Leaks**<br/>Using personal host browsers leaks cookies, extensions, and hardware IDs across accounts. | **Isolated Standalone Chromium Runtimes**<br/>Dedicated Chromium binaries managed in isolated directories ensure zero identity bleed between accounts. | **Enterprise Account Safety**<br/>Protect critical multi-account workflows against bans and fingerprint correlation. |
+| **Vendor Lock-in & Cloud Latency**<br/>Pure cloud automation platforms introduce network lag and risk business halt during outages. | **Offline-First with Seamless Cloud Sync**<br/>Executes reliably against local SQLite storage, with optional turnkey synchronization to Tuquet Cloud. | **100% Operational Resilience**<br/>Automations keep running locally even when external network connectivity drops. |
+
+---
+
 ## 🧭 Monorepo Structure
 
 ```text
