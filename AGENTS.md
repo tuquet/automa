@@ -22,5 +22,5 @@
   - When renaming or moving monorepo package directories on Windows, background Turborepo daemons may lock `.turbo` handles. Always stop active tasks and remove `.turbo` caches before directory restructuring.
 
 ## 4. Skills Management: Workspace Isolation Rule
-- **Strictly Local Skills:** All skills for this project MUST reside in `C:\Users\ndtu6\Repository\tuquet-automa\skills\`.
+- **Strictly Local Skills:** All skills for this project MUST reside in `skills/`.
 - **Zero Global Skills:** NEVER declare, generate, or move project-specific skills to the machine global directory (`~/.gemini/config/skills`).
