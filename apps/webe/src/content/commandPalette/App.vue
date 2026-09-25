@@ -186,8 +186,8 @@ import {
   watch,
 } from 'vue';
 import browser from 'webextension-polyfill';
-import ParameterInputValue from '@/components/newtab/workflow/edit/Parameter/ParameterInputValue.vue';
-import ParameterJsonValue from '@/components/newtab/workflow/edit/Parameter/ParameterJsonValue.vue';
+import ParameterInputValue from '@/components/workflow/edit/Parameter/ParameterInputValue.vue';
+import ParameterJsonValue from '@/components/workflow/edit/Parameter/ParameterJsonValue.vue';
 import RendererWorkflowService from '@/service/renderer/RendererWorkflowService';
 import { debounce, parseJSON } from '@/utils/helper';
 import { sendMessage } from '@/utils/message';

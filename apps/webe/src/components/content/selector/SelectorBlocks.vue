@@ -36,9 +36,9 @@
 <script setup>
 import { shallowReactive } from 'vue';
 import { tasks } from '@/utils/shared';
-import EditForms from '@/components/newtab/workflow/edit/EditForms.vue';
-import EditTriggerEvent from '@/components/newtab/workflow/edit/EditTriggerEvent.vue';
-import EditScrollElement from '@/components/newtab/workflow/edit/EditScrollElement.vue';
+import EditForms from '@/components/workflow/edit/EditForms.vue';
+import EditTriggerEvent from '@/components/workflow/edit/EditTriggerEvent.vue';
+import EditScrollElement from '@/components/workflow/edit/EditScrollElement.vue';
 import handleForms from '@/content/blocksHandler/handlerForms';
 import handleGetText from '@/content/blocksHandler/handlerGetText';
 import handleEventClick from '@/content/blocksHandler/handlerEventClick';

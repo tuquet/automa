@@ -339,13 +339,13 @@ import {
 import { Crosshair, Redo2, Undo2, Wand2, Settings2 } from 'lucide-vue-next';
 import defu from 'defu';
 
-import WorkflowEditor from '@/components/newtab/workflow/WorkflowEditor.vue';
-import WorkflowEditBlock from '@/components/newtab/workflow/WorkflowEditBlock.vue';
-import WorkflowDetailsCard from '@/components/newtab/workflow/WorkflowDetailsCard.vue';
-import WorkflowSettings from '@/components/newtab/workflow/WorkflowSettings.vue';
-import EditorLocalCtxMenu from '@/components/newtab/workflow/editor/EditorLocalCtxMenu.vue';
-import EditorDebugging from '@/components/newtab/workflow/editor/EditorDebugging.vue';
-import StudioCoreStatus from '@/components/newtab/workflow/StudioCoreStatus.vue';
+import WorkflowEditor from '@/components/workflow/WorkflowEditor.vue';
+import WorkflowEditBlock from '@/components/workflow/WorkflowEditBlock.vue';
+import WorkflowDetailsCard from '@/components/workflow/WorkflowDetailsCard.vue';
+import WorkflowSettings from '@/components/workflow/WorkflowSettings.vue';
+import EditorLocalCtxMenu from '@/components/workflow/editor/EditorLocalCtxMenu.vue';
+import EditorDebugging from '@/components/workflow/editor/EditorDebugging.vue';
+import StudioCoreStatus from './components/StudioCoreStatus.vue';
 import AppLogs from '@/components/newtab/app/AppLogs.vue';
 
 import { useCommandManager } from '@/composable/commandManager';

@@ -89,14 +89,14 @@ import { ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { nanoid } from 'nanoid/non-secure';
 import cloneDeep from 'lodash.clonedeep';
-import TriggerDate from '../workflow/edit/Trigger/TriggerDate.vue';
-import TriggerCronJob from '../workflow/edit/Trigger/TriggerCronJob.vue';
-import TriggerInterval from '../workflow/edit/Trigger/TriggerInterval.vue';
-import TriggerVisitWeb from '../workflow/edit/Trigger/TriggerVisitWeb.vue';
-import TriggerContextMenu from '../workflow/edit/Trigger/TriggerContextMenu.vue';
-import TriggerSpecificDay from '../workflow/edit/Trigger/TriggerSpecificDay.vue';
-// import TriggerElementChange from '../workflow/edit/Trigger/TriggerElementChange.vue';
-import TriggerKeyboardShortcut from '../workflow/edit/Trigger/TriggerKeyboardShortcut.vue';
+import TriggerDate from '@/components/workflow/edit/Trigger/TriggerDate.vue';
+import TriggerCronJob from '@/components/workflow/edit/Trigger/TriggerCronJob.vue';
+import TriggerInterval from '@/components/workflow/edit/Trigger/TriggerInterval.vue';
+import TriggerVisitWeb from '@/components/workflow/edit/Trigger/TriggerVisitWeb.vue';
+import TriggerContextMenu from '@/components/workflow/edit/Trigger/TriggerContextMenu.vue';
+import TriggerSpecificDay from '@/components/workflow/edit/Trigger/TriggerSpecificDay.vue';
+// import TriggerElementChange from '@/components/workflow/edit/Trigger/TriggerElementChange.vue';
+import TriggerKeyboardShortcut from '@/components/workflow/edit/Trigger/TriggerKeyboardShortcut.vue';
 
 defineOptions({ name: 'SharedWorkflowTriggers' });
 

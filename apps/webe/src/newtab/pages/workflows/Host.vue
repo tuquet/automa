@@ -118,7 +118,7 @@ import { useWorkflowStore } from '@/stores/workflow';
 import RendererWorkflowService from '@/service/renderer/RendererWorkflowService';
 import { useHostedWorkflowStore } from '@/stores/hostedWorkflow';
 import getTriggerText from '@/utils/triggerText';
-import WorkflowEditor from '@/components/newtab/workflow/WorkflowEditor.vue';
+import WorkflowEditor from '@/components/workflow/WorkflowEditor.vue';
 import emitter from '@/lib/mitt';
 
 useGroupTooltip();

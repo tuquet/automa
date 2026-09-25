@@ -155,7 +155,7 @@ import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import browser from 'webextension-polyfill';
-import WorkflowEditor from '@/components/newtab/workflow/WorkflowEditor.vue';
+import WorkflowEditor from '@/components/workflow/WorkflowEditor.vue';
 import WorkflowShare from '@/components/newtab/workflow/WorkflowShare.vue';
 import { useDialog } from '@/composable/dialog';
 import { useGroupTooltip } from '@/composable/groupTooltip';

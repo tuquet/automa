@@ -157,7 +157,7 @@ import {
   automaFuncsSnippets,
   completeFromGlobalScope,
 } from '@/utils/codeEditorAutocomplete';
-import { store } from '../../settings/jsBlockWrap';
+import { store } from '@/components/newtab/settings/jsBlockWrap';
 
 function modifyWhiteSpace() {
   if (store.whiteSpace === 'pre') {

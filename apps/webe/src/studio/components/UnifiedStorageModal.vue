@@ -93,7 +93,7 @@
 import { ref, watch } from 'vue';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@automa/ui';
 import { Database, FileCode, KeyRound, Table } from 'lucide-vue-next';
-import WorkflowGlobalData from '@/components/newtab/workflow/WorkflowGlobalData.vue';
+import WorkflowGlobalData from '@/components/workflow/WorkflowGlobalData.vue';
 import StorageTablesTab from './StorageTablesTab.vue';
 import StorageSecretsTab from './StorageSecretsTab.vue';
 

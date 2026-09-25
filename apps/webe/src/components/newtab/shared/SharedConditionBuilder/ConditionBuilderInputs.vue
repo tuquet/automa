@@ -111,7 +111,7 @@ import {
 } from '@/utils/codeEditorAutocomplete';
 import { conditionBuilder } from '@/utils/shared';
 import SharedElSelectorActions from '@/components/newtab/shared/SharedElSelectorActions.vue';
-import EditAutocomplete from '../../workflow/edit/EditAutocomplete.vue';
+import EditAutocomplete from '@/components/workflow/edit/EditAutocomplete.vue';
 
 const SharedCodemirror = defineAsyncComponent(() =>
   import('../SharedCodemirror.vue')
