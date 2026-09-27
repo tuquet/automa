@@ -1,0 +1,87 @@
+.vue-flow__minimap {
+  @apply rounded-lg bg-card border border-border shadow-md overflow-hidden;
+}
+
+.vue-flow__minimap-mask {
+  fill: rgba(234, 88, 12, 0.15);
+  stroke: rgba(234, 88, 12, 0.6);
+  stroke-width: 1.5;
+}
+
+.vue-flow__node {
+  & > div {
+    @apply rounded-lg transition;
+  }
+  &.selected .block-base__content {
+    @apply ring-2 ring-accent;
+  }
+  &:hover {
+    .block-menu-container {
+      display: block;
+    }
+  }
+
+  &.vue-flow__node-BlockGroup2 {
+    z-index: 0 !important;
+  }
+
+  .vue-flow__handle {
+    @apply h-4 w-4 rounded-full border-0;
+    &.target {
+      @apply bg-accent -ml-4;
+    }
+    &.source {
+      border-width: 3px;
+      @apply border-accent -mr-4 bg-background;
+    }
+  }
+}
+
+.vue-flow {
+  background-color: transparent;
+  &.disabled {
+    .vue-flow__handle {
+      pointer-events: none;
+    }
+  }
+  svg g.connected-edges path {
+    stroke: theme('colors.primary');
+  }
+}
+
+.vue-flow__background {
+  background-color: transparent;
+}
+
+.vue-flow__background pattern circle {
+  fill: var(--border, #cbd5e1);
+}
+
+.dark .vue-flow__background pattern circle {
+  fill: var(--border, #27272a);
+}
+
+.vue-flow__edge {
+  cursor: pointer;
+  &.selected .vue-flow__edge-path {
+    stroke: theme('colors.green.300');
+  }
+}
+
+.dark .vue-flow__edge-path:hover {
+  stroke: theme('colors.yellow.400');
+}
+.vue-flow__edge-path {
+  stroke: theme('colors.accent');
+  stroke-width: 4;
+  transition: stroke 100ms ease;
+  &:hover {
+    stroke: theme('colors.yellow.500');
+  }
+}
+
+.animate-blocks {
+  .vue-flow__node {
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
