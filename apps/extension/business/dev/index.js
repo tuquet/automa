@@ -69,20 +69,42 @@ async function initWorkerDaemon(message) {
   async function connect() {
     let browserId = 'daemon_worker';
     let daemonBaseUrl = DAEMON_BASE_URL;
+    let hasDaemonConfig = false;
+
     try {
-      const configRes = await fetch(chrome.runtime.getURL('daemon.json'));
-      if (configRes.ok) {
-        const config = await configRes.json();
-        if (config.browserId) browserId = config.browserId;
-        if (config.baseUrl) {
-          daemonBaseUrl = config.baseUrl;
-        } else if (config.port) {
-          daemonBaseUrl = `http://127.0.0.1:${config.port}`;
+      if (typeof chrome !== 'undefined' && chrome.runtime?.getURL) {
+        const configRes = await fetch(chrome.runtime.getURL('daemon.json'));
+        if (configRes.ok) {
+          hasDaemonConfig = true;
+          const config = await configRes.json();
+          if (config.browserId) browserId = config.browserId;
+          if (config.baseUrl) {
+            daemonBaseUrl = config.baseUrl;
+          } else if (config.port) {
+            daemonBaseUrl = `http://127.0.0.1:${config.port}`;
+          }
+          currentDaemonBaseUrl = daemonBaseUrl;
         }
-        currentDaemonBaseUrl = daemonBaseUrl;
       }
     } catch (_) {
       // Ignored
+    }
+
+    if (!hasDaemonConfig) {
+      let isDaemonExplicitlyEnabled = false;
+      try {
+        if (typeof chrome !== 'undefined' && chrome.storage?.local?.get) {
+          const res = await chrome.storage.local.get('daemonEnabled');
+          if (res?.daemonEnabled) isDaemonExplicitlyEnabled = true;
+        }
+      } catch (_) {}
+
+      if (!isDaemonExplicitlyEnabled) {
+        console.log(
+          '[Automa Extension] Running in standalone browser mode (no daemon.json).'
+        );
+        return;
+      }
     }
 
     try {
