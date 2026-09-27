@@ -15,6 +15,8 @@
 // We prefer `browser` (Firefox) when available, fall back to `chrome` (Chrome/Edge/Brave).
 const api = (typeof globalThis.browser !== 'undefined' && globalThis.browser?.runtime?.id)
   ? globalThis.browser
-  : (typeof globalThis.chrome !== 'undefined' ? globalThis.chrome : undefined);
+  : ((typeof globalThis.chrome !== 'undefined' && globalThis.chrome)
+    ? globalThis.chrome
+    : (globalThis.browser || {}));
 
 export default api;

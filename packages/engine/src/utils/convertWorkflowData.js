@@ -1,4 +1,4 @@
-import { parseJSON, findTriggerBlock } from './helper';
+import { parseJSON, findTriggerBlock } from './helper.js';
 
 const getFlowData = (workflow) => {
   if (!workflow) return {};

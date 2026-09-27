@@ -1,1 +1,1 @@
-export const IS_FIREFOX = BROWSER_TYPE === 'firefox';
+export const IS_FIREFOX = typeof BROWSER_TYPE !== 'undefined' ? BROWSER_TYPE === 'firefox' : false;

@@ -46,6 +46,10 @@
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.1/xlsx-0.19.1.tgz"
   },
   "scripts": {
-    "build": "echo 'No build step required for ESM engine'"
+    "build": "echo 'No build step required for ESM engine'",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.10"
   }
 }

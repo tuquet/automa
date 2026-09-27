@@ -14,6 +14,9 @@ function killProcessOnPort(port: number): void {
         execSync('taskkill /F /IM automa-core.exe', { stdio: 'ignore' });
       } catch {}
       try {
+        execSync('taskkill /F /IM automa.exe', { stdio: 'ignore' });
+      } catch {}
+      try {
         const output = execSync('netstat -ano -p tcp', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
         const lines = output.trim().split('\n');
         for (const line of lines) {
@@ -62,14 +65,22 @@ export async function setup(): Promise<void> {
   await ensurePortIsFree(TEST_PORT);
 
   console.log(`\n[E2E Global Setup] Starting Automa Core Test Daemon on port ${TEST_PORT}...`);
-  const corePath = path.join(process.cwd(), 'apps/core');
+  const corePath = fs.existsSync(path.join(process.cwd(), 'apps/core'))
+    ? path.join(process.cwd(), 'apps/core')
+    : path.resolve(process.cwd(), '../tuquet-automa-runner');
 
   const exeExt = process.platform === 'win32' ? '.exe' : '';
-  const exePath = path.join(corePath, 'target', 'debug', `automa-core${exeExt}`);
+  let exePath = path.join(corePath, 'target', 'debug', `automa${exeExt}`);
+  if (!fs.existsSync(exePath)) {
+    const legacyPath = path.join(corePath, 'target', 'debug', `automa-core${exeExt}`);
+    if (fs.existsSync(legacyPath)) {
+      exePath = legacyPath;
+    }
+  }
 
-  console.log(`[E2E Global Setup] Ensuring fresh automa-core binary is built...`);
+  console.log(`[E2E Global Setup] Ensuring fresh automa binary is built...`);
   try {
-    execSync('cargo build --quiet --bin automa-core', { cwd: corePath, stdio: 'inherit' });
+    execSync('cargo build --quiet', { cwd: corePath, stdio: 'inherit' });
   } catch (err: any) {
     if (!fs.existsSync(exePath)) {
       throw new Error(`[E2E Global Setup] cargo build failed and binary not found at ${exePath}: ${err.message}`);
@@ -77,7 +88,7 @@ export async function setup(): Promise<void> {
     console.warn(`[E2E Global Setup] Warning: cargo build failed, attempting to run existing binary at ${exePath}`);
   }
 
-  daemonProcess = spawn(exePath, ['--port', `${TEST_PORT}`], {
+  daemonProcess = spawn(exePath, ['server', '--port', `${TEST_PORT}`], {
     cwd: corePath,
     stdio: 'inherit',
     env: {

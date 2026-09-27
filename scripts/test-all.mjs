@@ -41,6 +41,15 @@ const SUITES = [
     cwd: rootDir,
   },
   {
+    id: 'engine',
+    tier: 1,
+    name: 'Automa Engine Primitives (@automa/engine Vitest)',
+    hint: 'Workflow sanitizer, data converter, format bridges',
+    cmd: 'pnpm',
+    args: ['-F', '@automa/engine', 'test'],
+    cwd: rootDir,
+  },
+  {
     id: 'ui',
     tier: 1,
     name: 'Automa UI Design System (@automa/ui Vitest)',
@@ -109,11 +118,12 @@ async function resolveSuites() {
     message: 'Test cái gì? Test tầng nào trong 4 tầng kiểm thử?',
     options: [
       { value: 'all', label: '🧪 Tất cả Suites (Tier 1 - 3 Toàn Diện)', hint: 'Chạy toàn bộ test suites' },
-      { value: 'tier1', label: '⚡ Tier 1: Unit Tests (Nhanh, RAM < 500MB)', hint: 'Rust Core + Types + UI' },
+      { value: 'tier1', label: '⚡ Tier 1: Unit Tests (Nhanh, RAM < 500MB)', hint: 'Rust Core + Types + Engine + UI' },
       { value: 'tier2', label: '🌐 Tier 2: E2E Integration API Tests', hint: 'Kiểm thử blackbox SDK chống daemon' },
       { value: 'tier3', label: '📐 Tier 3: Strict Schema Validator', hint: 'Kiểm tra OpenAPI schema không tải máy' },
       { value: 'core', label: '🦀 Chỉ kiểm thử Automa Core (Cargo test)', hint: 'automa-core Rust tests' },
       { value: 'types', label: '📐 Chỉ kiểm thử Types & Contracts (@automa/types)', hint: 'TypeScript block schemas & contracts' },
+      { value: 'engine', label: '⚙️ Chỉ kiểm thử Automa Engine (@automa/engine)', hint: 'Workflow converter & templating primitives' },
       { value: 'ui', label: '🎨 Chỉ kiểm thử Automa UI (Vitest)', hint: 'packages/ui component tests' },
     ],
   });
@@ -128,6 +138,7 @@ async function resolveSuites() {
   if (choice === 'tier3') return SUITES.filter((s) => s.tier === 3);
   if (choice === 'core') return SUITES.filter((s) => s.id === 'core');
   if (choice === 'types') return SUITES.filter((s) => s.id === 'types');
+  if (choice === 'engine') return SUITES.filter((s) => s.id === 'engine');
   if (choice === 'ui') return SUITES.filter((s) => s.id === 'ui');
   return SUITES;
 }

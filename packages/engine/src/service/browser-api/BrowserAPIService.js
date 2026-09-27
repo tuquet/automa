@@ -17,8 +17,7 @@ import { browserAPIMap } from './browser-api-map';
  * @property {boolean=} allFrames
  */
 
-// Maybe there's a better way?
-export const IS_BROWSER_API_AVAILABLE = 'tabs' in Browser;
+export const IS_BROWSER_API_AVAILABLE = Boolean(Browser && 'tabs' in Browser);
 
 function sendBrowserApiMessage(name, ...args) {
   const serializedArgs = serializeFunctions(args);
@@ -175,7 +174,7 @@ class BrowserAPIService {
     return deserializedArgs ? apiHandler(...deserializedArgs) : apiHandler();
   }
 
-  static runtime = Browser.runtime;
+  static runtime = Browser?.runtime;
 
   /** @type {typeof Browser.tabs} */
   static tabs;

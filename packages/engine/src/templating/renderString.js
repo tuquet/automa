@@ -1,7 +1,7 @@
 import { messageSandbox } from '../helper';
 import mustacheReplacer from './mustacheReplacer';
 
-const isFirefox = BROWSER_TYPE === 'firefox';
+const isFirefox = typeof BROWSER_TYPE !== 'undefined' ? BROWSER_TYPE === 'firefox' : false;
 
 export default async function (str, data, options = {}) {
   if (!str || typeof str !== 'string') return '';
