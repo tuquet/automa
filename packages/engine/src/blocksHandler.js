@@ -19,6 +19,6 @@ const handlers = Object.entries(handlerModules).reduce(
 export default function () {
   return {
     ...handlers,
-    ...customHandlers(),
+    ...(customHandlers?.() || {}),
   };
 }
