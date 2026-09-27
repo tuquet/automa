@@ -11,9 +11,9 @@ import process from 'node:process';
 import { pc, rootDir } from './lib/utils.mjs';
 
 const TARGET_DIRS = [
-  'apps/webe/src/studio',
-  'apps/webe/src/components',
-  'apps/webe/src/assets/css',
+  'apps/studio/src/studio',
+  'apps/studio/src/components',
+  'apps/extension/src/components',
   'packages/ui/src',
 ];
 

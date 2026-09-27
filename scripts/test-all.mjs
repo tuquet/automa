@@ -5,6 +5,7 @@
  * Supports 4-Tier verification, modular suite selection, and interactive TUI.
  */
 
+import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import {
@@ -16,6 +17,10 @@ import {
   runProcess,
 } from './lib/utils.mjs';
 
+const coreDir = fs.existsSync(path.join(rootDir, 'apps/core'))
+  ? path.join(rootDir, 'apps/core')
+  : path.resolve(rootDir, '../tuquet-automa-runner');
+
 const SUITES = [
   {
     id: 'core',
@@ -24,15 +29,15 @@ const SUITES = [
     hint: 'Cargo unit & integration tests trong automa-core',
     cmd: 'cargo',
     args: ['test'],
-    cwd: path.join(rootDir, 'apps/core'),
+    cwd: coreDir,
   },
   {
-    id: 'webe',
+    id: 'studio',
     tier: 1,
-    name: 'Automa Web Extension & Studio (Vitest)',
+    name: 'Automa Studio Canvas (Vitest)',
     hint: 'Studio composables, route sync, canvas & AST tests',
     cmd: 'pnpm',
-    args: ['-F', '@automa/webe', 'test'],
+    args: ['-F', '@automa/studio', 'test'],
     cwd: rootDir,
   },
   {

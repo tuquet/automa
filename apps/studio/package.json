@@ -11,6 +11,7 @@
     "build": "vite build",
     "dev": "vite",
     "preview": "vite preview",
+    "test": "vitest run",
     "clean": "rimraf dist .turbo"
   },
   "engines": {
@@ -101,10 +102,13 @@
     "@tailwindcss/typography": "^0.5.1",
     "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/test-utils": "^2.4.6",
     "autoprefixer": "^10.4.12",
+    "happy-dom": "^17.1.8",
     "postcss": "^8.4.21",
     "rimraf": "^5.0.5",
     "tailwindcss": "^4.3.3",
-    "vite": "^8.2.1"
+    "vite": "^8.2.1",
+    "vitest": "^4.1.10"
   }
 }
