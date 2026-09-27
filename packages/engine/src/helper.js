@@ -87,9 +87,7 @@ export async function getFrames(tabId) {
 }
 
 export function sendDebugCommand(tabId, method, params = {}) {
-  return new Promise((resolve) => {
-    BrowserAPIService.debugger.sendCommand({ tabId }, method, params, resolve);
-  });
+  return BrowserAPIService.debugger.sendCommand({ tabId }, method, params);
 }
 
 export async function attachDebugger(tabId, prevTab) {

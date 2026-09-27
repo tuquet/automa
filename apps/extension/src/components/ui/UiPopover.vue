@@ -93,7 +93,9 @@ export default {
         isShow.value = value;
 
         /* eslint-disable-next-line */
-        value ? instance.value.show() : instance.value.hide();
+        if (instance.value) {
+          value ? instance.value.show() : instance.value.hide();
+        }
       }
     );
 
@@ -135,13 +137,17 @@ export default {
         ...props.options,
       });
 
-      if (props.disabled) {
-        instance.value.hide();
-        instance.value.disable();
+      if (instance.value) {
+        if (props.disabled) {
+          instance.value.hide();
+          instance.value.disable();
+        } else if (props.modelValue) {
+          instance.value.show();
+        }
       }
     });
     onUnmounted(() => {
-      instance.value.destroy();
+      instance.value?.destroy?.();
     });
 
     return {

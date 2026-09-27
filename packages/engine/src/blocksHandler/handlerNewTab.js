@@ -102,9 +102,11 @@ async function newTab({ id, data }) {
     }
 
     if (isChrome) {
-      BrowserAPIService.tabs.group(options, (tabGroupId) => {
-        this.activeTab.groupId = tabGroupId;
-      });
+      try {
+        this.activeTab.groupId = await BrowserAPIService.tabs.group(options);
+      } catch (e) {
+        // Ignored
+      }
     }
   }
 

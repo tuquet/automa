@@ -178,10 +178,10 @@ async function initWorkerDaemon(message) {
       setTimeout(connect, 5000);
     } catch (e) {
       console.debug(
-        '[Automa Daemon Worker] Connection error. Reconnecting in 5s...',
-        e
+        '[Automa Daemon Worker] Daemon not reachable yet. Reconnecting in 2s...',
+        e?.message || e
       );
-      setTimeout(connect, 5000);
+      setTimeout(connect, 2000);
     }
   }
 
