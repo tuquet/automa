@@ -105,14 +105,6 @@ export const CANONICAL_MODULES = [
     path: path.join(appsDir, 'runner'),
   },
   {
-    id: 'extension',
-    name: '@automa/extension',
-    type: 'app',
-    lang: 'Vue / JS',
-    description: 'Full Chrome/Edge Browser Extension (MV3)',
-    path: path.join(appsDir, 'extension'),
-  },
-  {
     id: 'studio',
     name: '@automa/studio',
     type: 'app',

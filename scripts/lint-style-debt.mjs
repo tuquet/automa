@@ -13,7 +13,6 @@ import { pc, rootDir } from './lib/utils.mjs';
 const TARGET_DIRS = [
   'apps/studio/src/studio',
   'apps/studio/src/components',
-  'apps/extension/src/components',
   'packages/ui/src',
 ];
 
