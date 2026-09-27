@@ -1,31 +1,10 @@
 import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import tailwindcss from '@tailwindcss/vite';
 import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const tailwindCssPath = path.resolve(__dirname, 'src/assets/css/tailwind.css').replace(/\\/g, '/');
-
-function tailwindVueStyleReferencePlugin() {
-  return {
-    name: 'tailwind-vue-style-reference',
-    enforce: 'pre',
-    transform(code, id) {
-      if ((id.includes('.vue') && id.includes('type=style')) || (id.endsWith('.css') && !id.includes('tailwind.css'))) {
-        if (code.includes('@apply') && !code.includes('@reference')) {
-          return {
-            code: `@reference "${tailwindCssPath}";\n${code}`,
-            map: null,
-          };
-        }
-      }
-    },
-  };
-}
 
 function runnerAssetsPlugin() {
   return {
@@ -101,9 +80,6 @@ function runnerAssetsPlugin() {
 
 export default defineConfig({
   plugins: [
-    tailwindVueStyleReferencePlugin(),
-    vue(),
-    tailwindcss(),
     runnerAssetsPlugin(),
   ],
   resolve: {
@@ -114,13 +90,11 @@ export default defineConfig({
       '@business$': path.resolve(__dirname, 'business/dev/index.js'),
       '@business': path.resolve(__dirname, 'business/dev'),
       secrets: path.resolve(__dirname, 'secrets.blank.js'),
-      vue: 'vue/dist/vue.esm-bundler.js',
     },
   },
   define: {
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
     BROWSER_TYPE: JSON.stringify(process.env.BROWSER || 'chrome'),
-    __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
     __IS_RUNNER__: true,
   },
   build: {

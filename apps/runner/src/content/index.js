@@ -6,7 +6,7 @@ import { sendMessage } from '@/utils/message';
 import { isXPath, toCamelCase } from '@/utils/helper';
 import findSelector from '@/lib/findSelector';
 import blocksHandler from './blocksHandler';
-import initCommandPalette from './commandPalette';
+const initCommandPalette = () => {};
 import handleSelector, {
   getDocumentCtx,
   queryElements,
