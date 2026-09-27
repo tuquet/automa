@@ -9,10 +9,6 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/cli-runner/**", "build-zip/runner.zip"]
     },
-    "build:studio": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/studio/**"]
-    },
     "@automa/engine#build": {
       "cache": false
     },
@@ -51,10 +47,6 @@
       "persistent": true
     },
     "dev:runner": {
-      "cache": false,
-      "persistent": true
-    },
-    "dev:studio": {
       "cache": false,
       "persistent": true
     }

@@ -11,8 +11,6 @@ import process from 'node:process';
 import { pc, rootDir } from './lib/utils.mjs';
 
 const TARGET_DIRS = [
-  'apps/studio/src/studio',
-  'apps/studio/src/components',
   'packages/ui/src',
 ];
 

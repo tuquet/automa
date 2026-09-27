@@ -105,15 +105,6 @@ export const CANONICAL_MODULES = [
     path: path.join(appsDir, 'runner'),
   },
   {
-    id: 'studio',
-    name: '@automa/studio',
-    type: 'app',
-    lang: 'Vue / JS',
-    description: 'All-in-One Visual Canvas Studio (SPA, port :5173)',
-    path: path.join(appsDir, 'studio'),
-    port: 5173,
-  },
-  {
     id: 'ui',
     name: '@automa/ui',
     type: 'package',
