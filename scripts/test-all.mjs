@@ -109,11 +109,11 @@ async function resolveSuites() {
     message: 'Test cái gì? Test tầng nào trong 4 tầng kiểm thử?',
     options: [
       { value: 'all', label: '🧪 Tất cả Suites (Tier 1 - 3 Toàn Diện)', hint: 'Chạy toàn bộ test suites' },
-      { value: 'tier1', label: '⚡ Tier 1: Unit Tests (Nhanh, RAM < 500MB)', hint: 'Rust Core + Webe + UI' },
+      { value: 'tier1', label: '⚡ Tier 1: Unit Tests (Nhanh, RAM < 500MB)', hint: 'Rust Core + Types + UI' },
       { value: 'tier2', label: '🌐 Tier 2: E2E Integration API Tests', hint: 'Kiểm thử blackbox SDK chống daemon' },
       { value: 'tier3', label: '📐 Tier 3: Strict Schema Validator', hint: 'Kiểm tra OpenAPI schema không tải máy' },
       { value: 'core', label: '🦀 Chỉ kiểm thử Automa Core (Cargo test)', hint: 'automa-core Rust tests' },
-      { value: 'webe', label: '🌐 Chỉ kiểm thử Automa Webe (Vitest)', hint: 'apps/webe extension & studio tests' },
+      { value: 'types', label: '📐 Chỉ kiểm thử Types & Contracts (@automa/types)', hint: 'TypeScript block schemas & contracts' },
       { value: 'ui', label: '🎨 Chỉ kiểm thử Automa UI (Vitest)', hint: 'packages/ui component tests' },
     ],
   });
@@ -127,7 +127,7 @@ async function resolveSuites() {
   if (choice === 'tier2') return SUITES.filter((s) => s.tier === 2);
   if (choice === 'tier3') return SUITES.filter((s) => s.tier === 3);
   if (choice === 'core') return SUITES.filter((s) => s.id === 'core');
-  if (choice === 'webe') return SUITES.filter((s) => s.id === 'webe');
+  if (choice === 'types') return SUITES.filter((s) => s.id === 'types');
   if (choice === 'ui') return SUITES.filter((s) => s.id === 'ui');
   return SUITES;
 }

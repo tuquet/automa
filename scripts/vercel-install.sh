@@ -10,13 +10,13 @@ export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 export CI=1
 
 echo "================================================================"
-echo "🚀 [Vercel Monorepo] Starting Environment Setup for Automa Studio"
+echo "🚀 [Vercel Monorepo] Starting Environment Setup for Automa Ecosystem"
 echo "📂 Working directory: $(pwd)"
 echo "Node runtime: $(node --version 2>/dev/null || echo 'Unknown')"
 echo "================================================================"
 
 # 1. Pure Monorepo: All code is already checked out natively by Vercel
-echo "✔ Monorepo source directories present: apps/webe, packages/types, packages/ui."
+echo "✔ Monorepo source directories present: apps/runner, packages/types, packages/ui, packages/engine."
 
 # 3. Ensure pnpm is ready via Corepack or npm fallback
 echo "⚡ Preparing package manager (pnpm)..."

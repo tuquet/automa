@@ -89,11 +89,13 @@ export async function getPrompts() {
 export const CANONICAL_MODULES = [
   {
     id: 'core',
-    name: 'apps/core',
+    name: 'tuquet-automa-runner',
     type: 'app',
     lang: 'Rust',
     description: 'Rust Daemon Engine & REST API (port :8765)',
-    path: path.join(appsDir, 'core'),
+    path: fs.existsSync(path.join(appsDir, 'core'))
+      ? path.join(appsDir, 'core')
+      : path.resolve(rootDir, '../tuquet-automa-runner'),
     port: 8765,
   },
   {
@@ -103,6 +105,14 @@ export const CANONICAL_MODULES = [
     lang: 'Vue / JS',
     description: 'Headless MV3 Extension CLI Runner',
     path: path.join(appsDir, 'runner'),
+  },
+  {
+    id: 'engine',
+    name: '@automa/engine',
+    type: 'package',
+    lang: 'JavaScript',
+    description: 'Core Workflow Execution Engine & Primitives',
+    path: path.join(packagesDir, 'engine'),
   },
   {
     id: 'ui',
@@ -117,7 +127,7 @@ export const CANONICAL_MODULES = [
     name: '@automa/types',
     type: 'package',
     lang: 'TypeScript',
-    description: 'Typed OpenAPI Client SDK',
+    description: 'Typed OpenAPI Client SDK & Block Schemas',
     path: path.join(packagesDir, 'types'),
   },
   {
@@ -158,7 +168,8 @@ export function runProcess(command, args = [], options = {}) {
     const cwd = options.cwd || rootDir;
     const stdio = options.stdio || 'inherit';
 
-    const child = spawn(command, args, {
+    const fullCmd = args.length > 0 ? `${command} ${args.join(' ')}` : command;
+    const child = spawn(fullCmd, {
       cwd,
       stdio,
       shell: true,

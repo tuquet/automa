@@ -271,30 +271,31 @@ const TASKS = [
     color: pc.cyan,
     cmd: process.platform === 'win32' ? 'cargo.exe' : 'cargo',
     args: ['watch', '-x', 'run'],
-    cwd: path.join(rootDir, 'apps/core'),
+    cwd: fs.existsSync(path.join(rootDir, 'apps/core'))
+      ? path.join(rootDir, 'apps/core')
+      : path.resolve(rootDir, '../tuquet-automa-runner'),
     description: 'Rust Daemon on port 8765',
     url: 'http://127.0.0.1:8765/swagger-ui',
   },
   {
-    id: 'studio',
-    name: 'STUDIO',
-    label: '🎨 Automa Studio',
-    hint: 'Vue Flow Standalone Canvas Editor (:8765/studio)',
+    id: 'ui',
+    name: 'UI',
+    label: '🎨 Automa UI',
+    hint: 'Automa UI Design System watcher (@automa/ui)',
     color: pc.magenta,
     cmd: process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
-    args: ['-F', '@automa/webe', 'run', 'dev:studio'],
+    args: ['-F', '@automa/ui', 'run', 'dev'],
     cwd: rootDir,
-    description: 'Automa Studio Standalone Canvas',
-    url: 'http://127.0.0.1:8765/studio/',
+    description: 'Automa UI Design System Watcher',
   },
   {
     id: 'runner',
     name: 'RUNNER',
     label: '⚡ Automa Runner',
-    hint: 'Headless CLI Runner build watcher',
+    hint: 'Headless CLI Runner build watcher (@automa/runner)',
     color: pc.yellow,
     cmd: process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
-    args: ['-F', '@automa/webe', 'run', 'dev:runner'],
+    args: ['-F', '@automa/runner', 'run', 'dev'],
     cwd: rootDir,
     description: 'Automa CLI Runner Watcher',
   },
@@ -324,7 +325,7 @@ function loadSavedSelection() {
   } catch (_) {
     // Ignore corrupt state
   }
-  return ['core', 'studio']; // Default fallback
+  return ['core', 'runner']; // Default fallback
 }
 
 function saveSelection(selectedIds) {
@@ -344,7 +345,7 @@ const isDryRun = args.includes('--dry-run');
 const isAll = args.includes('--all');
 const isLast = args.includes('--last');
 const isCore = args.includes('--core');
-const isStudio = args.includes('--studio');
+const isUi = args.includes('--ui');
 const isRunner = args.includes('--runner');
 const isDocs = args.includes('--docs');
 const isInteractive = args.includes('--interactive');
@@ -356,7 +357,7 @@ async function resolveSelectedTasks() {
     if (isAll) return TASKS.map((t) => t.id);
     if (isLast) return loadSavedSelection();
     if (isCore) return ['core'];
-    if (isStudio) return ['core', 'studio'];
+    if (isUi) return ['ui'];
     if (isRunner) return ['core', 'runner'];
     if (isDocs) return ['docs'];
   }
