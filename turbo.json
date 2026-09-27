@@ -13,6 +13,12 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/studio/**"]
     },
+    "@automa/engine#build": {
+      "cache": false
+    },
+    "webextension-polyfill#build": {
+      "cache": false
+    },
     "build:core": {
       "outputs": ["apps/core/target/release/automa-core*"]
     },

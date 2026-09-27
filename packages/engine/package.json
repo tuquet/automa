@@ -1,24 +1,22 @@
 {
-  "name": "@automa/runner",
-  "private": true,
+  "name": "@automa/engine",
   "version": "1.0.0",
-  "description": "Tuquet Automa Headless CLI Runner Extension (Ultra-Lightweight)",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/tuquet/tuquet-automa.git"
-  },
-  "scripts": {
-    "build": "vite build",
-    "dev": "vite build --watch",
-    "clean": "rimraf dist .turbo"
-  },
-  "engines": {
-    "node": ">=18.0.0"
+  "private": true,
+  "description": "Shared workflow execution engine, block handlers, and runtime primitives for the Automa ecosystem",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./WorkflowEngine": "./src/WorkflowEngine.js",
+    "./WorkflowManager": "./src/WorkflowManager.js",
+    "./WorkflowLogger": "./src/WorkflowLogger.js",
+    "./WorkflowState": "./src/WorkflowState.js",
+    "./WorkflowWorker": "./src/WorkflowWorker.js",
+    "./blocksHandler": "./src/blocksHandler.js",
+    "./helper": "./src/helper.js"
   },
   "dependencies": {
     "@automa/types": "workspace:*",
-    "@automa/engine": "workspace:*",
-    "@medv/finder": "^3.1.0",
     "@n8n_io/riot-tmpl": "^2.0.0",
     "compare-versions": "^6.0.0-rc.1",
     "cron-parser": "^4.6.0",
@@ -46,8 +44,7 @@
     "webextension-polyfill": "workspace:*",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.1/xlsx-0.19.1.tgz"
   },
-  "devDependencies": {
-    "rimraf": "^5.0.5",
-    "vite": "^8.2.1"
+  "scripts": {
+    "build": "echo 'No build step required for ESM engine'"
   }
 }

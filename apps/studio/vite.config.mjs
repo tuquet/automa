@@ -36,6 +36,8 @@ export default defineConfig({
   base: './',
   resolve: {
     alias: {
+      '@automa/engine': path.resolve(__dirname, '../../packages/engine/src'),
+      '@/workflowEngine': path.resolve(__dirname, '../../packages/engine/src'),
       '@': path.resolve(__dirname, 'src'),
       'webextension-polyfill': path.resolve(__dirname, 'src/studio/standalone-browser-mock.js'),
       '@/utils/api': path.resolve(__dirname, 'business/dev/utils/api-runner-mock.js'),

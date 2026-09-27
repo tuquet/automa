@@ -1,13 +1,24 @@
-import { getBlocks } from '@/utils/getSharedData';
-import dayjs from '@/lib/dayjs';
-import { countDuration } from '@/utils/helper';
-import { messageHasReferences } from '@/utils/shared';
+import { getBlocks } from './getSharedData.js';
+import dayjs from '../lib/dayjs.js';
+import { countDuration } from './helper.js';
+import { messageHasReferences } from './shared.js';
 
-const blocks = getBlocks();
+let blocks = null;
+function getBlocksSafe() {
+  if (!blocks) {
+    try {
+      blocks = getBlocks() || {};
+    } catch (_) {
+      blocks = {};
+    }
+  }
+  return blocks;
+}
 
 function translateLog(log) {
   const copyLog = { ...log };
-  const blockDefName = blocks[log.name]?.name || log.name || 'Block';
+  const allBlocks = getBlocksSafe();
+  const blockDefName = allBlocks[log.name]?.name || log.name || 'Block';
 
   if (['finish', 'stop'].includes(log.type)) {
     copyLog.name = log.type;
