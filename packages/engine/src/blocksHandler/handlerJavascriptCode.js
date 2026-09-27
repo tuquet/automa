@@ -288,7 +288,7 @@ export async function javascriptCode({ outputs, data, ...block }, { refData }) {
   }
 
   const preloadScriptsPromise = await Promise.allSettled(
-    data.preloadScripts.map(async (script) => {
+    (data.preloadScripts || []).map(async (script) => {
       const { protocol } = new URL(script.src);
       const isValidUrl = /https?/.test(protocol);
       if (!isValidUrl) return null;
