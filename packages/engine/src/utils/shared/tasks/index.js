@@ -26,4 +26,10 @@ export {
   packageTasks,
 };
 
+export {
+  BLOCK_DEFAULT_DATA,
+  createBlockNode,
+  isBlockType,
+} from '@automa/types';
+
 export default tasks;

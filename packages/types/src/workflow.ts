@@ -1,3 +1,5 @@
+import type { AutomaBlockNode } from './blocks/index.js';
+
 export interface WorkflowVariable {
   name: string;
   value: unknown;
@@ -59,10 +61,10 @@ export interface Workflow {
   icon?: string;
   version?: string;
   drawflow?: {
-    nodes: WorkflowNode[];
+    nodes: Array<WorkflowNode | AutomaBlockNode>;
     edges: WorkflowEdge[];
   };
-  nodes?: WorkflowNode[];
+  nodes?: Array<WorkflowNode | AutomaBlockNode>;
   edges?: WorkflowEdge[];
   table?: WorkflowTableColumn[];
   variables?: Record<string, unknown> | WorkflowVariable[];
@@ -72,12 +74,34 @@ export interface Workflow {
   isTesting?: boolean;
 }
 
-export interface TriggerParameter extends Partial<WorkflowVariable> {
+export interface DefineWorkflowOptions {
   name: string;
-  defaultValue?: unknown;
-  isImplicit?: boolean;
-  [key: string]: unknown;
+  description?: string;
+  icon?: string;
+  nodes: Array<AutomaBlockNode | WorkflowNode>;
+  edges?: WorkflowEdge[];
+  variables?: Record<string, unknown>;
+  settings?: WorkflowSettings;
 }
+
+export function defineWorkflow(options: DefineWorkflowOptions): Workflow {
+  return {
+    id: `wf-${Math.random().toString(36).substring(2, 9)}`,
+    name: options.name,
+    description: options.description || '',
+    icon: options.icon || 'ri-global-line',
+    drawflow: {
+      nodes: options.nodes,
+      edges: options.edges || [],
+    },
+    variables: options.variables || {},
+    settings: options.settings || { debugMode: false },
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  };
+}
+
+export type { TriggerParameter } from './blocks/index.js';
 
 export interface WorkflowUpdatePayload
   extends Omit<Partial<Workflow>, 'table' | 'settings'> {
