@@ -32,12 +32,12 @@ const SUITES = [
     cwd: coreDir,
   },
   {
-    id: 'studio',
+    id: 'types',
     tier: 1,
-    name: 'Automa Studio Canvas (Vitest)',
-    hint: 'Studio composables, route sync, canvas & AST tests',
+    name: 'Automa TypeScript Contracts & Block Schemas (@automa/types)',
+    hint: 'Kiểm tra kiểu dữ liệu tĩnh và contracts giữa Rust và TypeScript',
     cmd: 'pnpm',
-    args: ['-F', '@automa/studio', 'test'],
+    args: ['-F', '@automa/types', 'run', 'typecheck'],
     cwd: rootDir,
   },
   {

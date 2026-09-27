@@ -19,3 +19,4 @@ export {
   createCallbackBridge,
   isCallbackBridge,
 } from './utils/callbackBridge.js';
+export { default as convertWorkflowData } from './utils/convertWorkflowData.js';

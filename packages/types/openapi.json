@@ -1,10 +1,10 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Automa Core API",
-    "description": "High-performance Rust backend daemon providing REST, SSE, and storage APIs for the Automa automation ecosystem.",
+    "title": "Tuquet Automa Core Bridge API",
+    "description": "Lightweight native process launcher, WebSocket event hub, and SQLite storage bridge for Automa WebExtension.",
     "contact": {
-      "name": "Automa Ecosystem Team",
+      "name": "Tuquet Ecosystem",
       "url": "https://github.com/tuquet/tuquet-automa"
     },
     "license": {
@@ -12,6 +12,12 @@
     },
     "version": "1.0.0"
   },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:3000",
+      "description": "Local Daemon Bridge Server"
+    }
+  ],
   "paths": {
     "/api/v1/browsers": {
       "get": {
@@ -428,124 +434,6 @@
         }
       }
     },
-    "/api/v1/browsers/{id}/cookies": {
-      "get": {
-        "tags": [
-          "Browsers"
-        ],
-        "summary": "Export cookies for a browser profile",
-        "description": "Extracts and decrypts all network cookies stored in the browser profile's Chromium SQLite cookie database.",
-        "operationId": "get_browser_cookies",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Unique browser profile identifier",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Decrypted array of cookies",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Cookie"
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Browser profile not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Failed to access or decrypt cookie store",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Browsers"
-        ],
-        "summary": "Import cookies into a browser profile",
-        "description": "Batch writes and encrypts an array of cookies directly into the browser profile's Chromium SQLite cookie database.",
-        "operationId": "import_browser_cookies",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Unique browser profile identifier",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Cookie"
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Cookies successfully imported",
-            "content": {
-              "application/json": {
-                "schema": {}
-              }
-            }
-          },
-          "400": {
-            "description": "Malformed cookie data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Failed to write cookies to database",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/browsers/{id}/extensions": {
       "post": {
         "tags": [
@@ -702,127 +590,6 @@
           },
           "400": {
             "description": "Invalid browser ID",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/campaigns/execute": {
-      "post": {
-        "tags": [
-          "Campaigns"
-        ],
-        "summary": "Execute a multi-instance automation campaign",
-        "description": "Parses a campaign descriptor from SQLite database or file, provisions required browser profiles, allocates grid matrix slots, and starts parallel workflow execution jobs.",
-        "operationId": "execute_campaign",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ExecuteCampaignRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Campaign execution scheduled",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExecuteCampaignResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid campaign payload or unreadable descriptor",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/campaigns/{id}": {
-      "delete": {
-        "tags": [
-          "Campaigns"
-        ],
-        "summary": "Abort a running multi-instance campaign",
-        "description": "Immediately halts all sub-jobs associated with the campaign, stops all browser processes in the grid matrix, and emits a matrix_finished SSE event.",
-        "operationId": "abort_campaign",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Unique campaign identifier",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Campaign aborted successfully"
-          },
-          "404": {
-            "description": "Campaign not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/campaigns/{id}/matrix-status": {
-      "get": {
-        "tags": [
-          "Campaigns"
-        ],
-        "summary": "Get campaign grid matrix execution status",
-        "description": "Retrieves real-time slot layout and execution status for a multi-instance grid campaign.",
-        "operationId": "get_campaign_matrix_status",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Unique campaign identifier",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Matrix status and slot allocation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MatrixStatusResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Campaign not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -1419,8 +1186,8 @@
         "tags": [
           "Lint"
         ],
-        "summary": "Validate and lint Automa assets (Workflows, Campaigns, Browsers, Packages)",
-        "description": "Performs static analysis on AST graph nodes, edge connections, parameter schemas, campaign schedules, and browser configs.",
+        "summary": "Validate and lint Automa assets (Bridge Stub)",
+        "description": "Bridge passthrough stub. In the Tuquet architecture, workflow graph validation is performed client-side by Web Studio and runtime blocks are executed by the browser worker.",
         "operationId": "lint_workflow",
         "requestBody": {
           "content": {
@@ -1439,58 +1206,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LintResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/secrets/encrypt": {
-      "post": {
-        "tags": [
-          "Secrets"
-        ],
-        "summary": "Encrypt sensitive token or secret with AES-256",
-        "description": "Encrypts plaintext secrets using PBKDF2 and AES-GCM-256 authenticated encryption.",
-        "operationId": "encrypt_secret",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EncryptSecretRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Secret encrypted successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EncryptSecretResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Missing plaintext or passphrase",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal encryption failure",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
                 }
               }
             }
@@ -1585,360 +1300,6 @@
           },
           "500": {
             "description": "Database write error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/storage/campaigns": {
-      "get": {
-        "tags": [
-          "Storage"
-        ],
-        "summary": "List all campaigns from storage database",
-        "description": "Retrieves all campaigns persisted in the central SQLite database.",
-        "operationId": "get_storage_campaigns",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Maximum number of campaigns to return",
-            "required": false,
-            "schema": {
-              "type": [
-                "integer",
-                "null"
-              ],
-              "minimum": 0
-            },
-            "example": 50
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "description": "Number of items to skip for pagination (default 0)",
-            "required": false,
-            "schema": {
-              "type": [
-                "integer",
-                "null"
-              ],
-              "minimum": 0
-            },
-            "example": 0
-          },
-          {
-            "name": "search",
-            "in": "query",
-            "description": "Optional search query to filter campaigns by name, ID or description",
-            "required": false,
-            "schema": {
-              "type": [
-                "string",
-                "null"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "List of campaigns",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CampaignStorageItem"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Database read error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Storage"
-        ],
-        "summary": "Create or persist a campaign in database",
-        "description": "Creates a new campaign record or updates an existing record in SQLite database.",
-        "operationId": "create_storage_campaign",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateCampaignStorageRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Campaign created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CampaignStorageItem"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid campaign payload",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Database write error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/storage/campaigns/import": {
-      "post": {
-        "tags": [
-          "Storage"
-        ],
-        "summary": "Import a campaign JSON into storage database",
-        "description": "Parses and imports a campaign JSON object into SQLite database.",
-        "operationId": "import_storage_campaign",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ImportCampaignStorageRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Campaign imported successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CampaignStorageItem"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid campaign JSON",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Database write error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/storage/campaigns/{id}": {
-      "get": {
-        "tags": [
-          "Storage"
-        ],
-        "summary": "Get a campaign by ID from storage database",
-        "description": "Retrieves the full configuration and metadata of a campaign from SQLite database.",
-        "operationId": "get_storage_campaign",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Unique campaign identifier",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Campaign details",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CampaignStorageItem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Campaign not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Database read error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Storage"
-        ],
-        "summary": "Update a campaign in storage database",
-        "description": "Modifies an existing campaign record in SQLite database.",
-        "operationId": "update_storage_campaign",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Unique campaign identifier",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateCampaignStorageRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Campaign updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CampaignStorageItem"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid update payload",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Campaign not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Database write error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Storage"
-        ],
-        "summary": "Delete a campaign from storage database",
-        "description": "Removes a campaign record from SQLite database by ID.",
-        "operationId": "delete_storage_campaign",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "Unique campaign identifier",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Campaign deleted successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteCampaignResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Campaign not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Database deletion error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2642,43 +2003,23 @@
           "Storage"
         ],
         "summary": "Read workflow JSON file from filesystem",
-        "description": "Reads and parses an automation workflow file (.workflow.json) securely from the given filesystem path.",
-        "operationId": "get_workflow",
+        "operationId": "get_workflow_file",
         "parameters": [
           {
             "name": "path",
             "in": "query",
-            "description": "Full filesystem path or relative workspace path to the target .workflow.json file",
             "required": true,
             "schema": {
               "type": "string"
-            },
-            "example": "workflows/search.workflow.json"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "Workflow JSON file read successfully"
           },
-          "400": {
-            "description": "Invalid path or unreadable workflow JSON",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
-          },
           "404": {
-            "description": "Workflow file not found on disk",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
-                }
-              }
-            }
+            "description": "Workflow file not found on disk"
           }
         }
       },
@@ -2686,14 +2027,13 @@
         "tags": [
           "Storage"
         ],
-        "summary": "Save or update workflow JSON file",
-        "description": "Serializes and writes the workflow content securely to the specified path on disk, creating parent directories automatically if needed.",
-        "operationId": "save_workflow",
+        "summary": "Save or update workflow JSON file on filesystem",
+        "operationId": "save_workflow_file",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SaveWorkflowPayload"
+                "$ref": "#/components/schemas/SaveWorkflowFilePayload"
               }
             }
           },
@@ -2705,17 +2045,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SaveWorkflowResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid payload or unwriteable path",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiErrorResponse"
+                  "$ref": "#/components/schemas/SaveWorkflowFileResponse"
                 }
               }
             }
@@ -3423,41 +2753,6 @@
           }
         }
       },
-      "Browser": {
-        "type": "object",
-        "required": [
-          "id",
-          "name",
-          "created_at",
-          "updated_at"
-        ],
-        "properties": {
-          "created_at": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "timezone": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "updated_at": {
-            "type": "string"
-          },
-          "user_agent": {
-            "type": [
-              "string",
-              "null"
-            ]
-          }
-        }
-      },
       "BrowserResponse": {
         "type": "object",
         "description": "Browser profile descriptor",
@@ -3547,151 +2842,6 @@
           }
         }
       },
-      "CampaignStorageItem": {
-        "type": "object",
-        "description": "Campaign descriptor stored in central SQLite database",
-        "required": [
-          "id",
-          "name",
-          "data",
-          "version",
-          "createdAt",
-          "updatedAt"
-        ],
-        "properties": {
-          "createdAt": {
-            "type": "string",
-            "description": "Creation timestamp (ISO 8601)"
-          },
-          "cron": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Optional cron schedule expression"
-          },
-          "data": {
-            "type": "object",
-            "description": "Campaign data (members, tasks, matrix, concurrency settings)"
-          },
-          "description": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Optional campaign description"
-          },
-          "id": {
-            "type": "string",
-            "description": "Unique campaign identifier"
-          },
-          "name": {
-            "type": "string",
-            "description": "Campaign display name"
-          },
-          "updatedAt": {
-            "type": "string",
-            "description": "Last modification timestamp (ISO 8601)"
-          },
-          "version": {
-            "type": "string",
-            "description": "Semantic version"
-          }
-        },
-        "example": {
-          "createdAt": "2026-08-26T00:00:00Z",
-          "cron": "0 8 * * *",
-          "data": {
-            "members": [
-              {
-                "browserId": "b1",
-                "workflowId": "w1"
-              }
-            ],
-            "settings": {
-              "concurrency_mode": "parallel"
-            }
-          },
-          "description": "Syncs marketing profiles",
-          "id": "cp_daily_sync",
-          "name": "Daily Sync Campaign",
-          "updatedAt": "2026-08-26T00:00:00Z",
-          "version": "1.0.0"
-        }
-      },
-      "Cookie": {
-        "type": "object",
-        "required": [
-          "domain",
-          "name",
-          "path",
-          "value"
-        ],
-        "properties": {
-          "domain": {
-            "type": "string"
-          },
-          "expirationDate": {
-            "type": [
-              "number",
-              "null"
-            ],
-            "format": "double"
-          },
-          "hostOnly": {
-            "type": [
-              "boolean",
-              "null"
-            ]
-          },
-          "httpOnly": {
-            "type": [
-              "boolean",
-              "null"
-            ]
-          },
-          "id": {
-            "type": [
-              "integer",
-              "null"
-            ],
-            "format": "int64"
-          },
-          "name": {
-            "type": "string"
-          },
-          "path": {
-            "type": "string"
-          },
-          "sameSite": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "secure": {
-            "type": [
-              "boolean",
-              "null"
-            ]
-          },
-          "session": {
-            "type": [
-              "boolean",
-              "null"
-            ]
-          },
-          "storeId": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "value": {
-            "type": "string"
-          }
-        }
-      },
       "CreateBrowserRequest": {
         "type": "object",
         "description": "Request payload for creating a new browser profile",
@@ -3730,67 +2880,6 @@
           "name": "Personal Profile",
           "timezone": "Asia/Ho_Chi_Minh",
           "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-        }
-      },
-      "CreateCampaignStorageRequest": {
-        "type": "object",
-        "description": "Request payload for creating a new campaign in SQLite database",
-        "required": [
-          "name",
-          "data"
-        ],
-        "properties": {
-          "cron": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Optional cron expression"
-          },
-          "data": {
-            "type": "object",
-            "description": "Campaign data (members, tasks, matrix)"
-          },
-          "description": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Optional campaign description"
-          },
-          "id": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Optional custom identifier"
-          },
-          "name": {
-            "type": "string",
-            "description": "Campaign display name"
-          },
-          "version": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Optional version (defaults to 1.0.0)"
-          }
-        },
-        "example": {
-          "cron": "0 8 * * *",
-          "data": {
-            "members": [
-              {
-                "browserId": "b1",
-                "workflowId": "w1"
-              }
-            ]
-          },
-          "description": "Syncs marketing profiles",
-          "id": "cp_daily_sync",
-          "name": "Daily Sync Campaign",
-          "version": "1.0.0"
         }
       },
       "CreateWorkflowStorageRequest": {
@@ -3856,28 +2945,6 @@
           "version": "1.0.0"
         }
       },
-      "DeleteCampaignResponse": {
-        "type": "object",
-        "description": "Response returned after successfully deleting a campaign",
-        "required": [
-          "success",
-          "message"
-        ],
-        "properties": {
-          "message": {
-            "type": "string",
-            "description": "Confirmation message"
-          },
-          "success": {
-            "type": "boolean",
-            "description": "True if deletion succeeded"
-          }
-        },
-        "example": {
-          "message": "Campaign 'cp_1' deleted",
-          "success": true
-        }
-      },
       "DeleteWorkflowResponse": {
         "type": "object",
         "description": "Response returned after successfully deleting a workflow",
@@ -3939,138 +3006,6 @@
             "format": "int32",
             "minimum": 0
           }
-        }
-      },
-      "EncryptSecretRequest": {
-        "type": "object",
-        "description": "Request payload to encrypt a secret string",
-        "required": [
-          "plaintext"
-        ],
-        "properties": {
-          "passphrase": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Optional encryption master passphrase (falls back to AUTOMA_PASSPHRASE env)",
-            "example": "optional_master_password"
-          },
-          "plaintext": {
-            "type": "string",
-            "description": "Plaintext string to encrypt",
-            "example": "my_super_secret_api_key"
-          }
-        },
-        "example": {
-          "passphrase": null,
-          "plaintext": "my_super_secret_token"
-        }
-      },
-      "EncryptSecretResponse": {
-        "type": "object",
-        "description": "Response containing ciphertext secret",
-        "required": [
-          "encryptedSecret"
-        ],
-        "properties": {
-          "encryptedSecret": {
-            "type": "string",
-            "description": "Base64 encrypted secret ciphertext"
-          }
-        },
-        "example": {
-          "encryptedSecret": "enc:aes256:d8f7a6b5..."
-        }
-      },
-      "ExecuteCampaignRequest": {
-        "type": "object",
-        "description": "Request payload to trigger or schedule a campaign execution",
-        "properties": {
-          "campaignId": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Optional custom campaign identifier"
-          },
-          "campaignPath": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Path to the `.campaign.json` descriptor file"
-          },
-          "runNow": {
-            "type": [
-              "boolean",
-              "null"
-            ],
-            "description": "Immediately start executing jobs"
-          },
-          "useGrid": {
-            "type": [
-              "boolean",
-              "null"
-            ],
-            "description": "Automatically tile browser windows across screen grid"
-          }
-        },
-        "example": {
-          "campaignId": "camp_daily_audit",
-          "campaignPath": "C:/vault/campaigns/daily_audit.campaign.json",
-          "runNow": true,
-          "useGrid": true
-        }
-      },
-      "ExecuteCampaignResponse": {
-        "type": "object",
-        "description": "Response returned after scheduling a campaign",
-        "required": [
-          "campaignId",
-          "status",
-          "totalJobs",
-          "jobIds",
-          "allocatedSlots"
-        ],
-        "properties": {
-          "allocatedSlots": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MatrixSlotInfo"
-            },
-            "description": "Grid matrix slot assignments"
-          },
-          "campaignId": {
-            "type": "string",
-            "description": "Unique campaign identifier"
-          },
-          "jobIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "description": "List of created job identifiers"
-          },
-          "status": {
-            "type": "string",
-            "description": "Current campaign state"
-          },
-          "totalJobs": {
-            "type": "integer",
-            "description": "Total execution jobs generated",
-            "minimum": 0
-          }
-        },
-        "example": {
-          "allocatedSlots": [],
-          "campaignId": "camp_123",
-          "jobIds": [
-            "job_1",
-            "job_2"
-          ],
-          "status": "running",
-          "totalJobs": 4
         }
       },
       "ExportBackupResponse": {
@@ -4221,32 +3156,6 @@
         "example": {
           "message": "Job history deleted",
           "success": true
-        }
-      },
-      "ImportCampaignStorageRequest": {
-        "type": "object",
-        "description": "Request payload for importing a campaign into SQLite database",
-        "required": [
-          "campaign"
-        ],
-        "properties": {
-          "campaign": {
-            "type": "object",
-            "description": "Raw campaign JSON content"
-          },
-          "id": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Optional custom ID"
-          }
-        },
-        "example": {
-          "campaign": {
-            "members": [],
-            "name": "Imported Fleet Campaign"
-          }
         }
       },
       "ImportCsvPayload": {
@@ -4476,7 +3385,6 @@
       },
       "LintIssue": {
         "type": "object",
-        "description": "Diagnostic issue report detected by the linter",
         "required": [
           "severity",
           "message"
@@ -4486,43 +3394,30 @@
             "type": [
               "string",
               "null"
-            ],
-            "description": "Machine-readable rule code for IDE filtering and categorization"
+            ]
           },
           "message": {
-            "type": "string",
-            "description": "Detailed diagnostic explanation"
+            "type": "string"
           },
-          "nodeId": {
+          "node_id": {
             "type": [
               "string",
               "null"
-            ],
-            "description": "Node ID associated with this diagnostic issue, if applicable"
+            ]
           },
           "path": {
             "type": [
               "string",
               "null"
-            ],
-            "description": "JSONPath location of the affected element"
+            ]
           },
           "severity": {
-            "$ref": "#/components/schemas/LintSeverity",
-            "description": "Severity level (\"warning\", \"error\", \"info\")"
+            "$ref": "#/components/schemas/LintSeverity"
           }
-        },
-        "example": {
-          "code": "MISSING_NODE_TYPE",
-          "message": "Node is missing property 'type'",
-          "nodeId": "trigger_1",
-          "path": "nodes[0]",
-          "severity": "warning"
         }
       },
       "LintMode": {
         "type": "string",
-        "description": "Execution context mode for the linter",
         "enum": [
           "editor",
           "runner"
@@ -4530,21 +3425,18 @@
       },
       "LintRequest": {
         "type": "object",
-        "description": "Request payload to lint workflows, campaigns, browsers, or packages",
         "properties": {
           "content": {
             "type": [
               "object",
               "null"
-            ],
-            "description": "Optional raw JSON content or document for auto-detection"
+            ]
           },
           "drawflow": {
             "type": [
               "object",
               "null"
-            ],
-            "description": "Optional entire workflow payload containing nested drawflow"
+            ]
           },
           "edges": {
             "type": [
@@ -4553,8 +3445,7 @@
             ],
             "items": {
               "type": "object"
-            },
-            "description": "Array of workflow edge connection descriptors"
+            }
           },
           "mode": {
             "oneOf": [
@@ -4562,8 +3453,7 @@
                 "type": "null"
               },
               {
-                "$ref": "#/components/schemas/LintMode",
-                "description": "Lint evaluation mode (default: \"editor\")"
+                "$ref": "#/components/schemas/LintMode"
               }
             ]
           },
@@ -4574,41 +3464,24 @@
             ],
             "items": {
               "type": "object"
-            },
-            "description": "Array of workflow block node definitions"
+            }
           },
-          "targetType": {
+          "target_type": {
             "oneOf": [
               {
                 "type": "null"
               },
               {
-                "$ref": "#/components/schemas/LintTargetType",
-                "description": "Explicit target type or \"auto\" to detect from payload"
+                "$ref": "#/components/schemas/LintTargetType"
               }
             ]
           }
-        },
-        "example": {
-          "edges": [],
-          "mode": "editor",
-          "nodes": [
-            {
-              "data": {},
-              "id": "trigger_1",
-              "label": "trigger",
-              "type": "BlockBasic"
-            }
-          ]
         }
       },
       "LintResponse": {
         "type": "object",
-        "description": "Result of static AST and schema validation",
         "required": [
           "valid",
-          "targetType",
-          "mode",
           "issues"
         ],
         "properties": {
@@ -4616,40 +3489,15 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/LintIssue"
-            },
-            "description": "List of detected validation warnings, errors, and info diagnostics"
-          },
-          "mode": {
-            "$ref": "#/components/schemas/LintMode",
-            "description": "Mode used during evaluation"
-          },
-          "targetType": {
-            "$ref": "#/components/schemas/LintTargetType",
-            "description": "Detected asset target type"
+            }
           },
           "valid": {
-            "type": "boolean",
-            "description": "Whether the asset passed validation without errors"
+            "type": "boolean"
           }
-        },
-        "example": {
-          "issues": [
-            {
-              "code": "NO_TRIGGER_NODE",
-              "message": "Workflow contains no trigger block to start execution.",
-              "nodeId": null,
-              "path": "nodes",
-              "severity": "warning"
-            }
-          ],
-          "mode": "editor",
-          "targetType": "workflow",
-          "valid": true
         }
       },
       "LintSeverity": {
         "type": "string",
-        "description": "Severity level of detected lint diagnostic",
         "enum": [
           "error",
           "warning",
@@ -4658,151 +3506,12 @@
       },
       "LintTargetType": {
         "type": "string",
-        "description": "Target asset type being validated",
         "enum": [
           "workflow",
           "campaign",
           "browser",
-          "package",
-          "auto"
+          "package"
         ]
-      },
-      "LogItem": {
-        "type": "object",
-        "required": [
-          "id",
-          "jobId",
-          "type",
-          "message",
-          "createdAt"
-        ],
-        "properties": {
-          "createdAt": {
-            "type": "string"
-          },
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "jobId": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string"
-          }
-        }
-      },
-      "MatrixSlotInfo": {
-        "type": "object",
-        "description": "Display bounds and runtime state for a grid window slot",
-        "required": [
-          "slotIndex",
-          "x",
-          "y",
-          "width",
-          "height",
-          "status"
-        ],
-        "properties": {
-          "browserId": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Assigned browser profile ID (if any)"
-          },
-          "height": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Window height in pixels",
-            "minimum": 0
-          },
-          "slotIndex": {
-            "type": "integer",
-            "format": "int32",
-            "description": "0-indexed matrix slot position",
-            "minimum": 0
-          },
-          "status": {
-            "type": "string",
-            "description": "Slot status (\"ready\", \"running\", \"completed\", \"failed\")"
-          },
-          "width": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Window width in pixels",
-            "minimum": 0
-          },
-          "x": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Window X coordinate in pixels"
-          },
-          "y": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Window Y coordinate in pixels"
-          }
-        },
-        "example": {
-          "browserId": "browser_slot_1",
-          "height": 540,
-          "slotIndex": 0,
-          "status": "ready",
-          "width": 960,
-          "x": 0,
-          "y": 0
-        }
-      },
-      "MatrixStatusResponse": {
-        "type": "object",
-        "description": "Grid matrix telemetry and slot allocation for a campaign",
-        "required": [
-          "campaignId",
-          "status",
-          "totalTasks",
-          "completedTasks",
-          "activeSlots"
-        ],
-        "properties": {
-          "activeSlots": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MatrixSlotInfo"
-            },
-            "description": "Detailed matrix slots currently allocated"
-          },
-          "campaignId": {
-            "type": "string",
-            "description": "Unique campaign identifier"
-          },
-          "completedTasks": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Number of completed tasks",
-            "minimum": 0
-          },
-          "status": {
-            "type": "string",
-            "description": "Overall campaign status (\"active\", \"completed\", \"aborted\")"
-          },
-          "totalTasks": {
-            "type": "integer",
-            "format": "int32",
-            "description": "Total tasks queued in the campaign",
-            "minimum": 0
-          }
-        },
-        "example": {
-          "activeSlots": [],
-          "campaignId": "camp_123",
-          "completedTasks": 1,
-          "status": "active",
-          "totalTasks": 4
-        }
       },
       "RestoreBackupRequest": {
         "type": "object",
@@ -4885,53 +3594,32 @@
           }
         }
       },
-      "SaveWorkflowPayload": {
+      "SaveWorkflowFilePayload": {
         "type": "object",
-        "description": "Request payload for saving or updating a workflow file",
         "required": [
           "path",
           "content"
         ],
         "properties": {
-          "content": {
-            "type": "object",
-            "description": "Workflow JSON content object (nodes, edges, settings)"
-          },
+          "content": {},
           "path": {
-            "type": "string",
-            "description": "Target filesystem path where the workflow should be written",
-            "example": "workflows/search.workflow.json"
+            "type": "string"
           }
-        },
-        "example": {
-          "content": {
-            "edges": [],
-            "name": "Search Workflow",
-            "nodes": []
-          },
-          "path": "workflows/search.workflow.json"
         }
       },
-      "SaveWorkflowResponse": {
+      "SaveWorkflowFileResponse": {
         "type": "object",
-        "description": "Response returned after saving a workflow file",
         "required": [
           "success",
           "message"
         ],
         "properties": {
           "message": {
-            "type": "string",
-            "description": "Status description message"
+            "type": "string"
           },
           "success": {
-            "type": "boolean",
-            "description": "Whether the file was written successfully"
+            "type": "boolean"
           }
-        },
-        "example": {
-          "message": "Workflow saved successfully",
-          "success": true
         }
       },
       "SideloadExtensionPayload": {
@@ -5466,51 +4154,6 @@
           }
         }
       },
-      "UpdateCampaignStorageRequest": {
-        "type": "object",
-        "description": "Request payload for updating an existing campaign in SQLite database",
-        "properties": {
-          "cron": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Optional updated cron expression"
-          },
-          "data": {
-            "type": [
-              "object",
-              "null"
-            ],
-            "description": "Optional updated campaign data"
-          },
-          "description": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Optional updated description"
-          },
-          "name": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Optional updated name"
-          },
-          "version": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Optional updated version"
-          }
-        },
-        "example": {
-          "cron": "0 9 * * *",
-          "name": "Updated Daily Sync"
-        }
-      },
       "UpdateDisplaySettingsRequest": {
         "type": "object",
         "properties": {
@@ -5809,44 +4452,36 @@
   },
   "tags": [
     {
-      "name": "Jobs",
-      "description": "Workflow job execution, lifecycle tracking, real-time logging, and worker control signals."
+      "name": "Health",
+      "description": "System health check endpoints"
     },
     {
-      "name": "Storage",
-      "description": "Workspace file exploration, workflow definitions, global variables, credentials, and data tables."
+      "name": "Jobs",
+      "description": "Workflow job dispatching and execution telemetry endpoints"
     },
     {
       "name": "Browsers",
-      "description": "Isolated browser profile management, process lifecycles, cookie stores, and extension sideloading."
-    },
-    {
-      "name": "Campaigns",
-      "description": "Multi-instance grid matrix orchestration and batch workflow campaigns."
-    },
-    {
-      "name": "System",
-      "description": "Host system diagnostics, CPU/RAM telemetry, browser binary installers, and Studio web editor."
+      "description": "Chromium instance lifecycle and profile isolation endpoints"
     },
     {
       "name": "History",
-      "description": "Job execution history, step audit trails, and log persistence."
+      "description": "Execution audit history and log queries"
     },
     {
-      "name": "Settings",
-      "description": "Application preferences, grid layout configuration, browser defaults, and concurrency limits."
+      "name": "Storage",
+      "description": "Local SQLite variables, tables, and workflow storage endpoints"
     },
     {
-      "name": "Secrets",
-      "description": "Cryptographic security and AES-256 authenticated secret encryption."
+      "name": "System",
+      "description": "System metrics and developer studio launcher"
     },
     {
       "name": "Lint",
-      "description": "Static analysis and structural validation for Automa workflow AST graphs."
+      "description": "Workflow static analysis endpoints"
     },
     {
-      "name": "Events",
-      "description": "Global Server-Sent Events stream for real-time task notifications."
+      "name": "Settings",
+      "description": "Core runtime configuration endpoints"
     }
   ]
 }

@@ -10,7 +10,9 @@ import path from 'node:path';
 import process from 'node:process';
 import { pc, rootDir } from './lib/utils.mjs';
 
-const API_DIR = path.join(rootDir, 'apps/core/src/api/handlers');
+const API_DIR = fs.existsSync(path.join(rootDir, 'apps/core/src/api/handlers'))
+  ? path.join(rootDir, 'apps/core/src/api/handlers')
+  : path.resolve(rootDir, '../tuquet-automa-runner/src/api/handlers');
 
 function lintSchemaFiles() {
   let hasError = false;

@@ -13,6 +13,7 @@
     "./WorkflowState": "./src/WorkflowState.js",
     "./WorkflowWorker": "./src/WorkflowWorker.js",
     "./blocksHandler": "./src/blocksHandler.js",
+    "./convertWorkflowData": "./src/utils/convertWorkflowData.js",
     "./helper": "./src/helper.js"
   },
   "dependencies": {
