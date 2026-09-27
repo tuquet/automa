@@ -1,7 +1,7 @@
 import { read as readXlsx, utils as utilsXlsx } from 'xlsx';
 import Papa from 'papaparse';
-import { parseJSON } from '@/utils/helper';
-import getFile, { readFileAsBase64 } from '@/utils/getFile';
+import { parseJSON } from '../utils/helper';
+import getFile, { readFileAsBase64 } from '../utils/getFile';
 import renderString from '../templating/renderString';
 
 async function insertData({ id, data }, { refData }) {

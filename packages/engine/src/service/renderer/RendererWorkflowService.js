@@ -1,5 +1,5 @@
 import { toRaw } from 'vue';
-import { MessageListener } from '@/utils/message';
+import { MessageListener } from '../../utils/message';
 
 class RendererWorkflowService {
   static executeWorkflow(workflowData, options) {

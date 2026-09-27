@@ -1,5 +1,5 @@
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
-import { parseJSON } from '@/utils/helper';
+import BrowserAPIService from '../service/browser-api/BrowserAPIService';
+import { parseJSON } from '../utils/helper';
 
 function getValues(data, keys) {
   const values = {};

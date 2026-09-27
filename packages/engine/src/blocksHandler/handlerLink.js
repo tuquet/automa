@@ -1,4 +1,4 @@
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
+import BrowserAPIService from '../service/browser-api/BrowserAPIService';
 
 export default async function ({ data, id, label }) {
   const url = await this._sendMessageToTab({

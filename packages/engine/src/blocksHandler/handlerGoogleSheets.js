@@ -1,10 +1,10 @@
-import googleSheetsApi from '@/utils/googleSheetsApi';
+import googleSheetsApi from '../utils/googleSheetsApi';
 import {
   convert2DArrayToArrayObj,
   convertArrObjTo2DArr,
   isWhitespace,
   parseJSON,
-} from '@/utils/helper';
+} from '../utils/helper';
 
 async function getSpreadsheetValues({
   spreadsheetId,

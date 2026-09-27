@@ -1,4 +1,4 @@
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
+import BrowserAPIService from '../service/browser-api/BrowserAPIService';
 
 async function closeWindow(data, windowId) {
   const windowIds = [];

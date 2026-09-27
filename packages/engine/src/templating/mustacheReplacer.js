@@ -1,6 +1,6 @@
 import objectPath from 'object-path';
-import credentialUtil from '@/utils/credentialUtil';
-import { parseJSON } from '@/utils/helper';
+import credentialUtil from '../utils/credentialUtil';
+import { parseJSON } from '../utils/helper';
 import templatingFunctions from './templatingFunctions';
 
 const refKeys = {

@@ -1,5 +1,5 @@
-import { parseJSON, isWhitespace } from '@/utils/helper';
-import getFile from '@/utils/getFile';
+import { parseJSON, isWhitespace } from './helper';
+import getFile from './getFile';
 
 const renderContent = async (content, contentType) => {
   if (contentType === 'text') return content;

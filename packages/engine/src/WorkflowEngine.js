@@ -1,13 +1,13 @@
 import cloneDeep from 'lodash.clonedeep';
 import { nanoid } from 'nanoid';
-import dbStorage from '@/db/storage';
+import dbStorage from './db/storage';
 import BrowserAPIService, {
   IS_BROWSER_API_AVAILABLE,
-} from '@/service/browser-api/BrowserAPIService';
-import { fetchApi } from '@/utils/api';
-import { getBlocks } from '@/utils/getSharedData';
-import { clearCache, isObject, parseJSON, sleep } from '@/utils/helper';
-import { MessageListener } from '@/utils/message';
+} from './service/browser-api/BrowserAPIService';
+import { fetchApi } from './utils/api';
+import { getBlocks } from './utils/getSharedData';
+import { clearCache, isObject, parseJSON, sleep } from './utils/helper';
+import { MessageListener } from './utils/message';
 import WorkflowWorker from './WorkflowWorker';
 
 let blocks = getBlocks();

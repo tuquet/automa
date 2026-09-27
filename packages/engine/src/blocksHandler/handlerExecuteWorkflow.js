@@ -1,8 +1,8 @@
 import { nanoid } from 'nanoid';
-import { isWhitespace, parseJSON } from '@/utils/helper';
-import decryptFlow, { getWorkflowPass } from '@/utils/decryptFlow';
-import convertWorkflowData from '@/utils/convertWorkflowData';
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
+import { isWhitespace, parseJSON } from '../utils/helper';
+import decryptFlow, { getWorkflowPass } from '../utils/decryptFlow';
+import convertWorkflowData from '../utils/convertWorkflowData';
+import BrowserAPIService from '../service/browser-api/BrowserAPIService';
 import WorkflowEngine from '../WorkflowEngine';
 
 function workflowListener(workflow, options) {

@@ -1,4 +1,4 @@
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
+import BrowserAPIService from '../service/browser-api/BrowserAPIService';
 import { attachDebugger, injectPreloadScript } from '../helper';
 
 export default async function ({ data, id }) {

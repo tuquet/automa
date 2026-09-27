@@ -1,5 +1,5 @@
-import { sleep } from '@/utils/helper';
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
+import { sleep } from '../utils/helper';
+import BrowserAPIService from '../service/browser-api/BrowserAPIService';
 import { attachDebugger, injectPreloadScript } from '../helper';
 
 async function activeTab(block) {

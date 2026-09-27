@@ -1,5 +1,5 @@
-import { isWhitespace } from '@/utils/helper';
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
+import { isWhitespace } from '../utils/helper';
+import BrowserAPIService from '../service/browser-api/BrowserAPIService';
 
 function handleEventListener(target, validate) {
   return (data, activeTab) => {

@@ -2,7 +2,8 @@ import Sizzle from 'sizzle';
 import {
   querySelectorAllDeep,
   querySelectorDeep,
-} from '@/lib/query-selector-shadow-dom';
+} from '../lib/query-selector-shadow-dom';
+import { isXPath } from './helper';
 
 // Add a custom "Sizzle" pseudo-class selector
 // ":contains": element content will be selected as long as it contains text
@@ -80,6 +81,23 @@ class FindElement {
 
     return result;
   }
+}
+
+export function getDocumentCtx(frameSelector) {
+  if (!frameSelector) return document;
+
+  let documentCtx = document;
+
+  const iframeSelectors = frameSelector.split('|>');
+  const type = isXPath(frameSelector) ? 'xpath' : 'cssSelector';
+  iframeSelectors.forEach((selector) => {
+    if (!documentCtx) return;
+
+    const element = FindElement[type]({ selector }, documentCtx);
+    documentCtx = element?.contentDocument;
+  });
+
+  return documentCtx;
 }
 
 export default FindElement;

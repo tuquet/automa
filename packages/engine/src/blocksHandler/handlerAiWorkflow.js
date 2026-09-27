@@ -1,4 +1,4 @@
-import { postRunAPWorkflow } from '@/utils/getAIPoweredInfo';
+import { postRunAPWorkflow } from '../utils/getAIPoweredInfo';
 import renderString from '../templating/renderString';
 
 async function aiWorkflow(block, { refData }) {

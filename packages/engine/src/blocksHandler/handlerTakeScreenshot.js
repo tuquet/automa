@@ -1,6 +1,6 @@
-import { fileSaver } from '@/utils/helper';
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
-import { IS_FIREFOX } from '@/common/utils/constant';
+import { fileSaver } from '../utils/helper';
+import BrowserAPIService from '../service/browser-api/BrowserAPIService';
+import { IS_FIREFOX } from '../common/utils/constant';
 import { waitTabLoaded } from '../helper';
 
 async function saveImage({ filename, uri, ext }) {

@@ -2,11 +2,11 @@
 /* eslint-disable prefer-rest-params */
 import objectPath from 'object-path';
 import Browser from 'webextension-polyfill';
-import { MessageListener } from '@/utils/message';
+import { MessageListener } from '../../utils/message';
 import {
   deserializeFunctions,
   serializeFunctions,
-} from '@/utils/serialization';
+} from '../../utils/serialization';
 import BrowserAPIEventHandler from './BrowserAPIEventHandler';
 import { browserAPIMap } from './browser-api-map';
 

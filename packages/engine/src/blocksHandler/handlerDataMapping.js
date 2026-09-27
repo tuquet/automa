@@ -1,5 +1,5 @@
 import objectPath from 'object-path';
-import { objectHasKey, isObject } from '@/utils/helper';
+import { objectHasKey, isObject } from '../utils/helper';
 
 function mapData(data, sources) {
   const mappedData = {};

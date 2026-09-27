@@ -1,6 +1,6 @@
-import { fetchGapi, validateOauthToken } from '@/utils/api';
-import getFile from '@/utils/getFile';
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
+import { fetchGapi, validateOauthToken } from '../utils/api';
+import getFile from '../utils/getFile';
+import BrowserAPIService from '../service/browser-api/BrowserAPIService';
 import renderString from '../templating/renderString';
 
 function getFilename(url) {

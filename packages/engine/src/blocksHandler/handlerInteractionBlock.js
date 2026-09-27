@@ -1,5 +1,5 @@
-import { objectHasKey } from '@/utils/helper';
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
+import { objectHasKey } from '../utils/helper';
+import BrowserAPIService from '../service/browser-api/BrowserAPIService';
 import { attachDebugger } from '../helper';
 
 async function checkAccess(blockName) {

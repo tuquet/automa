@@ -1,4 +1,4 @@
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
+import BrowserAPIService from '../service/browser-api/BrowserAPIService';
 
 export async function logData({ id, data }) {
   let urls = [];

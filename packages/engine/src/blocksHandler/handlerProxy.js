@@ -1,5 +1,5 @@
-import { isWhitespace } from '@/utils/helper';
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
+import { isWhitespace } from '../utils/helper';
+import BrowserAPIService from '../service/browser-api/BrowserAPIService';
 
 function setProxy({ data, id }) {
   const nextBlockId = this.getBlockConnections(id);

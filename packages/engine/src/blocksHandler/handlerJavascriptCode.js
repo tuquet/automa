@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash.clonedeep';
 import { customAlphabet } from 'nanoid/non-secure';
-import { isObject, parseJSON } from '@/utils/helper';
-import { MessageListener } from '@/utils/message';
+import { isObject, parseJSON } from '../utils/helper';
+import { MessageListener } from '../utils/message';
 import {
   automaRefDataStr,
   checkCSPAndInject,

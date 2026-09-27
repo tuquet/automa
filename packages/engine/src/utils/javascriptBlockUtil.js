@@ -1,4 +1,4 @@
-import { getDocumentCtx } from '@/content/handleSelector';
+import { getDocumentCtx } from './FindElement.js';
 
 export function automaFetchClient(id, { type, resource }) {
   return new Promise((resolve, reject) => {

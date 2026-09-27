@@ -1,5 +1,5 @@
-import { IS_FIREFOX } from '@/common/utils/constant';
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
+import { IS_FIREFOX } from '../common/utils/constant';
+import BrowserAPIService from '../service/browser-api/BrowserAPIService';
 import { copyTextToClipboard } from '../helper';
 
 function doCommand(command, value) {

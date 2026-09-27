@@ -1,8 +1,8 @@
-import dayjs from '@/lib/dayjs';
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
-import { fetchApi } from '@/utils/api';
-import convertWorkflowData from '@/utils/convertWorkflowData';
-import getBlockMessage from '@/utils/getBlockMessage';
+import dayjs from './lib/dayjs';
+import BrowserAPIService from './service/browser-api/BrowserAPIService';
+import { fetchApi } from './utils/api';
+import convertWorkflowData from './utils/convertWorkflowData';
+import getBlockMessage from './utils/getBlockMessage';
 import blocksHandler from './blocksHandler';
 import WorkflowEngine from './WorkflowEngine';
 import WorkflowEvent from './workflowEvent';

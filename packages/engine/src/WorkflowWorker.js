@@ -1,13 +1,13 @@
 import cloneDeep from 'lodash.clonedeep';
-import dbStorage from '@/db/storage';
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
+import dbStorage from './db/storage';
+import BrowserAPIService from './service/browser-api/BrowserAPIService';
 import {
   isObject,
   objectHasKey,
   parseJSON,
   sleep,
   toCamelCase,
-} from '@/utils/helper';
+} from './utils/helper';
 import { convertData, waitTabLoaded } from './helper';
 import templating from './templating';
 import renderString from './templating/renderString';

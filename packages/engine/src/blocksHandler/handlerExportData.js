@@ -1,5 +1,5 @@
-import { default as dataExporter, files } from '@/utils/dataExporter';
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
+import { default as dataExporter, files } from '../utils/dataExporter';
+import BrowserAPIService from '../service/browser-api/BrowserAPIService';
 
 function blobToBase64(blob) {
   return new Promise((resolve) => {

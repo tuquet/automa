@@ -1,5 +1,5 @@
 import objectPath from 'object-path';
-import { isWhitespace } from '@/utils/helper';
+import { isWhitespace } from '../utils/helper';
 import { executeWebhook } from '../utils/webhookUtil';
 import renderString from '../templating/renderString';
 

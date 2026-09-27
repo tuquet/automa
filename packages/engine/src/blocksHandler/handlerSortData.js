@@ -1,4 +1,4 @@
-import { objectHasKey } from '@/utils/helper';
+import { objectHasKey } from '../utils/helper';
 
 export async function sliceData({ id, data }) {
   let dataToSort = null;

@@ -1,5 +1,5 @@
 import secrets from 'secrets';
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
+import BrowserAPIService from '../service/browser-api/BrowserAPIService';
 import { isObject, parseJSON } from './helper';
 
 export async function fetchApi(path, options = {}) {

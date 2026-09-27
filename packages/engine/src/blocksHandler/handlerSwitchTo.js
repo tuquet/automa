@@ -1,4 +1,4 @@
-import { sleep } from '@/utils/helper';
+import { sleep } from '../utils/helper';
 import { getFrames } from '../helper';
 
 async function switchTo(block) {

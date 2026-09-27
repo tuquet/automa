@@ -1,4 +1,4 @@
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
+import BrowserAPIService from '../service/browser-api/BrowserAPIService';
 import { attachDebugger } from '../helper';
 
 export async function hoverElement(block) {

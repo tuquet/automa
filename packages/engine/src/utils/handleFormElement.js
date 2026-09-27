@@ -1,5 +1,5 @@
-import { sleep } from '@/utils/helper';
-import { keyDefinitions } from '@/utils/USKeyboardLayout';
+import { sleep } from './helper';
+import { keyDefinitions } from './USKeyboardLayout';
 import simulateEvent from './simulateEvent';
 
 const nativeInputValueSetter = Object.getOwnPropertyDescriptor(

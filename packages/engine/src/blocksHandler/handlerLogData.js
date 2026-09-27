@@ -1,4 +1,4 @@
-import getTranslateLog from '@/utils/getTranslateLog';
+import getTranslateLog from '../utils/getTranslateLog';
 
 export async function logData({ id, data }) {
   if (!data.workflowId) {

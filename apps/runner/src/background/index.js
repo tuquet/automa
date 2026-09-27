@@ -3,7 +3,6 @@ import browser from 'webextension-polyfill';
 import { IS_FIREFOX } from '@/common/utils/constant';
 import BrowserAPIEventHandler from '@/service/browser-api/BrowserAPIEventHandler';
 import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
-import { useUserStore } from '@/stores/user';
 import {
   executeCallbacksInData,
   isCallbackBridge,
@@ -215,8 +214,8 @@ message.on('workflow:breakpoint', (id) => {
 });
 
 message.on('get:user-id', async () => {
-  const userStore = useUserStore();
-  return { userId: userStore.user?.id };
+  const { user } = await browser.storage.local.get('user');
+  return { userId: user?.id };
 });
 
 message.on(

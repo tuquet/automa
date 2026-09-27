@@ -1,4 +1,4 @@
-import { MessageListener } from '@/utils/message';
+import { MessageListener } from '../utils/message';
 import { checkCSPAndInject, sendDebugCommand } from '../helper';
 
 const overwriteDialog = (accept, promptText) => `

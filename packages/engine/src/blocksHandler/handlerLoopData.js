@@ -1,5 +1,5 @@
 import objectPath from 'object-path';
-import { parseJSON, isXPath } from '@/utils/helper';
+import { parseJSON, isXPath } from '../utils/helper';
 
 async function loopData({ data, id }, { refData }) {
   try {

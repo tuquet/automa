@@ -1,5 +1,5 @@
 /* eslint-disable  no-param-reassign */
-import BrowserAPIService from '@/service/browser-api/BrowserAPIService';
+import BrowserAPIService from './service/browser-api/BrowserAPIService';
 
 class WorkflowState {
   constructor({ storage, key = 'workflowState' }) {
