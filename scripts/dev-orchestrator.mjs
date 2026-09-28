@@ -273,7 +273,9 @@ const TASKS = [
     args: ['watch', '-x', 'run'],
     cwd: fs.existsSync(path.join(rootDir, 'apps/core'))
       ? path.join(rootDir, 'apps/core')
-      : path.resolve(rootDir, '../tuquet-automa-runner'),
+      : fs.existsSync(path.resolve(rootDir, '../cli'))
+        ? path.resolve(rootDir, '../cli')
+        : path.resolve(rootDir, '../tuquet-automa-runner'),
     description: 'Rust Daemon on port 8765',
     url: 'http://127.0.0.1:8765/swagger-ui',
   },

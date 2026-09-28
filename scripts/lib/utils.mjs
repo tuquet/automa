@@ -17,20 +17,24 @@ export const homeDir = process.env.USERPROFILE || process.env.HOME || '';
 export function refreshRuntimePaths() {
   if (process.platform !== 'win32' || !homeDir) return;
 
+  const setupNodeDir = path.join(homeDir, 'Setup/nodejs');
   const scoopPnpmDir = path.join(homeDir, 'scoop/apps/pnpm/current');
   const scoopNodeDir = path.join(homeDir, 'scoop/apps/nodejs/current');
   const scoopNodeLtsDir = path.join(homeDir, 'scoop/apps/nodejs-lts/current');
   const scoopShimsDir = path.join(homeDir, 'scoop/shims');
+  const scoopMsvcCargoDir = path.join(homeDir, 'scoop/apps/rustup-msvc/current/.cargo/bin');
   const scoopCargoDir = path.join(homeDir, 'scoop/apps/rustup/current/.cargo/bin');
   const scoopPersistCargoDir = path.join(homeDir, 'scoop/persist/rustup/.cargo/bin');
   const scoopRustDir = path.join(homeDir, 'scoop/apps/rust/current/bin');
   const userCargoDir = path.join(homeDir, '.cargo/bin');
 
   const priorityDirs = [
+    setupNodeDir,
+    scoopShimsDir,
     scoopPnpmDir,
     scoopNodeDir,
     scoopNodeLtsDir,
-    scoopShimsDir,
+    scoopMsvcCargoDir,
     scoopCargoDir,
     scoopPersistCargoDir,
     scoopRustDir,
@@ -89,13 +93,15 @@ export async function getPrompts() {
 export const CANONICAL_MODULES = [
   {
     id: 'core',
-    name: 'tuquet-automa-runner',
+    name: 'cli',
     type: 'app',
     lang: 'Rust',
     description: 'Rust Daemon Engine & REST API (port :8765)',
     path: fs.existsSync(path.join(appsDir, 'core'))
       ? path.join(appsDir, 'core')
-      : path.resolve(rootDir, '../tuquet-automa-runner'),
+      : fs.existsSync(path.resolve(rootDir, '../cli'))
+        ? path.resolve(rootDir, '../cli')
+        : path.resolve(rootDir, '../tuquet-automa-runner'),
     port: 8765,
   },
   {

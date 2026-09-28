@@ -19,7 +19,9 @@ import {
 
 const coreDir = fs.existsSync(path.join(rootDir, 'apps/core'))
   ? path.join(rootDir, 'apps/core')
-  : path.resolve(rootDir, '../tuquet-automa-runner');
+  : fs.existsSync(path.resolve(rootDir, '../cli'))
+    ? path.resolve(rootDir, '../cli')
+    : path.resolve(rootDir, '../tuquet-automa-runner');
 
 const SUITES = [
   {
