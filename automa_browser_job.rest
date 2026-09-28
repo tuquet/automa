@@ -23,33 +23,49 @@ GET {{baseUrl}}/api/v1/browsers
 GET {{baseUrl}}/api/v1/jobs
 
 ###############################################################################
-# 2. CREATE JOB: OPEN BROWSER IN VISUAL GUI MODE (Giao diện hiển thị trực quan)
+# 2. CREATE JOB: OPEN BROWSER & PERFORM GOOGLE SEARCH VIA JAVASCRIPT (Visual GUI)
 ###############################################################################
 
-### 2.1 Submit Job: Open Visual Browser -> Navigate -> Delay 5s -> Finish
+### 2.1 Submit Job: Trigger (Params) -> Open Google -> JS Execute Search -> Delay 5s
 # @name submitVisualJob
 POST {{baseUrl}}/api/v1/jobs
 Content-Type: {{contentType}}
 
 {
   "workflowData": {
-    "name": "Visual Browser Navigation Job",
-    "description": "Opens dedicated Chromium in GUI mode, visits example.com, waits 5s and finishes",
+    "name": "Google Search Automation with Custom JavaScript",
+    "description": "Trigger with searchQuery parameter -> Open Google -> Execute JavaScript to fill input & submit search -> Delay 5s",
     "drawflow": {
       "nodes": [
         {
           "id": "node-trigger",
           "label": "trigger",
           "data": {
-            "type": "manual"
+            "type": "manual",
+            "parameters": [
+              {
+                "name": "searchQuery",
+                "value": "tuquet automa open source"
+              }
+            ]
           }
         },
         {
           "id": "node-new-tab",
           "label": "new-tab",
           "data": {
-            "url": "https://example.com",
+            "url": "https://www.google.com",
             "active": true
+          }
+        },
+        {
+          "id": "node-js-search",
+          "label": "javascript-code",
+          "data": {
+            "code": "const query = (typeof automaRefData === 'function' ? automaRefData('variables', 'searchQuery') : null) || '{{ variables.searchQuery }}' || 'tuquet automa open source'; console.log('Executing Google search for query:', query); const searchInput = document.querySelector('textarea[name=\"q\"]') || document.querySelector('input[name=\"q\"]'); if (searchInput) { searchInput.focus(); searchInput.value = query; searchInput.dispatchEvent(new Event('input', { bubbles: true })); searchInput.form?.submit(); } else { window.location.href = 'https://www.google.com/search?q=' + encodeURIComponent(query); } if (typeof automaNextBlock === 'function') automaNextBlock();",
+            "context": "webpage",
+            "preloadScripts": [],
+            "timeout": 10000
           }
         },
         {
@@ -69,6 +85,11 @@ Content-Type: {{contentType}}
         {
           "id": "edge-2",
           "source": "node-new-tab",
+          "target": "node-js-search"
+        },
+        {
+          "id": "edge-3",
+          "source": "node-js-search",
           "target": "node-delay"
         }
       ]
@@ -76,7 +97,10 @@ Content-Type: {{contentType}}
   },
   "options": {
     "headless": false,
-    "closeBrowserOnFinish": true
+    "closeBrowserOnFinish": true,
+    "variables": {
+      "searchQuery": "tuquet automa pure open source chromium"
+    }
   }
 }
 
