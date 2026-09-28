@@ -1,0 +1,191 @@
+###############################################################################
+# TUQUET AUTOMA CORE - BROWSER JOB EXECUTION & CONTROL API TEST
+# Compatible with: VS Code REST Client (humao.rest-client), JetBrains HTTP Client
+###############################################################################
+
+@baseUrl = http://127.0.0.1:8765
+@contentType = application/json
+
+###############################################################################
+# 1. PRE-FLIGHT CHECKS & SYSTEM DIAGNOSTICS
+###############################################################################
+
+### 1.1 Health Check - Verify Automa Core Daemon is Running
+GET {{baseUrl}}/api/v1/health
+
+### 1.2 Dedicated Browser Runtime Detection (Zero Host Scanning - Chromium Open Source)
+POST {{baseUrl}}/api/v1/browsers/auto-detect
+
+### 1.3 List All Browser Profiles
+GET {{baseUrl}}/api/v1/browsers
+
+### 1.4 Get Active Execution Jobs
+GET {{baseUrl}}/api/v1/jobs
+
+###############################################################################
+# 2. CREATE JOB: OPEN BROWSER IN VISUAL GUI MODE (Giao diện hiển thị trực quan)
+###############################################################################
+
+### 2.1 Submit Job: Open Visual Browser -> Navigate -> Delay 5s -> Finish
+# @name submitVisualJob
+POST {{baseUrl}}/api/v1/jobs
+Content-Type: {{contentType}}
+
+{
+  "workflowData": {
+    "name": "Visual Browser Navigation Job",
+    "description": "Opens dedicated Chromium in GUI mode, visits example.com, waits 5s and finishes",
+    "drawflow": {
+      "nodes": [
+        {
+          "id": "node-trigger",
+          "label": "trigger",
+          "data": {
+            "type": "manual"
+          }
+        },
+        {
+          "id": "node-new-tab",
+          "label": "new-tab",
+          "data": {
+            "url": "https://example.com",
+            "active": true
+          }
+        },
+        {
+          "id": "node-delay",
+          "label": "delay",
+          "data": {
+            "time": 5000
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge-1",
+          "source": "node-trigger",
+          "target": "node-new-tab"
+        },
+        {
+          "id": "edge-2",
+          "source": "node-new-tab",
+          "target": "node-delay"
+        }
+      ]
+    }
+  },
+  "options": {
+    "headless": false,
+    "closeBrowserOnFinish": true
+  }
+}
+
+###############################################################################
+# 3. CREATE JOB: OPEN BROWSER IN HEADLESS MODE (Chạy ngầm không mở cửa sổ)
+###############################################################################
+
+### 3.1 Submit Job: Headless Background Navigation
+# @name submitHeadlessJob
+POST {{baseUrl}}/api/v1/jobs
+Content-Type: {{contentType}}
+
+{
+  "workflowData": {
+    "name": "Headless Background Automation Job",
+    "description": "Runs in background using isolated Open-Source Chromium runtime",
+    "drawflow": {
+      "nodes": [
+        {
+          "id": "node-trigger",
+          "label": "trigger",
+          "data": {
+            "type": "manual"
+          }
+        },
+        {
+          "id": "node-new-tab",
+          "label": "new-tab",
+          "data": {
+            "url": "https://httpbin.org/get",
+            "active": true
+          }
+        },
+        {
+          "id": "node-delay",
+          "label": "delay",
+          "data": {
+            "time": 2000
+          }
+        }
+      ],
+      "edges": [
+        {
+          "id": "edge-1",
+          "source": "node-trigger",
+          "target": "node-new-tab"
+        },
+        {
+          "id": "edge-2",
+          "source": "node-new-tab",
+          "target": "node-delay"
+        }
+      ]
+    }
+  },
+  "options": {
+    "headless": true,
+    "closeBrowserOnFinish": true
+  }
+}
+
+###############################################################################
+# 4. CREATE JOB: RUN FROM WORKFLOW FILE PATH
+###############################################################################
+
+### 4.1 Submit Job using Existing Workflow File on Disk
+POST {{baseUrl}}/api/v1/jobs
+Content-Type: {{contentType}}
+
+{
+  "workflowPath": "C:\\Users\\ndtu6\\Repository\\tuquet-runner\\fixtures\\test_browser_workflow.json",
+  "options": {
+    "headless": false,
+    "closeBrowserOnFinish": true
+  }
+}
+
+###############################################################################
+# 5. JOB LIFECYCLE, STATUS TRACKING & LOGS
+###############################################################################
+
+### 5.1 Check Status of the Last Submitted Visual Job
+@visualJobId = {{submitVisualJob.response.body.jobId}}
+GET {{baseUrl}}/api/v1/jobs/{{visualJobId}}/status
+
+### 5.2 Stream Real-Time Execution Logs (Server-Sent Events)
+GET {{baseUrl}}/api/v1/events
+Accept: text/event-stream
+
+### 5.3 Query Execution History
+GET {{baseUrl}}/api/v1/history?limit=10
+
+### 5.4 Kill a Running Job (Dừng khẩn cấp tiến trình)
+DELETE {{baseUrl}}/api/v1/jobs/{{visualJobId}}
+
+###############################################################################
+# 6. DIRECT ANTI-DETECT BROWSER PROFILE SESSION (Mở phiên trình duyệt trực tiếp)
+###############################################################################
+
+### 6.1 Launch Direct Browser Session (Default Profile)
+POST {{baseUrl}}/api/v1/browsers/default/session
+Content-Type: {{contentType}}
+
+{
+  "headless": false
+}
+
+### 6.2 Stop Direct Browser Session
+DELETE {{baseUrl}}/api/v1/browsers/default/session
+
+### 6.3 Kill All Running Browser Sessions (Dọn sạch toàn bộ trình duyệt)
+DELETE {{baseUrl}}/api/v1/browsers/sessions
