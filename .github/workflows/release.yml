@@ -1,4 +1,4 @@
-name: Release Automa Engine
+name: Release Automa Extension
 
 on:
   push:
@@ -16,23 +16,15 @@ permissions:
 
 jobs:
   build-release:
-    name: Build & Package Release (${{ matrix.os }})
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        include:
-          - os: windows-latest
-            artifact_name: automa-v${{ github.ref_name || inputs.version }}-windows-x64.zip
-            asset_name: automa-v1.0.0-windows-x64.zip
+    name: Build & Package Extension
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9.15.9
+        uses: pnpm/action-setup@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -40,19 +32,17 @@ jobs:
           node-version: 20
           cache: 'pnpm'
 
-      - name: Install Rust Toolchain
-        uses: dtolnay/rust-toolchain@stable
-
       - name: Install Dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Inject Fallback Secrets & PassKey
-        shell: pwsh
         run: |
-          if (-not (Test-Path "apps/webe/src/utils/getPassKey.js")) {
-            New-Item -ItemType Directory -Path "apps/webe/src/utils" -Force
-            "export default function (key = '') { return 'automa-secret-passkey-' + key; }" | Set-Content -Path "apps/webe/src/utils/getPassKey.js"
+          mkdir -p apps/webe/src/utils
+          cat << 'EOF' > apps/webe/src/utils/getPassKey.js
+          export default function (key = '') {
+            return process.env.AUTOMA_MASTER_KEY || 'automa-master-passphrase-default';
           }
+          EOF
 
       - name: Build Web Assets (@automa/webe & dependencies)
         run: |
@@ -60,22 +50,15 @@ jobs:
           pnpm -F @automa/ui build
           pnpm -F @automa/webe run build
 
-      - name: Build Rust Core Engine
-        run: cargo build --release --manifest-path apps/core/Cargo.toml
-
-      - name: Package Release Assets (Windows)
-        if: runner.os == 'Windows'
-        shell: pwsh
+      - name: Package Extension Zip
         run: |
-          New-Item -ItemType Directory -Path "release-staging" -Force
-          Copy-Item "apps/core/target/release/automa-core.exe" -Destination "release-staging/automa.exe"
-          Copy-Item "apps/core/target/release/automa-core.exe" -Destination "release-staging/automa-core.exe"
-          if (Test-Path "apps/webe/dist") {
-            Copy-Item "apps/webe/dist" -Destination "release-staging/dist" -Recurse
-          }
-          Compress-Archive -Path "release-staging/*" -DestinationPath "${{ env.RELEASE_ZIP_NAME }}" -Force
-        env:
-          RELEASE_ZIP_NAME: ${{ matrix.asset_name }}
+          VERSION="${{ github.ref_name || format('v{0}', inputs.version) }}"
+          ZIP_NAME="automa-extension-${VERSION}.zip"
+          cd apps/webe/dist
+          zip -r "../../../${ZIP_NAME}" .
+          cd ../../..
+          sha256sum "${ZIP_NAME}" > "${ZIP_NAME}.sha256"
+          echo "ZIP_NAME=${ZIP_NAME}" >> $GITHUB_ENV
 
       - name: Create GitHub Release & Upload Asset
         uses: softprops/action-gh-release@v2
@@ -85,6 +68,7 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            automa-v1.0.0-windows-x64.zip
+            ${{ env.ZIP_NAME }}
+            ${{ env.ZIP_NAME }}.sha256
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

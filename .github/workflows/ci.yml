@@ -2,9 +2,13 @@ name: Ecosystem CI
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
-      - 'core-v*'
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 
