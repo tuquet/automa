@@ -67,14 +67,23 @@ export async function setup(): Promise<void> {
   console.log(`\n[E2E Global Setup] Starting Automa Core Test Daemon on port ${TEST_PORT}...`);
   const corePath = fs.existsSync(path.join(process.cwd(), 'apps/core'))
     ? path.join(process.cwd(), 'apps/core')
-    : path.resolve(process.cwd(), '../tuquet-automa-runner');
+    : fs.existsSync(path.resolve(process.cwd(), '../cli'))
+      ? path.resolve(process.cwd(), '../cli')
+      : fs.existsSync(path.resolve(process.cwd(), '../automa-core'))
+        ? path.resolve(process.cwd(), '../automa-core')
+        : path.resolve(process.cwd(), '../tuquet-automa-runner');
 
   const exeExt = process.platform === 'win32' ? '.exe' : '';
-  let exePath = path.join(corePath, 'target', 'debug', `automa${exeExt}`);
+  let exePath = path.join(corePath, 'target', 'debug', `tuquet${exeExt}`);
   if (!fs.existsSync(exePath)) {
-    const legacyPath = path.join(corePath, 'target', 'debug', `automa-core${exeExt}`);
-    if (fs.existsSync(legacyPath)) {
-      exePath = legacyPath;
+    const automaPath = path.join(corePath, 'target', 'debug', `automa${exeExt}`);
+    if (fs.existsSync(automaPath)) {
+      exePath = automaPath;
+    } else {
+      const legacyPath = path.join(corePath, 'target', 'debug', `automa-core${exeExt}`);
+      if (fs.existsSync(legacyPath)) {
+        exePath = legacyPath;
+      }
     }
   }
 

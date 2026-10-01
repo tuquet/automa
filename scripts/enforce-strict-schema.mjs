@@ -12,7 +12,11 @@ import { pc, rootDir } from './lib/utils.mjs';
 
 const API_DIR = fs.existsSync(path.join(rootDir, 'apps/core/src/api/handlers'))
   ? path.join(rootDir, 'apps/core/src/api/handlers')
-  : path.resolve(rootDir, '../tuquet-automa-runner/src/api/handlers');
+  : fs.existsSync(path.resolve(rootDir, '../cli/src/api/handlers'))
+    ? path.resolve(rootDir, '../cli/src/api/handlers')
+    : fs.existsSync(path.resolve(rootDir, '../automa-core/src/api/handlers'))
+      ? path.resolve(rootDir, '../automa-core/src/api/handlers')
+      : path.resolve(rootDir, '../tuquet-automa-runner/src/api/handlers');
 
 function lintSchemaFiles() {
   let hasError = false;

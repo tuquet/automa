@@ -5,7 +5,7 @@
   "description": "Tuquet Automa Headless CLI Runner Extension (Ultra-Lightweight)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tuquet/tuquet-automa.git"
+    "url": "https://github.com/tuquet/automa.git"
   },
   "scripts": {
     "build": "vite build",

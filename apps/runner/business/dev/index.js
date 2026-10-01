@@ -22,6 +22,21 @@ function initOffscreenDaemon(messageListener) {
 
   console.log('[Automa Core] Initializing offscreen monkey-patches...');
 
+  const originalInit = WorkflowEngine.prototype.init;
+  WorkflowEngine.prototype.init = function () {
+    if (this.options?.isDaemonJob && this.options?.jobId) {
+      sendMessage(
+        'daemon:register',
+        {
+          jobId: this.options.jobId,
+          engineId: this.id,
+        },
+        'background'
+      ).catch(console.error);
+    }
+    return originalInit.call(this);
+  };
+
   const originalAddLogHistory = WorkflowEngine.prototype.addLogHistory;
   WorkflowEngine.prototype.addLogHistory = function (detail) {
     originalAddLogHistory.call(this, detail);
@@ -65,6 +80,7 @@ async function initWorkerDaemon(message) {
   isWorkerDaemonInitialized = true;
 
   console.log('[Automa Core Worker] Initializing SSE connection...');
+  const activeJobEngines = new Map();
 
   async function connect() {
     let browserId = 'daemon_worker';
@@ -115,7 +131,52 @@ async function initWorkerDaemon(message) {
           payload = event;
         }
 
-        if (payload && payload.jobId && payload.workflowData) {
+        if (
+          payload &&
+          (payload.type === 'stop-workflow' ||
+            payload.event_type === 'stop-workflow' ||
+            payload.event === 'stop-workflow')
+        ) {
+          const targetJobId = payload.jobId || payload.job_id;
+          console.log(
+            `[Automa Daemon Worker] Received stop-workflow for Job ${targetJobId}`
+          );
+          const engineId = activeJobEngines.get(targetJobId);
+          if (engineId) {
+            BackgroundWorkflowUtils.instance.stopExecution(engineId);
+            activeJobEngines.delete(targetJobId);
+          }
+        } else if (
+          payload &&
+          (payload.type === 'pause-workflow' ||
+            payload.event_type === 'pause-workflow' ||
+            payload.event === 'pause-workflow')
+        ) {
+          const targetJobId = payload.jobId || payload.job_id;
+          console.log(
+            `[Automa Daemon Worker] Received pause-workflow for Job ${targetJobId}`
+          );
+          const engineId = activeJobEngines.get(targetJobId);
+          if (engineId) {
+            BackgroundWorkflowUtils.instance.updateExecutionState(engineId, {
+              state: { status: 'paused' },
+            });
+          }
+        } else if (
+          payload &&
+          (payload.type === 'resume-workflow' ||
+            payload.event_type === 'resume-workflow' ||
+            payload.event === 'resume-workflow')
+        ) {
+          const targetJobId = payload.jobId || payload.job_id;
+          console.log(
+            `[Automa Daemon Worker] Received resume-workflow for Job ${targetJobId}`
+          );
+          const engineId = activeJobEngines.get(targetJobId);
+          if (engineId) {
+            BackgroundWorkflowUtils.instance.resumeExecution(engineId);
+          }
+        } else if (payload && payload.jobId && payload.workflowData) {
           console.log(`[Automa Daemon Worker] Received Job ${payload.jobId}`);
 
           const triggerNode =
@@ -188,6 +249,12 @@ async function initWorkerDaemon(message) {
   connect();
 
   if (message && typeof message.on === 'function') {
+    message.on('daemon:register', (payload) => {
+      if (payload?.jobId && payload?.engineId) {
+        activeJobEngines.set(payload.jobId, payload.engineId);
+      }
+    });
+
     message.on('daemon:log', async (payload) => {
       try {
         await appendJobLog({
@@ -201,6 +268,9 @@ async function initWorkerDaemon(message) {
     });
 
     message.on('daemon:finish', async (payload) => {
+      if (payload?.jobId) {
+        activeJobEngines.delete(payload.jobId);
+      }
       try {
         await finishJob({
           baseUrl: currentDaemonBaseUrl,
@@ -215,6 +285,14 @@ async function initWorkerDaemon(message) {
   if (typeof chrome !== 'undefined' && chrome.runtime?.onMessage) {
     chrome.runtime.onMessage.addListener((msg) => {
       if (
+        msg?.name === 'background--daemon:register' ||
+        msg?.name === 'daemon:register'
+      ) {
+        const payload = msg.body || msg.payload || msg.data;
+        if (payload?.jobId && payload?.engineId) {
+          activeJobEngines.set(payload.jobId, payload.engineId);
+        }
+      } else if (
         msg?.name === 'background--daemon:log' ||
         msg?.name === 'daemon:log'
       ) {
@@ -232,6 +310,7 @@ async function initWorkerDaemon(message) {
       ) {
         const payload = msg.body || msg.payload || msg.data;
         if (payload?.jobId) {
+          activeJobEngines.delete(payload.jobId);
           finishJob({
             baseUrl: currentDaemonBaseUrl,
             path: { job_id: payload.jobId },

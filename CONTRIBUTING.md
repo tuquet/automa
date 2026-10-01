@@ -34,8 +34,8 @@ This document provides guidelines and instructions for contributing to the repos
 ### 1. Clone & Install
 ```bash
 # Clone repository
-git clone https://github.com/tuquet/tuquet-automa.git
-cd tuquet-automa
+git clone https://github.com/tuquet/automa.git
+cd automa
 
 # Install all pnpm monorepo dependencies
 pnpm install

@@ -2,8 +2,8 @@
   <h1>Tuquet Automa Engine</h1>
   <p><strong>High-Performance Browser Automation & OS Orchestration Engine</strong></p>
 
-  [![Scoop Bucket](https://img.shields.io/badge/Scoop-tuquet%2Ftuquet--scoop--bucket-blue.svg)](https://github.com/tuquet/tuquet-scoop-bucket)
-  [![GitHub Release](https://img.shields.io/github/v/release/tuquet/tuquet-automa?color=brightgreen)](https://github.com/tuquet/tuquet-automa/releases)
+  [![Scoop Bucket](https://img.shields.io/badge/Scoop-tuquet%2Fscoop--bucket-blue.svg)](https://github.com/tuquet/scoop-bucket)
+  [![GitHub Release](https://img.shields.io/github/v/release/tuquet/automa?color=brightgreen)](https://github.com/tuquet/automa/releases)
   [![Rust](https://img.shields.io/badge/Rust-Axum%2FTokio-orange.svg)](https://www.rust-lang.org/)
   [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18.x-brightgreen.svg)](https://nodejs.org/)
   [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -90,7 +90,7 @@ If you use [Scoop](https://scoop.sh/):
 
 ```powershell
 # 1. Add the official Tuquet Scoop bucket
-scoop bucket add tuquet https://github.com/tuquet/tuquet-scoop-bucket
+scoop bucket add tuquet https://github.com/tuquet/scoop-bucket
 
 # 2. Install Automa Engine
 scoop install automa
@@ -107,7 +107,7 @@ scoop update automa
 ### Option 2: Direct Binary Download (GitHub Releases)
 If you prefer downloading pre-built binaries without Scoop:
 
-1. Go to the **[Latest GitHub Releases](https://github.com/tuquet/tuquet-automa/releases)** page.
+1. Go to the **[Latest GitHub Releases](https://github.com/tuquet/automa/releases)** page.
 2. Download the **`automa-v1.0.0-windows-x64.zip`** package under Assets.
 3. Extract the `.zip` archive to any folder on your computer.
 4. Double-click **`automa.exe`** to start the Automa Core Engine.
@@ -127,8 +127,8 @@ If you want to contribute or build from source:
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/tuquet/tuquet-automa.git
-cd tuquet-automa
+git clone https://github.com/tuquet/automa.git
+cd automa
 
 # 2. Install dependencies
 pnpm install

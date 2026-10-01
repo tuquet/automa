@@ -69,7 +69,7 @@ async function runDoctor() {
       },
     },
     {
-      name: 'Rust & Cargo (for tuquet-automa-runner)',
+      name: 'Rust & Cargo (for tuquet-cli / tuquet)',
       check: () => {
         try {
           refreshRuntimePaths();
@@ -106,7 +106,7 @@ async function installDependencies(totalSteps = 3, stepIndex = 2) {
 }
 
 async function setupRust(totalSteps = 3, stepIndex = 3) {
-  console.log(`\n${pc.cyan(`🦀 [${stepIndex}/${totalSteps}] Setting up Rust & Cargo (for tuquet-automa-runner)...`)}`);
+  console.log(`\n${pc.cyan(`🦀 [${stepIndex}/${totalSteps}] Setting up Rust & Cargo (for tuquet-cli / tuquet)...`)}`);
   refreshRuntimePaths();
 
   try {

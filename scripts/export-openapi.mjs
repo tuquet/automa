@@ -33,7 +33,11 @@ export async function getOpenApiSpec() {
     console.log(`${pc.yellow('⚡')} Automa Core is not running live. Exporting OpenAPI spec directly from Rust source...`);
     const cargoManifest = fs.existsSync(path.join(rootDir, 'apps/core/Cargo.toml'))
       ? path.join(rootDir, 'apps/core/Cargo.toml')
-      : path.resolve(rootDir, '../tuquet-automa-runner/Cargo.toml');
+      : fs.existsSync(path.resolve(rootDir, '../cli/Cargo.toml'))
+        ? path.resolve(rootDir, '../cli/Cargo.toml')
+        : fs.existsSync(path.resolve(rootDir, '../automa-core/Cargo.toml'))
+          ? path.resolve(rootDir, '../automa-core/Cargo.toml')
+          : path.resolve(rootDir, '../tuquet-automa-runner/Cargo.toml');
     execSync(`cargo run --manifest-path "${cargoManifest}" --quiet -- --export-openapi "${OPENAPI_SPEC}"`, {
       cwd: rootDir,
       stdio: ['pipe', 'pipe', 'pipe'],
