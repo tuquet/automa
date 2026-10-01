@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Tuquet Platform — Multi-Repository Orchestration Pipeline",
+    "subtitle": "tuquet/cloud · tuquet/runner · tuquet/automa · tuquet/browser",
+    "output": "runner-automa-pipeline.html",
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "view_cloud_dispatch",
+        "label": "1. [tuquet/cloud] Job Ingestion",
+        "focus": ["cloud_dispatch", "runner_daemon", "job_guard"],
+        "note": "tuquet/cloud dispatches job to tuquet/runner, which arms Win32 Job Object"
+      },
+      {
+        "id": "view_automa_spawn",
+        "label": "2. [tuquet/automa] Spawn & DAG",
+        "focus": ["automa_core", "workflow_dag"],
+        "note": "tuquet/runner spawns automa.exe; tuquet/automa compiles the workflow step DAG"
+      },
+      {
+        "id": "view_browser_engine",
+        "label": "3. [tuquet/browser] Anti-Detect Launch",
+        "focus": ["tuquet_browser", "antidetect_cdp", "chromium_runtime"],
+        "note": "tuquet/browser coordinates multi-profile isolation, proxy, and launches Chromium"
+      },
+      {
+        "id": "view_dom_scrape",
+        "label": "4. DOM Automation & Event Stream",
+        "focus": ["chromium_runtime", "target_site", "antidetect_cdp", "workflow_dag"],
+        "note": "Chromium executes DOM scraping on target site; tuquet/browser streams events to Automa"
+      },
+      {
+        "id": "view_api_trigger",
+        "label": "5. [tuquet/automa -> cloud] Ingestion",
+        "focus": ["workflow_dag", "api_trigger", "cloud_ingest", "cloud_dispatch"],
+        "note": "tuquet/automa triggers HttpRequestBlock to POST crawled data directly into tuquet/cloud"
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "cloud_dispatch",
+      "type": "cloud",
+      "label": "Cloud Dispatcher",
+      "sublabel": "tuquet/cloud (Supabase)",
+      "brand": "supabase",
+      "tag": "campaign_runs · WS",
+      "pos": [90, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "runner_daemon",
+      "type": "backend",
+      "label": "Tuquet Runner Host",
+      "sublabel": "tuquet/runner (Rust)",
+      "brand": "rust",
+      "tag": "tokio supervisor",
+      "pos": [390, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "job_guard",
+      "type": "security",
+      "label": "Win32 Job Object",
+      "sublabel": "tuquet/runner (Kernel)",
+      "tag": "0.1ms Kill Limit",
+      "pos": [390, 280],
+      "size": [150, 64]
+    },
+    {
+      "id": "automa_core",
+      "type": "backend",
+      "label": "Automa Core Daemon",
+      "sublabel": "tuquet/automa (Axum/TS)",
+      "tag": "automa.exe daemon",
+      "pos": [690, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "workflow_dag",
+      "type": "backend",
+      "label": "Workflow Engine",
+      "sublabel": "tuquet/automa (DAG)",
+      "tag": "DOM Step Pipeline",
+      "pos": [690, 280],
+      "size": [150, 64]
+    },
+    {
+      "id": "api_trigger",
+      "type": "messagebus",
+      "label": "Workflow API Block",
+      "sublabel": "tuquet/automa (Block)",
+      "tag": "HttpRequestBlock",
+      "pos": [690, 480],
+      "size": [150, 64]
+    },
+    {
+      "id": "tuquet_browser",
+      "type": "backend",
+      "label": "Tuquet Browser Core",
+      "sublabel": "tuquet/browser (Rust)",
+      "brand": "rust",
+      "tag": "Lifecycle & CDN",
+      "pos": [990, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "antidetect_cdp",
+      "type": "backend",
+      "label": "Anti-Detect & CDP",
+      "sublabel": "tuquet/browser (Rust)",
+      "tag": "Hardware Spoof & Proxy",
+      "pos": [990, 280],
+      "size": [150, 64]
+    },
+    {
+      "id": "chromium_runtime",
+      "type": "backend",
+      "label": "Chromium Runtime",
+      "sublabel": "~/.tuquet/runtimes/bsd",
+      "tag": "Isolated Sandbox",
+      "pos": [1290, 80],
+      "size": [150, 64]
+    },
+    {
+      "id": "cloud_ingest",
+      "type": "database",
+      "label": "Cloud Ingestion & DB",
+      "sublabel": "tuquet/cloud (Supabase)",
+      "brand": "supabase",
+      "tag": "crawler_data · REST",
+      "pos": [90, 480],
+      "size": [150, 64]
+    },
+    {
+      "id": "target_site",
+      "type": "external",
+      "label": "Target Web Platform",
+      "sublabel": "external: Target Site",
+      "tag": "DOM & Single Page App",
+      "pos": [1290, 280],
+      "size": [150, 64]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "security-group",
+      "label": "repo: tuquet/cloud",
+      "wraps": ["cloud_dispatch", "cloud_ingest"]
+    },
+    {
+      "kind": "region",
+      "label": "repo: tuquet/runner",
+      "wraps": ["runner_daemon", "job_guard"]
+    },
+    {
+      "kind": "region",
+      "label": "repo: tuquet/automa",
+      "wraps": ["automa_core", "workflow_dag", "api_trigger"]
+    },
+    {
+      "kind": "region",
+      "label": "repo: tuquet/browser",
+      "wraps": ["tuquet_browser", "antidetect_cdp"]
+    },
+    {
+      "kind": "region",
+      "label": "runtime: ~/.tuquet/runtimes/",
+      "wraps": ["chromium_runtime"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "cloud-to-runner",
+      "from": "cloud_dispatch",
+      "to": "runner_daemon",
+      "label": "push job command",
+      "variant": "emphasis"
+    },
+    {
+      "id": "runner-to-job",
+      "from": "runner_daemon",
+      "to": "job_guard",
+      "label": "arm Win32 JobObj",
+      "variant": "security"
+    },
+    {
+      "id": "runner-to-automa",
+      "from": "runner_daemon",
+      "to": "automa_core",
+      "label": "spawn automa.exe",
+      "variant": "emphasis"
+    },
+    {
+      "id": "automa-to-flow",
+      "from": "automa_core",
+      "to": "workflow_dag",
+      "label": "compile step DAG",
+      "variant": "default"
+    },
+    {
+      "id": "automa-to-browser",
+      "from": "automa_core",
+      "to": "tuquet_browser",
+      "label": "request browser",
+      "variant": "emphasis"
+    },
+    {
+      "id": "browser-to-cdp",
+      "from": "tuquet_browser",
+      "to": "antidetect_cdp",
+      "label": "bind CDP & proxy",
+      "variant": "default"
+    },
+    {
+      "id": "browser-to-chromium",
+      "from": "tuquet_browser",
+      "to": "chromium_runtime",
+      "label": "launch isolated BSD",
+      "variant": "emphasis"
+    },
+    {
+      "id": "chromium-to-target",
+      "from": "chromium_runtime",
+      "to": "target_site",
+      "label": "automate DOM",
+      "variant": "emphasis"
+    },
+    {
+      "id": "target-to-cdp",
+      "from": "target_site",
+      "to": "antidetect_cdp",
+      "label": "extract DOM data",
+      "variant": "default"
+    },
+    {
+      "id": "cdp-to-flow",
+      "from": "antidetect_cdp",
+      "to": "workflow_dag",
+      "label": "stream CDP events",
+      "variant": "default"
+    },
+    {
+      "id": "flow-to-api",
+      "from": "workflow_dag",
+      "to": "api_trigger",
+      "label": "trigger API block",
+      "variant": "emphasis"
+    },
+    {
+      "id": "api-to-cloud",
+      "from": "api_trigger",
+      "to": "cloud_ingest",
+      "label": "POST crawl data",
+      "variant": "emphasis"
+    },
+    {
+      "id": "cloud-complete",
+      "from": "cloud_ingest",
+      "to": "cloud_dispatch",
+      "label": "run completed",
+      "variant": "dashed"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "violet",
+      "title": "Multi-Repository Architecture",
+      "items": [
+        "tuquet/cloud: Multi-tenant control plane, campaign run queues, and centralized crawler database",
+        "tuquet/runner: Rust process supervisor with 0.1ms Win32 Job Object containment",
+        "tuquet/automa: Visual workflow editor & Axum daemon with HttpRequestBlock API triggers",
+        "tuquet/browser: Dedicated Rust antidetect engine, multi-profile sandbox & CDP proxy"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Zero-Zombie & Anti-Detect Isolation",
+      "items": [
+        "tuquet/runner guarantees 0.1ms atomic teardown of child Chrome processes via Win32 Job Objects",
+        "tuquet/browser isolates cookies, Canvas/WebGL fingerprints, and proxies inside ~/.tuquet/runtimes/"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Closed-Loop Cloud Ingestion",
+      "items": [
+        "Automa workflow DAG triggers authenticated HTTP POST requests directly into tuquet/cloud",
+        "Campaign runs automatically record duration, masked execution logs, and scraped JSON payloads"
+      ]
+    }
+  ]
+}

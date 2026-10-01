@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "5b706937-4002-4f93-9a0b-9dcc1e55a5fb",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "C:\\Users\\ndtu6\\Repository\\tuquet\\automa\\diagrams\\runner-automa-pipeline.architecture.json",
+  "output": "C:\\Users\\ndtu6\\Repository\\tuquet\\automa\\diagrams\\runner-automa-pipeline.html",
+  "specification": {
+    "sha256": "f50969c10f1bbdbcae85844637ce2fff7ca085d98fc50e3eab8b764501ddb414",
+    "bytes": 8429
+  },
+  "artifact": {
+    "sha256": "904faaf4a48624ca949eca3aff9d56e634bbf777bcef22516369a069c18167f8",
+    "bytes": 790817
+  }
+}

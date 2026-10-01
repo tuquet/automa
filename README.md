@@ -39,12 +39,23 @@ tuquet-automa/
 │   ├── types/          # OpenAPI Specifications & Shared TypeScript Types
 │   ├── ui/             # Enterprise Shadcn Vue UI Primitive Components
 │   └── webextension-polyfill/
+├── diagrams/           # Interactive Archify Architectural & Pipeline Visualizations
 └── docs/               # Technical Architecture & Deployment Guides
 ```
+
+> 💡 **Interactive Architecture Artifacts:** Explore the animated [Tuquet Platform Orchestration Pipeline Video](diagrams/tuquet-platform-multi-repository-orchestration-pipeline.webm) and the standalone [Interactive Architecture HTML Viewer](diagrams/runner-automa-pipeline.html) (featuring 5-phase guided tour, infinite trace packet animation, Win32 Job Object supervision, and canonical `~/.tuquet/` storage).
+
 
 ---
 
 ## 🏗️ System Architecture
+
+<div align="center">
+  <video src="diagrams/tuquet-platform-multi-repository-orchestration-pipeline.webm" autoplay loop muted playsinline width="100%"></video>
+  <p><em>Real-Time Closed-Loop Multi-Repository Orchestration Pipeline: Cloud Command &rarr; Tuquet Runner Supervisor &rarr; Automa Engine &rarr; Browser Core &rarr; Cloud Event Sync</em></p>
+</div>
+
+### Internal Monorepo Subsystems (apps/core & apps/webe)
 
 ```mermaid
 flowchart TD
@@ -56,18 +67,16 @@ flowchart TD
     subgraph CORE["apps/core (Rust Core Daemon & Manager CLI)"]
         REST["Axum REST / SSE / WS Daemon (127.0.0.1:8080)"]
         CDP["CDP Browser Orchestrator & Native OS I/O"]
-        
-        subgraph ADAPTERS["Storage Adapter Layer"]
-            SQLITE["SQLite Local Adapter (Offline / Fast)"]
-            SUPABASE["Supabase Remote Adapter (Cloud Sync / RBAC)"]
-        end
+        SQLITE[("SQLite Local Storage (Offline / Fast)")]
+        SUPABASE[("Supabase Remote Cloud (Sync / RBAC)")]
     end
 
-    STUDIO <-->|"HTTP / WebSocket API"| REST
-    EXT <-->|"Local WS Bridge"| REST
-    REST --> ADAPTERS
-    ADAPTERS --> SQLITE
-    ADAPTERS --> SUPABASE
+    STUDIO -->|"HTTP / WebSocket API"| REST
+    REST -->|"Visual Flow State"| STUDIO
+    EXT -->|"Local WS Bridge"| REST
+    REST -->|"CDP Target Control"| CDP
+    REST -->|"Local Persistence"| SQLITE
+    REST -->|"Cloud Replication"| SUPABASE
 ```
 
 ---

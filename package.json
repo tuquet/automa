@@ -11,6 +11,7 @@
         "setup": "node scripts/setup-ecosystem.mjs",
         "build": "turbo run build",
         "build:runner": "turbo run build --filter=@automa/runner",
+        "build:pages": "node scripts/build-pages.mjs",
         "dev": "node scripts/dev-orchestrator.mjs",
         "dev:all": "node scripts/dev-orchestrator.mjs --all",
         "dev:turbo": "turbo run dev",

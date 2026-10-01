@@ -17,18 +17,16 @@ flowchart TD
     subgraph CORE["apps/core (Rust Core Daemon)"]
         REST["Axum REST / SSE / WS Daemon (127.0.0.1:8080)"]
         CDP["CDP Browser Orchestrator & Native OS I/O"]
-        
-        subgraph ADAPTERS["Storage Adapter Layer (Trait StorageAdapter)"]
-            SQLITE["SQLite Local Adapter (Fast / Offline)"]
-            SUPABASE["Supabase Remote Adapter (Cloud Sync / RBAC)"]
-        end
+        SQLITE[("SQLite Local Storage (Fast / Offline)")]
+        SUPABASE[("Supabase Remote Cloud (Cloud Sync / RBAC)")]
     end
 
-    STUDIO <-->|"HTTP / WebSocket API"| REST
-    EXT <-->|"Local WS Bridge"| REST
-    REST --> ADAPTERS
-    ADAPTERS --> SQLITE
-    ADAPTERS --> SUPABASE
+    STUDIO -->|"HTTP / WebSocket API"| REST
+    REST -->|"Visual Flow State"| STUDIO
+    EXT -->|"Local WS Bridge"| REST
+    REST -->|"CDP Target Control"| CDP
+    REST -->|"Local Persistence"| SQLITE
+    REST -->|"Cloud Replication"| SUPABASE
 ```
 
 ---
@@ -65,7 +63,7 @@ pub trait StorageAdapter: Send + Sync {
 
 ### 💾 1. SQLite Local Adapter (`SqliteAdapter`)
 - **Use Case**: Offline mode, local privacy, zero network latency.
-- **Implementation**: Uses embedded SQLite database (`~/.automa/automa.db`). Ideal for single-device offline automation.
+- **Implementation**: Uses embedded SQLite database (`~/.tuquet/automa.db`). Ideal for single-device offline automation.
 
 ### ☁️ 2. Supabase Remote Adapter (`SupabaseAdapter`)
 - **Use Case**: Multi-device sync, cloud collaboration, team RBAC, centralized logging.
