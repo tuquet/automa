@@ -83,17 +83,17 @@ When troubleshooting system errors or diagnosing dev orchestrator runs (`pnpm ru
 
 When cleaning temporary files, scratch artifacts, or optimizing repository size:
 
-### Danh Mục Bảo Vệ Tuyệt Đối (PROTECTED WHITELIST - CẤM XÓA):
-1. **`apps/webe/src/utils/getPassKey.js`**: Khóa mã hóa bắt buộc để Vite biên dịch `apps/webe` và runner.
-2. **`.changeset/*.md`**: Lịch sử release phân tán của packages & apps.
-3. **Các file cấu hình cốt lõi**: `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `turbo.json`, `Cargo.lock`, `Cargo.toml`, `.vscode/*`, `biome.json`.
-4. **Các tệp mã nguồn trong `src/`**: Tuyệt đối không xóa nếu chưa đối chiếu grep references.
+### Protected Whitelist (DO NOT DELETE):
+1. **`apps/webe/src/utils/getPassKey.js`**: Required passkey for Vite compilation of `apps/webe` and the headless runner.
+2. **`.changeset/*.md`**: Release changeset history for packages & apps.
+3. **Core configuration files**: `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `turbo.json`, `Cargo.lock`, `Cargo.toml`, `.vscode/*`, `biome.json`.
+4. **Source files in `src/`**: Strictly do not delete without verifying grep references.
 
-### 4 Bước Chuẩn (SOP):
-1. **Quét & Phát hiện (Discovery)**: Dùng `find_by_name` quét `*.vsix`, `*.log`, `*/scratch`.
-2. **Kiểm tra An toàn (Cross-Check)**: Dùng `grep_search` kiểm tra references trong code.
-3. **Báo cáo (Dry-Run)**: Liệt kê danh sách file dự kiến xóa.
-4. **Thực thi & Kiểm định (Purge & Test)**: Xóa file và chạy `pnpm run lint` + `pnpm run build` để xác nhận hệ sinh thái hoạt động bình thường.
+### 4 Standard Steps (SOP):
+1. **Discovery**: Use file search tools to scan for `*.vsix`, `*.log`, `*/scratch`.
+2. **Safety Cross-Check**: Use grep to verify potential references in codebase.
+3. **Dry-Run Report**: List candidate files scheduled for deletion.
+4. **Purge & Verification**: Delete files and run `pnpm run lint` + `pnpm run build` to confirm ecosystem health.
 
 ---
 

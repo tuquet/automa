@@ -1,12 +1,12 @@
-# 🏛️ SRS Feature Store & Reactive State Topology Specification
+# 🏛️ SRS Horizontal Feature Store & Reactive State Topology Specification
 
 ---
 
-## 🎯 1. TỔNG QUAN VÀ NGUYÊN TẮC KIẾN TRÚC STORE
+## 🎯 1. Overview & Store Architecture Principles
 
-Tài liệu này là **Đặc tả Kỹ thuật Master (SRS)** chuẩn hóa toàn bộ kiến trúc quản lý trạng thái (State Management) thông qua **Feature-Scoped Stores** trên toàn bộ hệ sinh thái Automa (**`apps/desk`**, **`apps/vsce`**, **`apps/webe`**).
+This document serves as the **Master Technical Specification (SRS)** standardizing the state management architecture through **Feature-Scoped Stores** across the Automa Ecosystem (**`apps/desk`**, **`apps/vsce`**, **`apps/webe`**).
 
-Mục tiêu là thiết lập **Single Source of Truth** cho từng phân hệ nghiệp vụ, cho phép các nút bấm (`btn.*`), dropdowns (`select.*`) và views tự động phản xạ reactive tức thì theo luồng sự kiện thời gian thực từ Rust Daemon (`/api/v1/events` & `/api/v1/ws`).
+The objective is to establish a **Single Source of Truth** for each domain subsystem, enabling action buttons (`btn.*`), dropdowns (`select.*`), and views to react instantaneously to real-time event streams emitted by the Rust Core Daemon (`/api/v1/events` & `/api/v1/ws`).
 
 ```mermaid
 flowchart TD
@@ -26,30 +26,30 @@ flowchart TD
 
 ---
 
-### 🛡️ CẤU TRÚC 4 TẦNG CHUẨN CỦA MỖI FEATURE STORE
+### 🛡️ Standard 4-Tier Structure of Each Feature Store
 
-Mọi Feature Store trong hệ sinh thái **BẮT BUỘC** tuân thủ cấu trúc 4 tầng đồng nhất:
+Every Feature Store in the ecosystem **MUST** adhere to a uniform 4-tier structure:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│ 1. State Slice (Strict Typing từ @automa/types)             │
+│ 1. State Slice (Strictly typed from @automa/types)          │
 ├─────────────────────────────────────────────────────────────┤
-│ 2. Computed / Getters (Dữ liệu phái sinh Reactive)          │
+│ 2. Computed / Getters (Reactive Derived Data)               │
 ├─────────────────────────────────────────────────────────────┤
-│ 3. Actions & FSM Mutators (Thực thi nút bấm & mutations)    │
+│ 3. Actions & FSM Mutators (Button execution & mutations)    │
 ├─────────────────────────────────────────────────────────────┤
-│ 4. SSE / WS Event Listeners (Tự động nạp lại & Invalidation)│
+│ 4. SSE / WS Event Listeners (Auto-refetch & Invalidation)   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 📊 2. CHI TIẾT 6 DOMAIN FEATURE STORES CHUẨN HOÁ
+## 📊 2. Detailed Breakdown of 6 Domain Feature Stores
 
 ---
 
-### 1. `useWorkflowStore` — Quản Lý Canvas & Đồ Thị AST Kịch Bản
-* **Vị trí**: Quản lý đồ thị nodes/edges trên VueFlow Canvas, trạng thái chỉnh sửa (`isDirty`), breakpoints và linter issues.
+### 1. `useWorkflowStore` — Canvas & Workflow AST Graph Management
+* **Scope**: Manages nodes/edges on the VueFlow Canvas, dirty tracking state (`isDirty`), breakpoints, and linter issues.
 * **State Slice**:
   ```typescript
   interface WorkflowStoreState {
@@ -62,18 +62,18 @@ Mọi Feature Store trong hệ sinh thái **BẮT BUỘC** tuân thủ cấu tr�
     lintIssues: Array<{ id: string; nodeId?: string; message: string; severity: 'error' | 'warning' | 'info' }>;
   }
   ```
-* **Getters Phái Sinh**:
-  - `validNodesCount`: Đếm số lượng node hợp lệ trên canvas.
-  - `hasUnsavedChanges`: Kiểm tra xem canvas có thay đổi chưa lưu hay không.
-  - `isExecuting`: Trả về `true` khi `fsmState === 'EXECUTING'`.
-* **Phản Xạ Reactive (Side-Effects)**:
-  - Khi `setWorkflow()`: Tự động kích hoạt `lint_workflow` để phân tích AST.
-  - Khi `btn.workflow.save` hoàn tất: Đặt `isDirty = false`, phát tín hiệu `workflow_saved` đến `select.storage.workflow`.
+* **Derived Getters**:
+  - `validNodesCount`: Counts valid nodes on canvas.
+  - `hasUnsavedChanges`: Checks if canvas has unsaved edits.
+  - `isExecuting`: Returns `true` when `fsmState === 'EXECUTING'`.
+* **Reactive Side-Effects**:
+  - On `setWorkflow()`: Automatically triggers `lint_workflow` for AST analysis.
+  - On `btn.workflow.save` completion: Sets `isDirty = false`, emits `workflow_saved` event to `select.storage.workflow`.
 
 ---
 
-### 2. `useBrowserStore` — Quản Lý Đội Trình Duyệt & Anti-Detect Profiles
-* **Vị trí**: Quản lý danh sách browser profiles từ SQLite DB, trạng thái online/offline và ưu tiên khởi chạy (Waterfall Resolution).
+### 2. `useBrowserStore` — Browser Fleet & Anti-Detect Profile Management
+* **Scope**: Manages browser profiles from SQLite DB, online/offline status, and launch priority (Waterfall Resolution).
 * **State Slice**:
   ```typescript
   interface BrowserStoreState {
@@ -86,14 +86,14 @@ Mọi Feature Store trong hệ sinh thái **BẮT BUỘC** tuân thủ cấu tr�
   }
   ```
 * **SSE Event Invalidation Bindings**:
-  - `browser_created`: Tự động thêm profile mới vào mảng `browsers`, cập nhật `select.browser.profile`.
-  - `browser_deleted`: Xóa profile khỏi `browsers`, fallback `selectedBrowserId` về `default`.
-  - `browser_online` / `browser_offline`: Cập nhật `onlineBrowserIds` để đổi màu status badge.
+  - `browser_created`: Appends new profile to `browsers` array, updates `select.browser.profile`.
+  - `browser_deleted`: Removes profile from `browsers`, falls back `selectedBrowserId` to `default`.
+  - `browser_online` / `browser_offline`: Updates `onlineBrowserIds` to alter status badge color.
 
 ---
 
-### 3. `useCampaignStore` — Quản Lý Chiến Dịch Ma Trận (Matrix Fleet)
-* **Vị trí**: Quản lý kịch bản campaign matrix, phân bổ slots hiển thị và tiến trình chạy đồng thời.
+### 3. `useCampaignStore` — Campaign Matrix Fleet Management
+* **Scope**: Manages campaign matrix configurations, grid slot allocations, and concurrent execution progress.
 * **State Slice**:
   ```typescript
   interface CampaignStoreState {
@@ -111,13 +111,13 @@ Mọi Feature Store trong hệ sinh thái **BẮT BUỘC** tuân thủ cấu tr�
   }
   ```
 * **SSE Event Bindings**:
-  - `campaign_slot_progress`: Cập nhật tiến độ `progressPercent` của slot tương ứng trên CSS Grid.
-  - `campaign_aborted`: Chuyển trạng thái toàn bộ active slots về `aborted` và giải phóng tài nguyên.
+  - `campaign_slot_progress`: Updates `progressPercent` of the corresponding slot in the CSS Grid.
+  - `campaign_aborted`: Resets all active slots to `aborted` and releases resources.
 
 ---
 
-### 4. `useStorageStore` — Quản Lý Cơ Sở Dữ Liệu Business (Tables, Variables, Credentials)
-* **Vị trí**: Lưu trữ danh sách bảng dữ liệu, biến toàn cục, secret keys và file tree workspace.
+### 4. `useStorageStore` — Business Database Management (Tables, Variables, Credentials)
+* **Scope**: Manages data tables, global variables, encrypted secret keys, and workspace file trees.
 * **State Slice**:
   ```typescript
   interface StorageStoreState {
@@ -129,14 +129,14 @@ Mọi Feature Store trong hệ sinh thái **BẮT BUỘC** tuân thủ cấu tr�
     isLoading: boolean;
   }
   ```
-* **Phản Xạ Reactive**:
-  - Khi `storage_table_changed`: Tự động gọi lại `get_storage_tables` và refresh `select.storage.table`.
-  - Khi `storage_variable_changed`: Cập nhật danh sách autocomplete `{{variables.KEY}}` trên mọi input field.
+* **Reactive Side-Effects**:
+  - On `storage_table_changed`: Re-fetches `get_storage_tables` and refreshes `select.storage.table`.
+  - On `storage_variable_changed`: Updates autocomplete registry for `{{variables.KEY}}` across input fields.
 
 ---
 
-### 5. `useExecutionStore` — Giám Sát Thực Thi Real-time & Telemetry Logs
-* **Vị trí**: Quản lý telemetry buffer, nhật ký thực thi từng bước và điều khiển FSM (Pause/Resume/Kill).
+### 5. `useExecutionStore` — Real-Time Execution Monitoring & Telemetry Logs
+* **Scope**: Manages telemetry buffer, step-level execution logs, and FSM controls (Pause/Resume/Kill).
 * **State Slice**:
   ```typescript
   interface ExecutionStoreState {
@@ -148,13 +148,13 @@ Mọi Feature Store trong hệ sinh thái **BẮT BUỘC** tuân thủ cấu tr�
   }
   ```
 * **SSE Event Bindings**:
-  - `job_log`: Nhận log mới từ Rust Core, chèn vào `logs` và tự động cuộn xuống cuối màn hình console.
-  - `job_status`: Chuyển `fsmState` tương ứng (`EXECUTING`, `COMPLETED`, `FAILED`, `TERMINATING`).
+  - `job_log`: Ingests new logs from Rust Core, appends to `logs`, and auto-scrolls the console drawer.
+  - `job_status`: Transitions `fsmState` accordingly (`EXECUTING`, `COMPLETED`, `FAILED`, `TERMINATING`).
 
 ---
 
-### 6. `useSettingsStore` — Cấu Hình Hệ Thống & Tọa Độ Grid
-* **Vị trí**: Lưu trữ cấu hình kích thước màn hình, tỷ lệ chia ô ma trận, giới hạn tải và giao diện Dark/Light.
+### 6. `useSettingsStore` — System Configuration & Grid Dimensions
+* **Scope**: Persists viewport dimensions, matrix grid partition ratios, concurrency limits, and Dark/Light themes.
 * **State Slice**:
   ```typescript
   interface SettingsStoreState {
@@ -166,7 +166,7 @@ Mọi Feature Store trong hệ sinh thái **BẮT BUỘC** tuân thủ cấu tr�
 
 ---
 
-## ⚡ 3. MA TRẬN KẾT NỐI SỰ KIỆN REAL-TIME (SSE / WS TO STORE DISPATCH MATRIX)
+## ⚡ 3. Real-Time Event Dispatch Matrix (SSE / WS to Store)
 
 ```mermaid
 sequenceDiagram
@@ -191,9 +191,9 @@ sequenceDiagram
 
 ---
 
-## 💻 4. MẪU TRIỂN KHAI PHẢN XẠ REACTIVE (CODE RECIPES)
+## 💻 4. Reactive Implementation Recipes
 
-### 📦 Ví Dụ 1: Gắn Kết SSE Event Hub Vào Pinia Store Trong Vue 3.5
+### 📦 Example: Binding SSE Event Hub to Pinia Store in Vue 3.5
 
 ```typescript
 // composables/useBindStoreSse.ts
@@ -240,10 +240,10 @@ export function useBindStoreSse() {
 
 ---
 
-## 🔍 5. GIAO THỨC KIỂM TRA CHÉO DÀNH CHO SUBAGENT (AGENT STORE AUDIT PROTOCOL)
+## 🔍 5. Subagent Store Audit Protocol
 
-Khi rà soát một tính năng trên UI, Agent **BẮT BUỘC** kiểm tra 4 tiêu chí:
-1. **Store Binding**: Thành phần UI có đọc trạng thái trực tiếp từ Feature Store hay không (tránh lưu state cục bộ rời rạc).
-2. **Action Trigger**: Khi người dùng tương tác, UI có gọi Action tương ứng trong Store (Action sau đó dispatch `btn.*` hoặc `select.*`).
-3. **SSE Reflection**: Khi Daemon bắn sự kiện thay đổi dữ liệu, Store có hook listener cập nhật state slice ngay lập tức không.
-4. **Zero Flakiness**: Không gây ra tình trạng bất đồng bộ dữ liệu giữa các tabs / webviews.
+When auditing a UI feature, agents **MUST** verify 4 criteria:
+1. **Store Binding**: Does the UI component read state directly from the Feature Store (avoiding fragmented local state)?
+2. **Action Trigger**: On user interaction, does the UI invoke the corresponding Store Action (which then dispatches `btn.*` or `select.*`)?
+3. **SSE Reflection**: When the daemon emits a mutation event, does the Store have an active listener updating the state slice immediately?
+4. **Zero Flakiness**: Ensure no state drift occurs across tabs and webviews.

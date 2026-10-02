@@ -43,7 +43,7 @@ When authoring or generating Automa workflow JSON:
 
 ### 1. Node IDs & Edges
 - **Node ID**: Every block node MUST use unique nanoid-compatible IDs (never generic `n1`, `node_1`).
-- **Handles**: Dây nối (edges) MUST declare explicit `sourceHandle` and `targetHandle` matching the block definition.
+- **Handles**: Edges MUST declare explicit `sourceHandle` and `targetHandle` matching the block definition.
 - **Looping**: Loop variable interpolation syntax: `{{loopData.<loopId>.data}}`. The final block of a loop cycle MUST have an edge pointing back to the `loop-data` block ID.
 - **Conditionals**: Edge from Match 1 MUST use `sourceHandle: 'cond1'`, fallback/error MUST use `sourceHandle: 'fallback'`.
 

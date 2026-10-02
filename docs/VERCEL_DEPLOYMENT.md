@@ -1,86 +1,86 @@
-# Hướng dẫn Tự Động Hóa Triển Khai Automa Studio lên Vercel (Pure Monorepo)
+# Automated Deployment Guide for Automa Studio on Vercel (Pure Monorepo)
 
-Tài liệu này ghi lại chi tiết cấu hình và quy trình tự động hóa triển khai **Automa Visual Studio (`apps/webe/src/studio`)** lên hạ tầng Vercel Edge Network theo kiến trúc **Pure Monorepo Native Git Integration**.
+This document details the configuration and automated deployment pipeline for **Automa Visual Studio (`apps/webe/src/studio`)** to the Vercel Edge Network using **Pure Monorepo Native Git Integration**.
 
 ---
 
-## 1. Tổng quan Kiến Trúc Triển Khai
+## 1. Deployment Architecture Overview
 
-Automa Studio là ứng dụng thuần Web UI (Single Page Application - SPA) viết bằng Vue 3, Vite, Tailwind CSS, Pinia và Vue Flow. 
+Automa Studio is a Single Page Application (SPA) built with Vue 3, Vite, Tailwind CSS, Pinia, and Vue Flow.
 
-- **Đầu ra bản dựng tĩnh**: Nằm tại `apps/webe/dist/studio/` (`index.html` và `assets/*`).
-- **Phụ thuộc nội bộ trong Monorepo**: 
+- **Static Build Output**: Located at `apps/webe/dist/studio/` (`index.html` and `assets/*`).
+- **Internal Monorepo Dependencies**: 
   - `@automa/types` (`packages/types`)
   - `@automa/ui` (`packages/ui`)
-- **Quản lý mã nguồn**:
-  - Repo monorepo: `tuquet/automa` (Chứa toàn bộ `apps/` và `packages/`, không còn Git submodules).
+- **Source Code Management**:
+  - Monorepo repository: `tuquet/automa` (Houses all `apps/` and `packages/` directly without Git submodules).
 - **Vercel Project**: `automa-studio` (Team: `tuquets-projects`)
-- **Live URL**: `https://studio-lyart-one-86.vercel.app` (hoặc `automa-studio.vercel.app`)
+- **Live URL**: `https://studio-lyart-one-86.vercel.app` (or `automa-studio.vercel.app`)
 
 ---
 
-## 2. Các Tệp Cấu Hình Đã Thiết Lập
+## 2. Configuration Files
 
-### A. `vercel.json` (Thư mục gốc monorepo)
-Cấu hình Vercel build command, output directory và các luật định tuyến SPA:
+### A. `vercel.json` (Monorepo Root)
+Configures Vercel build command, output directory, and SPA routing rules:
 - **Framework**: `vite`
 - **Build Command**: `pnpm run vercel:build`
 - **Output Directory**: `apps/webe/dist/studio`
-- **Rewrites**: `/(.*) -> /index.html` (Đảm bảo F5 refresh và deep linking không bị 404).
-- **Headers**: Cache-Control 1 năm cho `/assets/*` và bật CORS `Access-Control-Allow-Origin: *`.
+- **Rewrites**: `/(.*) -> /index.html` (Ensures browser refresh and deep linking resolve cleanly without 404s).
+- **Headers**: 1-year Cache-Control for `/assets/*` and enabled CORS `Access-Control-Allow-Origin: *`.
 
 ### B. `scripts/vercel-install.sh`
-Script cài đặt tự động được Vercel thực thi trước khi build:
-1. Chuẩn bị môi trường `pnpm` tương thích Node 24.x trên hạ tầng Vercel.
-2. Cài đặt toàn bộ dependencies của monorepo (`pnpm install --frozen-lockfile=false`).
-3. Không cần bất kỳ lệnh git clone hoặc cấu hình token `GH_PAT` nào (do mã nguồn nằm trực tiếp trong monorepo).
+Automated install script executed by Vercel prior to build:
+1. Prepares `pnpm` environment compatible with Node 24.x on Vercel infrastructure.
+2. Installs all monorepo dependencies (`pnpm install --frozen-lockfile=false`).
+3. Eliminates any need for git submodules or `GH_PAT` token downloads because all source files reside directly in the monorepo.
 
-### C. Các Scripts trong `package.json`
-- `"vercel:install"`: Chạy `bash scripts/vercel-install.sh`.
-- `"vercel:build"`: Chạy `pnpm -F @automa/types build && pnpm -F @automa/ui build && turbo run build:studio`.
-- `"vercel:ignore"`: Kiểm tra thay đổi commit (`git diff --quiet HEAD^ HEAD apps/webe/ packages/ui/ packages/types/ scripts/vercel-install.sh vercel.json pnpm-workspace.yaml package.json`). Trả về exit code `0` nếu không có thay đổi để hủy build không cần thiết, tiết kiệm build minutes.
-- `"deploy:studio"`: Lệnh One-Click Deploy thủ công từ terminal (`pnpm run build:studio && vercel deploy apps/webe/dist/studio --prod`).
+### C. `package.json` Deployment Scripts
+- `"vercel:install"`: Executes `bash scripts/vercel-install.sh`.
+- `"vercel:build"`: Executes `pnpm -F @automa/types build && pnpm -F @automa/ui build && turbo run build:studio`.
+- `"vercel:ignore"`: Checks commit diff (`git diff --quiet HEAD^ HEAD apps/webe/ packages/ui/ packages/types/ scripts/vercel-install.sh vercel.json pnpm-workspace.yaml package.json`). Returns exit code `0` to cancel unnecessary builds when relevant files are untouched, conserving build minutes.
+- `"deploy:studio"`: One-click manual CLI deploy (`pnpm run build:studio && vercel deploy apps/webe/dist/studio --prod`).
 
 ---
 
-## 3. Cài Đặt Cần Thiết trên Vercel Dashboard
+## 3. Vercel Dashboard Settings
 
-Dự án đã được liên kết với project `automa-studio` trên team `tuquets-projects`. Để đảm bảo Git Integration tự động chạy khi push commit lên GitHub:
+The project is linked to `automa-studio` under the `tuquets-projects` team. To verify automated Git integration triggers on GitHub push:
 
-1. **Truy cập Cài đặt Project trên Vercel**:
+1. **Access Project Settings on Vercel**:
    - URL: `https://vercel.com/tuquets-projects/automa-studio/settings`
 2. **Environment Variables**:
-   - Không yêu cầu biến môi trường đặc biệt nào cho quá trình build công khai (toàn bộ mã nguồn `apps/webe` được checkout tự động trong monorepo).
+   - No special environment variables are required for public builds.
 3. **Build & Development Settings**:
    - **Framework Preset**: `Vite`
-   - **Root Directory**: `.` (Thư mục gốc)
-   - **Build Command**: Bật Override -> `pnpm run vercel:build`
-   - **Output Directory**: Bật Override -> `apps/webe/dist/studio`
-   - **Install Command**: Bật Override -> `bash scripts/vercel-install.sh`
+   - **Root Directory**: `.` (Root)
+   - **Build Command**: Enable Override $\rightarrow$ `pnpm run vercel:build`
+   - **Output Directory**: Enable Override $\rightarrow$ `apps/webe/dist/studio`
+   - **Install Command**: Enable Override $\rightarrow$ `bash scripts/vercel-install.sh`
    - **Node.js Version**: `24.x`
-4. **Git -> Ignored Build Step (Tối ưu tài nguyên)**:
-   - Chọn **Custom**:
+4. **Git $\rightarrow$ Ignored Build Step**:
+   - Select **Custom**:
      ```bash
      git diff --quiet HEAD^ HEAD apps/webe packages/ui packages/types pnpm-workspace.yaml package.json
      ```
 
 ---
 
-## 4. Quy Trình Làm Việc Hàng Ngày (Developer Workflow)
+## 4. Daily Developer Workflow
 
-### Kịch bản A: Triển khai Tự Động qua Git (Khuyên dùng)
-1. Thực hiện chỉnh sửa mã nguồn Studio trong `apps/webe/`.
-2. Commit & Push trực tiếp trong repository monorepo:
+### Scenario A: Automated Deployment via Git (Recommended)
+1. Make changes to Studio source files under `apps/webe/`.
+2. Commit & Push to the monorepo repository:
    ```bash
    git add apps/webe/
    git commit -m "feat(studio): update studio workflow editor"
    git push origin main
    ```
-3. Vercel tự động nhận commit, kiểm tra diff, chạy `vercel-install.sh`, build Studio và xuất bản phiên bản mới lên Vercel Edge.
+3. Vercel receives the webhook, checks the diff, runs `vercel-install.sh`, builds Studio, and deploys the latest version to Vercel Edge.
 
-### Kịch bản B: One-Click Deploy Ngay từ VPS / Local
-Khi cần deploy gấp từ máy tính mà không cần chờ Git webhook:
+### Scenario B: One-Click Deploy from Local Workstation
+When an immediate deployment is needed without awaiting Git webhooks:
 ```bash
 pnpm run deploy:studio
 ```
-Lệnh này sẽ tự động build studio ra `apps/webe/dist/studio` và đẩy trực tiếp lên Vercel trong ~10 giây.
+This command builds the studio artifacts to `apps/webe/dist/studio` and deploys directly to Vercel production in ~10 seconds.

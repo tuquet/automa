@@ -1,83 +1,83 @@
-# ⚙️ ĐẶC TẢ NGHIỆP VỤ SRS: MENU SETTINGS (SYSTEM & CORE CONFIGURATION)
+# ⚙️ SRS Domain Specification: Menu Settings (System & Core Configuration)
 
 ---
 
-## 🎯 1. MỤC TIÊU & PHẠM VI (SCOPE & OBJECTIVES)
+## 🎯 1. Scope & Objectives
 
-Menu **Settings** quản lý cấu hình toàn cục của hệ điều hành và thông số kết nối với Rust Daemon (`automa-core`) cho toàn bộ Automa Ecosystem:
-- **`apps/desk`**: Cung cấp giao diện cấu hình hệ thống (`SettingsView.vue`), quản lý địa chỉ cổng Daemon `:8765`, tự động khởi chạy Daemon cùng ứng dụng (Auto-start), thiết lập Master Passphrase, và quản lý Theme (Dark/Light/System).
-- **`apps/vsce`**: Đồng bộ cấu hình qua VS Code Settings (`automa.daemonPort`, `automa.storagePath`).
-- **`apps/core`**: Cung cấp endpoint cấu hình `/api/v1/settings` và kiểm tra sức khỏe `/api/v1/system/health`.
+The **Settings** menu manages global operating parameters and connection settings for the Rust Daemon (`automa-core`) across the Automa Ecosystem:
+- **`apps/desk`**: Provides a system configuration view (`SettingsView.vue`), manages daemon port `:8765`, controls auto-start toggles, configures Master Passphrase for secrets, and toggles Appearance themes (Dark/Light/System).
+- **`apps/vsce`**: Synchronizes settings via VS Code configuration (`automa.daemonPort`, `automa.storagePath`).
+- **`apps/core`**: Exposes `/api/v1/settings` and health telemetry `/api/v1/system/health`.
 
 ---
 
-## 🌳 2. BỐ CỤC GIAO DIỆN & COMPONENT TREE (UI/UX LAYOUT)
+## 🌳 2. UI/UX Layout & Component Tree
 
 ```text
 SettingsView.vue
 ├── SECTION 1: DAEMON CONNECTION & STATUS
 │   ├── Daemon Status Badge (Green: Connected / Red: Disconnected)
-│   ├── Daemon Host & Port Input (Mặc định: http://127.0.0.1:8765)
+│   ├── Daemon Host & Port Input (Default: http://127.0.0.1:8765)
 │   ├── Auto-Start Daemon with App (Toggle Switch)
-│   ├── btn.settings.daemon.check (Kiểm tra kết nối)
-│   └── btn.settings.daemon.restart (Khởi động lại Daemon)
+│   ├── btn.settings.daemon.check (Verify connection)
+│   └── btn.settings.daemon.restart (Restart Daemon process)
 ├── SECTION 2: VAULT & SECURITY
-│   ├── Master Passphrase Input (vscode.SecretStorage hoặc RAM runtime)
-│   ├── btn.settings.passphrase.save (Lưu mật mã chủ)
-│   └── btn.settings.passphrase.clear (Xóa mật mã khỏi bộ nhớ)
+│   ├── Master Passphrase Input (SecretStorage or RAM runtime)
+│   ├── btn.settings.passphrase.save (Save master passphrase)
+│   └── btn.settings.passphrase.clear (Purge passphrase from memory)
 ├── SECTION 3: APPEARANCE & THEME
 │   └── select.settings.theme (Dark / Light / System)
 ├── SECTION 4: STORAGE & WORKSPACE PATHS
 │   ├── Storage Workspace Directory Path
-│   ├── btn.settings.path.browse (Mở native file dialog chọn thư mục)
-│   └── btn.settings.save (Lưu toàn bộ cấu hình)
+│   ├── btn.settings.path.browse (Open native folder picker)
+│   └── btn.settings.save (Save entire configuration)
 └── System Diagnostics & Version Info
 ```
 
 ---
 
-## ⚡ 3. DANH MỤC NÚT BẤM (BUTTON CATALOG) TRONG MENU SETTINGS
+## ⚡ 3. Button Catalog in Settings Menu
 
-| Button ID | Tên Nút / Nhãn UI | Icon | Trạng Thái FSM Hỗ Trợ | Target Action & Endpoint | `data-testid` |
+| Button ID | UI Label | Icon | Supported FSM States | Target Action & Endpoint | `data-testid` |
 |---|---|---|---|---|---|
-| `btn.settings.save` | Save Settings | `Save` | `IDLE` | Lưu cấu hình `updateSettings()` | `btn-save-settings` |
-| `btn.settings.daemon.check` | Test Connection | `Activity`| `IDLE`, `VALIDATING` | Gọi `/api/v1/system/health` kiểm tra | `btn-check-daemon-health` |
-| `btn.settings.daemon.restart`| Restart Daemon | `RotateCw` | `IDLE` | Gửi lệnh khởi động lại tiến trình Daemon | `btn-restart-daemon` |
-| `btn.settings.passphrase.save`| Save Passphrase | `Key` | `IDLE` | Lưu Passphrase vào SecretStorage | `btn-save-master-passphrase` |
-| `btn.settings.path.browse` | Browse Folder | `Folder` | `IDLE` | Mở hộp thoại chọn thư mục Native | `btn-browse-storage-path` |
+| `btn.settings.save` | Save Settings | `Save` | `IDLE` | Persists configuration `updateSettings()` | `btn-save-settings` |
+| `btn.settings.daemon.check` | Test Connection | `Activity`| `IDLE`, `VALIDATING` | Queries `/api/v1/system/health` | `btn-check-daemon-health` |
+| `btn.settings.daemon.restart`| Restart Daemon | `RotateCw` | `IDLE` | Triggers daemon restart cycle | `btn-restart-daemon` |
+| `btn.settings.passphrase.save`| Save Passphrase | `Key` | `IDLE` | Stores passphrase in SecretStorage | `btn-save-master-passphrase` |
+| `btn.settings.path.browse` | Browse Folder | `Folder` | `IDLE` | Opens native file explorer dialog | `btn-browse-storage-path` |
 
 ---
 
-## 📜 4. DANH MỤC SELECT / DROPDOWN TRONG MENU SETTINGS
+## 📜 4. Select Dropdowns in Settings Menu
 
-| Select ID | Tên Dropdown | Nguồn Dữ Liệu Remote | Virtualization & Debounce | Side-effect Phản Xạ Khi Chọn | `data-testid` |
+| Select ID | Dropdown Label | Remote Data Source | Virtualization & Debounce | Reactive Selection Side-Effect | `data-testid` |
 |---|---|---|---|---|---|
-| `select.settings.theme` | Color Theme | Static Union (`dark`, `light`, `system`) | Không cần ảo hóa | Cập nhật class `dark` trên `<html>` và lưu `theme` | `select-settings-theme` |
-| `select.settings.language` | Display Language | Static Union (`en`, `vi`) | Không cần ảo hóa | Chuyển đổi ngôn ngữ i18n toàn ứng dụng | `select-settings-language` |
+| `select.settings.theme` | Color Theme | Static Union (`dark`, `light`, `system`) | No virtualization | Toggles `dark` class on `<html>` and persists `theme` | `select-settings-theme` |
+| `select.settings.language` | Display Language | Static Union (`en`, `vi`) | No virtualization | Updates i18n locale across application | `select-settings-language` |
 
 ---
 
-## 🍍 5. QUẢN LÝ TRẠNG THÁI PINIA STORE LIÊN QUAN (`useSettingsStore`)
+## 🍍 5. Associated Pinia State Management (`useSettingsStore`)
 
-Store [`useSettingsStore`](../../packages/ui/src/stores/useSettingsStore.ts) quản lý cấu hình hệ thống:
-- `settings`: Object cấu hình hệ thống (`AppSettings`).
-- `isDaemonHealthy`: Cờ boolean đánh dấu trạng thái sống/chết của Core Daemon.
-- `theme`: Trạng thái theme hiện tại (`'dark' | 'light' | 'system'`).
-- `setDaemonHealthy(status)`: Cập nhật badge trên thanh tiêu đề `AppTitleBar.vue`.
+The [`useSettingsStore`](../../packages/ui/src/stores/useSettingsStore.ts) store coordinates system settings:
+- `settings`: System configuration object (`AppSettings`).
+- `isDaemonHealthy`: Boolean tracking daemon heartbeat liveness.
+- `theme`: Active UI theme (`'dark' | 'light' | 'system'`).
+- `setDaemonHealthy(status)`: Updates status badge in `AppTitleBar.vue`.
 
 ---
 
-## 🌐 6. DANH MỤC API ENDPOINTS & HEALTH CHECK
+## 🌐 6. API Endpoints & Health Check Catalog
 
-| Giao Thức | Endpoint | Phương Thức | SDK Function Gọi Chuẩn | Mô Tả Nghiệp Vụ |
+| Protocol | Endpoint | Method | SDK Function | Business Description |
 |---|---|:---:|---|---|
-| **REST** | `/api/v1/system/health` | `GET` | `getSystemHealth()` | Kiểm tra trạng thái Daemon & SQLite DB |
-| **REST** | `/api/v1/settings` | `GET` / `PUT` | `getSettings()` / `updateSettings()` | Đọc hoặc cập nhật cấu hình hệ thống |
+| **REST** | `/api/v1/system/health` | `GET` | `getSystemHealth()` | Inspects daemon and SQLite database health |
+| **REST** | `/api/v1/settings` | `GET` / `PUT` | `getSettings()` / `updateSettings()` | Reads or patches system configuration |
 
 ---
 
-## 🛡️ 7. TIÊU CHUẨN KIỂM ĐỊNH CHẤT LƯỢNG (AGENT CROSS-CHECK)
+## 🛡️ 7. Quality Assurance & Agent Cross-Checklist
 
-1. [ ] Thay đổi Theme trong Settings phải phản xạ tức thì trên toàn bộ các View và thanh Titlebar mà không cần reload.
-2. [ ] Khi Daemon bị tắt hoặc gặp sự cố, indicator trên Titlebar phải đổi sang màu đỏ (`Offline`) ngay lập tức nhờ Heartbeat Check.
-3. [ ] Master Passphrase được bảo mật nghiêm ngặt, không bao giờ hiển thị dạng plaintext trong localStorage hoặc file log.
+1. [ ] Theme changes in Settings must immediately reflect across all Views and Titlebar without requiring application reload.
+2. [ ] If the daemon stops or errors, the indicator on Titlebar must turn red (`Offline`) via background Heartbeat Check.
+3. [ ] Master Passphrase is never stored in plaintext within localStorage, configuration files, or logs.

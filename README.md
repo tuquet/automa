@@ -1,30 +1,33 @@
 <div align="center">
-  <h1>Tuquet Automa Engine</h1>
-  <p><strong>High-Performance Browser Automation & OS Orchestration Engine</strong></p>
+  <img src="./assets/logo.svg" width="76" height="76" alt="Automa Logo" />
+  <h1>Automa</h1>
+  <p><strong>Next-Generation Workflow Orchestration &amp; Headless Automation Platform</strong></p>
 
-  [![Scoop Bucket](https://img.shields.io/badge/Scoop-tuquet%2Fscoop--bucket-blue.svg)](https://github.com/tuquet/scoop-bucket)
-  [![GitHub Release](https://img.shields.io/github/v/release/tuquet/automa?color=brightgreen)](https://github.com/tuquet/automa/releases)
-  [![Rust](https://img.shields.io/badge/Rust-Axum%2FTokio-orange.svg)](https://www.rust-lang.org/)
-  [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18.x-brightgreen.svg)](https://nodejs.org/)
-  [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+  <p>
+    <a href="https://github.com/tuquet/scoop-bucket"><img src="https://img.shields.io/badge/Scoop-tuquet%2Fscoop--bucket-blue.svg" alt="Scoop Bucket" /></a>
+    <a href="https://github.com/tuquet/automa/releases"><img src="https://img.shields.io/github/v/release/tuquet/automa?color=brightgreen" alt="GitHub Release" /></a>
+    <a href="https://www.rust-lang.org/"><img src="https://img.shields.io/badge/Rust-Axum%2FTokio-orange.svg" alt="Rust" /></a>
+    <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-%3E%3D18.x-brightgreen.svg" alt="Node.js" /></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License" /></a>
+  </p>
 </div>
 
 <br/>
 
-Welcome to **Tuquet Automa**, an open-source, high-performance browser automation & OS orchestration platform. Built as a streamlined monorepo, Tuquet Automa pairs a lightning-fast **Rust Native Core (`apps/core`)** with a **Manifest V3 Chrome Extension & Visual Canvas Web Studio (`apps/webe`)**.
+Welcome to **Automa**, an open-source, high-performance browser automation & OS orchestration platform. Built as a streamlined monorepo, Automa pairs a lightning-fast **Rust Native Core (`apps/core`)** with a **Manifest V3 Chrome Extension & Visual Canvas Web Studio (`apps/webe`)**.
 
 ---
 
-## ⚡ Why Tuquet Automa?
+## ⚡ Why Automa?
 
-Modern web automation requires a delicate balance between ease of use, execution speed, and account safety. Tuquet Automa solves this with a hybrid architecture:
+Modern web automation requires a delicate balance between ease of use, execution speed, and account safety. Automa solves this with a hybrid architecture:
 
-| Automation Challenge | The Tuquet Automa Solution | Business Outcome |
+| Automation Challenge | The Automa Solution | Business Outcome |
 | :--- | :--- | :--- |
 | **Complex Automation Coding**<br/>Traditional tools require software engineers to write and maintain brittle automation scripts. | **Visual Node-Graph Web Studio**<br/>Intuitive drag-and-drop workflow canvas allows non-technical operators to build and test automation flows visually. | **10x Faster Workflow Creation**<br/>Empower operations teams to build and modify automations without engineering bottlenecks. |
 | **High Memory & Fragile Node Daemons**<br/>Running multiple Electron or Node.js browser runners exhausts workstation CPU and memory. | **Lightweight Rust Native Engine**<br/>Native Axum daemon compiled directly for Windows/Linux with near-zero memory footprint and raw CDP speed. | **Maximum Workstation Density**<br/>Run multiple concurrent automation tasks smoothly on standard hardware. |
 | **Browser Fingerprint & Identity Leaks**<br/>Using personal host browsers leaks cookies, extensions, and hardware IDs across accounts. | **Isolated Standalone Chromium Runtimes**<br/>Dedicated Chromium binaries managed in isolated directories ensure zero identity bleed between accounts. | **Enterprise Account Safety**<br/>Protect critical multi-account workflows against bans and fingerprint correlation. |
-| **Vendor Lock-in & Cloud Latency**<br/>Pure cloud automation platforms introduce network lag and risk business halt during outages. | **Offline-First with Seamless Cloud Sync**<br/>Executes reliably against local SQLite storage, with optional turnkey synchronization to Tuquet Cloud. | **100% Operational Resilience**<br/>Automations keep running locally even when external network connectivity drops. |
+| **Vendor Lock-in & Cloud Latency**<br/>Pure cloud automation platforms introduce network lag and risk business halt during outages. | **Offline-First with Seamless Cloud Sync**<br/>Executes reliably against local SQLite storage, with optional turnkey synchronization to Cloud. | **100% Operational Resilience**<br/>Automations keep running locally even when external network connectivity drops. |
 
 ---
 
@@ -52,7 +55,7 @@ tuquet-automa/
 
 <div align="center">
   <video src="diagrams/tuquet-platform-multi-repository-orchestration-pipeline.webm" autoplay loop muted playsinline width="100%"></video>
-  <p><em>Real-Time Closed-Loop Multi-Repository Orchestration Pipeline: Cloud Command &rarr; Tuquet Runner Supervisor &rarr; Automa Engine &rarr; Browser Core &rarr; Cloud Event Sync</em></p>
+  <p><em>Real-Time Closed-Loop Multi-Repository Orchestration Pipeline: Cloud Command &rarr; Runner Supervisor &rarr; Automa Engine &rarr; Browser Core &rarr; Cloud Event Sync</em></p>
 </div>
 
 ### Internal Monorepo Subsystems (apps/core & apps/webe)
@@ -83,7 +86,7 @@ flowchart TD
 
 ## 🚀 Quick Start for End Users
 
-There are **two easy ways** to install and run Tuquet Automa on Windows:
+There are **two easy ways** to install and run Automa on Windows:
 
 ### Option 1: Automatic Install via Scoop (Recommended)
 If you use [Scoop](https://scoop.sh/):
@@ -152,6 +155,32 @@ pnpm run dev:core     # Run Rust Core with cargo-watch hot reload
 
 ---
 
+## 🌐 Ecosystem
+
+Part of the **Automation & Agent Ecosystem**:
+
+- [Automa](https://github.com/tuquet/automa) — Native Chrome/Edge Desktop UI Automation Browser.
+- [Runner](https://github.com/tuquet/runner) — High-Performance Distributed Process Supervision Engine in Rust.
+- [Browser](https://github.com/tuquet/browser) — High-Performance Headless Web Scraping & Stealth Automation Core.
+- [Cloud](https://github.com/tuquet/cloud) — Enterprise Orchestration & Real-time Task Control Plane.
+- [CLI](https://github.com/tuquet/cli) — Developer Ergonomic CLI & Unified Command Center.
+- [Lib](https://github.com/tuquet/lib) — Monorepo for Shared Enterprise UI & Utilities (`vue-ui`, `vue-table`, `md-export`, `extension-runner`, `lunar`).
+- [Scoop Bucket](https://github.com/tuquet/scoop-bucket) — Official Windows Scoop Distribution Channel.
+
+---
+
 ## 📄 License
 
 Distributed under the [MIT License](LICENSE).
+
+---
+
+<div align="center">
+  <samp>
+    <a href="https://tuquet.github.io">Portfolio</a> •
+    <a href="https://tuquet.github.io/cv">CV &amp; Resume</a> •
+    <a href="https://tuquet.github.io/automa">Automa Studio</a> •
+    <a href="https://tuquet.github.io/lib">Component Lab</a> •
+    <a href="https://github.com/tuquet/scoop-bucket">Scoop Bucket</a>
+  </samp>
+</div>

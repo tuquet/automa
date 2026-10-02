@@ -1,12 +1,12 @@
-# 📖 Hướng Dẫn Sử Dụng Tuquet Automa Web Studio Standalone (`apps/webe/src/studio`)
+# 📖 User Guide: Automa Web Studio Standalone (`apps/webe/src/studio`)
 
-Tài liệu hướng dẫn chi tiết dành cho người dùng về kiến trúc giao diện OS Standalone Studio, danh sách các màn hình chức năng, nhóm công cụ sơ đồ khối và quy trình thiết kế kịch bản tự động hóa trên môi trường Desktop OS.
+Comprehensive user manual detailing the architecture, modal interfaces, block tool groups, and step-by-step workflow authoring within the Desktop OS Standalone Studio.
 
 ---
 
-## 🔌 1. Kiến Trúc Liên Kết Rust Core Daemon (`apps/core`) & OS Web Studio (`apps/webe/src/studio`)
+## 🔌 1. Core Daemon Integration (`apps/core`) & OS Web Studio (`apps/webe/src/studio`)
 
-Automa Web Studio Standalone được thiết kế để chạy trực tiếp trên hệ điều hành (Native OS Mode), được nhúng và phục vụ trực tiếp bởi Daemon Rust (`apps/core`) tại địa chỉ:
+Automa Web Studio Standalone executes directly on the desktop operating system (Native OS Mode), served natively by the Rust Daemon (`apps/core`) at:
 
 $$\text{URL}: \mathtt{http://127.0.0.1:3000/studio/}$$
 
@@ -34,88 +34,88 @@ flowchart LR
     RestAPI --> SQLiteDB
 ```
 
-* **Contract-First Type Safety**: Toàn bộ giao tiếp giữa Studio UI và Rust Core được định kiểu an toàn 100% qua SDK Client `@automa/types/api`.
-* **Zero Extension Dependency**: Chạy hoàn toàn độc lập mà không cần môi trường Chrome Extension.
+* **Contract-First Type Safety**: All communication between Studio UI and Rust Core is 100% type-safe via the client SDK `@automa/types/api`.
+* **Zero Extension Dependency**: Executes standalone in any modern browser without requiring a browser extension.
 
 ---
 
-## 🖥️ 2. Danh Sách Màn Hình & Thành Phần Giao Diện Trong OS Studio (`apps/webe/src/studio/`)
+## 🖥️ 2. UI Layout & Component Modals (`apps/webe/src/studio/`)
 
-Tất cả các thành phần màn hình bên dưới thuộc về phiên bản **OS Standalone Web Studio (`apps/webe/src/studio`)**:
+All interface components belong to the **OS Standalone Web Studio (`apps/webe/src/studio`)**:
 
 ### 2.1 Main Studio Workspace Canvas (`apps/webe/src/studio/StudioApp.vue`)
-* **Chức năng**: Màn hình làm việc chính thiết kế sơ đồ khối tự động hóa (Visual Flowchart Editor).
-* **Các vùng thành phần**:
+* **Purpose**: Primary visual programming canvas for designing automation workflows (VueFlow DAG Editor).
+* **Workspace Panels**:
   * **Top Header Bar ([`StudioHeader.vue`](components/StudioHeader.vue))**:
-    * Hiển thị tên file/kịch bản đang mở, đường dẫn tệp vault (`.workflow.json`).
-    * Trạng thái kết nối Rust Daemon ([`StudioCoreStatus.vue`](../components/newtab/workflow/StudioCoreStatus.vue)).
-    * Các nút hành động: **Run** (`Ctrl+Enter`), **Save** (`Ctrl+S`), **Pause/Resume/Stop Job**, **New Workflow**, **Export JSON**.
-    * Đếm số lượng cảnh báo Linter thời gian thực (Live AST Lint).
-  * **Resizable Sidebar (Bên trái)**:
-    * **Block Palette**: Danh sách hơn 50+ khối công cụ sơ đồ khối.
-    * **Block Form Editor**: Bảng tùy chỉnh thuộc tính chi tiết của khối đang chọn.
-  * **VueFlow Canvas Area (Ở giữa)**:
-    * Khung trực quan hóa sơ đồ khối kéo-thả.
-    * Thanh công cụ Canvas: **Undo** (`Ctrl+Z`), **Redo** (`Ctrl+Y`), **Auto-Align** (Tự động căn chỉnh nút sơ đồ).
+    * Displays active workflow filename and vault path (`.workflow.json`).
+    * Real-time Rust Daemon connectivity indicator ([`StudioCoreStatus.vue`](../components/newtab/workflow/StudioCoreStatus.vue)).
+    * Action triggers: **Run** (`Ctrl+Enter`), **Save** (`Ctrl+S`), **Pause/Resume/Stop Job**, **New Workflow**, **Export JSON**.
+    * Real-time AST Linter diagnostics count.
+  * **Resizable Left Sidebar**:
+    * **Block Palette**: Catalog of 50+ automation block primitives.
+    * **Block Form Editor**: Contextual inspector configuring properties of the currently selected block.
+  * **VueFlow Canvas Area (Center)**:
+    * Interactive drag-and-drop node graph canvas.
+    * Canvas controls: **Undo** (`Ctrl+Z`), **Redo** (`Ctrl+Y`), **Auto-Align** (automatic node hierarchy layout).
 
-### 2.2 Modal Thư Viện Kịch Bản Vault Explorer ([`WorkflowLibraryModal.vue`](components/WorkflowLibraryModal.vue))
-* **Chức năng**: Trình duyệt và quản lý danh sách file kịch bản lưu trên đĩa cá nhân (`apps/vault/*.workflow.json`).
-* **Tính năng**:
-  * Tìm kiếm tệp kịch bản theo tên hoặc từ khóa.
-  * Tải trực tiếp kịch bản từ đĩa cứng lên Canvas để chỉnh sửa.
-  * Tạo mới hoặc xóa file kịch bản khỏi Vault.
+### 2.2 Workflow Library Modal ([`WorkflowLibraryModal.vue`](components/WorkflowLibraryModal.vue))
+* **Purpose**: File explorer managing local disk workflows (`apps/vault/*.workflow.json`).
+* **Features**:
+  * Full-text search by workflow title, tags, or description.
+  * Directly load workflows from disk to canvas.
+  * Create, duplicate, and delete scenario files.
 
-### 2.3 Modal Quản Lý Storage & Dữ Liệu Tập Trung ([`UnifiedStorageModal.vue`](components/UnifiedStorageModal.vue))
-* **Chức năng**: Trung tâm quản lý dữ liệu lưu trữ offline/cloud.
-* **Các Tab màn hình con**:
-  * **Storage Tables Tab ([`StorageTablesTab.vue`](components/StorageTablesTab.vue))**: Tạo bảng dữ liệu mẫu, xem và phân trang các dòng dữ liệu bóc tách được.
-  * **Storage Secrets Tab ([`StorageSecretsTab.vue`](components/StorageSecretsTab.vue))**: Quản lý Biến toàn cục (Variables) và Khóa mật mã AES-256 (Credentials/API Keys).
+### 2.3 Unified Storage & Data Modal ([`UnifiedStorageModal.vue`](components/UnifiedStorageModal.vue))
+* **Purpose**: Centralized management for offline/cloud tabular data and credentials.
+* **Tabs**:
+  * **Storage Tables Tab ([`StorageTablesTab.vue`](components/StorageTablesTab.vue))**: Create custom schemas, inspect scraped rows, and export data.
+  * **Storage Secrets Tab ([`StorageSecretsTab.vue`](components/StorageSecretsTab.vue))**: Manage global variables and AES-256 encrypted credentials / API keys.
 
-### 2.4 Modal Quản Lý Trình Duyệt CDP ([`BrowsersQuickModal.vue`](components/BrowsersQuickModal.vue))
-* **Chức năng**: Quản lý và theo dõi các tiến trình trình duyệt CDP do Rust Core điều khiển.
-* **Tính năng**:
-  * Hiển thị danh sách các cửa sổ trình duyệt Chrome/Edge/Brave đang mở.
-  * Nút khẩn cấp **Kill All Browsers**: Giải phóng tức thì toàn bộ tiến trình trình duyệt ngầm trên OS.
+### 2.4 CDP Browser Process Modal ([`BrowsersQuickModal.vue`](components/BrowsersQuickModal.vue))
+* **Purpose**: Inspect and supervise active Chromium browser instances controlled via CDP.
+* **Features**:
+  * List all running Chrome, Edge, and Brave browser windows.
+  * Emergency **Kill All Browsers** button: Instantly terminates orphaned browser processes on the host.
 
-### 2.5 Modal Cấu Hình Khởi Chạy Kịch Bản ([`RunWorkflowModal.vue`](components/RunWorkflowModal.vue))
-* **Chức năng**: Thiết lập tham số trước khi bấm chạy kịch bản thực tế trên OS.
-* **Tùy chọn**:
-  * Chọn chế độ hiển thị: **Headed** (Mở trình duyệt thực) hoặc **Headless** (Chạy ẩn).
-  * Chọn loại trình duyệt target: Chrome, Edge, Brave.
-  * Truyền danh sách biến đầu vào (Input Parameters).
+### 2.5 Run Workflow Configuration Modal ([`RunWorkflowModal.vue`](components/RunWorkflowModal.vue))
+* **Purpose**: Configure execution parameters before launching an automation job.
+* **Options**:
+  * Display Mode: **Headed** (visible browser) or **Headless** (background execution).
+  * Target Browser: Chrome, Edge, Brave.
+  * Input Parameters (dynamic variables injected at runtime).
 
-### 2.6 Modal Cài Đặt Nhanh Kịch Bản ([`WorkflowQuickSettings.vue`](components/WorkflowQuickSettings.vue))
-* **Chức năng**: Tùy chỉnh cài đặt riêng cho kịch bản đang mở.
-* **Tùy chọn**: Đổi biểu tượng (Icon), Tên, Mô tả, Cấu hình hành vi khi gặp lỗi (OnError fallback / Notification).
+### 2.6 Workflow Quick Settings Modal ([`WorkflowQuickSettings.vue`](components/WorkflowQuickSettings.vue))
+* **Purpose**: Configure metadata for the open scenario.
+* **Options**: Icon, Title, Description, and error fallback handlers (OnError fallback, retry counts, notifications).
 
 ---
 
-## 🧩 3. Chi Tiết Các Nhóm Công Cụ (Block Palette Tool Groups)
+## 🧩 3. Block Palette Tool Groups
 
-Trong màn hình Canvas Studio (`StudioApp.vue`), danh sách khối công cụ kéo-thả được chia làm **6 Nhóm chính**:
+Inside the canvas editor (`StudioApp.vue`), tool blocks are organized into **6 Core Categories**:
 
-| Nhóm Công Cụ | Tên Tiếng Anh | Khối Công Cụ Tiêu Biểu | Chức Năng |
+| Category | Category Name | Representative Blocks | Purpose & Capabilities |
 | :--- | :--- | :--- | :--- |
-| **1. Khởi chạy & Điều khiển** | `General` | `Trigger`, `Execute Workflow`, `Delay`, `Repeat Task`, `Note` | Khởi tạo mốc bắt đầu kịch bản, hẹn giờ chờ, gọi kịch bản con, lặp lại công việc. |
-| **2. Trình duyệt** | `Browser` | `Active Tab`, `New Tab`, `Close Tab`, `Switch Tab`, `Take Screenshot`, `Save Assets`, `Set Cookies` | Mở/Đóng tab, chuyển tab, chụp ảnh màn hình, lưu file tải về, quản lý Cookie/Proxy. |
-| **3. Tương tác Web (DOM)** | `Interaction` | `Click Element`, `Type Text`, `Select Dropdown`, `Get Text`, `Scroll Page`, `Hover Element`, `Upload File` | Bấm nút, điền văn bản vào input, chọn ô dropdown, cuộn trang, upload file, bóc tách text/attribute. |
-| **4. Điều kiện & Vòng lặp** | `Conditions` | `Conditions (If/Else)`, `Element Exists`, `Loop Data`, `Loop Elements`, `Switch Case` | Kiểm tra điều kiện đúng/sai, lặp qua danh sách phần tử web hoặc dòng dữ liệu bảng. |
-| **5. Dữ liệu & Lưu trữ** | `Data & Storage` | `Insert Data`, `Get Variable`, `Set Variable`, `Export Data (CSV/JSON)`, `Crypto/Hash` | Đọc/Ghi biến, chèn dòng vào Bảng dữ liệu (Table), xuất dữ liệu ra file CSV/JSON. |
-| **6. Dịch vụ Trực tuyến** | `Online Services` | `Google Sheets`, `HTTP Request (API)`, `Webhook` | Gửi HTTP GET/POST API đến server bên ngoài, đồng bộ dữ liệu trực tiếp với Google Sheets. |
+| **1. Execution & Control** | `General` | `Trigger`, `Execute Workflow`, `Delay`, `Repeat Task`, `Note` | Flow entry points, timeouts, sub-workflow delegation, and iteration loops. |
+| **2. Browser Management** | `Browser` | `Active Tab`, `New Tab`, `Close Tab`, `Switch Tab`, `Take Screenshot`, `Save Assets`, `Set Cookies` | Tab lifecycle, page captures, download handling, cookies, and proxy routing. |
+| **3. DOM Interactions** | `Interaction` | `Click Element`, `Type Text`, `Select Dropdown`, `Get Text`, `Scroll Page`, `Hover Element`, `Upload File` | Button clicks, text inputs, dropdown selection, scrolling, file uploads, and attribute scraping. |
+| **4. Conditions & Logic** | `Conditions` | `Conditions (If/Else)`, `Element Exists`, `Loop Data`, `Loop Elements`, `Switch Case` | Boolean branching, element assertions, data row loops, and switch routing. |
+| **5. Data & Storage** | `Data & Storage` | `Insert Data`, `Get Variable`, `Set Variable`, `Export Data (CSV/JSON)`, `Crypto/Hash` | Read/write state variables, append table rows, data formatting, and cryptographic hashes. |
+| **6. Online Integrations** | `Online Services` | `Google Sheets`, `HTTP Request (API)`, `Webhook` | Outbound HTTP requests, external REST integrations, and real-time Google Sheets sync. |
 
 ---
 
-## 🛠️ 4. Quy Trình 4 Bước Thiết Kế Kịch Bản Trên OS Studio
+## 🛠️ 4. Step-by-Step Workflow Authoring Walkthrough
 
-1. **Khởi động Daemon & Mở Studio**:
-   * Khởi chạy Rust Core: `automa` (Daemon mở tại `http://127.0.0.1:3000`).
-   * Mở trình duyệt truy cập: `http://127.0.0.1:3000/studio/`. Trạng thái kết nối hiển thị **Core Daemon Connected (Xanh)**.
-2. **Tạo kịch bản mới**: Nhấp nút **New Workflow** trên Header (`StudioHeader.vue`) -> Nhập tên file kịch bản.
-3. **Thiết kế sơ đồ khối trên Canvas (`StudioApp.vue`)**:
-   * Kéo khối **New Tab** từ Sidebar bên trái vào Canvas -> Nhập URL mục tiêu (VD: `https://example.com`).
-   * Kéo khối **Click Element** -> Nhập Selector CSS của nút bấm.
-   * Kéo khối **Get Text** -> Nhập Selector nội dung cần lấy -> Chọn cột lưu vào Storage Table.
-   * Nối đường liên kết từ Output khối này sang Input khối kế tiếp.
-4. **Thực thi & Xuất Dữ Liệu**:
-   * Nhấp nút **Run** (`Ctrl+Enter`) -> Cửa sổ trình duyệt thực tế mở ra tự động thao tác.
-   * Mở **Storage Explorer** (`UnifiedStorageModal.vue`) -> Xem dữ liệu trong Table và tải về file CSV.
+1. **Start Daemon & Open Web Studio**:
+   * Launch the Core Engine: `automa` (Daemon listens on `http://127.0.0.1:3000`).
+   * Navigate to `http://127.0.0.1:3000/studio/`. Connectivity indicator reflects **Core Daemon Connected (Green)**.
+2. **Create New Workflow**: Click **New Workflow** on the header bar (`StudioHeader.vue`) and name the scenario file.
+3. **Assemble DAG Nodes on Canvas (`StudioApp.vue`)**:
+   * Drag a **New Tab** block from the left palette onto the canvas $\rightarrow$ Enter target URL (e.g. `https://example.com`).
+   * Drag a **Click Element** block $\rightarrow$ Enter CSS selector for the action element.
+   * Drag a **Get Text** block $\rightarrow$ Enter selector for target content $\rightarrow$ Map column to Storage Table.
+   * Connect node handles sequentially from output to input.
+4. **Execute & Export Results**:
+   * Click **Run** (`Ctrl+Enter`) $\rightarrow$ Browser launches and executes the sequence.
+   * Open **Storage Explorer** (`UnifiedStorageModal.vue`) $\rightarrow$ Inspect extracted records and export to CSV.

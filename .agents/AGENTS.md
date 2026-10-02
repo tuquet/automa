@@ -137,7 +137,7 @@
     3. Update `docs/srs/SRS_HORIZONTAL_BUTTONS.md`, `docs/srs/SRS_HORIZONTAL_SELECTS.md`, `docs/srs/SRS_HORIZONTAL_FEATURE_STORES.md`, and `docs/OPENAPI_INTEGRATION_GUIDE.md` with the new contracts.
     4. Implement the frontend / extension UI consuming the newly generated SDK methods.
 
-# 15-Minute Periodic Health & 6-Layer Coverage Audit SOP (SOP Rà Soát Định Kỳ Góc Độ Phủ Toàn Diện)
+# 15-Minute Periodic Health & 6-Layer Coverage Audit SOP
 
 When running the recurring 15-minute cron wakeups or evaluating overall system readiness, Agent **MUST** execute a systematic **6-Layer Coverage Audit**:
 

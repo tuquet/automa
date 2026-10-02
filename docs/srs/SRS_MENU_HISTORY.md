@@ -1,75 +1,75 @@
-# 📜 ĐẶC TẢ NGHIỆP VỤ SRS: MENU HISTORY (JOB TELEMETRY & AUDIT LOGS)
+# 📜 SRS Domain Specification: Menu History (Job Telemetry & Audit Logs)
 
 ---
 
-## 🎯 1. MỤC TIÊU & PHẠM VI (SCOPE & OBJECTIVES)
+## 🎯 1. Scope & Objectives
 
-Menu **History** cung cấp nhật ký thực thi chi tiết (Job Execution History) và kiểm toán hiệu năng (Telemetry Performance Audit) của toàn bộ các phiên chạy workflow trên Automa Ecosystem:
-- **`apps/desk`**: Cung cấp giao diện nhật ký toàn diện (`HistoryView.vue`), bộ lọc trạng thái, xem chi tiết từng bước log của job trong quá khứ, và tính toán thời gian chạy trung bình.
-- **`apps/vsce`**: Cung cấp giao diện nhật ký và tích hợp Output Channel.
-- **`apps/core`**: Lưu trữ lịch sử thực thi vào bảng SQLite `job_history`.
+The **History** menu provides execution audit logs and performance telemetry across all workflow execution sessions within the Automa Ecosystem:
+- **`apps/desk`**: Delivers a comprehensive audit interface (`HistoryView.vue`), status filters, step-level trace inspection, and execution duration analytics.
+- **`apps/vsce`**: Delivers execution log inspection and Output Channel integration.
+- **`apps/core`**: Persists run history in SQLite `job_history` storage.
 
 ---
 
-## 🌳 2. BỐ CỤC GIAO DIỆN & COMPONENT TREE (UI/UX LAYOUT)
+## 🌳 2. UI/UX Layout & Component Tree
 
 ```text
-HistoryView.vue (hoặc LiveLogView.vue trong VS Code)
+HistoryView.vue (or LiveLogView.vue in VS Code)
 ├── Header Filter Bar
-│   ├── Search Input (Debounced 150ms theo Job ID / Workflow Name)
+│   ├── Search Input (Debounced 150ms by Job ID / Workflow Name)
 │   ├── Status Filter Dropdown (select.history.status: All / Completed / Failed / Stopped)
 │   ├── Date Range Filter
-│   ├── btn.history.refresh (Tải lại lịch sử)
-│   └── btn.history.clear (Xóa lịch sử cũ)
+│   ├── btn.history.refresh (Reload history records)
+│   └── btn.history.clear (Purge historical logs)
 ├── History Job Table / Card List
 │   └── Job Record Item
 │       ├── Job ID & Workflow Name
 │       ├── Status Badge (Green: Completed / Red: Failed / Amber: Stopped)
-│       ├── Start Time & Duration (Thời gian chạy)
+│       ├── Start Time & Duration
 │       ├── Trigger Type (Manual / Cron / Webhook / Campaign)
-│       ├── btn.history.viewdetails (Mở drawer xem chi tiết log)
-│       └── btn.history.rerun (Chạy lại kịch bản với thông số cũ)
+│       ├── btn.history.viewdetails (Open trace log drawer)
+│       └── btn.history.rerun (Re-run workflow with original parameters)
 └── Job Details & Trace Log Drawer
     ├── Job Summary & Execution Context
     ├── Step-by-step Block Execution Timeline
-    └── Raw Console Logs Viewer (với tính năng copy/export)
+    └── Raw Console Logs Viewer (with copy/export utilities)
 ```
 
 ---
 
-## ⚡ 3. DANH MỤC NÚT BẤM (BUTTON CATALOG) TRONG MENU HISTORY
+## ⚡ 3. Button Catalog in History Menu
 
-| Button ID | Tên Nút / Nhãn UI | Icon | Trạng Thái FSM Hỗ Trợ | Target Action & Endpoint | `data-testid` |
+| Button ID | UI Label | Icon | Supported FSM States | Target Action & Endpoint | `data-testid` |
 |---|---|---|---|---|---|
-| `btn.history.refresh` | Refresh History | `RefreshCw` | `IDLE` | Gọi `getJobHistory()` cập nhật danh sách | `btn-refresh-history` |
-| `btn.history.clear` | Clear History | `Trash2` | `IDLE` | Xóa các bản ghi lịch sử cũ | `btn-clear-history` |
-| `btn.history.viewdetails`| View Details | `Eye` | `IDLE` | Mở drawer xem chi tiết trace logs | `btn-view-job-details` |
-| `btn.history.rerun` | Re-run Job | `RotateCcw`| `IDLE` | Tái kích hoạt workflow với cùng tham số | `btn-rerun-job` |
-| `btn.history.export` | Export Logs | `Download` | `IDLE` | Xuất toàn bộ file logs ra định dạng text/JSON | `btn-export-history-logs` |
+| `btn.history.refresh` | Refresh History | `RefreshCw` | `IDLE` | Calls `getJobHistory()` to refresh list | `btn-refresh-history` |
+| `btn.history.clear` | Clear History | `Trash2` | `IDLE` | Purges legacy execution records | `btn-clear-history` |
+| `btn.history.viewdetails`| View Details | `Eye` | `IDLE` | Opens drawer for step trace logs | `btn-view-job-details` |
+| `btn.history.rerun` | Re-run Job | `RotateCcw`| `IDLE` | Re-dispatches workflow with saved inputs | `btn-rerun-job` |
+| `btn.history.export` | Export Logs | `Download` | `IDLE` | Exports logs to text/JSON | `btn-export-history-logs` |
 
 ---
 
-## 📜 4. DANH MỤC SELECT / DROPDOWN TRONG MENU HISTORY
+## 📜 4. Select Dropdowns in History Menu
 
-| Select ID | Tên Dropdown | Nguồn Dữ Liệu Remote | Virtualization & Debounce | Side-effect Phản Xạ Khi Chọn | `data-testid` |
+| Select ID | Dropdown Label | Remote Data Source | Virtualization & Debounce | Reactive Selection Side-Effect | `data-testid` |
 |---|---|---|---|---|---|
-| `select.history.status` | Filter By Status | Static Union (`all`, `completed`, `failed`, `stopped`) | Không cần ảo hóa | Lọc danh sách bản ghi hiển thị trên bảng | `select-history-status` |
-| `select.history.workflow`| Filter By Workflow| `GET /api/v1/storage/workflows` | Virtualized 1000+, Debounce 150ms | Lọc lịch sử theo từng kịch bản cụ thể | `select-history-workflow` |
+| `select.history.status` | Filter By Status | Static Union (`all`, `completed`, `failed`, `stopped`) | No virtualization | Filters table records by execution status | `select-history-status` |
+| `select.history.workflow`| Filter By Workflow| `GET /api/v1/storage/workflows` | Virtualized 1000+, Debounce 150ms | Restricts history to chosen workflow | `select-history-workflow` |
 
 ---
 
-## 🌐 5. DANH MỤC API ENDPOINTS & SSE EVENTS
+## 🌐 5. API Endpoints & SSE Events Catalog
 
-| Giao Thức | Endpoint / Sự Kiện | Phương Thức | SDK Function Gọi Chuẩn | Mô Tả Nghiệp Vụ |
+| Protocol | Endpoint / Event | Method | SDK Function | Business Description |
 |---|---|:---:|---|---|
-| **REST** | `/api/v1/history` | `GET` | `getJobHistory({ query: { limit, offset, search, status } })` | Lấy danh sách lịch sử phân trang từ SQLite |
-| **REST** | `/api/v1/history/{id}` | `GET` | `getJobDetails()` | Lấy chi tiết trace logs của một phiên chạy |
-| **SSE** | `/api/v1/events` | Stream | `globalSseClient` | Nhận sự kiện `job_completed` / `job_failed` để tự động thêm vào lịch sử |
+| **REST** | `/api/v1/history` | `GET` | `getJobHistory({ query: { limit, offset, search, status } })` | Retrieves paginated execution records from SQLite |
+| **REST** | `/api/v1/history/{id}` | `GET` | `getJobDetails()` | Retrieves detailed trace telemetry for specific job |
+| **SSE** | `/api/v1/events` | Stream | `globalSseClient` | Ingests `job_completed` / `job_failed` to auto-insert new entries |
 
 ---
 
-## 🛡️ 6. TIÊU CHUẨN KIỂM ĐỊNH CHẤT LƯỢNG (AGENT CROSS-CHECK)
+## 🛡️ 6. Quality Assurance & Agent Cross-Checklist
 
-1. [ ] Danh sách lịch sử phải hỗ trợ phân trang chuẩn `limit` và `offset` trên SQLite, không tải toàn bộ gây tràn RAM.
-2. [ ] Khi một job vừa chạy xong trong Menu Studio, bản ghi mới phải tự động xuất hiện trên Menu History nhờ SSE phản xạ.
-3. [ ] Drawer xem log hiển thị đầy đủ thông tin: ID khối, thời gian thực thi của từng block, và thông báo lỗi chi tiết nếu thất bại.
+1. [ ] History queries must support pagination using `limit` and `offset` in SQLite, preventing memory overhead.
+2. [ ] Upon job completion in the Studio menu, the new entry must immediately appear in History via reactive SSE listeners.
+3. [ ] The log drawer must expose complete metadata: Block ID, execution duration per step, and formatted error logs upon failure.

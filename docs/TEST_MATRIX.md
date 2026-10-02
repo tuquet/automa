@@ -1,25 +1,25 @@
-# 🌐 Ma Trận Kiểm Thử Hệ Sinh Thái Automa (Ecosystem Test Matrix)
+# 🌐 Automa Ecosystem Test Matrix
 
-Chào mừng bạn đến với trung tâm giám sát chất lượng và ma trận kiểm thử tổng thể của **Automa Ecosystem**. Hệ thống áp dụng chiến lược kiểm thử đa tầng (Multi-tier Testing Strategy) đảm bảo tính toàn vẹn từ lõi Rust Engine tới giao diện VS Code Extension, Desktop App và Chrome Web Extension.
+Welcome to the comprehensive quality assurance and test monitoring hub for the **Automa Ecosystem**. The system follows a multi-tier testing strategy ensuring end-to-end integrity from the low-level Rust Engine to the VS Code Extension, Desktop Application, and Chrome Web Extension.
 
 ---
 
-## 🧭 1. Kim Tự Tháp Kiểm Thử Hệ Sinh Thái (Ecosystem Testing Pyramid)
+## 🧭 1. Ecosystem Testing Pyramid
 
 ```mermaid
 graph TD
-    subgraph E2E["🔗 Tầng 3: Tích Hợp Đa Dịch Vụ (Multi-Service E2E)"]
+    subgraph E2E["🔗 Tier 3: Multi-Service E2E Integration"]
         RootE2E["tests/e2e (Rust Backend + Browser Sessions + SQLite Storage + SSE Streams)"]
         WVE2E["Playwright Headless Webview E2E (Vue Webview Apps)"]
     end
 
-    subgraph Unit_Integration["💻 Tầng 2: Kiểm Thử Ứng Dụng (Unit & Component Level)"]
+    subgraph Unit_Integration["💻 Tier 2: Application Tests (Unit & Component Level)"]
         VSCode["apps/vsce (vscode-automa - Vitest)"]
         DeskApp["apps/desk (@automa/desk - Vitest)"]
         ExtBuild["apps/webe (@automa/webe - Standalone Studio & Runner Targets)"]
     end
 
-    subgraph Core_Engine["🦀 Tầng 1: Lõi Thực Thi Cấp Thấp (Rust Backend Engine)"]
+    subgraph Core_Engine["🦀 Tier 1: Low-Level Engine (Rust Backend Engine)"]
         Core["apps/core (Cargo tests - Crypto, AST Sanitizer, OpenAPI, DB)"]
     end
 
@@ -33,9 +33,9 @@ graph TD
 
 ---
 
-## 📊 2. Bảng Tổng Hợp Chỉ Số Kiểm Thử Từng Phân Hệ
+## 📊 2. Subsystem Test Summary Matrix
 
-| Phân Hệ (Ứng Dụng / Gói) | Công Nghệ Kiểm Thử | Số Tests / Suites | Trạng Thái | Tài Liệu Chi Tiết | Lệnh Thực Thi |
+| Subsystem (App / Package) | Testing Stack | Tests / Suites | Status | Documentation | Execution Command |
 | :--- | :--- | :---: | :---: | :--- | :--- |
 | **`apps/vsce`** | Vitest v4 + Biome | **214 tests / 40 suites** | ✅ **Passed** | [📄 apps/vsce Test Matrix](../apps/vsce/docs/TEST_MATRIX.md) | `pnpm -F vscode-automa test` |
 | **`apps/core`** | Cargo Test (In-Memory SQLite) | **55 tests** | ✅ **Passed** | [📄 apps/core README](../apps/core/README.md) | `cargo test --manifest-path apps/core/Cargo.toml --lib` |
@@ -46,17 +46,17 @@ graph TD
 
 ---
 
-## 🛠️ 3. Sổ Tay Chạy Kiểm Thử Toàn Diện (All-in-One Testing SOP)
+## 🛠️ 3. Comprehensive Testing SOP (Run All)
 
-### 1. Kiểm tra toàn bộ hệ sinh thái (All Packages)
+### 1. Test the Entire Ecosystem (All Packages)
 ```bash
-# Chạy script điều phối kiểm thử 4 tầng của toàn bộ monorepo
+# Run 4-tier testing orchestration across monorepo
 pnpm test
-# hoặc
+# or
 node scripts/test-all.mjs
 ```
 
-### 2. Kiểm thử riêng lẻ từng phân hệ
+### 2. Individual Subsystem Execution
 - **VS Code Extension**:
   ```bash
   pnpm -F vscode-automa test
@@ -69,19 +69,19 @@ node scripts/test-all.mjs
   ```bash
   cargo test --manifest-path apps/core/Cargo.toml --lib
   ```
-- **Kiểm tra tự động sinh mã OpenAPI SDK (Zero-conflict)**:
+- **OpenAPI SDK Synchronization Verification**:
   ```bash
   pnpm run sync:api
   ```
-- **Đóng gói toàn bộ Monorepo**:
+- **Full Monorepo Build**:
   ```bash
   pnpm run build
   ```
 
 ---
 
-## 🔗 4. Liên Kết Điều Hướng
+## 🔗 4. Navigation Links
 
 - [🏠 Documentation Hub](Home.md)
-- [💻 Chi Tiết Ma Trận Kiểm Thử apps/vsce](../apps/vsce/docs/TEST_MATRIX.md)
-- [📚 Danh Mục Hướng Dẫn Kỹ Thuật apps/vsce](../apps/vsce/docs/README.md)
+- [💻 Detailed apps/vsce Test Matrix](../apps/vsce/docs/TEST_MATRIX.md)
+- [📚 Technical Directory: apps/vsce](../apps/vsce/docs/README.md)

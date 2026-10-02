@@ -1,36 +1,36 @@
-# 🎨 ĐẶC TẢ NGHIỆP VỤ SRS: MENU STUDIO (CANVAS & WORKFLOW EDITOR)
+# 🎨 SRS Domain Specification: Menu Studio (Canvas & Workflow Editor)
 
 ---
 
-## 🎯 1. MỤC TIÊU & PHẠM VI (SCOPE & OBJECTIVES)
+## 🎯 1. Scope & Objectives
 
-Menu **Studio** là trung tâm sáng tạo và điều khiển đồ thị kịch bản tự động hóa (Visual Workflow Editor) của Automa Ecosystem:
-- **`apps/webe:studio`**: Cung cấp Visual Canvas Engine thuần Web dựa trên VueFlow, xử lý kéo thả khối (Blocks), kết nối cạnh (Edges), cấu hình thông số và linting thời gian thực.
-- **`apps/desk`**: Nhúng Studio Canvas qua Iframe (`StudioCanvasEmbed.vue`), tích hợp thanh Action Header chuẩn (`StudioActionHeader.vue`), điều phối FSM thực thi kịch bản (`useStudioExecution.ts`), và hiển thị thanh Console Logs thời gian thực (`ExecutionConsole.vue`).
-- **`apps/vsce`**: Nhúng Studio Canvas qua Custom Text Editor Webview (`WorkflowEditorView.vue`) gắn với file `*.workflow.json`.
+The **Studio** menu is the workflow orchestration and visual graph editor for the Automa Ecosystem:
+- **`apps/webe:studio`**: Delivers a pure Web Visual Canvas Engine based on VueFlow, handling block drag-and-drop, edge connections, parameter configurations, and real-time AST linting.
+- **`apps/desk`**: Embeds Studio Canvas via Iframe (`StudioCanvasEmbed.vue`), integrates a standardized Action Header (`StudioActionHeader.vue`), coordinates execution FSM (`useStudioExecution.ts`), and renders the real-time Console Logs drawer (`ExecutionConsole.vue`).
+- **`apps/vsce`**: Embeds Studio Canvas via a Custom Text Editor Webview (`WorkflowEditorView.vue`) bound to `*.workflow.json` files.
 
 ---
 
-## 🌳 2. BỐ CỤC GIAO DIỆN & COMPONENT TREE (UI/UX LAYOUT)
+## 🌳 2. UI/UX Component Tree
 
 ```text
 StudioView.vue
 ├── StudioActionHeader.vue (Top Toolbar)
 │   ├── Workflow Name & Version Badge
-│   ├── btn.workflow.save (Lưu kịch bản)
-│   ├── btn.workflow.lint (Kiểm tra lỗi AST)
-│   ├── select.workflow.browser (Chọn nhanh Browser Profile)
-│   └── btn.workflow.run / btn.workflow.stop (Chạy / Dừng FSM)
+│   ├── btn.workflow.save (Save workflow)
+│   ├── btn.workflow.lint (Verify AST schema)
+│   ├── select.workflow.browser (Quick target browser selector)
+│   └── btn.workflow.run / btn.workflow.stop (Run / Stop FSM)
 ├── StudioCanvasEmbed.vue (Center Graph Area - Iframe to apps/webe:studio)
 │   ├── VueFlow Visual Canvas (WorkflowEditor.vue)
 │   │   ├── Custom Blocks (BlockBasic, BlockGroup, BlockLoop, etc.)
 │   │   └── Smart Connect & Output Handles
-│   ├── Blocks Palette Drawer (Danh mục khối tự động hóa)
+│   ├── Blocks Palette Drawer (Automation blocks catalog)
 │   ├── Block Edit Drawer (WorkflowEditBlock.vue)
 │   └── Modals:
-│       ├── RunWorkflowModal.vue (Cấu hình tham số & Browser trước khi chạy)
-│       ├── BrowsersQuickModal.vue (Quản lý nhanh danh sách profile)
-│       └── StorageTablesModal.vue (Nạp bảng dữ liệu SQLite)
+│       ├── RunWorkflowModal.vue (Runtime parameter & browser selector)
+│       ├── BrowsersQuickModal.vue (Quick profile manager)
+│       └── StorageTablesModal.vue (SQLite table selector)
 └── ExecutionConsole.vue (Bottom Collapsible Drawer)
     ├── FSM Status Badge (IDLE / VALIDATING / DISPATCHING / EXECUTING / COMPLETED / FAILED)
     ├── Execution Timer (mm:ss.S)
@@ -40,66 +40,66 @@ StudioView.vue
 
 ---
 
-## ⚡ 3. DANH MỤC NÚT BẤM (BUTTON CATALOG) TRONG MENU STUDIO
+## ⚡ 3. Button Catalog in Studio Menu
 
-| Button ID | Tên Nút / Nhãn UI | Icon / Shortcut | Trạng Thái FSM Hỗ Trợ | Target Action & Endpoint | `data-testid` |
+| Button ID | UI Label | Icon / Shortcut | Supported FSM States | Target Action & Endpoint | `data-testid` |
 |---|---|---|---|---|---|
-| `btn.workflow.run` | Run Workflow | `Play` / `F5` | `IDLE`, `VALIDATING`, `DISPATCHING` | Kích hoạt thác Waterfall $\rightarrow$ `submitJob()` | `btn-run-workflow` |
-| `btn.workflow.stop` | Stop Job | `Square` / `Shift+F5` | `EXECUTING`, `TERMINATING` | Gửi lệnh hủy `killJob()` hoặc WS `KILL_JOB` | `btn-stop-workflow` |
-| `btn.workflow.pause` | Pause Job | `Pause` | `EXECUTING` | Gửi lệnh tạm dừng qua WebSocket `PAUSE_JOB` | `btn-pause-workflow` |
-| `btn.workflow.resume` | Resume Job | `Play` | `PAUSED` | Gửi lệnh tiếp tục qua WebSocket `RESUME_JOB` | `btn-resume-workflow` |
-| `btn.workflow.save` | Save Workflow | `Save` / `Ctrl+S` | `IDLE`, `VALIDATING` | Cập nhật storage `saveWorkflow()` / SQLite | `btn-save-workflow` |
-| `btn.workflow.export` | Export JSON | `Download` | `IDLE` | Xuất file `.workflow.json` ra đĩa | `btn-export-workflow` |
-| `btn.workflow.import` | Import File | `Upload` | `IDLE` | Đọc file `.workflow.json` nạp lên Canvas | `btn-import-workflow` |
-| `btn.workflow.lint` | Lint AST | `CheckCircle` | `IDLE`, `VALIDATING` | Gọi `lintWorkflow()` phân tích chu trình/lỗi | `btn-lint-workflow` |
-| `btn.workflow.format` | Auto Layout | `LayoutGrid` | `IDLE` | Sắp xếp đồ thị tự động bằng Dagre Layout | `btn-format-workflow` |
-| `btn.workflow.undo` | Undo | `Undo2` / `Ctrl+Z` | `IDLE` | Hoàn tác thay đổi gần nhất trên Canvas | `btn-undo-workflow` |
-| `btn.workflow.redo` | Redo | `Redo2` / `Ctrl+Y` | `IDLE` | Làm lại thao tác vừa hoàn tác | `btn-redo-workflow` |
-| `btn.workflow.debug.step` | Step Over | `StepForward` / `F10`| `PAUSED` | Bước qua 1 block tiếp theo trong debugger | `btn-debug-step` |
+| `btn.workflow.run` | Run Workflow | `Play` / `F5` | `IDLE`, `VALIDATING`, `DISPATCHING` | Triggers Waterfall resolver $\rightarrow$ `submitJob()` | `btn-run-workflow` |
+| `btn.workflow.stop` | Stop Job | `Square` / `Shift+F5` | `EXECUTING`, `TERMINATING` | Sends cancellation `killJob()` or WS `KILL_JOB` | `btn-stop-workflow` |
+| `btn.workflow.pause` | Pause Job | `Pause` | `EXECUTING` | Sends pause command via WebSocket `PAUSE_JOB` | `btn-pause-workflow` |
+| `btn.workflow.resume` | Resume Job | `Play` | `PAUSED` | Sends resume command via WebSocket `RESUME_JOB` | `btn-resume-workflow` |
+| `btn.workflow.save` | Save Workflow | `Save` / `Ctrl+S` | `IDLE`, `VALIDATING` | Updates storage via `saveWorkflow()` / SQLite | `btn-save-workflow` |
+| `btn.workflow.export` | Export JSON | `Download` | `IDLE` | Exports active workflow as `.workflow.json` | `btn-export-workflow` |
+| `btn.workflow.import` | Import File | `Upload` | `IDLE` | Reads `.workflow.json` from disk into Canvas | `btn-import-workflow` |
+| `btn.workflow.lint` | Lint AST | `CheckCircle` | `IDLE`, `VALIDATING` | Invokes `lintWorkflow()` to detect loops and schema errors | `btn-lint-workflow` |
+| `btn.workflow.format` | Auto Layout | `LayoutGrid` | `IDLE` | Arranges graph layout via Dagre | `btn-format-workflow` |
+| `btn.workflow.undo` | Undo | `Undo2` / `Ctrl+Z` | `IDLE` | Reverts last action on canvas | `btn-undo-workflow` |
+| `btn.workflow.redo` | Redo | `Redo2` / `Ctrl+Y` | `IDLE` | Reapplies reverted action | `btn-redo-workflow` |
+| `btn.workflow.debug.step` | Step Over | `StepForward` / `F10`| `PAUSED` | Steps to next block in debugger mode | `btn-debug-step` |
 
 ---
 
-## 📜 4. DANH MỤC SELECT / DROPDOWN TRONG MENU STUDIO
+## 📜 4. Select Dropdowns in Studio Menu
 
-| Select ID | Tên Dropdown | Nguồn Dữ Liệu Remote | Virtualization & Debounce | Side-effect Phản Xạ Khi Chọn | `data-testid` |
+| Select ID | Dropdown Label | Remote Data Source | Virtualization & Debounce | Reactive Selection Side-Effect | `data-testid` |
 |---|---|---|---|---|---|
-| `select.workflow.browser` | Select Target Browser | `GET /api/v1/browsers` | Virtualized 1000+, Debounce 200ms | Gán `browserStore.selectedBrowserId` $\rightarrow$ Cập nhật mục tiêu cho `btn.workflow.run` | `select-workflow-browser` |
-| `select.workflow.table` | Select Storage Table | `GET /api/v1/storage/tables` | Virtualized 500+, Debounce 150ms | Nạp metadata cột bảng vào gợi ý `{{table.COL}}` | `select-workflow-table` |
-| `select.workflow.variable` | Select Global Variable | `GET /api/v1/storage/variables` | Virtualized 1000+, Debounce 150ms | Tự động điền `{{variables.KEY}}` vào input block | `select-workflow-variable` |
+| `select.workflow.browser` | Select Target Browser | `GET /api/v1/browsers` | Virtualized 1000+, Debounce 200ms | Sets `browserStore.selectedBrowserId` $\rightarrow$ Updates target for `btn.workflow.run` | `select-workflow-browser` |
+| `select.workflow.table` | Select Storage Table | `GET /api/v1/storage/tables` | Virtualized 500+, Debounce 150ms | Populates table column metadata into `{{table.COL}}` suggestions | `select-workflow-table` |
+| `select.workflow.variable` | Select Global Variable | `GET /api/v1/storage/variables` | Virtualized 1000+, Debounce 150ms | Auto-fills `{{variables.KEY}}` into block input fields | `select-workflow-variable` |
 
 ---
 
-## 🍍 5. QUẢN LÝ TRẠNG THÁI PINIA STORE LIÊN QUAN
+## 🍍 5. Associated Pinia State Management
 
-Menu Studio tương tác trực tiếp với 2 Domain Stores chính:
+The Studio menu interacts directly with 2 primary Domain Stores:
 1. **`useWorkflowStore`**:
-   - `workflow`: Cấu trúc AST kịch bản (`nodes`, `edges`, `settings`, `globalData`).
-   - `isDirty`: Cờ đánh dấu có thay đổi chưa lưu.
-   - `activeNodeId`: ID node đang chạy nhận từ SSE `job_log` để kích hoạt hiệu ứng viền sáng (Pulse Highlighter).
-   - `breakpoints`: Danh sách node IDs dừng luồng chạy.
-   - `lintIssues`: Danh sách cảnh báo/lỗi từ Static Linter.
+   - `workflow`: Workflow AST structure (`nodes`, `edges`, `settings`, `globalData`).
+   - `isDirty`: Flag tracking unsaved edits.
+   - `activeNodeId`: Currently executing node ID from SSE `job_log`, activating the pulse highlighter.
+   - `breakpoints`: Array of node IDs pausing execution.
+   - `lintIssues`: Array of warnings and errors from the AST linter.
 2. **`useExecutionStore`**:
-   - `fsmState`: Máy trạng thái thực thi (`IDLE` $\rightarrow$ `VALIDATING` $\rightarrow$ `DISPATCHING` $\rightarrow$ `EXECUTING` $\rightarrow$ `COMPLETED`).
-   - `activeJobId`: ID phiên chạy do Daemon cấp phát.
-   - `logs`: Buffer chứa telemetry logs thời gian thực từ SSE.
-   - `isConsoleOpen`: Đóng/mở console log drawer.
+   - `fsmState`: Execution state machine (`IDLE` $\rightarrow$ `VALIDATING` $\rightarrow$ `DISPATCHING` $\rightarrow$ `EXECUTING` $\rightarrow$ `COMPLETED`).
+   - `activeJobId`: Unique daemon-assigned job ID.
+   - `logs`: Ring buffer storing real-time telemetry logs from SSE.
+   - `isConsoleOpen`: Boolean toggle for console drawer visibility.
 
 ---
 
-## 🌐 6. DANH MỤC API ENDPOINTS, SSE & WEBSOCKET
+## 🌐 6. API Endpoints, SSE & WebSocket Catalog
 
-| Giao Thức | Đường Dẫn Endpoint / Channel | Phương Thức | SDK Function Gọi Chuẩn | Mô Tả Nghiệp Vụ |
+| Protocol | Path / Channel | Method | SDK Function | Business Description |
 |---|---|:---:|---|---|
-| **REST** | `/api/v1/jobs` | `POST` | `submitJob()` | Khởi tạo phiên chạy workflow trên Daemon |
-| **REST** | `/api/v1/jobs/{id}` | `DELETE` | `killJob()` | Dừng và hủy phiên chạy ngay lập tức |
-| **REST** | `/api/v1/lint` | `POST` | `lintWorkflow()` | Kiểm tra chu trình và lỗi schema AST |
-| **REST** | `/api/v1/storage/workflows` | `GET` / `POST` | `getWorkflow()` / `saveWorkflow()` | Nạp hoặc lưu file kịch bản lên SQLite |
-| **SSE** | `/api/v1/events` | Stream | `globalSseClient` | Lắng nghe `job_log` (tiến độ block) & `job_status` (lifecycle) |
-| **WS** | `/api/v1/ws` | 2-Way | `wsClient` | Gửi tín hiệu điều khiển `PAUSE_JOB`, `RESUME_JOB`, `KILL_JOB` |
+| **REST** | `/api/v1/jobs` | `POST` | `submitJob()` | Dispatches workflow execution session to daemon |
+| **REST** | `/api/v1/jobs/{id}` | `DELETE` | `killJob()` | Terminates active job execution immediately |
+| **REST** | `/api/v1/lint` | `POST` | `lintWorkflow()` | Analyzes AST cycles and validation errors |
+| **REST** | `/api/v1/storage/workflows` | `GET` / `POST` | `getWorkflow()` / `saveWorkflow()` | Retrieves or persists workflow definition in SQLite |
+| **SSE** | `/api/v1/events` | Stream | `globalSseClient` | Subscribes to `job_log` (block progress) & `job_status` (lifecycle) |
+| **WS** | `/api/v1/ws` | 2-Way | `wsClient` | Sends real-time control signals: `PAUSE_JOB`, `RESUME_JOB`, `KILL_JOB` |
 
 ---
 
-## 🔄 7. SƠ ĐỒ MÁY TRẠNG THÁI & KỊCH BẢN THỰC THI (FSM WORKFLOW)
+## 🔄 7. Execution Sequence & FSM Workflow
 
 ```mermaid
 sequenceDiagram
@@ -114,37 +114,37 @@ sequenceDiagram
     User->>Desk: Click "Run Workflow" (btn.workflow.run)
     Desk->>Desk: FSM -> VALIDATING & Clear Logs
     Desk->>Core: Fetch default browser & check parameters
-    alt Level 1: Fast Path (Có profile & không có required params)
+    alt Level 1: Fast Path (Default browser exists & zero required params)
         Desk->>Desk: FSM -> DISPATCHING
         Desk->>Core: submitJob({ workflowData, options })
-        Core-->>Desk: Trả về { jobId: "job-123", status: "running" }
+        Core-->>Desk: Return { jobId: "job-123", status: "running" }
         Desk->>Desk: FSM -> EXECUTING (Start Timer)
-    else Level 2: Parameter Prompt (Yêu cầu nhập tham số)
-        Desk->>Studio: Mở RunWorkflowModal.vue
-        User->>Studio: Điền tham số & bấm "Execute"
+    else Level 2: Parameter Prompt (User input required)
+        Desk->>Studio: Open RunWorkflowModal.vue
+        User->>Studio: Provide parameters & click "Execute"
         Studio->>Core: submitJob({ workflowData, options })
     end
 
     loop Real-time Telemetry Loop
         Core->>SSE: Emit { type: "job_log", blockId: "n-456", message: "Clicking button" }
-        SSE->>Desk: useBindStoreSse nhận sự kiện
+        SSE->>Desk: useBindStoreSse receives event
         Desk->>Desk: executionStore.appendLog() & workflowStore.setActiveNode("n-456")
         Desk->>Bridge: postMessage({ type: "highlightNode", blockId: "n-456" })
-        Bridge->>Studio: Canvas vẽ hiệu ứng Pulse viền xanh lục trên Node
+        Bridge->>Studio: Canvas renders green pulse glow on target Node
     end
 
     Core->>SSE: Emit { type: "job_status", status: "completed" }
     SSE->>Desk: FSM -> COMPLETED (Stop Timer)
-    Desk->>Desk: Tự động reset FSM -> IDLE sau 2 giây
+    Desk->>Desk: Auto reset FSM -> IDLE after 2 seconds
 ```
 
 ---
 
-## 🛡️ 8. TIÊU CHUẨN KIỂM ĐỊNH CHẤT LƯỢNG (AGENT CROSS-CHECK)
+## 🛡️ 8. Quality Assurance & Agent Cross-Checklist
 
-Khi Subagent rà soát Menu Studio, bắt buộc phải đối soát checklist 5 điểm:
-1. [ ] 100% các nút bấm trên Toolbar và Canvas đều có `data-testid` tương ứng với mã `btn.workflow.*`.
-2. [ ] Thác giải quyết Browser (Waterfall) xử lý chuẩn cả 3 kịch bản (Fast path, QuickPick modal, Resolver modal).
-3. [ ] Khi job đang chạy (`EXECUTING`), nút "Run" tự động chuyển thành nút "Stop" (`btn.workflow.stop`) và disable nút "Save".
-4. [ ] Sự kiện SSE `job_log` có chứa `blockId` phải làm sáng viền đúng node trên Canvas và ghi log vào `ExecutionConsole`.
-5. [ ] Tuyệt đối không dùng `fetch()` thô; 100% gọi qua typed SDK `@automa/types/api`.
+When auditing the Studio Menu, verify the following 5 criteria:
+1. [ ] 100% of Toolbar and Canvas action buttons define a valid `data-testid` matching `btn.workflow.*`.
+2. [ ] The Browser Resolution Waterfall handles all 3 tiers (Fast path, QuickPick modal, Resolver modal).
+3. [ ] When execution is active (`EXECUTING`), "Run" transforms into "Stop" (`btn.workflow.stop`) and "Save" is disabled.
+4. [ ] Ingested SSE `job_log` events carrying `blockId` highlight the active node on Canvas and append to `ExecutionConsole`.
+5. [ ] Raw `fetch()` calls are strictly prohibited; 100% of network traffic routes through `@automa/types/api`.

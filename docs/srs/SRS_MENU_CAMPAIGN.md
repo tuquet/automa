@@ -1,34 +1,34 @@
-# 🚀 ĐẶC TẢ NGHIỆP VỤ SRS: MENU CAMPAIGN (CAMPAIGN MATRIX FLEET)
+# 🚀 SRS Domain Specification: Menu Campaign (Campaign Matrix Fleet)
 
 ---
 
-## 🎯 1. MỤC TIÊU & PHẠM VI (SCOPE & OBJECTIVES)
+## 🎯 1. Scope & Objectives
 
-Menu **Campaign** quản lý và điều phối các chiến dịch tự động hóa quy mô lớn (Matrix Automation Fleet) chạy song song trên nhiều profile trình duyệt độc lập:
-- **`automa-desk`**: Cung cấp giao diện bảng ma trận phân bổ tài nguyên (`CampaignView.vue`), cấu hình số lượng luồng song song (Concurrency Slots), theo dõi tiến độ từng luồng thời gian thực.
-- **`automa-vsce`**: Cung cấp custom preview `CampaignMatrixView.vue` mở file `*.campaign.json` trên VS Code.
-- **`automa-vault`**: Nơi lưu trữ các kịch bản ma trận chiến dịch trên đĩa.
+The **Campaign** menu orchestrates large-scale automation campaigns (Matrix Automation Fleet) running across multiple independent browser profiles in parallel:
+- **`automa-desk`**: Provides a resource allocation matrix grid (`CampaignView.vue`), configures concurrency limits (Slots), and monitors per-slot progress in real time.
+- **`automa-vsce`**: Delivers a custom preview editor (`CampaignMatrixView.vue`) for `*.campaign.json` files within VS Code.
+- **`automa-vault`**: Local on-disk workspace storage for campaign specifications.
 
 ---
 
-## 🌳 2. BỐ CỤC GIAO DIỆN & COMPONENT TREE (UI/UX LAYOUT)
+## 🌳 2. UI/UX Layout & Component Tree
 
 ```text
-CampaignView.vue (hoặc CampaignMatrixView.vue trong VS Code)
+CampaignView.vue (or CampaignMatrixView.vue in VS Code)
 ├── Campaign Header Toolbar
 │   ├── Campaign Name & Status Badge (IDLE / RUNNING / ABORTED / COMPLETED)
 │   ├── Target Workflow Selector (select.campaign.workflow)
 │   ├── Concurrency Control (Slot Count Input: 1..32)
-│   ├── btn.campaign.run (Chạy toàn bộ ma trận)
-│   ├── btn.campaign.abort (Hủy khẩn cấp toàn bộ chiến dịch)
-│   └── btn.campaign.save (Lưu cấu hình chiến dịch)
+│   ├── btn.campaign.run (Run entire matrix)
+│   ├── btn.campaign.abort (Emergency abort campaign)
+│   └── btn.campaign.save (Persist campaign configuration)
 ├── Fleet Slots Allocation Grid
-│   └── Campaign Slot Card (Từng luồng song song)
+│   └── Campaign Slot Card (Per parallel worker)
 │       ├── Slot Index (#1, #2, ... #N)
 │       ├── Assigned Browser Selector (select.campaign.browser)
-│       ├── Real-time Progress Bar (% tiến độ & số bước hoàn thành)
+│       ├── Real-time Progress Bar (% progress & step count)
 │       ├── Live Status Indicator (Idle / Running / Success / Error)
-│       └── btn.campaign.slot.stop (Dừng riêng luồng này)
+│       └── btn.campaign.slot.stop (Terminate individual slot)
 └── Real-time Telemetry Progress Summary
     ├── Total Slots, Completed Count, Failed Count
     └── Overall Campaign Progress Gauge (%)
@@ -36,50 +36,50 @@ CampaignView.vue (hoặc CampaignMatrixView.vue trong VS Code)
 
 ---
 
-## ⚡ 3. DANH MỤC NÚT BẤM (BUTTON CATALOG) TRONG MENU CAMPAIGN
+## ⚡ 3. Button Catalog in Campaign Menu
 
-| Button ID | Tên Nút / Nhãn UI | Icon | Trạng Thái FSM Hỗ Trợ | Target Action & Endpoint | `data-testid` |
+| Button ID | UI Label | Icon | Supported FSM States | Target Action & Endpoint | `data-testid` |
 |---|---|---|---|---|---|
-| `btn.campaign.run` | Run Campaign | `Play` | `IDLE`, `ABORTED` | Gửi ma trận chiến dịch lên Daemon thực thi | `btn-run-campaign` |
-| `btn.campaign.abort` | Abort Campaign | `Square` | `RUNNING` | Gửi lệnh hủy khẩn cấp toàn bộ chiến dịch | `btn-abort-campaign` |
-| `btn.campaign.save` | Save Matrix | `Save` | `IDLE` | Lưu cấu hình `*.campaign.json` lên SQLite | `btn-save-campaign` |
-| `btn.campaign.slot.add` | Add Slot | `Plus` | `IDLE` | Thêm 1 luồng browser vào ma trận | `btn-add-campaign-slot` |
-| `btn.campaign.slot.remove`| Remove Slot | `Trash2` | `IDLE` | Xóa luồng khỏi ma trận | `btn-remove-campaign-slot` |
-| `btn.campaign.slot.stop` | Stop Slot | `XCircle` | `RUNNING` | Dừng riêng 1 slot đang chạy | `btn-stop-campaign-slot` |
+| `btn.campaign.run` | Run Campaign | `Play` | `IDLE`, `ABORTED` | Dispatches campaign matrix to daemon | `btn-run-campaign` |
+| `btn.campaign.abort` | Abort Campaign | `Square` | `RUNNING` | Sends emergency abort signal | `btn-abort-campaign` |
+| `btn.campaign.save` | Save Matrix | `Save` | `IDLE` | Persists `*.campaign.json` to SQLite | `btn-save-campaign` |
+| `btn.campaign.slot.add` | Add Slot | `Plus` | `IDLE` | Appends a browser worker slot to matrix | `btn-add-campaign-slot` |
+| `btn.campaign.slot.remove`| Remove Slot | `Trash2` | `IDLE` | Removes worker slot from matrix | `btn-remove-campaign-slot` |
+| `btn.campaign.slot.stop` | Stop Slot | `XCircle` | `RUNNING` | Halts specific running slot | `btn-stop-campaign-slot` |
 
 ---
 
-## 📜 4. DANH MỤC SELECT / DROPDOWN TRONG MENU CAMPAIGN
+## 📜 4. Select Dropdowns in Campaign Menu
 
-| Select ID | Tên Dropdown | Nguồn Dữ Liệu Remote | Virtualization & Debounce | Side-effect Phản Xạ Khi Chọn | `data-testid` |
+| Select ID | Dropdown Label | Remote Data Source | Virtualization & Debounce | Reactive Selection Side-Effect | `data-testid` |
 |---|---|---|---|---|---|
-| `select.campaign.workflow`| Select Target Workflow | `GET /api/v1/storage/workflows` | Virtualized 1000+, Debounce 150ms | Gán kịch bản gốc để ma trận phân phối chạy | `select-campaign-workflow` |
-| `select.campaign.browser` | Assign Browser to Slot | `GET /api/v1/browsers` | Virtualized 1000+, Debounce 150ms | Gán profile browser riêng cho từng slot | `select-campaign-browser` |
+| `select.campaign.workflow`| Select Target Workflow | `GET /api/v1/storage/workflows` | Virtualized 1000+, Debounce 150ms | Assigns base workflow for matrix dispatch | `select-campaign-workflow` |
+| `select.campaign.browser` | Assign Browser to Slot | `GET /api/v1/browsers` | Virtualized 1000+, Debounce 150ms | Binds dedicated browser profile to slot | `select-campaign-browser` |
 
 ---
 
-## 🍍 5. QUẢN LÝ TRẠNG THÁI PINIA STORE LIÊN QUAN (`useCampaignStore`)
+## 🍍 5. Associated Pinia State Management (`useCampaignStore`)
 
-Store [`useCampaignStore`](../../packages/ui/src/stores/useCampaignStore.ts) quản lý ma trận chiến dịch:
-- `campaignId`, `campaignName`: Định danh chiến dịch.
-- `activeSlots`: Mảng các slot (`slotIndex`, `browserId`, `workflowId`, `status`, `progressPercent`).
-- `status`: Trạng thái tổng thể (`'idle' | 'running' | 'aborted' | 'completed'`).
-- `updateSlot(index, patch)`: Cập nhật tiến độ tức thì khi nhận SSE `campaign_slot_progress`.
+The [`useCampaignStore`](../../packages/ui/src/stores/useCampaignStore.ts) store coordinates campaign matrix execution:
+- `campaignId`, `campaignName`: Campaign metadata identifiers.
+- `activeSlots`: Array of worker slots (`slotIndex`, `browserId`, `workflowId`, `status`, `progressPercent`).
+- `status`: Overall matrix status (`'idle' | 'running' | 'aborted' | 'completed'`).
+- `updateSlot(index, patch)`: Modifies slot progress immediately upon receiving SSE `campaign_slot_progress` events.
 
 ---
 
-## 🌐 6. DANH MỤC API ENDPOINTS & SSE EVENTS
+## 🌐 6. API Endpoints & SSE Events Catalog
 
-| Giao Thức | Endpoint / Sự Kiện | Phương Thức | SDK Function Gọi Chuẩn | Mô Tả Nghiệp Vụ |
+| Protocol | Endpoint / Event | Method | SDK Function | Business Description |
 |---|---|:---:|---|---|
-| **REST** | `/api/v1/storage/campaigns` | `GET` | `getCampaigns({ query: { limit, offset, search } })` | Lấy danh sách chiến dịch phân trang |
-| **REST** | `/api/v1/storage/campaigns` | `POST` | `saveCampaign()` | Lưu cấu hình ma trận chiến dịch |
-| **REST** | `/api/v1/jobs` | `POST` | `submitJob()` | Kích hoạt phân phối ma trận đa luồng |
-| **SSE** | `/api/v1/events` | Stream | `globalSseClient` | Nhận sự kiện `campaign_slot_progress`, `campaign_aborted` |
+| **REST** | `/api/v1/storage/campaigns` | `GET` | `getCampaigns({ query: { limit, offset, search } })` | Retrieves paginated campaign definitions |
+| **REST** | `/api/v1/storage/campaigns` | `POST` | `saveCampaign()` | Persists campaign matrix configuration |
+| **REST** | `/api/v1/jobs` | `POST` | `submitJob()` | Dispatches parallel matrix execution |
+| **SSE** | `/api/v1/events` | Stream | `globalSseClient` | Ingests `campaign_slot_progress`, `campaign_aborted` |
 
 ---
 
-## 🔄 7. SƠ ĐỒ ĐIỀU PHỐI MA TRẬN ĐA LUỒNG (CAMPAIGN DISPATCH FLOW)
+## 🔄 7. Multi-Threaded Matrix Dispatch Sequence
 
 ```mermaid
 sequenceDiagram
@@ -90,13 +90,13 @@ sequenceDiagram
     participant Core as automa-core (Daemon)
     participant SSE as SSE Stream (/api/v1/events)
 
-    User->>Desk: Chọn Workflow & phân bổ 5 Browser Slots
-    User->>Desk: Bấm "Run Campaign" (btn.campaign.run)
+    User->>Desk: Select Workflow & allocate 5 Browser Slots
+    User->>Desk: Click "Run Campaign" (btn.campaign.run)
     Desk->>Store: setCampaignStatus('running')
     Desk->>Core: submitJob({ matrix: [slot1, slot2, ... slot5] })
-    Core-->>Desk: Trả về { campaignJobId: "camp-99", status: "running" }
+    Core-->>Desk: Return { campaignJobId: "camp-99", status: "running" }
 
-    par Song Song 5 Luồng
+    par 5 Parallel Streams
         Core->>SSE: Emit { type: "campaign_slot_progress", slotIndex: 0, progressPercent: 40 }
         SSE->>Store: updateSlot(0, { progressPercent: 40, status: 'running' })
     and
@@ -110,8 +110,8 @@ sequenceDiagram
 
 ---
 
-## 🛡️ 8. TIÊU CHUẨN KIỂM ĐỊNH CHẤT LƯỢNG (AGENT CROSS-CHECK)
+## 🛡️ 8. Quality Assurance & Agent Cross-Checklist
 
-1. [ ] Bảng ma trận hỗ trợ phân bổ tối thiểu 32 slots đồng thời mà không giật lag giao diện nhờ Virtualization.
-2. [ ] Các thanh tiến độ `%` của từng slot cập nhật mượt mà khi nhận SSE `campaign_slot_progress`.
-3. [ ] Khi bấm `Abort Campaign`, 100% các slot đang chạy phải đổi trạng thái sang `aborted` và các session browser tương ứng phải được đóng.
+1. [ ] The matrix grid comfortably renders up to 32 parallel slots without UI stutter via Virtualization.
+2. [ ] Slot progress percentage bars update smoothly upon receiving SSE `campaign_slot_progress` events.
+3. [ ] Triggering `Abort Campaign` transitions 100% of running slots to `aborted` and closes associated browser sessions.

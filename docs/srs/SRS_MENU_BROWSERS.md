@@ -1,123 +1,123 @@
-# 🌐 ĐẶC TẢ NGHIỆP VỤ SRS: MENU BROWSERS (ANTI-DETECT BROWSER FLEET)
+# 🌐 SRS Domain Specification: Menu Browsers (Anti-Detect Browser Fleet)
 
 ---
 
-## 🎯 1. MỤC TIÊU & PHẠM VI (SCOPE & OBJECTIVES)
+## 🎯 1. Scope & Objectives
 
-Menu **Browsers** quản lý toàn bộ hạm đội trình duyệt ảo (Anti-detect Browser Profiles) và các phiên Chromium của Automa Ecosystem:
-- **`automa-desk`**: Cung cấp giao diện quản trị profile độc lập (`BrowsersView.vue`), cấu hình proxy, user-agent, fingerprint, đảm bảo profile mặc định (`autoDetectBrowsers`), và điều khiển phiên chạy Chromium độc lập.
-- **`automa-vsce`**: Cung cấp sidebar panel `BROWSERS` (`automa.browsers`) và webview quản lý `BrowserManagerView.vue` với khả năng launch/stop nhanh.
-- **`automa-webe:studio`**: Cung cấp modal chọn profile nhanh (`BrowsersQuickModal.vue`) và cơ chế tự phục hồi (Self-Healing Waterfall).
-- **Quy chuẩn Phase 1 (Zero-Host Invariant)**: Toàn bộ hệ sinh thái chỉ dùng duy nhất **1 Executable là Chromium tải về độc lập** (mô hình Playwright). Nghiêm cấm quét file cài đặt máy Host để tránh xung đột phiên bản và lộ danh tính.
+The **Browsers** menu manages all virtual anti-detect browser profiles and Chromium execution sessions for the Automa Ecosystem:
+- **`automa-desk`**: Provides a dedicated profile management interface (`BrowsersView.vue`), configures proxies, user-agents, and fingerprints, ensures a default profile (`autoDetectBrowsers`), and manages Chromium sessions.
+- **`automa-vsce`**: Provides the `BROWSERS` sidebar panel (`automa.browsers`) and a management webview (`BrowserManagerView.vue`) with quick launch and stop capabilities.
+- **`automa-webe:studio`**: Provides a quick profile selection modal (`BrowsersQuickModal.vue`) and self-healing waterfall resolution.
+- **Phase 1 Standard (Zero-Host Invariant)**: The entire ecosystem relies exclusively on **a single standalone managed Chromium executable** (Playwright model). Scanning arbitrary host binaries is strictly prohibited to avoid environment drift and fingerprint leaks.
 
 ---
 
-## 🌳 2. BỐ CỤC GIAO DIỆN & COMPONENT TREE (UI/UX LAYOUT)
+## 🌳 2. UI/UX Layout & Component Tree
 
 ```text
-BrowsersView.vue (hoặc BrowserManagerView.vue trong VS Code)
+BrowsersView.vue (or BrowserManagerView.vue in VS Code)
 ├── Header Bar
 │   ├── Search Input (Debounced 150ms)
 │   ├── Filter Dropdown (select.browser.status: All / Online / Offline)
-│   ├── btn.browser.autodetect (Đảm bảo profile Chromium mặc định)
-│   ├── btn.browser.download (Tải Chromium portable)
-│   ├── btn.browser.create (Tạo profile ảo mới)
-│   └── btn.browser.killall (Dừng khẩn cấp toàn bộ hạm đội)
+│   ├── btn.browser.autodetect (Ensure default Chromium profile)
+│   ├── btn.browser.download (Download portable Chromium)
+│   ├── btn.browser.create (Create new virtual profile)
+│   └── btn.browser.killall (Emergency kill-all sessions)
 ├── Browser Profiles Grid / List
-│   └── Browser Card (Từng profile)
+│   └── Browser Card (Per profile)
 │       ├── Status Indicator Badge (Green: Online / Gray: Offline)
-│       ├── Profile Name & Browser Type (Khóa cứng: Chromium)
+│       ├── Profile Name & Browser Type (Locked: Chromium)
 │       ├── Proxy Tag & Fingerprint Summary
 │       ├── Default Star Toggle (btn.browser.setdefault)
-│       ├── btn.browser.launch / btn.browser.stop (Khởi động / Tắt phiên)
-│       ├── btn.browser.edit (Chỉnh sửa cấu hình proxy/headers)
-│       └── btn.browser.delete (Xóa profile)
+│       ├── btn.browser.launch / btn.browser.stop (Launch / Stop session)
+│       ├── btn.browser.edit (Edit proxy and headers)
+│       └── btn.browser.delete (Delete profile)
 └── Modals:
-    ├── CreateEditBrowserModal.vue (Form cấu hình chi tiết)
-    └── BrowserResolverModal.vue (Thác giải quyết tự phục hồi 3 cấp)
+    ├── CreateEditBrowserModal.vue (Configuration form)
+    └── BrowserResolverModal.vue (3-tier self-healing waterfall)
 ```
 
 ---
 
-## ⚡ 3. DANH MỤC NÚT BẤM (BUTTON CATALOG) TRONG MENU BROWSERS
+## ⚡ 3. Button Catalog in Browsers Menu
 
-| Button ID | Tên Nút / Nhãn UI | Icon | Trạng Thái FSM Hỗ Trợ | Target Action & Endpoint | `data-testid` |
+| Button ID | UI Label | Icon | Supported FSM States | Target Action & Endpoint | `data-testid` |
 |---|---|---|---|---|---|
-| `btn.browser.launch` | Launch Browser | `ExternalLink` | `IDLE`, `DISPATCHING` | Gọi `startBrowser()` mở Chromium | `btn-launch-browser` |
-| `btn.browser.stop` | Stop Browser | `Square` | `ONLINE` | Gọi `stopBrowserSession()` đóng cửa sổ | `btn-stop-browser` |
-| `btn.browser.killall` | Kill All Sessions | `Flame` | `IDLE`, `ONLINE` | Gọi `killAllBrowsers()` đóng toàn bộ | `btn-kill-all-browsers` |
-| `btn.browser.create` | New Profile | `Plus` | `IDLE` | Mở modal tạo profile mới `createBrowser()` | `btn-create-browser` |
-| `btn.browser.edit` | Edit Profile | `Edit` | `IDLE` | Mở form sửa `updateBrowser()` | `btn-edit-browser` |
-| `btn.browser.delete` | Delete Profile | `Trash2` | `IDLE` | Xóa profile `deleteBrowser()` khỏi SQLite | `btn-delete-browser` |
-| `btn.browser.autodetect` | Ensure Default | `Search` | `IDLE`, `VALIDATING` | Gọi `autoDetectBrowsers()` đảm bảo Default Chromium | `btn-autodetect-browsers` |
-| `btn.browser.download` | Download Binary | `Download` | `IDLE`, `DISPATCHING` | Gọi `installBrowserBinary()` tải Chromium | `btn-download-browser-binary` |
-| `btn.browser.setdefault`| Set Default | `Star` | `IDLE` | Gán profile mặc định cho toàn hệ thống | `btn-set-default-browser` |
+| `btn.browser.launch` | Launch Browser | `ExternalLink` | `IDLE`, `DISPATCHING` | Calls `startBrowser()` to open Chromium | `btn-launch-browser` |
+| `btn.browser.stop` | Stop Browser | `Square` | `ONLINE` | Calls `stopBrowserSession()` to close instance | `btn-stop-browser` |
+| `btn.browser.killall` | Kill All Sessions | `Flame` | `IDLE`, `ONLINE` | Calls `killAllBrowsers()` to terminate all | `btn-kill-all-browsers` |
+| `btn.browser.create` | New Profile | `Plus` | `IDLE` | Opens creation modal `createBrowser()` | `btn-create-browser` |
+| `btn.browser.edit` | Edit Profile | `Edit` | `IDLE` | Opens editing form `updateBrowser()` | `btn-edit-browser` |
+| `btn.browser.delete` | Delete Profile | `Trash2` | `IDLE` | Removes profile `deleteBrowser()` from SQLite | `btn-delete-browser` |
+| `btn.browser.autodetect` | Ensure Default | `Search` | `IDLE`, `VALIDATING` | Calls `autoDetectBrowsers()` to verify Default Chromium | `btn-autodetect-browsers` |
+| `btn.browser.download` | Download Binary | `Download` | `IDLE`, `DISPATCHING` | Calls `installBrowserBinary()` to fetch Chromium | `btn-download-browser-binary` |
+| `btn.browser.setdefault`| Set Default | `Star` | `IDLE` | Designates global default profile in settings | `btn-set-default-browser` |
 
 ---
 
-## 📜 4. DANH MỤC SELECT / DROPDOWN TRONG MENU BROWSERS
+## 📜 4. Select Dropdowns in Browsers Menu
 
-| Select ID | Tên Dropdown | Nguồn Dữ Liệu Remote | Virtualization & Debounce | Side-effect Phản Xạ Khi Chọn | `data-testid` |
+| Select ID | Dropdown Label | Remote Data Source | Virtualization & Debounce | Reactive Selection Side-Effect | `data-testid` |
 |---|---|---|---|---|---|
-| `select.browser.profile` | Filter Profiles | `GET /api/v1/browsers` | Virtualized 1000+, Debounce 150ms | Lọc danh sách hiển thị trên giao diện | `select-browser-profile` |
-| `select.browser.status` | Filter Status | Static Union (`all`, `online`, `offline`) | Không cần ảo hóa | Cập nhật bộ lọc hiển thị | `select-browser-status` |
-| `select.browser.proxy` | Select Proxy Config | `GET /api/v1/storage/variables` | Virtualized 500+, Debounce 150ms | Gán chuỗi proxy vào form cấu hình profile | `select-browser-proxy` |
+| `select.browser.profile` | Filter Profiles | `GET /api/v1/browsers` | Virtualized 1000+, Debounce 150ms | Filters displayed profile cards in UI | `select-browser-profile` |
+| `select.browser.status` | Filter Status | Static Union (`all`, `online`, `offline`) | No virtualization | Updates list status filter | `select-browser-status` |
+| `select.browser.proxy` | Select Proxy Config | `GET /api/v1/storage/variables` | Virtualized 500+, Debounce 150ms | Populates proxy URL into profile form | `select-browser-proxy` |
 
 ---
 
-## 🍍 5. QUẢN LÝ TRẠNG THÁI PINIA STORE LIÊN QUAN (`useBrowserStore`)
+## 🍍 5. Associated Pinia State Management (`useBrowserStore`)
 
-Store [`useBrowserStore`](../../packages/ui/src/stores/useBrowserStore.ts) quản lý toàn bộ dữ liệu nghiệp vụ của menu Browsers:
-- `browsers`: Mảng danh sách profile lấy từ SQLite (`BrowserResponse[]`).
-- `selectedBrowserId`: ID profile được chọn làm đích thực thi.
-- `onlineBrowserIds`: Danh sách ID các phiên đang chạy thực tế trong RAM.
-- `waterfallResolution`: Trạng thái giải quyết đường dẫn binary (`executablePath`, `isDetected`).
-- `onlineCount`: Computed getter đếm số lượng phiên đang hoạt động.
-- `setBrowserOnline(id, isOnline)`: Action cập nhật tức thì khi nhận SSE `browser_online`/`browser_offline`.
+The [`useBrowserStore`](../../packages/ui/src/stores/useBrowserStore.ts) store coordinates browser domain state:
+- `browsers`: Array of profile objects loaded from SQLite (`BrowserResponse[]`).
+- `selectedBrowserId`: Currently selected target profile ID.
+- `onlineBrowserIds`: Array of profile IDs actively running in RAM.
+- `waterfallResolution`: Binary path resolution state (`executablePath`, `isDetected`).
+- `onlineCount`: Computed getter tracking running session count.
+- `setBrowserOnline(id, isOnline)`: Action updating state immediately upon receiving SSE `browser_online`/`browser_offline` events.
 
 ---
 
-## 🌐 6. DANH MỤC API ENDPOINTS & SSE EVENTS
+## 🌐 6. API Endpoints & SSE Events Catalog
 
-| Giao Thức | Endpoint / Sự Kiện | Phương Thức | SDK Function Gọi Chuẩn | Mô Tả Nghiệp Vụ |
+| Protocol | Endpoint / Event | Method | SDK Function | Business Description |
 |---|---|:---:|---|---|
-| **REST** | `/api/v1/browsers` | `GET` | `getBrowsers({ query: { limit, offset, search } })` | Lấy danh sách profile phân trang từ SQLite |
-| **REST** | `/api/v1/browsers` | `POST` | `createBrowser()` | Tạo mới profile trình duyệt |
-| **REST** | `/api/v1/browsers/{id}` | `PUT` / `DELETE` | `updateBrowser()` / `deleteBrowser()` | Cập nhật hoặc xóa profile |
-| **REST** | `/api/v1/browsers/{id}/session` | `POST` | `startBrowser()` | Khởi chạy phiên Chromium instance |
-| **REST** | `/api/v1/browsers/{id}/session` | `DELETE` | `stopBrowserSession()` | Dừng phiên Chromium |
-| **REST** | `/api/v1/browsers/sessions` | `DELETE` | `killAllBrowsers()` | Dừng khẩn cấp toàn bộ các phiên |
-| **REST** | `/api/v1/browsers/auto-detect` | `POST` | `autoDetectBrowsers()` | Tự động quét binary Chrome/Brave/Edge |
-| **SSE** | `/api/v1/events` | Stream | `globalSseClient` | Nhận sự kiện `browser_created`, `browser_deleted`, `browser_online`, `browser_offline` |
+| **REST** | `/api/v1/browsers` | `GET` | `getBrowsers({ query: { limit, offset, search } })` | Retrieves paginated profiles from SQLite |
+| **REST** | `/api/v1/browsers` | `POST` | `createBrowser()` | Creates a new browser profile |
+| **REST** | `/api/v1/browsers/{id}` | `PUT` / `DELETE` | `updateBrowser()` / `deleteBrowser()` | Updates or deletes an existing profile |
+| **REST** | `/api/v1/browsers/{id}/session` | `POST` | `startBrowser()` | Launches an isolated Chromium session |
+| **REST** | `/api/v1/browsers/{id}/session` | `DELETE` | `stopBrowserSession()` | Closes an active Chromium session |
+| **REST** | `/api/v1/browsers/sessions` | `DELETE` | `killAllBrowsers()` | Terminates all running Chromium sessions |
+| **REST** | `/api/v1/browsers/auto-detect` | `POST` | `autoDetectBrowsers()` | Resolves managed Chromium executable |
+| **SSE** | `/api/v1/events` | Stream | `globalSseClient` | Ingests `browser_created`, `browser_deleted`, `browser_online`, `browser_offline` |
 
 ---
 
-## 🔄 7. SƠ ĐỒ THÁC GIẢI QUYẾT BROWSER 3 CẤP (RESOLUTION WATERFALL)
+## 🔄 7. 3-Tier Browser Resolution Waterfall
 
 ```mermaid
 graph TD
-    Trigger["Yêu cầu Browser (Run Workflow / Launch)"] --> Fetch["Truy vấn SQLite API: getBrowsers()"]
-    Fetch --> CheckCount{"Số lượng Profile trong DB?"}
+    Trigger["Browser Request (Run Workflow / Launch)"] --> Fetch["Query SQLite API: getBrowsers()"]
+    Fetch --> CheckCount{"Profile Count in DB?"}
     
-    CheckCount -- "N == 0 (Chưa có profile)" --> Level3["LEVEL 3: MASTER RESOLVER MODAL<br/>(BrowserResolverModal.vue)"]
+    CheckCount -- "N == 0 (Zero Profiles)" --> Level3["LEVEL 3: MASTER RESOLVER MODAL<br/>(BrowserResolverModal.vue)"]
     Level3 --> OptA["Option A: autoDetectBrowsers()"]
     Level3 --> OptB["Option B: installBrowserBinary()"]
     Level3 --> OptC["Option C: createBrowser()"]
-    OptA & OptB & OptC --> ReturnProfile["Lưu vào SQLite & Trả về Profile ID"]
+    OptA & OptB & OptC --> ReturnProfile["Save to SQLite & Return Profile ID"]
     
-    CheckCount -- "N == 1 hoặc có Default Profile" --> Level1["LEVEL 1: FAST PATH (Happy Flow)<br/>Tự động gán Profile ID & Khởi chạy ngay"]
+    CheckCount -- "N == 1 or Default Profile exists" --> Level1["LEVEL 1: FAST PATH (Happy Flow)<br/>Auto-assign Profile ID & Launch immediately"]
     
-    CheckCount -- "N > 1 & Chưa có Default" --> Level2["LEVEL 2: QUICKPICK MODAL<br/>(BrowserQuickPickModal.vue)"]
-    Level2 --> UserPick["Người dùng chọn profile + Tùy chọn 'Set Default'"]
+    CheckCount -- "N > 1 & No Default set" --> Level2["LEVEL 2: QUICKPICK MODAL<br/>(BrowserQuickPickModal.vue)"]
+    Level2 --> UserPick["User picks profile + Optional 'Set Default'"]
     UserPick --> ReturnProfile
 ```
 
 ---
 
-## 🛡️ 8. TIÊU CHUẨN KIỂM ĐỊNH CHẤT LƯỢNG (AGENT CROSS-CHECK)
+## 🛡️ 8. Quality Assurance & Agent Cross-Checklist
 
-Khi Subagent rà soát Menu Browsers, bắt buộc phải đối soát checklist:
-1. [ ] 100% các nút thao tác đều gắn `data-testid` đúng chuẩn (`btn-launch-browser`, `btn-create-browser`, `btn-kill-all-browsers`).
-2. [ ] Khi bấm `Launch`, card đổi sang trạng thái `ONLINE` với viền xanh lục và nút đổi thành `btn.browser.stop`.
-3. [ ] Khi Core Daemon phát SSE `browser_online` hoặc `browser_offline`, badge trạng thái trên UI phải tự động cập nhật mà không cần reload trang.
-4. [ ] Endpoint `auto-detect` quét đúng các đường dẫn binary tiêu chuẩn của hệ điều hành.
+When auditing the Browsers Menu, verify:
+1. [ ] 100% of interactive buttons include standardized `data-testid` attributes (`btn-launch-browser`, `btn-create-browser`, `btn-kill-all-browsers`).
+2. [ ] Clicking `Launch` shifts the card state to `ONLINE` with a pulsing badge and toggles the action to `btn.browser.stop`.
+3. [ ] When the Core Daemon emits `browser_online` or `browser_offline` via SSE, the UI status badges update without manual refresh.
+4. [ ] The `auto-detect` endpoint locates standard binary paths accurately.

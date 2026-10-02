@@ -1,24 +1,24 @@
 <div align="center">
   <h1>WebExtension Polyfill (Dummy/Alias Package)</h1>
-  <p><strong>Gói Giải Quyết Phụ Thuộc (Dependency Resolution) Cho Cơ Chế Zero-Polyfill</strong></p>
+  <p><strong>Dependency Resolution Package for Zero-Polyfill Strategy</strong></p>
 </div>
 
 ---
 
 > [!WARNING]
-> Đây **KHÔNG PHẢI** là mã nguồn gốc của thư viện `webextension-polyfill` từ Mozilla. Đây là một gói giả (Dummy Package) được thiết kế đặc thù cho Hệ sinh thái Automa.
+> This is **NOT** Mozilla's original `webextension-polyfill` library. This is a targeted dummy alias package designed specifically for the Automa ecosystem.
 
-## 🚨 Vấn Đề Lịch Sử
-Trong kho lưu trữ upstream gốc (`AutomaApp/automa`), thư viện `webextension-polyfill` được sử dụng để bọc các API trình duyệt. Tuy nhiên, kiến trúc này đã gây ra **lỗi Crash diện rộng** trên các phiên bản Chrome v129+ do xung đột nội tại với Storage API.
+## 🚨 Upstream Problem
+In upstream repositories (`AutomaApp/automa`), `webextension-polyfill` was used to wrap browser APIs. However, this architecture caused **widespread crashes on Chrome v129+** due to internal context binding errors on the Storage API (`Illegal invocation`).
 
-## 🛠 Giải Pháp Của Chúng Ta (Zero-Polyfill)
-Để giải quyết dứt điểm vấn đề mà không phải viết lại (refactor) hàng ngàn dòng code cũ từ upstream, Hệ sinh thái Automa sử dụng chiến lược **Build-time Aliasing** (Ghi đè lúc biên dịch).
+## 🛠 Our Solution (Zero-Polyfill)
+To resolve this without rewriting thousands of lines of legacy code during upstream syncs, Automa employs **Build-time Aliasing**.
 
-Gói `packages/webextension-polyfill` này tồn tại để:
-1. **Đánh lừa trình biên dịch (Webpack/Vite):** Bất cứ khi nào code cũ `import browser from "webextension-polyfill"`, tiến trình build sẽ tự động trỏ (alias) về gói giả này.
-2. **Cung cấp Wrapper An Toàn:** Gói này xuất (export) ra một đối tượng trung gian bọc trực tiếp các API `chrome.*` gốc (MV3 Native API), hoặc `browser.*` nếu chạy trên Firefox, thay vì dùng thư viện cồng kềnh của Mozilla.
+This package exists to:
+1. **Instruct Bundlers (Webpack/Vite):** Whenever legacy code executes `import browser from "webextension-polyfill"`, the build system aliases the import to this lightweight package.
+2. **Provide Safe Direct Bindings:** Exports an intermediary object delegating directly to native `chrome.*` (MV3 Native API) or native `browser.*` on Firefox, completely bypassing Mozilla's polyfill wrappers.
 
-## 🚀 Tác Dụng
-- Kích thước bundle giảm đáng kể.
-- Khắc phục 100% lỗi Crash trên Chrome mới.
-- Không cần sửa đổi hàng loạt file mã nguồn cũ, đảm bảo việc Rebase/Sync từ upstream `AutomaApp/automa` vẫn an toàn tuyệt đối và không bị conflict mã nguồn.
+## 🚀 Key Benefits
+- Significantly smaller bundle footprint.
+- Eliminates 100% of Chrome v129+ storage binding crashes.
+- Preserves clean Git rebasing from upstream without merge conflicts.

@@ -1,29 +1,29 @@
 # Automa Core OpenAPI — Integration & Implementation Guide
-### Hướng Dẫn Tích Hợp & Triển Khai Dành Cho Nhà Phát Triển (Client / SDK Consumers)
+### Developer Integration & Deployment Guide (Client / SDK Consumers)
 
-> **Mục tiêu**: Cung cấp tài liệu hướng dẫn kỹ thuật chuẩn công nghiệp (Industry-Standard Developer Guide tương tự phong cách Stripe, Temporal, Supabase) giúp các lập trình viên Frontend (`automa-desk`, `automa-vsce`, `automa-webe`) hoặc dịch vụ thứ ba có thể dễ dàng hiểu, tích hợp và triển khai OpenAPI của **Automa Core** theo mô hình **Event-Driven Architecture (EDA)**.
-
----
-
-## 📑 Mục Lục
-
-1. [Tổng Quan Kiến Trúc & Triết Lý Contract-First](#1-tổng-quan-kiến-trúc--triết-lý-contract-first)
-2. [Cài Đặt & Cấu Hình SDK Client (`@automa/types/api`)](#2-cài-đặt--cấu-hình-sdk-client-automatypesapi)
-3. [Tam Giác Giao Thức (REST vs SSE vs WebSocket)](#3-tam-giác-giao-thức-rest-vs-sse-vs-websocket)
-4. [Hướng Dẫn Triển Khai Theo Từng Nghiệp Vụ (Code Recipes)](#4-hướng-dẫn-triển-khai-theo-từng-nghiệp-vụ-code-recipes)
-   - [4.1. Thực Thi Workflow & Nhận Log Real-Time](#41-thực-thi-workflow--nhận-log-real-time)
-   - [4.2. Quản Lý Phiên Virtual Browser (Anti-Detect)](#42-quản-lý-phiên-virtual-browser-anti-detect)
-   - [4.3. Chạy Chiến Dịch Song Song (Campaign Matrix)](#43-chạy-chiến-dịch-song-song-campaign-matrix)
-   - [4.4. Quản Trị Dữ Liệu SQLite & Mã Hóa Bí Mật (AES-256)](#44-quản-trị-dữ-liệu-sqlite--mã-hóa-bí-mật-aes-256)
-5. [Chuẩn Hóa Xử Lý Lỗi (Error Handling & `ApiErrorResponse`)](#5-chuẩn-hóa-xử-lý-lỗi-error-handling--apierrorresponse)
-6. [Code Mẫu Chuẩn: Vue 3 / Pinia Event-Driven Composable](#6-code-mẫu-chuẩn-vue-3--pinia-event-driven-composable)
-7. [Kiểm Thử & Tự Động Hóa Hợp Đồng (Contract Testing)](#7-kiểm-thử--tự-động-hóa-hợp-đồng-contract-testing)
+> **Objective**: Provide an industry-standard technical developer guide (similar to Stripe, Temporal, and Supabase documentation) enabling frontend developers (`automa-desk`, `automa-vsce`, `automa-webe`) and third-party services to understand, integrate, and deploy with the **Automa Core** OpenAPI using an **Event-Driven Architecture (EDA)** model.
 
 ---
 
-## 1. 🎯 Tổng Quan Kiến Trúc & Triết Lý Contract-First
+## 📑 Table of Contents
 
-Automa Core vận hành dưới dạng một Daemon Rust hiệu năng cao (`http://127.0.0.1:8765`), đóng vai trò là Single Source of Truth cho toàn bộ logic điều phối tự động hóa, quản lý Chromium process và lưu trữ SQLite.
+1. [Architecture Overview & Contract-First Philosophy](#1--architecture-overview--contract-first-philosophy)
+2. [SDK Client Installation & Configuration (`@automa/types/api`)](#2--sdk-client-installation--configuration-automatypesapi)
+3. [Protocol Triangle (REST vs SSE vs WebSocket)](#3--protocol-triangle-rest-vs-sse-vs-websocket)
+4. [Domain-Specific Implementation Recipes](#4-️-domain-specific-implementation-recipes)
+   - [4.1. Workflow Execution & Real-Time Log Streaming](#41-workflow-execution--real-time-log-streaming)
+   - [4.2. Virtual Browser Profile Management (Anti-Detect)](#42-virtual-browser-profile-management-anti-detect)
+   - [4.3. Parallel Campaign Matrix Execution](#43-parallel-campaign-matrix-execution)
+   - [4.4. SQLite Data Management & Secret Encryption (AES-256)](#44-sqlite-data-management--secret-encryption-aes-256)
+5. [Standardized Error Handling & `ApiErrorResponse`](#5-️-standardized-error-handling--apierrorresponse)
+6. [Reference Code: Vue 3 / Pinia Event-Driven Composable](#6--reference-code-vue-3--pinia-event-driven-composable)
+7. [Contract Testing & Automation](#7--contract-testing--automation)
+
+---
+
+## 1. 🎯 Architecture Overview & Contract-First Philosophy
+
+Automa Core operates as a high-performance Rust daemon (`http://127.0.0.1:8765`), acting as the Single Source of Truth for automation orchestration, Chromium process lifecycle, and SQLite storage.
 
 ```text
 +-------------------------------------------------------------------------------+
@@ -45,32 +45,32 @@ Automa Core vận hành dưới dạng một Daemon Rust hiệu năng cao (`http
 +-------------------------------------------------------------------------------+
 ```
 
-### 4 Nguyên Tắc Cốt Lõi:
-1. **Contract-First & Single Source of Truth**: Toàn bộ DTOs và Endpoints được định nghĩa bằng Rust (`utoipa`) và tự động xuất ra OpenAPI 3.1.0 spec (`openapi.json`). Client **tuyệt đối không viết `fetch` thủ công** mà luôn sử dụng SDK `@automa/types/api` được sinh tự động. Loại bỏ hoàn toàn các file markdown tĩnh sao chép API để tránh Documentation Drift.
-2. **Hệ Sinh Thái 3 Tầng Khép Kín (The Unified API Trinity)**:
-   - **Tier 1 (Code-to-Code / Compiler)**: SDK `@automa/types/api` cung cấp Type-Safety tuyệt đối, autocomplete và compile-time validation cho TypeScript.
-   - **Tier 2 (Interactive Explorer / QA)**: **Scalar API Reference** (`pnpm run docs:api` tại `http://localhost:8767`) với giao diện hiện đại, tìm kiếm nhanh `Ctrl+K`, test trực tiếp và live reload.
-   - **Tier 3 (Architecture & Blueprints)**: Tài liệu hướng dẫn này và các đặc tả 2D Matrix trong `docs/srs/`, tập trung vào tư duy kiến trúc, workflows và recipes thực tế.
-3. **Zero-Dummy UI**: Mọi nút bấm (Run, Stop, Pause, Delete, Sideload) phải ánh xạ tới đúng `operation_id` trong OpenAPI spec và xử lý triệt để các trạng thái `Loading`, `Success`, `Error`.
-4. **Event-Driven UI Reactions**: Client gửi lệnh bất đồng bộ $\rightarrow$ Nhận `200 OK (job_id)` ngay lập tức $\rightarrow$ Đăng ký lắng nghe kênh SSE/WS để cập nhật tiến trình hiển thị cho người dùng.
+### 4 Core Invariants:
+1. **Contract-First & Single Source of Truth**: All DTOs and endpoints are declared in Rust (`utoipa`) and automatically exported to the OpenAPI 3.1.0 specification (`openapi.json`). Clients **must never write manual `fetch` calls** and should always use the auto-generated `@automa/types/api` SDK. Manual markdown API copy-pasting is strictly prohibited to eliminate documentation drift.
+2. **Unified API Trinity**:
+   - **Tier 1 (Code-to-Code / Compiler)**: The `@automa/types/api` SDK delivers absolute type safety, autocomplete, and compile-time validation for TypeScript.
+   - **Tier 2 (Interactive Explorer / QA)**: **Scalar API Reference** (`pnpm run docs:api` at `http://localhost:8767`) provides a modern interface with `Ctrl+K` quick search, live execution tests, and hot reload.
+   - **Tier 3 (Architecture & Blueprints)**: This integration guide and the 2D Matrix specifications in `docs/srs/` focus on architectural principles, workflows, and production recipes.
+3. **Zero-Dummy UI**: Every action button (Run, Stop, Pause, Delete, Sideload) must map to a valid `operation_id` in the OpenAPI spec and comprehensively handle `Loading`, `Success`, and `Error` states.
+4. **Event-Driven UI Reactions**: Client sends an asynchronous command $\rightarrow$ Receives `200 OK (job_id)` immediately $\rightarrow$ Subscribes to the SSE/WS telemetry stream to update progress in the UI.
 
 ---
 
-## 2. 📦 Cài Đặt & Cấu Hình SDK Client (`@automa/types/api`)
+## 2. 📦 SDK Client Installation & Configuration (`@automa/types/api`)
 
-Mọi ứng dụng trong monorepo hoặc ứng dụng ngoài đều có thể nhập typed SDK trực tiếp từ package `@automa/types`:
+Any monorepo application or external service can import the typed SDK directly from `@automa/types`:
 
-### Cấu hình Base URL và Client Interceptors
+### Base URL and Client Interceptor Configuration
 
 ```typescript
 import { client } from '@automa/types/api';
 
-// 1. Cấu hình địa chỉ daemon Automa Core
+// 1. Configure the Automa Core daemon base address
 client.setConfig({
   baseUrl: 'http://127.0.0.1:8765',
 });
 
-// 2. (Tùy chọn) Bổ sung Interceptor để log telemetry hoặc đính kèm token xác thực
+// 2. (Optional) Add request/response interceptors for telemetry or auth headers
 client.interceptors.request.use((request) => {
   request.headers.set('X-Client-App', 'Automa-Desktop-v1.0');
   return request;
@@ -86,32 +86,32 @@ client.interceptors.response.use((response) => {
 
 ---
 
-## 3. 🔌 Tam Giác Giao Thức (REST vs SSE vs WebSocket)
+## 3. 🔌 Protocol Triangle (REST vs SSE vs WebSocket)
 
-Để quyết định sử dụng kênh nào khi triển khai một tính năng:
+Use the following guidelines to select the appropriate communication channel:
 
-| Giao Thức | Endpoint | Hướng Giao Tiếp | Trường Hợp Sử Dụng (Use Cases) |
+| Protocol | Endpoint | Direction | Primary Use Cases |
 | :--- | :--- | :--- | :--- |
-| **HTTP REST** | `/api/v1/...` | Request $\rightarrow$ Response (1-1) | CRUD dữ liệu, Lưu Workflow, Tạo Profile Browser, Đăng ký Job (`submit_job`), Check Health. |
-| **SSE (Server-Sent Events)** | `/api/v1/events` | Server $\rightarrow$ Client (1 chiều) | Luồng log console (`task:log`), sự kiện tiến độ node (`JOB_PROGRESS`), cập nhật matrix slot. |
-| **WebSocket** | `/api/v1/ws` | Client $\leftrightarrow$ Server (2 chiều) | Điều khiển độ trễ thấp: Tạm dừng (`PAUSE_JOB`), Tiếp tục (`RESUME_JOB`), Dừng khẩn cấp (`KILL_JOB`), gửi lệnh CDP trực tiếp. |
+| **HTTP REST** | `/api/v1/...` | Request $\rightarrow$ Response (1-1) | CRUD mutations, saving workflows, profile creation, job dispatch (`submit_job`), health checks. |
+| **SSE (Server-Sent Events)** | `/api/v1/events` | Server $\rightarrow$ Client (Unidirectional) | Console log streaming (`task:log`), node progress events (`JOB_PROGRESS`), campaign matrix slot updates. |
+| **WebSocket** | `/api/v1/ws` | Client $\leftrightarrow$ Server (Bidirectional) | Low-latency interactive controls: Pause (`PAUSE_JOB`), Resume (`RESUME_JOB`), Terminate (`KILL_JOB`), direct CDP command pass-through. |
 
 ---
 
-## 4. 🛠️ Hướng Dẫn Triển Khai Theo Từng Nghiệp Vụ (Code Recipes)
+## 4. 🛠️ Domain-Specific Implementation Recipes
 
-### 4.1. Thực Thi Workflow & Nhận Log Real-Time
+### 4.1. Workflow Execution & Real-Time Log Streaming
 
-#### Luồng nghiệp vụ:
-1. Người dùng nhấn nút **Run Workflow** (`btn.workflow.run`).
-2. Client gọi `submitJob` qua REST.
-3. Server cấp phát `job_id` và bắt đầu điều phối browser worker.
-4. Client mở kết nối SSE `/api/v1/events` để hứng log và render lên Output Panel.
+#### Operational Flow:
+1. User clicks **Run Workflow** (`btn.workflow.run`).
+2. Client invokes `submitJob` via REST.
+3. Server assigns a `job_id` and starts orchestrating the browser worker.
+4. Client opens an SSE connection to `/api/v1/events` to ingest logs and render them in the Output Panel.
 
 ```typescript
 import { submitJob, killJob } from '@automa/types/api';
 
-// Bước 1: Gửi lệnh thực thi workflow
+// Step 1: Dispatch workflow execution
 export async function executeWorkflow(workflowPath: string, browserId?: string) {
   const { data, error } = await submitJob({
     body: {
@@ -125,39 +125,39 @@ export async function executeWorkflow(workflowPath: string, browserId?: string) 
   });
 
   if (error || !data?.job_id) {
-    throw new Error(error?.message || 'Không thể khởi động workflow');
+    throw new Error(error?.message || 'Failed to dispatch workflow job');
   }
 
   const jobId = data.job_id;
   console.log(`[Job Enqueued] ID: ${jobId}`);
 
-  // Bước 2: Lắng nghe luồng Server-Sent Events để hiển thị log
+  // Step 2: Subscribe to Server-Sent Events stream for telemetry
   const eventSource = new EventSource('http://127.0.0.1:8765/api/v1/events');
 
   eventSource.onmessage = (event) => {
     try {
       const payload = JSON.parse(event.data);
       
-      // Lọc log thuộc về đúng jobId hiện tại
+      // Filter events matching the current jobId
       if (payload.jobId === jobId) {
         if (payload.type === 'task:log') {
           console.log(`[LOG - Step ${payload.step}]:`, payload.message);
         } else if (payload.type === 'task:completed') {
-          console.log('✅ Workflow hoàn thành thành công!');
+          console.log('✅ Workflow completed successfully!');
           eventSource.close();
         } else if (payload.type === 'task:error') {
-          console.error('❌ Workflow gặp lỗi:', payload.error);
+          console.error('❌ Workflow error encountered:', payload.error);
           eventSource.close();
         }
       }
     } catch (e) {
-      console.error('Lỗi phân tích cú pháp SSE:', e);
+      console.error('Error parsing SSE event:', e);
     }
   };
 
   return {
     jobId,
-    // Hàm hủy bỏ job bất kỳ lúc nào
+    // Abort handler to terminate execution at any time
     abort: async () => {
       await killJob({ path: { job_id: jobId } });
       eventSource.close();
@@ -168,10 +168,10 @@ export async function executeWorkflow(workflowPath: string, browserId?: string) 
 
 ---
 
-### 4.2. Quản Lý Phiên Virtual Browser (Anti-Detect)
+### 4.2. Virtual Browser Profile Management (Anti-Detect)
 
-#### Luồng nghiệp vụ:
-Khởi chạy một profile Chromium biệt lập đã được cấu hình proxy, user-agent và fingerprint riêng.
+#### Operational Flow:
+Launch an isolated Chromium profile configured with dedicated proxies, custom user agents, and distinct fingerprints.
 
 ```typescript
 import {
@@ -182,14 +182,14 @@ import {
   getBrowserCookies,
 } from '@automa/types/api';
 
-// 1. Lấy danh sách Profile và trạng thái Online/Offline
+// 1. Retrieve profiles list and online/offline status
 export async function fetchBrowserList() {
   const { data, error } = await getBrowsers();
   if (error) throw error;
   return data; // Array<BrowserResponse>
 }
 
-// 2. Tạo một Browser Profile mới
+// 2. Register a new Browser Profile
 export async function registerNewBrowserProfile(id: string, name: string, proxyUrl?: string) {
   const { error } = await createBrowser({
     body: {
@@ -205,18 +205,18 @@ export async function registerNewBrowserProfile(id: string, name: string, proxyU
   if (error) throw error;
 }
 
-// 3. Khởi chạy và Quản lý phiên
+// 3. Launch and manage session lifecycle
 export async function toggleBrowserSession(browserId: string, isRunning: boolean) {
   if (!isRunning) {
-    // Bật Browser
+    // Start Browser
     await startBrowserSession({ path: { id: browserId } });
   } else {
-    // Tắt Browser
+    // Stop Browser
     await stopBrowserSession({ path: { id: browserId } });
   }
 }
 
-// 4. Trích xuất Cookies từ Chromium SQLite Database
+// 4. Extract Cookies from Chromium SQLite storage
 export async function exportCookies(browserId: string) {
   const { data, error } = await getBrowserCookies({ path: { id: browserId } });
   if (error) throw error;
@@ -226,24 +226,24 @@ export async function exportCookies(browserId: string) {
 
 ---
 
-### 4.3. Chạy Chiến Dịch Song Song (Campaign Matrix)
+### 4.3. Parallel Campaign Matrix Execution
 
 ```typescript
 import { executeCampaign, abortCampaign, getCampaignMatrixStatus } from '@automa/types/api';
 
 export async function runMatrixFleet(campaignId: string) {
-  // 1. Kích hoạt ma trận phân bổ browser
+  // 1. Activate multi-browser allocation matrix
   const { data, error } = await executeCampaign({
     body: {
       campaign_id: campaignId,
-      concurrency: 4, // 4 browser song song
+      concurrency: 4, // 4 concurrent browsers
       grid_layout: { rows: 2, cols: 2 },
     },
   });
 
   if (error) throw error;
 
-  // 2. Thăm dò (Poll) trạng thái ma trận các slot
+  // 2. Poll matrix slot telemetry status
   const interval = setInterval(async () => {
     const status = await getCampaignMatrixStatus({ path: { id: campaignId } });
     if (status.data?.is_finished) {
@@ -256,9 +256,9 @@ export async function runMatrixFleet(campaignId: string) {
 
 ---
 
-### 4.4. Quản Trị Dữ Liệu SQLite & Mã Hóa Bí Mật (AES-256)
+### 4.4. SQLite Data Management & Secret Encryption (AES-256)
 
-Automa Core lưu trữ bảng dữ liệu và biến cấu hình trong cơ sở dữ liệu SQLite cục bộ. Đối với thông tin nhạy cảm (API Keys, Passwords), client yêu cầu mã hóa trước khi lưu:
+Automa Core persists data tables and environment variables in local SQLite storage. Sensitive credentials (API keys, passwords) are encrypted before writing:
 
 ```typescript
 import {
@@ -269,7 +269,7 @@ import {
   addStorageCredential,
 } from '@automa/types/api';
 
-// 1. Tạo bảng dữ liệu người dùng
+// 1. Create a user data table
 export async function createDataTable(tableName: string) {
   const { data, error } = await addStorageTable({
     body: {
@@ -285,9 +285,9 @@ export async function createDataTable(tableName: string) {
   return data;
 }
 
-// 2. Lưu Credential bảo mật (Mã hóa AES-256 trong RAM)
+// 2. Save encrypted credential (AES-256-GCM with PBKDF2)
 export async function saveSecureCredential(key: string, secretValue: string, masterPass: string) {
-  // Mã hóa thông qua core daemon
+  // Encrypt via core daemon vault
   const { data: encryptedData, error: encError } = await encryptSecret({
     body: {
       plaintext: secretValue,
@@ -297,7 +297,7 @@ export async function saveSecureCredential(key: string, secretValue: string, mas
 
   if (encError || !encryptedData) throw encError;
 
-  // Lưu bản mã vào SQLite
+  // Store encrypted ciphertext into SQLite
   await addStorageCredential({
     body: {
       id: key,
@@ -312,9 +312,9 @@ export async function saveSecureCredential(key: string, secretValue: string, mas
 
 ---
 
-## 5. 🛡️ Chuẩn Hóa Xử Lý Lỗi (Error Handling & `ApiErrorResponse`)
+## 5. 🛡️ Standardized Error Handling & `ApiErrorResponse`
 
-Tất cả các API trả về mã lỗi HTTP tiêu chuẩn đi kèm cấu trúc `ApiErrorResponse` chuẩn hóa:
+All endpoints return standard HTTP status codes accompanied by a structured `ApiErrorResponse` payload:
 
 ```json
 {
@@ -327,20 +327,20 @@ Tất cả các API trả về mã lỗi HTTP tiêu chuẩn đi kèm cấu trúc
 }
 ```
 
-### Mã Lỗi Thường Gặp & Chiến Lược UI:
+### Common Error Codes & Recommended UI Action:
 
-| HTTP Status | Error Code | Ý Nghĩa Nghiệp Vụ | Hành Động UI Đề Xuất |
+| HTTP Status | Error Code | Business Meaning | Recommended UI Reaction |
 | :--- | :--- | :--- | :--- |
-| `400 Bad Request` | `VALIDATION_FAILED` | Tham số gửi lên sai định dạng hoặc thiếu trường bắt buộc. | Hiển thị thông báo lỗi inline dưới ô nhập liệu tương ứng. |
-| `404 Not Found` | `RESOURCE_NOT_FOUND` | Không tìm thấy Profile, Workflow hoặc Bảng dữ liệu. | Hiển thị Toast thông báo và tự động tải lại danh sách. |
-| `429 Too Many Requests` | `MAX_CONCURRENCY` | Số lượng job vượt quá giới hạn tài nguyên máy. | Chuyển nút bấm sang trạng thái Queue hoặc thông báo chờ. |
-| `500 Internal Error` | `DATABASE_ERROR` | Lỗi đọc/ghi SQLite hoặc lỗi hệ thống OS. | Mở Modal thông báo chi tiết và đề xuất kiểm tra log file. |
+| `400 Bad Request` | `VALIDATION_FAILED` | Invalid request parameters or missing required fields. | Display inline validation error message below input control. |
+| `404 Not Found` | `RESOURCE_NOT_FOUND` | Profile, Workflow, or Data Table not found on disk/db. | Display Toast error notification and automatically refresh list. |
+| `429 Too Many Requests` | `MAX_CONCURRENCY` | Concurrency limit reached for system resources. | Transition button to queued state or prompt user to wait. |
+| `500 Internal Error` | `DATABASE_ERROR` | SQLite read/write failure or OS-level process error. | Open error modal with details and prompt log inspection. |
 
 ---
 
-## 6. 💻 Code Mẫu Chuẩn: Vue 3 / Pinia Event-Driven Composable
+## 6. 💻 Reference Code: Vue 3 / Pinia Event-Driven Composable
 
-Dưới đây là một composable sản xuất mẫu (Production-Ready) thể hiện đầy đủ FSM, gọi OpenAPI và bắt sự kiện qua WebSocket / SSE:
+Below is a production-ready composable illustrating the Finite State Machine (FSM), typed OpenAPI invocation, and SSE/WS event streaming:
 
 ```typescript
 import { defineStore } from 'pinia';
@@ -357,33 +357,33 @@ export const useWorkflowActionStore = defineStore('workflow-action', () => {
   const isBusy = computed(() => buttonState.value === 'VALIDATING' || buttonState.value === 'DISPATCHING');
   const isRunning = computed(() => buttonState.value === 'EXECUTING');
 
-  // Trigger hành động từ nút bấm
+  // Trigger button action
   async function triggerRunOrStop(workflowPath: string, browserId?: string) {
-    // Nếu đang chạy -> Nhấn nút sẽ đóng vai trò STOP
+    // If executing -> button click acts as STOP
     if (isRunning.value && activeJobId.value) {
       buttonState.value = 'TERMINATING';
       try {
         await killJob({ path: { job_id: activeJobId.value } });
       } catch (err: any) {
-        lastError.value = err?.message || 'Không thể dừng tiến trình';
+        lastError.value = err?.message || 'Failed to terminate job';
       }
       return;
     }
 
     if (buttonState.value !== 'IDLE') return;
 
-    // Pha 1: Validation
+    // Phase 1: Validation
     buttonState.value = 'VALIDATING';
     lastError.value = null;
     executionLogs.value = [];
 
     if (!workflowPath) {
-      lastError.value = 'Đường dẫn workflow không hợp lệ';
+      lastError.value = 'Invalid workflow path';
       buttonState.value = 'IDLE';
       return;
     }
 
-    // Pha 2: Gửi lệnh Dispatch tới OpenAPI
+    // Phase 2: Dispatch request to OpenAPI
     buttonState.value = 'DISPATCHING';
     const { data, error } = await submitJob({
       body: {
@@ -394,17 +394,17 @@ export const useWorkflowActionStore = defineStore('workflow-action', () => {
 
     if (error || !data?.job_id) {
       buttonState.value = 'FAILED';
-      lastError.value = error?.message || 'Gặp lỗi khi tạo phiên làm việc';
+      lastError.value = error?.message || 'Error occurred while creating session';
       setTimeout(() => { buttonState.value = 'IDLE'; }, 3000);
       return;
     }
 
-    // Pha 3: Chuyển sang trạng thái Executing và lắng nghe sự kiện
+    // Phase 3: Transition to Executing state and await telemetry events
     activeJobId.value = data.job_id;
     buttonState.value = 'EXECUTING';
   }
 
-  // Hook cập nhật từ Socket hoặc SSE
+  // Hook for updates from WebSocket or SSE
   function onTelemetryEvent(event: { type: string; jobId: string; message?: string; status?: string }) {
     if (event.jobId !== activeJobId.value) return;
 
@@ -418,7 +418,7 @@ export const useWorkflowActionStore = defineStore('workflow-action', () => {
       }, 1500);
     } else if (event.type === 'task:error' || event.status === 'failed') {
       buttonState.value = 'FAILED';
-      lastError.value = event.message || 'Tiến trình thất bại';
+      lastError.value = event.message || 'Execution failed';
       setTimeout(() => {
         buttonState.value = 'IDLE';
         activeJobId.value = null;
@@ -441,21 +441,21 @@ export const useWorkflowActionStore = defineStore('workflow-action', () => {
 
 ---
 
-## 7. 🧪 Kiểm Thử & Tự Động Hóa Hợp Đồng (Contract Testing)
+## 7. 🧪 Contract Testing & Automation
 
-Để kiểm chứng việc tích hợp OpenAPI không bị sai lệch kiểu dữ liệu hoặc hỏng hợp đồng khi backend thay đổi:
+To guarantee OpenAPI contract integrity and prevent schema regressions during backend refactors:
 
-### Lệnh kiểm tra trong Monorepo:
-1. **Kiểm tra Schema hợp lệ 100%**:
+### Monorepo Verification Commands:
+1. **Validate 100% OpenAPI Schema Compliance**:
    ```bash
    pnpm run lint:schema
    ```
-2. **Chạy Unit Test giao diện & Mock IPC**:
+2. **Run UI Unit Tests & Mock IPC**:
    ```bash
    pnpm -F vscode-automa test
    pnpm -F @automa/desk test:unit
    ```
-3. **Đồng bộ hóa lại SDK khi Backend Rust thay đổi**:
+3. **Synchronize SDK when Rust Backend Changes**:
    ```bash
    pnpm run sync:api
    ```

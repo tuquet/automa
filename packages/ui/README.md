@@ -1,37 +1,35 @@
-# 🎨 @automa/ui: Gói Thư Viện Giao Diện & Dữ Liệu Dùng Chung Cho Hệ Sinh Thái Automa
+# 🎨 @automa/ui: Shared Component Library & State Store
 
-Chào mừng bạn đến với **`@automa/ui`**!
+> **Unified Enterprise UI Primitives, Reactive State Stores & Virtualized Data Components**
 
-Hãy tưởng tượng hệ sinh thái **Automa** giống như một hãng xe hơi cao cấp sản xuất 3 dòng xe khác nhau:
-- 🏎️ **Dòng xe Desktop**: Ứng dụng độc lập cài trên máy tính (`apps/desk`).
-- 🚗 **Dòng xe Web Extension**: Tiện ích chạy trên trình duyệt Chrome (`apps/webe`).
-- 🚙 **Dòng xe VS Code**: Tiện ích chạy trực tiếp trong trình soạn thảo VS Code (`apps/vsce`).
+`@automa/ui` provides standardized UI primitives, virtualized components, and domain state stores shared across Automa clients:
+- 🏎️ **Desktop Suite**: Standalone desktop app (`apps/desk`).
+- 🚗 **Web Extension**: Manifest V3 Chrome/Edge extension (`apps/webe`).
+- 🚙 **VS Code Studio**: In-editor extension (`apps/vsce`).
 
-**`@automa/ui`** chính là **khối động cơ, vô-lăng và bảng điều khiển thông minh chuẩn hóa dùng chung** cho cả 3 dòng xe đó:
-- Khi cần một chiếc vô-lăng (ví dụ: nút chọn trình duyệt, màn hình console xem log), cả 3 xe đều lắp chung một linh kiện hoàn hảo từ `@automa/ui`.
-- Khi nâng cấp động cơ (tăng tốc độ cuộn, tự động làm mới dữ liệu), **cả 3 dòng xe đều đồng loạt mạnh lên mà không phải tháo rời chế tạo lại từ đầu**.
+By centralizing shared components and domain stores in `@automa/ui`, any performance optimization (virtual scrolling, automatic data re-fetching) is instantly propagated across all client form factors.
 
 ---
 
-## 🌟 4 ĐIỂM NỔI BẬT CỦA `@automa/ui`
+## 🌟 Key Highlights
 
-### 1. ⚡ Cuộn Siêu Mượt Không Bao Giờ Giật Lag (TanStack Virtual)
-- Dù danh sách có **10.000 trình duyệt** hay **100.000 dòng log đang chạy ầm ầm**, màn hình vẫn cuộn êm ru ở tốc độ 60fps vì hệ thống chỉ vẽ đúng các dòng bạn đang nhìn thấy trên mắt, giúp máy tính luôn mát mẻ và tiết kiệm RAM.
+### 1. ⚡ High-Throughput Virtualization (TanStack Virtual)
+- Smoothly scrolls lists with **10,000+ browser profiles** or **100,000+ active execution logs** at 60fps. Only viewport rows are rendered into the DOM, minimizing memory footprint and CPU load.
 
-### 2. 🌊 Tự Động Làm Mới Dữ Liệu Theo Thời Gian Thực (SSE Auto-Invalidation)
-- Bạn không bao giờ phải bấm nút "Tải lại" (F5/Refresh) thủ công. Khi Backend tạo mới một trình duyệt hoặc chạy xong một kịch bản, bảng điều khiển tự động cập nhật ngay trước mắt bạn trong chớp mắt.
+### 2. 🌊 Real-Time Automatic Re-validation (SSE Auto-Invalidation)
+- Eliminates manual refresh buttons. When the backend initializes a browser profile or completes a job, frontend state updates automatically via Server-Sent Events.
 
-### 3. 🎯 Lắp Ráp Nhanh Trong 1 Nốt Nhạc (Plug & Play)
-- Lập trình viên chỉ cần gọi đúng 1 dòng component (như `<RemoteVirtualSelect />` hoặc `<ExecutionConsoleDrawer />`), component sẽ tự động lo hết mọi việc: từ tải dữ liệu, lọc tìm kiếm, đến hiển thị huy hiệu (Online/Offline).
+### 3. 🎯 Plug & Play Component Architecture
+- Developers embed components in one line (e.g. `<RemoteVirtualSelect />` or `<ExecutionConsoleDrawer />`). The component autonomously manages data fetching, query debouncing, filtering, and connection status badges.
 
-### 4. 🎨 Tự Đổi Màu Theo Từng Ứng Dụng (Adaptive Theme)
-- Khi thả component vào VS Code, nó tự đổi theo màu của VS Code. Khi mở trên Desktop hay Web, nó tự thích ứng theo chế độ Sáng / Tối (Dark / Light mode).
+### 4. 🎨 Adaptive Theming & Token Mapping
+- Automatically inherits the host environment's color tokens (VS Code theme tokens in VSCE, dark/light mode in Desktop and Web).
 
 ---
 
-## 🚀 HƯỚNG DẪN SỬ DỤNG NHANH
+## 🚀 Quick Start
 
-### 1. Khởi tạo trong ứng dụng
+### 1. App Initialization
 ```ts
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
@@ -44,7 +42,7 @@ app.use(createAutomaUiPlugin({ baseUrl: 'http://127.0.0.1:8765' }))
 app.mount('#app')
 ```
 
-### 2. Sử dụng Component Dropdown Chọn Profile
+### 2. Browser Profile Dropdown Component
 ```vue
 <script setup>
 import { ref } from 'vue'
@@ -57,21 +55,21 @@ const selectedBrowser = ref('default')
   <RemoteVirtualSelect
     id="select.browser.profile"
     v-model="selectedBrowser"
-    placeholder="Chọn profile trình duyệt..."
+    placeholder="Select browser profile..."
   />
 </template>
 ```
 
 ---
 
-## 📁 CẤU TRÚC GÓI
+## 📁 Package Structure
 
 ```
 packages/ui/
 ├── src/
 │   ├── stores/        # 🍍 6 Pinia Domain Stores (Workflow, Browser, Execution, Storage, Campaign, Settings)
-│   ├── hooks/         # 🌐 TanStack Query Hooks (Tự động cache & fetch dữ liệu)
-│   ├── plugin/        # 🌊 Plugin tự động lắng nghe sự kiện realtime
-│   ├── components/    # 🎨 Các linh kiện giao diện ảo hóa (Dropdown, Console Drawer, Danh sách)
-│   └── styles/        # 🌈 Bảng màu Semantic Tokens tương thích mọi nền tảng
+│   ├── hooks/         # 🌐 TanStack Query Hooks (Automated caching & data fetching)
+│   ├── plugin/        # 🌊 Plugin listening to real-time telemetry events
+│   ├── components/    # 🎨 Virtualized UI components (Dropdowns, Console Drawer, Tables)
+│   └── styles/        # 🌈 Cross-platform semantic tokens and CSS styles
 ```
