@@ -41,7 +41,8 @@ jobs:
 
       - name: Inject Pass Key
         run: |
-          cat << 'EOF' > apps/webe/src/utils/getPassKey.js
+          mkdir -p apps/runner/src/utils
+          cat << 'EOF' > apps/runner/src/utils/getPassKey.js
           export default function getPassKey() {
             return process.env.AUTOMA_MASTER_KEY || 'automa-master-passphrase-default';
           }

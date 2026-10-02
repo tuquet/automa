@@ -37,24 +37,24 @@ jobs:
 
       - name: Inject Fallback Secrets & PassKey
         run: |
-          mkdir -p apps/webe/src/utils
-          cat << 'EOF' > apps/webe/src/utils/getPassKey.js
+          mkdir -p apps/runner/src/utils
+          cat << 'EOF' > apps/runner/src/utils/getPassKey.js
           export default function (key = '') {
             return process.env.AUTOMA_MASTER_KEY || 'automa-master-passphrase-default';
           }
           EOF
 
-      - name: Build Web Assets (@automa/webe & dependencies)
+      - name: Build Runner Assets (@automa/runner & dependencies)
         run: |
           pnpm -F @automa/types build
           pnpm -F @automa/ui build
-          pnpm -F @automa/webe run build
+          pnpm -F @automa/runner run build
 
       - name: Package Extension Zip
         run: |
           VERSION="${{ github.ref_name || format('v{0}', inputs.version) }}"
           ZIP_NAME="automa-extension-${VERSION}.zip"
-          cd apps/webe/dist
+          cd apps/runner/dist
           zip -r "../../../${ZIP_NAME}" .
           cd ../../..
           sha256sum "${ZIP_NAME}" > "${ZIP_NAME}.sha256"
