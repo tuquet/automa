@@ -2,7 +2,7 @@
 
 > Tuquet Automa Headless CLI Runner Extension (Ultra-Lightweight Manifest V3)
 
-`@automa/runner` is an ultra-lightweight, purely headless Chrome Manifest V3 extension designed specifically for the Rust-based CLI runner (`automa.exe` / `tuquet-automa-runner`).
+`@automa/runner` is an ultra-lightweight, purely headless Chrome Manifest V3 extension designed specifically for the Rust-based CLI runner (`runner` / `tuquet runner`).
 
 ## Key Characteristics
 
@@ -12,7 +12,7 @@
   - `background.bundle.js`: ~110 KB (service worker event coordination & bridge)
   - Build time: < 350 ms via Vite.
 - **Shared Execution Engine**: Powered by `@automa/engine`, sharing a single source of truth for workflow block handlers, templating, and runtime execution.
-- **Sideload Target**: Automatically resolved and sideloaded by `automa.exe` / `tqr` during workflow execution.
+- **Sideload Target**: Automatically resolved and sideloaded by `runner` (`tuquet runner`) during workflow execution.
 
 ## Commands
 

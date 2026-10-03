@@ -15,7 +15,7 @@ This directory contains standalone, interactive visual architecture artifacts fo
 
 <div align="center">
   <video src="tuquet-platform-multi-repository-orchestration-pipeline.webm" autoplay loop muted playsinline width="100%"></video>
-  <p><em>Real-Time Closed-Loop Multi-Repository Orchestration Pipeline: Cloud Command &rarr; Tuquet Runner Supervisor &rarr; Automa Engine &rarr; Browser Core &rarr; Cloud Event Sync</em></p>
+  <p><em>Real-Time Closed-Loop Multi-Repository Orchestration Pipeline: Cloud Command &rarr; Runner Supervisor &rarr; Automa Engine &rarr; Browser Core &rarr; Cloud Event Sync</em></p>
 </div>
 
 
@@ -26,8 +26,8 @@ flowchart LR
     end
 
     subgraph Runner["repo: tuquet/runner"]
-        RunnerHost["Tuquet Runner Host"]
-        JobGuard["Win32 Job Object"]
+        RunnerHost["Runner Host"]
+        JobGuard["Process Tree Guard"]
     end
 
     subgraph Automa["repo: tuquet/automa"]
@@ -52,7 +52,7 @@ flowchart LR
     end
 
     CloudDispatch -->|"1. push job command"| RunnerHost
-    RunnerHost -->|"2. arm Win32 JobObj"| JobGuard
+    RunnerHost -->|"2. arm Process Guard"| JobGuard
     RunnerHost -->|"3. spawn automa.exe"| AutomaEng
     AutomaEng -->|"compile step DAG"| WorkflowDAG
     AutomaEng -->|"4. request browser"| BrowserEng
@@ -73,7 +73,7 @@ flowchart LR
 | Repository | Form / Tech | Primary Responsibilities Visualized |
 | :--- | :--- | :--- |
 | **`tuquet/cloud`** | Supabase (PostgreSQL, Realtime, RLS) | Centralized control plane, `campaign_runs` WebSocket dispatch, and `crawler_data` REST ingestion endpoints. |
-| **`tuquet/runner`** | Rust Native Daemon | Host process supervisor, Win32 Job Objects (`0.1ms kill limit`) eliminating orphan Chrome instances. |
+| **`tuquet/runner`** | Rust Native Daemon | Host process supervisor, kernel process tree guards (`0.1ms kill limit`) eliminating orphan Chrome instances. |
 | **`tuquet/automa`** | Vue 3 Studio & Axum Engine | Workflow block DAG compiler, DOM automation executor, and `HttpRequestBlock` API trigger. |
 | **`tuquet/browser`** | Rust Core Crate (`tuquet-browser`) | Multi-profile user data sandbox, Chromium LTS CDN downloader, and hardware anti-detect spoofer (Canvas, WebGL, proxies). |
 | **`~/.tuquet/runtimes/`** | Canonical Storage | Isolated Chromium binaries and dedicated profile storage directory preventing cross-account identity bleed. |

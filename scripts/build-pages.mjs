@@ -440,7 +440,7 @@ const portalHtml = `<!doctype html>
       </div>
       <h1>High-Performance Browser Automation & OS Orchestration</h1>
       <p>
-        Zero-zombie Win32 Job Object supervision, hardware anti-detect Chromium isolation in <code>~/.tuquet/</code>, 
+        Zero-zombie process tree supervision, hardware anti-detect Chromium isolation in <code>~/.tuquet/</code>, 
         and an intuitive node-graph canvas for high-density enterprise operations.
       </p>
       <div class="cta-group">
@@ -467,7 +467,7 @@ const portalHtml = `<!doctype html>
       <div class="feature-card">
         <div class="feature-icon">🛡️</div>
         <h3>Zero-Zombie Supervision</h3>
-        <p>Tuquet Runner Host uses Win32 Job Objects with kernel-enforced 0.1ms kill limits, preventing orphan browser processes.</p>
+        <p>Runner Supervisor uses kernel-enforced process trees with 0.1ms kill limits, preventing orphan browser processes.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">🎭</div>

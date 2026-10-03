@@ -13,7 +13,7 @@
         "id": "view_cloud_dispatch",
         "label": "1. [tuquet/cloud] Job Ingestion",
         "focus": ["cloud_dispatch", "runner_daemon", "job_guard"],
-        "note": "tuquet/cloud dispatches job to tuquet/runner, which arms Win32 Job Object"
+        "note": "tuquet/cloud dispatches job to tuquet/runner, which arms kernel process guard"
       },
       {
         "id": "view_automa_spawn",
@@ -55,7 +55,7 @@
     {
       "id": "runner_daemon",
       "type": "backend",
-      "label": "Tuquet Runner Host",
+      "label": "Runner Host",
       "sublabel": "tuquet/runner (Rust)",
       "brand": "rust",
       "tag": "tokio supervisor",
@@ -65,7 +65,7 @@
     {
       "id": "job_guard",
       "type": "security",
-      "label": "Win32 Job Object",
+      "label": "Process Guard",
       "sublabel": "tuquet/runner (Kernel)",
       "tag": "0.1ms Kill Limit",
       "pos": [390, 280],
@@ -185,7 +185,7 @@
       "id": "runner-to-job",
       "from": "runner_daemon",
       "to": "job_guard",
-      "label": "arm Win32 JobObj",
+      "label": "arm Process Guard",
       "variant": "security"
     },
     {
@@ -272,7 +272,7 @@
       "title": "Multi-Repository Architecture",
       "items": [
         "tuquet/cloud: Multi-tenant control plane, campaign run queues, and centralized crawler database",
-        "tuquet/runner: Rust process supervisor with 0.1ms Win32 Job Object containment",
+        "tuquet/runner: Rust process supervisor with 0.1ms process containment",
         "tuquet/automa: Visual workflow editor & Axum daemon with HttpRequestBlock API triggers",
         "tuquet/browser: Dedicated Rust antidetect engine, multi-profile sandbox & CDP proxy"
       ]
@@ -281,7 +281,7 @@
       "dot": "rose",
       "title": "Zero-Zombie & Anti-Detect Isolation",
       "items": [
-        "tuquet/runner guarantees 0.1ms atomic teardown of child Chrome processes via Win32 Job Objects",
+        "tuquet/runner guarantees 0.1ms atomic teardown of child Chrome processes via kernel guards",
         "tuquet/browser isolates cookies, Canvas/WebGL fingerprints, and proxies inside ~/.tuquet/runtimes/"
       ]
     },
