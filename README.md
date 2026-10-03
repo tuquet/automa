@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./assets/logo.svg" width="76" height="76" alt="Automa Logo" />
+  <img src="https://tuquet.github.io/icons/automa.svg" width="76" height="76" alt="Automa Logo" />
   <h1>Automa</h1>
   <p><strong>Next-Generation Workflow Orchestration &amp; Headless Automation Platform</strong></p>
 
