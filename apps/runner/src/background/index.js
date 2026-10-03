@@ -591,6 +591,9 @@ message.on(
                 let onNextBlock;
                 let onResetTimeout;
 
+                const targetBody =
+                  $documentCtx.body || $documentCtx.documentElement || $documentCtx;
+
                 const cleanUp = () => {
                   script.remove();
                   preloadScriptsEl.forEach((item) => {
@@ -599,14 +602,16 @@ message.on(
 
                   clearTimeout(timeout);
 
-                  $documentCtx.body.removeEventListener(
-                    '__automa-reset-timeout__',
-                    onResetTimeout
-                  );
-                  $documentCtx.body.removeEventListener(
-                    '__automa-next-block__',
-                    onNextBlock
-                  );
+                  if (targetBody && typeof targetBody.removeEventListener === 'function') {
+                    targetBody.removeEventListener(
+                      '__automa-reset-timeout__',
+                      onResetTimeout
+                    );
+                    targetBody.removeEventListener(
+                      '__automa-next-block__',
+                      onNextBlock
+                    );
+                  }
                 };
 
                 onNextBlock = ({ detail }) => {
@@ -632,25 +637,33 @@ message.on(
                   timeout = setTimeout(cleanUp, $blockData.data.timeout);
                 };
 
-                $documentCtx.body.addEventListener(
-                  '__automa-next-block__',
-                  onNextBlock
-                );
-                $documentCtx.body.addEventListener(
-                  '__automa-reset-timeout__',
-                  onResetTimeout
-                );
+                if (targetBody && typeof targetBody.addEventListener === 'function') {
+                  targetBody.addEventListener(
+                    '__automa-next-block__',
+                    onNextBlock
+                  );
+                  targetBody.addEventListener(
+                    '__automa-reset-timeout__',
+                    onResetTimeout
+                  );
+                }
 
                 timeout = setTimeout(cleanUp, $blockData.data.timeout);
               } else {
                 resolve();
               }
 
+              const targetHead =
+                $documentCtx.head || $documentCtx.documentElement || $documentCtx;
               // Inject scripts in the correct order
               preloadScriptsEl.forEach((item) => {
-                $documentCtx.head.appendChild(item.element);
+                if (targetHead && typeof targetHead.appendChild === 'function') {
+                  targetHead.appendChild(item.element);
+                }
               });
-              $documentCtx.head.appendChild(script);
+              if (targetHead && typeof targetHead.appendChild === 'function') {
+                targetHead.appendChild(script);
+              }
             } catch (error) {
               console.error('javascriptBlockUtil error', error);
               reject(error);
@@ -661,9 +674,9 @@ message.on(
         args: [blockData, preloadScripts, automaScript],
       });
 
-      return [{ result: result[0].result }];
+      return [{ result: result?.[0]?.result ?? null }];
     } catch (err) {
-      return { result: null, msg: err.message, error: err };
+      return [{ result: null, msg: err.message, error: err }];
     }
   }
 );

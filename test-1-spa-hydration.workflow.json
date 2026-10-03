@@ -1,0 +1,59 @@
+{
+  "name": "Test 1 - SPA Dynamic Hydration",
+  "description": "Verifies that TuquetCrawler handles client-rendered SPAs with delayed JavaScript DOM hydration",
+  "drawflow": {
+    "nodes": [
+      {
+        "id": "node-trigger",
+        "label": "trigger",
+        "data": { "type": "manual" }
+      },
+      {
+        "id": "node-new-tab",
+        "label": "new-tab",
+        "data": {
+          "url": "https://quotes.toscrape.com/js/",
+          "active": true
+        }
+      },
+      {
+        "id": "node-spa-crawl",
+        "label": "javascript-code",
+        "data": {
+          "context": "website",
+          "timeout": 25000,
+          "code": "(async () => {\n  try {\n    const tc = window.TuquetCrawler;\n    const startTime = Date.now();\n    const initialQuotesCount = document.querySelectorAll('.quote').length;\n    \n    // Wait for dynamic hydration via MutationObserver quietness\n    await tc.waitForDomIdle({ quietnessThresholdMs: 600, maxTimeoutMs: 6000 });\n    \n    const hydratedQuotesCount = document.querySelectorAll('.quote').length;\n    const crawl = await tc.crawlDocument(document, {\n      extractMetadata: true,\n      extractMainContent: true,\n      toMarkdown: true\n    });\n    \n    const firstQuote = document.querySelector('.quote .text')?.textContent?.trim();\n    const firstAuthor = document.querySelector('.quote .author')?.textContent?.trim();\n    \n    automaNextBlock({\n      success: true,\n      testName: 'SPA Dynamic Hydration',\n      url: window.location.href,\n      initialQuotesCount,\n      hydratedQuotesCount,\n      hydrationDetected: hydratedQuotesCount > 0 && initialQuotesCount === 0,\n      firstQuoteSample: firstQuote ? `${firstQuote} — ${firstAuthor}` : null,\n      markdownLength: crawl.markdown?.length || 0,\n      executionMs: Date.now() - startTime\n    });\n  } catch (err) {\n    automaNextBlock({ $error: true, message: err.message });\n  }\n})();"
+        }
+      },
+      {
+        "id": "node-delay",
+        "label": "delay",
+        "data": { "time": 500 }
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "source": "node-trigger",
+        "target": "node-new-tab",
+        "sourceHandle": "node-trigger-output-1",
+        "targetHandle": "node-new-tab-input-1"
+      },
+      {
+        "id": "e2",
+        "source": "node-new-tab",
+        "target": "node-spa-crawl",
+        "sourceHandle": "node-new-tab-output-1",
+        "targetHandle": "node-spa-crawl-input-1"
+      },
+      {
+        "id": "e3",
+        "source": "node-spa-crawl",
+        "target": "node-delay",
+        "sourceHandle": "node-spa-crawl-output-1",
+        "targetHandle": "node-delay-input-1"
+      }
+    ]
+  },
+  "settings": { "debugMode": false, "saveLog": true }
+}

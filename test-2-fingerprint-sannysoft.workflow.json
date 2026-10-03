@@ -1,0 +1,59 @@
+{
+  "name": "Test 2 - Anti-Bot Fingerprint Benchmark (Sannysoft)",
+  "description": "Evaluates headless browser stealth against the industry standard bot.sannysoft.com detector",
+  "drawflow": {
+    "nodes": [
+      {
+        "id": "node-trigger",
+        "label": "trigger",
+        "data": { "type": "manual" }
+      },
+      {
+        "id": "node-new-tab",
+        "label": "new-tab",
+        "data": {
+          "url": "https://bot.sannysoft.com",
+          "active": true
+        }
+      },
+      {
+        "id": "node-eval-fingerprint",
+        "label": "javascript-code",
+        "data": {
+          "context": "website",
+          "timeout": 25000,
+          "code": "(async () => {\n  try {\n    // Wait 2 seconds for Sannysoft async tests to complete\n    await new Promise(r => setTimeout(r, 2000));\n    \n    const getTest = (id) => {\n      const el = document.getElementById(id);\n      if (!el) return { text: 'N/A', passed: false };\n      const text = el.textContent?.trim() || '';\n      const isFailed = el.classList.contains('failed') || el.classList.contains('result-failed');\n      const isPassed = el.classList.contains('passed') || el.classList.contains('result-passed') || (!isFailed && !text.toLowerCase().includes('fail'));\n      return { text, passed: isPassed && !isFailed };\n    };\n    \n    const results = {\n      userAgent: getTest('user-agent-result'),\n      webdriver: getTest('webdriver-result'),\n      advancedWebdriver: getTest('advanced-webdriver-result'),\n      chromeRuntime: getTest('chrome-result'),\n      permissions: getTest('permissions-result'),\n      pluginsLength: getTest('plugins-length-result'),\n      languages: getTest('languages-result'),\n      webglVendor: getTest('webgl-vendor'),\n      webglRenderer: getTest('webgl-renderer'),\n      brokenImageDimensions: getTest('broken-image-dimensions')\n    };\n    \n    const inPageStealth = {\n      navigatorWebdriver: navigator.webdriver,\n      windowChrome: !!window.chrome,\n      pluginsCount: navigator.plugins.length,\n      userAgent: navigator.userAgent\n    };\n    \n    automaNextBlock({\n      success: true,\n      testName: 'Anti-Bot Fingerprint Benchmark',\n      url: window.location.href,\n      inPageStealth,\n      sannysoftResults: results\n    });\n  } catch (err) {\n    automaNextBlock({ $error: true, message: err.message });\n  }\n})();"
+        }
+      },
+      {
+        "id": "node-delay",
+        "label": "delay",
+        "data": { "time": 500 }
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "source": "node-trigger",
+        "target": "node-new-tab",
+        "sourceHandle": "node-trigger-output-1",
+        "targetHandle": "node-new-tab-input-1"
+      },
+      {
+        "id": "e2",
+        "source": "node-new-tab",
+        "target": "node-eval-fingerprint",
+        "sourceHandle": "node-new-tab-output-1",
+        "targetHandle": "node-eval-fingerprint-input-1"
+      },
+      {
+        "id": "e3",
+        "source": "node-eval-fingerprint",
+        "target": "node-delay",
+        "sourceHandle": "node-eval-fingerprint-output-1",
+        "targetHandle": "node-delay-input-1"
+      }
+    ]
+  },
+  "settings": { "debugMode": false, "saveLog": true }
+}

@@ -1,0 +1,98 @@
+{
+  "name": "Test 3 - Watchdog & Multi-URL Resilience",
+  "description": "Tests runner longevity and resilience across fast, slow, 404, and SPA pages",
+  "drawflow": {
+    "nodes": [
+      {
+        "id": "node-trigger",
+        "label": "trigger",
+        "data": { "type": "manual" }
+      },
+      {
+        "id": "node-tab-1",
+        "label": "new-tab",
+        "data": {
+          "url": "https://example.com",
+          "active": true
+        }
+      },
+      {
+        "id": "node-crawl-1",
+        "label": "javascript-code",
+        "data": {
+          "context": "website",
+          "timeout": 15000,
+          "code": "(async () => {\n  try {\n    const crawl = await window.TuquetCrawler.crawlDocument(document, { toMarkdown: true });\n    automaNextBlock({\n      stage: 1,\n      url: window.location.href,\n      status: 'ok',\n      title: crawl.metadata?.title || document.title\n    });\n  } catch (e) {\n    automaNextBlock({ stage: 1, error: e.message });\n  }\n})();"
+        }
+      },
+      {
+        "id": "node-tab-2",
+        "label": "new-tab",
+        "data": {
+          "url": "https://httpbin.org/status/404",
+          "active": true
+        }
+      },
+      {
+        "id": "node-crawl-2",
+        "label": "javascript-code",
+        "data": {
+          "context": "website",
+          "timeout": 15000,
+          "code": "(async () => {\n  try {\n    const crawl = await window.TuquetCrawler.crawlDocument(document, { toMarkdown: true });\n    automaNextBlock({\n      stage: 2,\n      url: window.location.href,\n      pageType: crawl.pageType,\n      status: 'handled_404'\n    });\n  } catch (e) {\n    automaNextBlock({ stage: 2, error: e.message });\n  }\n})();"
+        }
+      },
+      {
+        "id": "node-tab-3",
+        "label": "new-tab",
+        "data": {
+          "url": "https://httpbin.org/delay/2",
+          "active": true
+        }
+      },
+      {
+        "id": "node-crawl-3",
+        "label": "javascript-code",
+        "data": {
+          "context": "website",
+          "timeout": 20000,
+          "code": "(async () => {\n  try {\n    const crawl = await window.TuquetCrawler.crawlDocument(document, { toMarkdown: true });\n    automaNextBlock({\n      stage: 3,\n      url: window.location.href,\n      status: 'delayed_success'\n    });\n  } catch (e) {\n    automaNextBlock({ stage: 3, error: e.message });\n  }\n})();"
+        }
+      },
+      {
+        "id": "node-tab-4",
+        "label": "new-tab",
+        "data": {
+          "url": "https://quotes.toscrape.com/js/",
+          "active": true
+        }
+      },
+      {
+        "id": "node-crawl-4",
+        "label": "javascript-code",
+        "data": {
+          "context": "website",
+          "timeout": 20000,
+          "code": "(async () => {\n  try {\n    const crawl = await window.TuquetCrawler.crawlDocument(document, { toMarkdown: true });\n    const quotes = document.querySelectorAll('.quote').length;\n    automaNextBlock({\n      stage: 4,\n      url: window.location.href,\n      status: 'spa_success',\n      quotesCount: quotes\n    });\n  } catch (e) {\n    automaNextBlock({ stage: 4, error: e.message });\n  }\n})();"
+        }
+      },
+      {
+        "id": "node-delay",
+        "label": "delay",
+        "data": { "time": 500 }
+      }
+    ],
+    "edges": [
+      { "id": "e1", "source": "node-trigger", "target": "node-tab-1", "sourceHandle": "node-trigger-output-1", "targetHandle": "node-tab-1-input-1" },
+      { "id": "e2", "source": "node-tab-1", "target": "node-crawl-1", "sourceHandle": "node-tab-1-output-1", "targetHandle": "node-crawl-1-input-1" },
+      { "id": "e3", "source": "node-crawl-1", "target": "node-tab-2", "sourceHandle": "node-crawl-1-output-1", "targetHandle": "node-tab-2-input-1" },
+      { "id": "e4", "source": "node-tab-2", "target": "node-crawl-2", "sourceHandle": "node-tab-2-output-1", "targetHandle": "node-crawl-2-input-1" },
+      { "id": "e5", "source": "node-crawl-2", "target": "node-tab-3", "sourceHandle": "node-crawl-2-output-1", "targetHandle": "node-tab-3-input-1" },
+      { "id": "e6", "source": "node-tab-3", "target": "node-crawl-3", "sourceHandle": "node-tab-3-output-1", "targetHandle": "node-crawl-3-input-1" },
+      { "id": "e7", "source": "node-crawl-3", "target": "node-tab-4", "sourceHandle": "node-crawl-3-output-1", "targetHandle": "node-tab-4-input-1" },
+      { "id": "e8", "source": "node-tab-4", "target": "node-crawl-4", "sourceHandle": "node-tab-4-output-1", "targetHandle": "node-crawl-4-input-1" },
+      { "id": "e9", "source": "node-crawl-4", "target": "node-delay", "sourceHandle": "node-crawl-4-output-1", "targetHandle": "node-delay-input-1" }
+    ]
+  },
+  "settings": { "debugMode": false, "saveLog": true }
+}
