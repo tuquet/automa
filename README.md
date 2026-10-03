@@ -86,12 +86,12 @@ flowchart TD
 
 ## 🚀 Quick Start for End Users
 
-There are **two easy ways** to install and run Automa on Windows:
+There are **two easy ways** to install and run Automa:
 
 ### Option 1: Automatic Install via Scoop (Recommended)
 If you use [Scoop](https://scoop.sh/):
 
-```powershell
+```console
 # 1. Add the official Tuquet Scoop bucket
 scoop bucket add tuquet https://github.com/tuquet/scoop-bucket
 
@@ -108,12 +108,12 @@ scoop update automa
 ---
 
 ### Option 2: Direct Binary Download (GitHub Releases)
-If you prefer downloading pre-built binaries without Scoop:
+If you prefer downloading pre-built packages:
 
 1. Go to the **[Latest GitHub Releases](https://github.com/tuquet/automa/releases)** page.
-2. Download the **`automa-v1.0.0-windows-x64.zip`** package under Assets.
-3. Extract the `.zip` archive to any folder on your computer.
-4. Double-click **`automa.exe`** to start the Automa Core Engine.
+2. Download the latest release package under Assets.
+3. Extract the archive to any directory.
+4. Run the **`automa`** executable to start the Automa Core Engine.
 
 > 💡 Once launched, Automa Core runs locally at `http://127.0.0.1:3000`. You can inspect CLI options anytime by running `automa --help`.
 
