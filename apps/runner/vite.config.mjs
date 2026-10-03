@@ -21,7 +21,7 @@ function runnerAssetsPlugin() {
         manifest.name = `${manifest.name} (Runner)`;
         manifest.web_accessible_resources = [
           {
-            resources: ['/icon-128.png'],
+            resources: ['/icon-128.png', '/tuquet-crawler.bundle.js'],
             matches: ['*://*/*', 'file://*/*'],
           },
         ];
@@ -72,6 +72,23 @@ function runnerAssetsPlugin() {
           type: 'asset',
           fileName: 'icon-dev-128.png',
           source: fs.readFileSync(iconDevPath),
+        });
+      }
+
+      // 6. Tuquet Crawler Standalone Bundle
+      const crawlerDistPath = path.resolve(__dirname, '../../../lib/packages/crawler/dist/tuquet-crawler.global.global.js');
+      const crawlerAssetPath = path.resolve(__dirname, 'src/assets/tuquet-crawler.bundle.js');
+      let crawlerSource = null;
+      if (fs.existsSync(crawlerDistPath)) {
+        crawlerSource = fs.readFileSync(crawlerDistPath, 'utf8');
+      } else if (fs.existsSync(crawlerAssetPath)) {
+        crawlerSource = fs.readFileSync(crawlerAssetPath, 'utf8');
+      }
+      if (crawlerSource) {
+        this.emitFile({
+          type: 'asset',
+          fileName: 'tuquet-crawler.bundle.js',
+          source: crawlerSource,
         });
       }
     },

@@ -1,0 +1,66 @@
+{
+  "name": "Crawler Integrated Universal Extraction Workflow",
+  "description": "Verifies that window.TuquetCrawler is automatically available in tabs without inline script pasting",
+  "drawflow": {
+    "nodes": [
+      {
+        "id": "node-trigger",
+        "label": "trigger",
+        "data": {
+          "type": "manual"
+        }
+      },
+      {
+        "id": "node-new-tab",
+        "label": "new-tab",
+        "data": {
+          "url": "https://example.com",
+          "active": true
+        }
+      },
+      {
+        "id": "node-crawl-test",
+        "label": "javascript-code",
+        "data": {
+          "context": "website",
+          "timeout": 20000,
+          "code": "(async () => {\n  try {\n    const hasCrawler = typeof window.TuquetCrawler !== 'undefined';\n    const methods = hasCrawler ? Object.keys(window.TuquetCrawler) : [];\n    let crawlResult = null;\n    if (hasCrawler) {\n      crawlResult = await window.TuquetCrawler.crawlDocument(document, {\n        autoDismissModals: false,\n        autoScroll: false,\n        extractMetadata: true,\n        extractMainContent: true,\n        toMarkdown: true,\n      });\n    }\n    console.log('[TuquetCrawler Test Result]', {\n      hasCrawler,\n      methodsCount: methods.length,\n      pageType: crawlResult?.pageType,\n      title: crawlResult?.metadata?.title,\n      markdownLength: crawlResult?.markdown?.length,\n    });\n    automaNextBlock({\n      hasCrawler,\n      methodsCount: methods.length,\n      pageType: crawlResult?.pageType,\n      title: crawlResult?.metadata?.title,\n      markdown: crawlResult?.markdown,\n    });\n  } catch (err) {\n    console.error('[TuquetCrawler Error]', err);\n    automaNextBlock({ $error: true, message: err.message });\n  }\n})();"
+        }
+      },
+      {
+        "id": "node-delay",
+        "label": "delay",
+        "data": {
+          "time": 1000
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge-1",
+        "source": "node-trigger",
+        "target": "node-new-tab",
+        "sourceHandle": "node-trigger-output-1",
+        "targetHandle": "node-new-tab-input-1"
+      },
+      {
+        "id": "edge-2",
+        "source": "node-new-tab",
+        "target": "node-crawl-test",
+        "sourceHandle": "node-new-tab-output-1",
+        "targetHandle": "node-crawl-test-input-1"
+      },
+      {
+        "id": "edge-3",
+        "source": "node-crawl-test",
+        "target": "node-delay",
+        "sourceHandle": "node-crawl-test-output-1",
+        "targetHandle": "node-delay-input-1"
+      }
+    ]
+  },
+  "settings": {
+    "debugMode": true,
+    "saveLog": true
+  }
+}

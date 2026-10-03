@@ -34,7 +34,15 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["contentScript.bundle.js"],
+      "js": ["tuquet-crawler.bundle.js"],
+      "run_at": "document_start",
+      "match_about_blank": true,
+      "all_frames": true,
+      "world": "MAIN"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["tuquet-crawler.bundle.js", "contentScript.bundle.js"],
       "run_at": "document_start",
       "match_about_blank": true,
       "all_frames": true
@@ -74,6 +82,7 @@
       "resources": [
         "/locales/*",
         "/icon-128.png",
+        "/tuquet-crawler.bundle.js",
         "/elementSelector.css",
         "elementSelector.bundle.js",
         "/Inter-roman-latin.var.woff2"

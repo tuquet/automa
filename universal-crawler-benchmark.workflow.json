@@ -1,0 +1,66 @@
+{
+  "name": "Universal Crawler & Stealth End-to-End Benchmark",
+  "description": "Comprehensive benchmark verifying native crawler injection, stealth evasions, and semantic extraction in Automa",
+  "drawflow": {
+    "nodes": [
+      {
+        "id": "node-trigger",
+        "label": "trigger",
+        "data": {
+          "type": "manual"
+        }
+      },
+      {
+        "id": "node-new-tab",
+        "label": "new-tab",
+        "data": {
+          "url": "https://httpbin.org/html",
+          "active": true
+        }
+      },
+      {
+        "id": "node-benchmark",
+        "label": "javascript-code",
+        "data": {
+          "context": "website",
+          "timeout": 20000,
+          "code": "(async () => {\n  try {\n    const tc = window.TuquetCrawler;\n    const stealthStatus = {\n      webdriver: navigator.webdriver,\n      hasChrome: !!window.chrome,\n      hasPlugins: navigator.plugins.length > 0,\n      pluginsCount: navigator.plugins.length\n    };\n    const crawl = await tc.crawlDocument(document, {\n      autoDismissModals: true,\n      autoScroll: false,\n      extractMetadata: true,\n      extractMainContent: true,\n      toMarkdown: true\n    });\n    automaNextBlock({\n      success: true,\n      stealth: stealthStatus,\n      pageType: crawl.pageType,\n      title: crawl.metadata?.title,\n      hasMarkdown: !!crawl.markdown && crawl.markdown.length > 0,\n      markdownPreview: crawl.markdown ? crawl.markdown.slice(0, 150) : '',\n      methods: Object.keys(tc)\n    });\n  } catch (err) {\n    automaNextBlock({ $error: true, message: err.message });\n  }\n})();"
+        }
+      },
+      {
+        "id": "node-delay",
+        "label": "delay",
+        "data": {
+          "time": 500
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge-1",
+        "source": "node-trigger",
+        "target": "node-new-tab",
+        "sourceHandle": "node-trigger-output-1",
+        "targetHandle": "node-new-tab-input-1"
+      },
+      {
+        "id": "edge-2",
+        "source": "node-new-tab",
+        "target": "node-benchmark",
+        "sourceHandle": "node-new-tab-output-1",
+        "targetHandle": "node-benchmark-input-1"
+      },
+      {
+        "id": "edge-3",
+        "source": "node-benchmark",
+        "target": "node-delay",
+        "sourceHandle": "node-benchmark-output-1",
+        "targetHandle": "node-delay-input-1"
+      }
+    ]
+  },
+  "settings": {
+    "debugMode": false,
+    "saveLog": true
+  }
+}
