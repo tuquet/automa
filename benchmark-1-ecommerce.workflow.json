@@ -1,0 +1,59 @@
+{
+  "name": "Benchmark 1 - E-Commerce Product",
+  "description": "Evaluate extraction on books.toscrape.com",
+  "drawflow": {
+    "nodes": [
+      {
+        "id": "node-trigger",
+        "label": "trigger",
+        "data": { "type": "manual" }
+      },
+      {
+        "id": "node-new-tab",
+        "label": "new-tab",
+        "data": {
+          "url": "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html",
+          "active": true
+        }
+      },
+      {
+        "id": "node-crawl",
+        "label": "javascript-code",
+        "data": {
+          "context": "website",
+          "timeout": 25000,
+          "code": "(async () => {\n  try {\n    const tc = window.TuquetCrawler;\n    const startTime = Date.now();\n    const rawHtmlLength = document.documentElement.outerHTML.length;\n    const crawl = await tc.crawlDocument(document, {\n      autoDismissModals: true,\n      autoScroll: false,\n      extractMetadata: true,\n      extractMainContent: true,\n      toMarkdown: true\n    });\n    const markdown = crawl.markdown || '';\n    const tokenSavings = tc.estimateTokenSavings(document.documentElement.outerHTML, markdown);\n    const priceMatch = document.body.innerText.match(/£[0-9.]+/);\n    const stockMatch = document.body.innerText.match(/In stock \\([0-9]+ available\\)/);\n    automaNextBlock({\n      success: true,\n      domain: 'books.toscrape.com',\n      url: window.location.href,\n      pageType: crawl.pageType,\n      title: crawl.metadata?.title || document.title,\n      price: priceMatch ? priceMatch[0] : null,\n      stock: stockMatch ? stockMatch[0] : null,\n      articleScore: crawl.article?.confidenceScore,\n      rawLength: rawHtmlLength,\n      markdownLength: markdown.length,\n      tokenSavings: tokenSavings,\n      markdownSample: markdown.slice(0, 800),\n      executionMs: Date.now() - startTime\n    });\n  } catch (err) {\n    automaNextBlock({ $error: true, message: err.message });\n  }\n})();"
+        }
+      },
+      {
+        "id": "node-delay",
+        "label": "delay",
+        "data": { "time": 500 }
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "source": "node-trigger",
+        "target": "node-new-tab",
+        "sourceHandle": "node-trigger-output-1",
+        "targetHandle": "node-new-tab-input-1"
+      },
+      {
+        "id": "e2",
+        "source": "node-new-tab",
+        "target": "node-crawl",
+        "sourceHandle": "node-new-tab-output-1",
+        "targetHandle": "node-crawl-input-1"
+      },
+      {
+        "id": "e3",
+        "source": "node-crawl",
+        "target": "node-delay",
+        "sourceHandle": "node-crawl-output-1",
+        "targetHandle": "node-delay-input-1"
+      }
+    ]
+  },
+  "settings": { "debugMode": false, "saveLog": true }
+}

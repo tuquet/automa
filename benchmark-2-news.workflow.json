@@ -1,0 +1,59 @@
+{
+  "name": "Benchmark 2 - Editorial News & Anti-Bot",
+  "description": "Evaluate extraction on vnexpress.net article",
+  "drawflow": {
+    "nodes": [
+      {
+        "id": "node-trigger",
+        "label": "trigger",
+        "data": { "type": "manual" }
+      },
+      {
+        "id": "node-new-tab",
+        "label": "new-tab",
+        "data": {
+          "url": "https://vnexpress.net/google-can-10-nam-va-1-800-lan-phong-de-xay-trung-tam-du-lieu-vu-tru-5127638.html",
+          "active": true
+        }
+      },
+      {
+        "id": "node-crawl",
+        "label": "javascript-code",
+        "data": {
+          "context": "website",
+          "timeout": 25000,
+          "code": "(async () => {\n  try {\n    const tc = window.TuquetCrawler;\n    const startTime = Date.now();\n    const rawHtml = document.documentElement.outerHTML;\n    const crawl = await tc.crawlDocument(document, {\n      autoDismissModals: true,\n      autoScroll: false,\n      extractMetadata: true,\n      extractMainContent: true,\n      toMarkdown: true\n    });\n    const markdown = crawl.markdown || '';\n    const tokenSavings = tc.estimateTokenSavings(rawHtml, markdown);\n    automaNextBlock({\n      success: true,\n      domain: 'vnexpress.net',\n      url: window.location.href,\n      pageType: crawl.pageType,\n      title: crawl.metadata?.title || document.title,\n      author: crawl.metadata?.author || crawl.article?.byline,\n      publishedTime: crawl.metadata?.publishedTime,\n      readingTimeMinutes: crawl.article?.readingTimeMinutes,\n      wordCount: crawl.article?.wordCount,\n      articleConfidence: crawl.article?.confidenceScore,\n      rawLength: rawHtml.length,\n      markdownLength: markdown.length,\n      tokenSavings: tokenSavings,\n      markdownSample: markdown.slice(0, 800),\n      executionMs: Date.now() - startTime\n    });\n  } catch (err) {\n    automaNextBlock({ $error: true, message: err.message });\n  }\n})();"
+        }
+      },
+      {
+        "id": "node-delay",
+        "label": "delay",
+        "data": { "time": 500 }
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "source": "node-trigger",
+        "target": "node-new-tab",
+        "sourceHandle": "node-trigger-output-1",
+        "targetHandle": "node-new-tab-input-1"
+      },
+      {
+        "id": "e2",
+        "source": "node-new-tab",
+        "target": "node-crawl",
+        "sourceHandle": "node-new-tab-output-1",
+        "targetHandle": "node-crawl-input-1"
+      },
+      {
+        "id": "e3",
+        "source": "node-crawl",
+        "target": "node-delay",
+        "sourceHandle": "node-crawl-output-1",
+        "targetHandle": "node-delay-input-1"
+      }
+    ]
+  },
+  "settings": { "debugMode": false, "saveLog": true }
+}
