@@ -1,0 +1,59 @@
+{
+  "name": "Canonical Document Generation & Storage Test",
+  "description": "Verifies that crawlDocument + buildCanonicalDocument generates complete dual-layer storage payloads",
+  "drawflow": {
+    "nodes": [
+      {
+        "id": "node-trigger",
+        "label": "trigger",
+        "data": { "type": "manual" }
+      },
+      {
+        "id": "node-new-tab",
+        "label": "new-tab",
+        "data": {
+          "url": "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html?utm_source=test&utm_campaign=winter",
+          "active": true
+        }
+      },
+      {
+        "id": "node-crawl-and-build",
+        "label": "javascript-code",
+        "data": {
+          "context": "website",
+          "timeout": 20000,
+          "code": "(async () => {\n  try {\n    const tc = window.TuquetCrawler;\n    const startTime = Date.now();\n    const rawHtml = document.documentElement.outerHTML;\n    const crawl = await tc.crawlDocument(document, {\n      extractMetadata: true,\n      extractMainContent: true,\n      toMarkdown: true\n    });\n    const priceMatch = document.body.innerText.match(/£[0-9.]+/);\n    const canonicalDoc = tc.buildCanonicalDocument({\n      url: window.location.href,\n      title: crawl.metadata?.title || document.title,\n      markdown: crawl.markdown || '',\n      pageType: crawl.pageType,\n      payload: {\n        price: priceMatch ? priceMatch[0] : null,\n        stock: 'In stock'\n      },\n      rawMeta: crawl.metadata?.openGraph || {},\n      rawHtmlLength: rawHtml.length,\n      executionMs: Date.now() - startTime,\n      generateChunks: true\n    });\n    automaNextBlock({\n      success: true,\n      docId: canonicalDoc.id,\n      normalizedUrl: canonicalDoc.identity.normalizedUrl,\n      urlHash: canonicalDoc.identity.urlHash,\n      contentHash: canonicalDoc.lifecycle.contentHash,\n      chunksCount: canonicalDoc.chunks?.length || 0,\n      sampleChunk: canonicalDoc.chunks?.[0],\n      tokenStats: canonicalDoc.content.tokenSavings\n    });\n  } catch (err) {\n    automaNextBlock({ $error: true, message: err.message });\n  }\n})();"
+        }
+      },
+      {
+        "id": "node-delay",
+        "label": "delay",
+        "data": { "time": 500 }
+      }
+    ],
+    "edges": [
+      {
+        "id": "e1",
+        "source": "node-trigger",
+        "target": "node-new-tab",
+        "sourceHandle": "node-trigger-output-1",
+        "targetHandle": "node-new-tab-input-1"
+      },
+      {
+        "id": "e2",
+        "source": "node-new-tab",
+        "target": "node-crawl-and-build",
+        "sourceHandle": "node-new-tab-output-1",
+        "targetHandle": "node-crawl-and-build-input-1"
+      },
+      {
+        "id": "e3",
+        "source": "node-crawl-and-build",
+        "target": "node-delay",
+        "sourceHandle": "node-crawl-and-build-output-1",
+        "targetHandle": "node-delay-input-1"
+      }
+    ]
+  },
+  "settings": { "debugMode": false, "saveLog": true }
+}
