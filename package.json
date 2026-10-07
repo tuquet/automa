@@ -1,0 +1,52 @@
+{
+    "name": "tuquet-automa",
+    "private": true,
+    "packageManager": "pnpm@9.15.9",
+    "engines": {
+        "node": ">=18.0.0",
+        "pnpm": ">=9.0.0"
+    },
+    "scripts": {
+        "prepare": "husky",
+        "setup": "node scripts/setup-ecosystem.mjs",
+        "build": "turbo run build",
+        "build:runner": "turbo run build --filter=@automa/runner",
+        "build:pages": "node scripts/build-pages.mjs",
+        "dev": "turbo run dev",
+        "dev:source:runner": "turbo run dev --filter=@automa/runner",
+        "test": "vitest run",
+        "test:unit": "vitest run tests/unit",
+        "test:e2e": "vitest run tests/e2e",
+        "test:schema": "node scripts/enforce-strict-schema.mjs",
+        "test:ui": "vitest --ui",
+        "lint": "turbo run lint && node scripts/lint-style-debt.mjs",
+        "lint:style": "node scripts/lint-style-debt.mjs",
+        "lint:schema": "node scripts/enforce-strict-schema.mjs",
+        "lint:fix": "turbo run lint:fix",
+        "format": "turbo run format",
+        "format:check": "turbo run format:check",
+        "typecheck": "turbo run typecheck",
+        "clean": "turbo run clean && node -e \"['node_modules','.turbo'].forEach(p => fs.rmSync(p, {recursive: true, force: true}))\"",
+        "sync:api": "node scripts/sync-api.mjs",
+        "postsync:api": "pnpm run lint"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "^2.5.14",
+        "@types/ws": "^8.18.1",
+        "@vitest/coverage-v8": "^4.1.10",
+        "@vitest/ui": "^4.1.10",
+        "husky": "^9.1.7",
+        "lint-staged": "^17.2.0",
+        "turbo": "^2.1.2",
+        "vitest": "^4.1.10",
+        "ws": "^8.21.3"
+    },
+    "pnpm": {
+        "overrides": {
+            "proxy-addr": ">=2.0.8",
+            "undici": ">=8.10.2",
+            "@modelcontextprotocol/sdk": ">=1.31.0",
+            "source-map-js": ">=1.2.2"
+        }
+    }
+}

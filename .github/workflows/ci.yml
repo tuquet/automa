@@ -1,0 +1,82 @@
+name: Ecosystem CI
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.vscode/**'
+      - 'diagrams/**'
+      - 'CHEATSHEET.md'
+      - 'LICENSE'
+      - 'AGENTS.md'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.vscode/**'
+      - 'diagrams/**'
+      - 'CHEATSHEET.md'
+      - 'LICENSE'
+      - 'AGENTS.md'
+  workflow_dispatch:
+
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build_and_verify:
+    name: Build & Verify
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Inject Pass Key
+        run: |
+          mkdir -p apps/runner/src/utils
+          cat << 'EOF' > apps/runner/src/utils/getPassKey.js
+          export default function getPassKey() {
+            return process.env.AUTOMA_MASTER_KEY || 'automa-master-passphrase-default';
+          }
+          EOF
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Build
+        run: pnpm run build
+
+  notify:
+    name: Notify Telegram
+    needs: [build_and_verify]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Telegram Notification
+        uses: tuquet/bot@main
+        with:
+          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          status: ${{ needs.build_and_verify.result }}

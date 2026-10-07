@@ -1,0 +1,143 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build:core",
+      "type": "shell",
+      "command": "cargo build --manifest-path apps/core/Cargo.toml",
+      "problemMatcher": ["$rustc"],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "build:studio",
+      "type": "shell",
+      "command": "pnpm run build:studio",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "📦 Automa: Build All",
+      "type": "shell",
+      "command": "pnpm run build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$tsup", "$rustc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true,
+        "clear": true
+      }
+    },
+    {
+      "label": "🧪 Automa: Test Matrix",
+      "type": "shell",
+      "command": "pnpm run test",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true,
+        "clear": true
+      }
+    },
+    {
+      "label": "🧙 Automa: Master Wizard",
+      "type": "shell",
+      "command": "node scripts/ecosystem-wizard.mjs",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "🚀 Automa: Dev Orchestrator",
+      "type": "shell",
+      "command": "pnpm run dev",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "focus": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "✨ Automa: Lint & Quality",
+      "type": "shell",
+      "command": "pnpm run lint",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true,
+        "clear": true
+      }
+    },
+    {
+      "label": "🔄 Automa: Sync Contracts",
+      "type": "shell",
+      "command": "pnpm run sync:api",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true,
+        "clear": true
+      }
+    },
+    {
+      "label": "⚙️ Automa: Ecosystem Setup (Full)",
+      "type": "shell",
+      "command": "node scripts/setup-ecosystem.mjs all",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "⚙️ Automa: Ecosystem Setup & Init (Wizard)",
+      "type": "shell",
+      "command": "node scripts/setup-ecosystem.mjs ${input:setupTarget}",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "focus": true,
+        "clear": false
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "setupTarget",
+      "type": "pickString",
+      "description": "Setup cai gi? Khoi tao phan nao?",
+      "options": [
+        { "value": "all", "label": "🚀 Full Setup (PNPM + Rust/Cargo)" },
+        { "value": "rust", "label": "🦀 Rust & Cargo Setup (Scoop install rustup)" },
+        { "value": "pnpm", "label": "⚡ Dependencies Only (pnpm install)" },
+        { "value": "doctor", "label": "🩺 Doctor & Diagnostics (Node, PNPM, Git, Rust)" }
+      ],
+      "default": "all"
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "name": "@automa/engine",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shared workflow execution engine, block handlers, and runtime primitives for the Automa ecosystem",
+  "type": "module",
+  "main": "./src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./WorkflowEngine": "./src/WorkflowEngine.js",
+    "./WorkflowManager": "./src/WorkflowManager.js",
+    "./WorkflowLogger": "./src/WorkflowLogger.js",
+    "./WorkflowState": "./src/WorkflowState.js",
+    "./WorkflowWorker": "./src/WorkflowWorker.js",
+    "./blocksHandler": "./src/blocksHandler.js",
+    "./convertWorkflowData": "./src/utils/convertWorkflowData.js",
+    "./helper": "./src/helper.js"
+  },
+  "dependencies": {
+    "@automa/types": "workspace:*",
+    "@n8n_io/riot-tmpl": "^2.0.0",
+    "compare-versions": "^6.0.0-rc.1",
+    "cron-parser": "^4.6.0",
+    "cronstrue": "^2.21.0",
+    "crypto-js": "4.2.0",
+    "css-selector-generator": "^3.6.4",
+    "dayjs": "^1.11.6",
+    "defu": "^6.1.2",
+    "dexie": "^3.2.3",
+    "idb": "^7.0.2",
+    "js-base64": "^3.7.5",
+    "json5": "^2.2.3",
+    "jsonpath": "^1.1.1",
+    "loader-utils": "^3.2.1",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.merge": "^4.6.2",
+    "mitt": "^3.0.0",
+    "mousetrap": "^1.6.5",
+    "nanoid": "^4.0.0",
+    "object-path": "^0.11.8",
+    "papaparse": "^5.3.1",
+    "pinia": "^2.3.1",
+    "rxjs": "^7.8.0",
+    "sizzle": "^2.3.8",
+    "webextension-polyfill": "workspace:*",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  },
+  "scripts": {
+    "build": "echo 'No build step required for ESM engine'",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.10"
+  }
+}

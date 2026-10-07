@@ -1,0 +1,91 @@
+name: Release Automa Extension
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: Build & Package Extension
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Inject Fallback Secrets & PassKey
+        run: |
+          mkdir -p apps/runner/src/utils
+          cat << 'EOF' > apps/runner/src/utils/getPassKey.js
+          export default function (key = '') {
+            return process.env.AUTOMA_MASTER_KEY || 'automa-master-passphrase-default';
+          }
+          EOF
+
+      - name: Build Runner Assets (@automa/runner & dependencies)
+        run: |
+          pnpm -F @automa/types build
+          pnpm -F @automa/ui build
+          pnpm -F @automa/runner run build
+
+      - name: Package Extension Zip
+        run: |
+          VERSION="${{ github.ref_name || format('v{0}', inputs.version) }}"
+          ZIP_NAME="automa-extension-${VERSION}.zip"
+          cd apps/runner/dist
+          zip -r "../../../${ZIP_NAME}" .
+          cd ../../..
+          sha256sum "${ZIP_NAME}" > "${ZIP_NAME}.sha256"
+          echo "ZIP_NAME=${ZIP_NAME}" >> $GITHUB_ENV
+
+      - name: Create GitHub Release & Upload Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name || format('v{0}', inputs.version) }}
+          name: Release ${{ github.ref_name || format('v{0}', inputs.version) }}
+          draft: false
+          prerelease: false
+          files: |
+            ${{ env.ZIP_NAME }}
+            ${{ env.ZIP_NAME }}.sha256
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  notify:
+    name: Notify Telegram
+    needs: [build-release]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Telegram Notification
+        uses: tuquet/bot@main
+        with:
+          bot-token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          chat-id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          status: ${{ needs.build-release.result }}
+          type: 'release'
+          tag: ${{ github.ref_name || format('v{0}', inputs.version) }}
+
+

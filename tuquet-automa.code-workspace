@@ -1,0 +1,37 @@
+{
+  "folders": [
+    {
+      "name": "tuquet-automa",
+      "path": "."
+    },
+    {
+      "name": "core",
+      "path": "apps/core"
+    },
+    {
+      "name": "webe",
+      "path": "apps/webe"
+    },
+    {
+      "name": "ui",
+      "path": "packages/ui"
+    },
+    {
+      "name": "types",
+      "path": "packages/types"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/.git": true,
+      "**/.DS_Store": true,
+      "**/Thumbs.db": true
+    },
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/target": true,
+      "**/.turbo": true
+    }
+  }
+}

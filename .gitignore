@@ -1,0 +1,55 @@
+# Dependencies & Package Managers
+node_modules/
+.pnpm-store/
+
+# Turborepo & Build Cache
+.turbo/
+.cache/
+coverage/
+
+# Common Build Artifacts
+dist/
+dist-pages/
+out/
+build/
+*.vsix
+
+# Local Automation & Browser Profiles
+.automa/
+.chrome-profile/
+.chrome-profile-diagnose/
+.manual-profile/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+*.db
+*.db-shm
+*.db-wal
+
+# Temporary / Scratch Files
+scratch/
+temp_workflow.json
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Operating System & IDE Files
+.DS_Store
+Thumbs.db
+.idea/
+.obsidian/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Local Tool Dumps
+automa-repo-clone/
+automa-obsidian/
+automa-bruno/
+.vercel
+.env*
+
+# Local OS / Proxy Scripts (Managed at Global User Level)
+scripts/network/
