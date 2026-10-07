@@ -30,10 +30,14 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   build_and_verify:
     name: Build & Verify
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout Repository
@@ -64,6 +68,12 @@ jobs:
 
       - name: Lint
         run: pnpm run lint
+
+      - name: Test Unit
+        run: pnpm run test:unit
+
+      - name: Test Strict Schema
+        run: pnpm run test:schema
 
       - name: Build
         run: pnpm run build
