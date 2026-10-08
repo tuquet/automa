@@ -5,13 +5,13 @@
 
   <p>
     <a href="https://github.com/tuquet/scoop-bucket"><img src="https://img.shields.io/badge/Scoop-specter-brightgreen.svg" alt="Scoop Bucket" /></a>
-    <a href="https://tuquet.github.io/docs/automation/automa"><img src="https://img.shields.io/badge/Docs-VitePress%20Portal-blue.svg" alt="Documentation" /></a>
+    <a href="https://tuquet.github.io/docs/automa/"><img src="https://img.shields.io/badge/Docs-VitePress%20Portal-blue.svg" alt="Documentation" /></a>
     <a href="https://www.rust-lang.org/"><img src="https://img.shields.io/badge/Rust-Axum%2FTokio-orange.svg" alt="Rust" /></a>
     <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-%3E%3D18.x-brightgreen.svg" alt="Node.js" /></a>
     <a href="https://github.com/tuquet/skills/blob/main/skills/specter-automa/SKILL.md"><img src="https://img.shields.io/badge/Skill-%2Fspecter--automa-purple.svg" alt="Specter Automa Skill" /></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License" /></a>
   </p>
-  <p><strong><a href="https://tuquet.github.io/docs/automation/automa">📖 Read Full Documentation in Portal &rarr;</a> • <a href="https://github.com/tuquet/skills/blob/main/skills/specter-automa/SKILL.md">⚡ Operational Skill Reference (`/specter-automa`) &rarr;</a></strong></p>
+  <p><strong><a href="https://tuquet.github.io/docs/automa/">📖 Read Full Documentation in Portal &rarr;</a> • <a href="https://github.com/tuquet/skills/blob/main/skills/specter-automa/SKILL.md">⚡ Operational Skill Reference (`/specter-automa`) &rarr;</a></strong></p>
 </div>
 
 <br/>
@@ -184,7 +184,7 @@ Part of the **Automation & Agent Ecosystem**:
 
 For full node-graph schema references, CDP protocol actions, and visual studio tutorials, visit the official **Specter Documentation Portal**:
 
-👉 **[https://tuquet.github.io/docs/automation/automa](https://tuquet.github.io/docs/automation/automa)**
+👉 **[https://tuquet.github.io/docs/automa/](https://tuquet.github.io/docs/automa/)**
 
 ---
 
