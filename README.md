@@ -1,20 +1,22 @@
 <div align="center">
   <img src="https://tuquet.github.io/icons/automa.svg" width="76" height="76" alt="Automa Logo" />
-  <h1>Automa</h1>
+  <h1>Specter Automa</h1>
   <p><strong>Next-Generation Workflow Orchestration &amp; Headless Automation Platform</strong></p>
 
   <p>
-    <a href="https://github.com/tuquet/scoop-bucket"><img src="https://img.shields.io/badge/Scoop-tuquet%2Fscoop--bucket-blue.svg" alt="Scoop Bucket" /></a>
-    <a href="https://github.com/tuquet/automa/releases"><img src="https://img.shields.io/github/v/release/tuquet/automa?color=brightgreen" alt="GitHub Release" /></a>
+    <a href="https://github.com/tuquet/scoop-bucket"><img src="https://img.shields.io/badge/Scoop-specter-brightgreen.svg" alt="Scoop Bucket" /></a>
+    <a href="https://tuquet.github.io/docs/automation/automa"><img src="https://img.shields.io/badge/Docs-VitePress%20Portal-blue.svg" alt="Documentation" /></a>
     <a href="https://www.rust-lang.org/"><img src="https://img.shields.io/badge/Rust-Axum%2FTokio-orange.svg" alt="Rust" /></a>
     <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-%3E%3D18.x-brightgreen.svg" alt="Node.js" /></a>
+    <a href="https://github.com/tuquet/skills/blob/main/skills/specter-automa/SKILL.md"><img src="https://img.shields.io/badge/Skill-%2Fspecter--automa-purple.svg" alt="Specter Automa Skill" /></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License" /></a>
   </p>
+  <p><strong><a href="https://tuquet.github.io/docs/automation/automa">📖 Read Full Documentation in Portal &rarr;</a> • <a href="https://github.com/tuquet/skills/blob/main/skills/specter-automa/SKILL.md">⚡ Operational Skill Reference (`/specter-automa`) &rarr;</a></strong></p>
 </div>
 
 <br/>
 
-Welcome to **Automa**, an open-source, high-performance browser automation & OS orchestration platform. Built as a streamlined monorepo, Automa pairs an extensible **Workflow Engine DAG (`packages/engine`)** with a lightweight **Manifest V3 Headless Chrome Extension Runner (`apps/runner`)**, supervised by the native **Tuquet Runner** daemon (`runner`) and **Tuquet CLI** (`cli`).
+Welcome to **Automa**, an open-source, high-performance browser automation & OS orchestration platform. Built as a streamlined monorepo, Automa pairs an extensible **Workflow Engine DAG (`packages/engine`)** with a lightweight **Manifest V3 Headless Chrome Extension Runner (`apps/runner`)**, supervised by the native **Specter Runner** daemon (`runner`) and **Specter CLI** (`cli`).
 
 ---
 
@@ -175,6 +177,14 @@ Part of the **Automation & Agent Ecosystem**:
 - [CLI](https://github.com/tuquet/cli) — Developer Ergonomic CLI & Unified Command Center.
 - [Lib](https://github.com/tuquet/lib) — Monorepo for Shared Enterprise UI & Utilities (`vue-ui`, `vue-table`, `md-export`, `extension-runner`, `lunar`).
 - [Scoop Bucket](https://github.com/tuquet/scoop-bucket) — Official Windows Scoop Distribution Channel.
+
+---
+
+## 📖 Comprehensive Documentation
+
+For full node-graph schema references, CDP protocol actions, and visual studio tutorials, visit the official **Specter Documentation Portal**:
+
+👉 **[https://tuquet.github.io/docs/automation/automa](https://tuquet.github.io/docs/automation/automa)**
 
 ---
 
