@@ -10,6 +10,7 @@ const BASE_URL = `http://127.0.0.1:${TEST_PORT}`;
 function killProcessOnPort(port: number): void {
   try {
     if (process.platform === 'win32') {
+      execSync('taskkill /F /IM specter.exe', { stdio: 'ignore' });
       execSync('taskkill /F /IM tuquet.exe', { stdio: 'ignore' });
       execSync('taskkill /F /IM automa.exe', { stdio: 'ignore' });
     } else {
@@ -35,6 +36,8 @@ async function ensurePortIsFree(port: number): Promise<void> {
 function resolveBinaryPath(corePath: string): string | undefined {
   const exe = process.platform === 'win32' ? '.exe' : '';
   const candidates = [
+    path.join(corePath, 'target', 'debug', `specter${exe}`),
+    path.join(corePath, 'target', 'release', `specter${exe}`),
     path.join(corePath, 'target', 'debug', `tuquet${exe}`),
     path.join(corePath, 'target', 'release', `tuquet${exe}`),
     path.join(corePath, 'target', 'debug', `automa${exe}`),
@@ -63,7 +66,7 @@ export async function setup(): Promise<void> {
 
   console.log(`[E2E Global Setup] Starting Test Daemon: ${exePath}`);
   const exeName = path.basename(exePath).toLowerCase();
-  const spawnArgs = exeName.startsWith('tuquet')
+  const spawnArgs = exeName.startsWith('specter') || exeName.startsWith('tuquet')
     ? ['runner', 'start', '--port', `${TEST_PORT}`]
     : ['server', '--port', `${TEST_PORT}`];
 
