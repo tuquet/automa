@@ -1,14 +1,6 @@
 name: Deploy Architecture & API Docs to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'diagrams/**'
-      - 'packages/types/openapi.json'
-      - 'scripts/build-pages.mjs'
-      - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
 permissions:
