@@ -1,9 +1,0 @@
-dist/
-dist-firefox/
-build/
-build-zip/
-node_modules/
-.turbo/
-scratch/
-coverage/
-*.min.js
